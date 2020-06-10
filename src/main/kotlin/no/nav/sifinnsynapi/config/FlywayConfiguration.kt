@@ -7,11 +7,11 @@ import org.springframework.boot.autoconfigure.flyway.FlywayConfigurationCustomiz
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
-@Configuration
+/*@Configuration
 @ConditionalOnProperty("spring.flyway.enabled")
 class FlywayConfiguration {
     @Bean
     fun flywayConfig(@Value("\${spring.cloud.vault.database.role}") role: String?): FlywayConfigurationCustomizer {
         return FlywayConfigurationCustomizer { c: FluentConfiguration -> c.initSql(String.format("SET ROLE \"%s\"", role)) }
     }
-}
+}*/
