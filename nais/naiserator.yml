@@ -1,0 +1,62 @@
+apiVersion: "nais.io/v1alpha1"
+kind: "Application"
+metadata:
+  name: {{app}}
+  namespace: {{namespace}}
+  labels:
+    team: {{team}}
+spec:
+  image: {{ image }}
+  port: 8080
+  accessPolicy:
+    outbound:
+      external:
+        - host: secretmanager.googleapis.com
+        - host: oauth2.googleapis.com
+        - host: www.googleapis.com
+        - host: login.microsoftonline.com
+      rules: []
+  secrets:
+    - name: gcp.accesskey
+    - name: gcp.secretkey
+  liveness:
+    path: /actuator/health
+    initialDelay: 60
+    timeout: 1
+    periodSeconds: 5
+    failureThreshold: 10
+  readiness:
+    path: /actuator/health
+    initialDelay: 60
+    timeout: 1
+  resources:
+    limits:
+      cpu: 2000m
+      memory: 3072Mi
+    requests:
+      cpu: 250m
+      memory: 1536Mi
+  ingresses:
+  {{#each ingresses as |url|}}
+     - {{url}}
+  {{/each}}
+  replicas:
+    min: {{minReplicas}}
+    max: {{maxReplicas}}
+    cpuThresholdPercentage: 90
+  prometheus:
+    enabled: true
+    path: /actuator/prometheus
+  vault:
+    enabled: false
+  webproxy: true
+  env:
+  {{#each env}}
+   - name: {{@key}}
+     value: "{{this}}"
+  {{/each}}
+  gcp:
+    sqlInstances:
+      - type: POSTGRES_11
+        databases:
+          - name: sif-innsyn-db

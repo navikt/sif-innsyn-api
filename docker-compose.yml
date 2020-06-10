@@ -1,0 +1,33 @@
+version: '3'
+networks:
+  sif.docker-internal:
+    external:
+      name: sif.docker-internal
+services:
+  db:
+    container_name: db
+    image: 'postgres'
+    networks:
+      sif.docker-internal:
+        aliases:
+          - db.sif.docker-internal
+    restart: on-failure
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: password
+
+  sif-innsyn-api:
+    container_name: sif-innsyn-api
+    image: 'sif-innsyn-api-local:latest'
+    networks:
+      sif.docker-internal:
+        aliases:
+          - sif-innsyn-api.sif.docker-internal
+    restart: on-failure
+    env_file:
+      - sif-innsyn-api.env
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db

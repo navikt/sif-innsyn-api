@@ -1,0 +1,16 @@
+{
+  "app": "sif-innsyn-api",
+  "cluster": "dev-gcp",
+  "namespace": "dusseldorf",
+  "team": "dusseldorf",
+  "minReplicas": "1",
+  "maxReplicas": "2",
+  "ingresses": [
+    "https://sif-innsyn-api-q.nav.no",
+    "https://sif-innsyn-api.dev-gcp.nais.io"
+  ],
+  "env": {
+    "SERVER_PORT": "8080",
+    "SPRING_PROFILES_ACTIVE": "dev-gcp"
+  }
+}

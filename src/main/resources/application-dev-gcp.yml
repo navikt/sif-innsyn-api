@@ -1,0 +1,39 @@
+no.nav:
+  security:
+    jwt:
+      issuer:
+        selvbetjening:
+           discoveryUrl: https://login.microsoftonline.com/NAVtestB2C.onmicrosoft.com/v2.0/.well-known/openid-configuration?p=B2C_1A_idporten_ver1
+           cookie_name: selvbetjening-idtoken
+           accepted_audience: placeholder
+
+management:
+   endpoints:
+      web:
+         exposure:
+            include: '*'
+   endpoint:
+      health:
+         show-details: always
+spring:
+  application:
+    name: sif-innsyn-api
+  http:
+    log-request-details: true
+  datasource:
+    hikari:
+      connection-test-query: SELECT 1
+      maximum-pool-size: 2
+    url: jdbc:postgresql://${NAIS_DATABASE_SIF_INNSYN_API_SIF_INNSYN_DB_HOST}:${NAIS_DATABASE_SIF_INNSYN_API_SIF_INNSYN_DB_PORT}/${NAIS_DATABASE_SIF_INNSYN_API_SIF_INNSYN_DB_DATABASE}
+    username: ${NAIS_DATABASE_SIF_INNSYN_API_SIF_INNSYN_DB_USERNAME}
+    password: ${NAIS_DATABASE_SIF_INNSYN_API_SIF_INNSYN_DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+  flyway:
+    baselineOnMigrate: true
+    enabled: true
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        ddl-auto: create-drop
+        dialect: org.hibernate.dialect.PostgreSQLDialect
