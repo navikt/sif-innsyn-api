@@ -11,6 +11,7 @@
   ],
   "env": {
     "SERVER_PORT": "8080",
-    "SPRING_PROFILES_ACTIVE": "dev-gcp"
+    "SPRING_PROFILES_ACTIVE": "dev-gcp",
+    "SPRING_CLOUD_VAULT_DATABASE_ROLE": "sif-innsyn-db-admin"
   }
 }
