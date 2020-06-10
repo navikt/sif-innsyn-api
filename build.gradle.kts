@@ -80,6 +80,7 @@ dependencies {
 	// Database
 	runtimeOnly("org.postgresql:postgresql")
 	implementation("org.flywaydb:flyway-core")
+	runtimeOnly("org.hibernate:hibernate-jpamodelgen")
 	testImplementation("org.hsqldb:hsqldb")
 	implementation("com.github.ben-manes.caffeine:caffeine")
 

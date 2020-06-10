@@ -35,5 +35,6 @@ spring:
     show-sql: true
     properties:
       hibernate:
-        ddl-auto: create-drop
         dialect: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: create-drop
