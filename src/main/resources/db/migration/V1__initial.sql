@@ -1,5 +1,5 @@
 CREATE TABLE søknad(
-    id SERIAL PRIMARY KEY,
+    id UUID PRIMARY KEY,
     språk VARCHAR(100) NOT NULL,
     harForståttRettigheterOgPlikter boolean  NOT NULL,
     harBekreftetOpplysninger boolean  NOT NULL,

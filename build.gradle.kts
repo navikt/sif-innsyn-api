@@ -81,7 +81,9 @@ dependencies {
 	runtimeOnly("org.postgresql:postgresql")
 	implementation("org.flywaydb:flyway-core")
 	runtimeOnly("org.hibernate:hibernate-jpamodelgen")
+	implementation("com.vladmihalcea:hibernate-types-52:2.3.4")
 	testImplementation("org.hsqldb:hsqldb")
+
 	implementation("com.github.ben-manes.caffeine:caffeine")
 
 	// Jackson

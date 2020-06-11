@@ -1,12 +1,16 @@
 package no.nav.sifinnsynapi.poc
 
+import org.hibernate.annotations.Type
+import java.util.*
 import javax.persistence.Entity
-import javax.persistence.GeneratedValue
 import javax.persistence.Id
+
 
 @Entity
 data class Søknad(
-        @Id @GeneratedValue val id: Long? = null,
+        @Id
+        @Type(type = "pg-uuid")
+        private val id: UUID = UUID.randomUUID(),
         val språk: String,
         val harForståttRettigheterOgPlikter: Boolean,
         val harBekreftetOpplysninger: Boolean,
