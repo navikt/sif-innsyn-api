@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @ProtectedWithClaims(issuer = "selvbetjening", claimMap = ["acr=Level4"])
 class PocController(
-        private val søknadSewrvice: SøknadService
+        private val søknadService: SøknadService
 ) {
     companion object {
         val logger = LoggerFactory.getLogger(PocController::class.java)
@@ -18,8 +18,8 @@ class PocController(
 
     @GetMapping("/soknad",  produces = [MediaType.APPLICATION_JSON_VALUE])
     @Unprotected
-    fun hentSøknad(): List<Søknad> {
+    fun hentSøknad(): List<SøknadDTO> {
         logger.info("henter søknader...")
-        return søknadSewrvice.hentSøknad()
+        return søknadService.hentSøknad()
     }
 }
