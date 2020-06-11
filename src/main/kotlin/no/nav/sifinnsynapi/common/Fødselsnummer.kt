@@ -8,7 +8,7 @@ import javax.persistence.Embeddable
 @Embeddable
 class Fødselsnummer {
     @get:JsonValue
-    var fnr: String? = null
+    var fødselsnummer: String? = null
 
     override fun equals(obj: Any?): Boolean {
         if (this === obj) {
@@ -21,28 +21,28 @@ class Fødselsnummer {
             return false
         }
         val other = obj as Fødselsnummer
-        if (fnr == null) {
-            if (other.fnr != null) {
+        if (fødselsnummer == null) {
+            if (other.fødselsnummer != null) {
                 return false
             }
-        } else if (fnr != other.fnr) {
+        } else if (fødselsnummer != other.fødselsnummer) {
             return false
         }
         return true
     }
 
     override fun hashCode(): Int {
-        return Objects.hashCode(fnr)
+        return Objects.hashCode(fødselsnummer)
     }
 
     override fun toString(): String {
-        return javaClass.simpleName + " [fnr=" + mask(fnr) + "]"
+        return javaClass.simpleName + " [fnr=" + mask(fødselsnummer) + "]"
     }
 
     companion object {
         fun valueOf(fnr: String?): Fødselsnummer {
             val id = Fødselsnummer()
-            id.fnr = fnr
+            id.fødselsnummer = fnr
             return id
         }
 

@@ -1,3 +1,10 @@
 spring:
+  datasource:
+    url: jdbc:tc:postgresql:9.6.8:///sif-innsyn-db
+    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
   flyway:
-    enabled: false
+    enabled: true
+    baselineOnMigrate: true
+  jpa:
+    hibernate:
+      ddl-auto: create-drop

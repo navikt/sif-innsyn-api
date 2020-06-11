@@ -82,7 +82,7 @@ dependencies {
 	implementation("org.flywaydb:flyway-core")
 	runtimeOnly("org.hibernate:hibernate-jpamodelgen")
 	implementation("com.vladmihalcea:hibernate-types-52:2.3.4")
-	testImplementation("org.hsqldb:hsqldb")
+	testImplementation("org.testcontainers:postgresql:1.14.3")
 
 	implementation("com.github.ben-manes.caffeine:caffeine")
 

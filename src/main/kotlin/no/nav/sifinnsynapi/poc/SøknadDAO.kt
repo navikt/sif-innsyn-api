@@ -20,6 +20,7 @@ import javax.persistence.EnumType.STRING
         TypeDef(name = "jsonb", typeClass = JsonBinaryType::class)
 )
 @Entity(name = "søknad")
+@Table(name = "søknad")
 data class SøknadDAO(
         @Id @Type(type = "pg-uuid") val id: UUID = UUID.randomUUID(),
         @Embedded val aktørId: AktørId,
