@@ -2,6 +2,7 @@ package no.nav.sifinnsynapi.poc
 
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
+import no.nav.sifinnsynapi.common.AktørId
 import no.nav.sifinnsynapi.oppslag.OppslagsService
 import org.springframework.stereotype.Service
 
@@ -17,9 +18,9 @@ class SøknadService(
 
     fun hentSøknad(): List<SøknadDTO> {
 
-        val aktørId = oppslagsService.hentAktørId()!!.aktør_id
+        val aktørId = AktørId.valueOf(oppslagsService.hentAktørId()!!.aktør_id)
 
-        return repo.findAll().map {
+        return repo.findAllByAktørId(aktørId).map {
             SøknadDTO(
                     saksId = it.saksId,
                     journalpostId = it.journalpostId,
