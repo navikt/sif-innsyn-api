@@ -13,4 +13,6 @@ object Constants {
     const val NAV_AKTØR_ID = "Nav-Aktør-Id"
     const val ISSUER = "selvbetjening"
     const val NAV_TOKEN_EXPIRY_ID = "Nav-Token-Expiry"
+    const val X_CORRELATION_ID = "X-Correlation-ID"
+    const val X_NAV_APIKEY = "x-nav-apiKey"
 }

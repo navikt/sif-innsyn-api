@@ -1,3 +1,9 @@
+no.nav:
+  apigw:
+    apikey: test-key
+  gateways:
+    k9-selvbetjening-oppslag: http://localhost:8080
+
 spring:
   datasource:
     url: jdbc:tc:postgresql:9.6.8:///sif-innsyn-db

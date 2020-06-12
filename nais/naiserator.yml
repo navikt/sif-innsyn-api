@@ -15,6 +15,7 @@ spec:
         - host: oauth2.googleapis.com
         - host: www.googleapis.com
         - host: login.microsoftonline.com
+        - host: api-gw-q1.oera.no
       rules: []
   secrets:
     - name: gcp.accesskey
