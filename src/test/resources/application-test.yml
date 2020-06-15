@@ -5,6 +5,12 @@ no.nav:
     k9-selvbetjening-oppslag: http://localhost:8080
 
 spring:
+  rest:
+    retry:
+      multiplier: 0
+      initialDelay: 1
+      maxDelay: 1
+      maxAttempts: 1
   datasource:
     url: jdbc:tc:postgresql:9.6.8:///sif-innsyn-db
     driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver

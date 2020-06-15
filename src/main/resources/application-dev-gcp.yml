@@ -19,6 +19,13 @@ management:
       health:
          show-details: always
 spring:
+  rest:
+    retry:
+      multiplier: 2
+      initialDelay: 100
+      maxDelay: 2000
+      maxAttempts: 3
+
   application:
     name: sif-innsyn-api
   http:

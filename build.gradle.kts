@@ -32,6 +32,7 @@ val brukernotifikasjonVersion by extra("1.2020.03.25-11.14-c3621e6d211a")
 val logstashLogbackEncoderVersion by extra("6.3")
 val tokenValidationVersion by extra("1.1.5")
 val springCloudVersion by extra( "Hoxton.SR5")
+val retryVersion by extra("1.3.0")
 
 
 
@@ -56,6 +57,8 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 	implementation("org.springframework.boot:spring-boot-starter-web")
+	implementation("org.springframework.retry:spring-retry:$retryVersion")
+	implementation("org.springframework:spring-aspects")
 	runtimeOnly("org.springframework.boot:spring-boot-properties-migrator")
 	annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 	annotationProcessor("org.springframework.boot:spring-boot-autoconfigure-processor")
