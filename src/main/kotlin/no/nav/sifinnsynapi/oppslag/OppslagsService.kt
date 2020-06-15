@@ -8,7 +8,9 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.http.HttpMethod
+import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
+import org.springframework.web.client.RestClientException
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.util.UriComponentsBuilder
 
@@ -19,9 +21,6 @@ class OppslagsService(
 ) {
     private companion object {
         private val logger: Logger = LoggerFactory.getLogger(OppslagsService::class.java)
-        private const val HENTE_SOKER_OPERATION = "hente-soker"
-        private val objectMapper = jacksonObjectMapper().k9SelvbetjeningOppslagKonfigurert()
-        private val attributter = Pair("a", listOf("aktør_id"))
 
         val søkerUrl = UriComponentsBuilder
                 .fromUriString("/meg")
@@ -30,20 +29,25 @@ class OppslagsService(
     }
 
     fun hentAktørId(): OppslagRespons? {
-        val exchange = oppslagsKlient.getForEntity(søkerUrl.toUriString(), OppslagRespons::class.java)
-        logger.info("Fikk response {} fra oppslag: {}", exchange.statusCode, exchange.body)
-        return exchange.body
+        var exchange: ResponseEntity<Any?>? = null
+        return try {
+            exchange = oppslagsKlient.getForEntity(søkerUrl.toUriString(), OppslagRespons::class.java)
+            logger.info("Fikk response {} fra oppslag: {}", exchange.statusCode, exchange.body)
+
+            exchange.body
+        } catch (e: RestClientException) {
+            logger.error("Error response = '${exchange.asString()}' fra '${OppslagsService.søkerUrl.toUriString()}'")
+            logger.error(exchange.toString())
+            throw IllegalStateException("Feil ved henting av søkers personinformasjon")
+        }
+    }
+
+    private fun <T> ResponseEntity<T>.asString(): String {
+        return this.body.toString()
     }
 }
 
 data class OppslagRespons(
         val aktør_id: String
 )
-
-internal fun ObjectMapper.k9SelvbetjeningOppslagKonfigurert(): ObjectMapper {
-    return ObjectMapper().apply {
-        configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-        registerModule(JavaTimeModule())
-    }
-}
 
