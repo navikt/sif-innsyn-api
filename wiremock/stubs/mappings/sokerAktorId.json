@@ -1,6 +1,6 @@
 {
   "request": {
-    "urlPattern": "/xxxk9-selvbetjening-oppslag-mock/meg.*",
+    "urlPattern": "/k9-selvbetjening-oppslag-mock/meg.*",
     "method": "GET",
     "headers": {
       "x-nav-apiKey": {

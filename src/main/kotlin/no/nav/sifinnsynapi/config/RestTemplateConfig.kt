@@ -19,6 +19,7 @@ import org.springframework.retry.RetryCallback
 import org.springframework.retry.RetryContext
 import org.springframework.retry.RetryListener
 import org.springframework.web.client.RestTemplate
+import java.time.Duration
 import java.util.*
 
 @Configuration
@@ -37,6 +38,8 @@ class RestTemplateConfig(
     @Bean(name = ["k9OppslagsKlient"])
     fun restTemplate(builder: RestTemplateBuilder, tokenInterceptor: BearerTokenClientHttpRequestInterceptor, mdcInterceptor: MDCValuesPropagatingClienHttpRequesInterceptor): RestTemplate {
         return builder
+                .setConnectTimeout(Duration.ofSeconds(20))
+                .setReadTimeout(Duration.ofSeconds(20))
                 .additionalMessageConverters(MappingJackson2HttpMessageConverter(k9SelvbetjeningOppslagKonfigurert()))
                 .defaultHeader(X_NAV_APIKEY, apigwConfig.apiKey)
                 .defaultHeader(X_CORRELATION_ID, UUID.randomUUID().toString())

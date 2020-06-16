@@ -10,12 +10,13 @@ import org.springframework.retry.annotation.Retryable
 import org.springframework.stereotype.Service
 import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.HttpServerErrorException
+import org.springframework.web.client.ResourceAccessException
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.util.UriComponentsBuilder
 
 @Service
 @Retryable(
-        exclude = [HttpClientErrorException.Unauthorized::class, HttpClientErrorException.Forbidden::class],
+        exclude = [HttpClientErrorException.Unauthorized::class, HttpClientErrorException.Forbidden::class, ResourceAccessException::class],
         backoff = Backoff(
                 delayExpression = "\${spring.rest.retry.initialDelay}",
                 multiplierExpression = "\${spring.rest.retry.multiplier}",
@@ -44,17 +45,22 @@ class OppslagsService(
     }
 
     @Recover
-    fun recover(error: HttpServerErrorException): OppslagRespons? {
+    private fun recover(error: HttpServerErrorException): OppslagRespons? {
         logger.error("Error response = '${error.responseBodyAsString}' fra '${søkerUrl.toUriString()}'")
         throw IllegalStateException("Feil ved henting av søkers personinformasjon")
     }
 
     @Recover
-    fun recover(error: HttpClientErrorException): OppslagRespons? {
+    private fun recover(error: HttpClientErrorException): OppslagRespons? {
         logger.error("Error response = '${error.responseBodyAsString}' fra '${søkerUrl.toUriString()}'")
         throw IllegalStateException("Feil ved henting av søkers personinformasjon")
     }
 
+    @Recover
+    private fun recover(error: ResourceAccessException): OppslagRespons? {
+        logger.error("{}", error.message)
+        throw IllegalStateException("Timout ved henting av søkers personinformasjon")
+    }
 }
 
 data class OppslagRespons(
