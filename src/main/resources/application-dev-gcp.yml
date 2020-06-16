@@ -1,6 +1,6 @@
 no.nav:
   apigw:
-    apikey: ${API_GATEWAY_API_KEY}
+    apikey: ${APIGW_API_KEY}
   gateways:
     k9-selvbetjening-oppslag: ${K9_OPPSLAG_REGISTER_URL}
   security:
