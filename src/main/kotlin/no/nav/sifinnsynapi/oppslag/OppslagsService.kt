@@ -8,14 +8,14 @@ import org.springframework.retry.annotation.Backoff
 import org.springframework.retry.annotation.Recover
 import org.springframework.retry.annotation.Retryable
 import org.springframework.stereotype.Service
+import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.HttpServerErrorException
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.util.UriComponentsBuilder
 
 @Service
 @Retryable(
-        //include = [BadGateway::class, HttpServerErrorException::class],
-        //exclude = [Forbidden::class],
+        exclude = [HttpClientErrorException.Unauthorized::class, HttpClientErrorException.Forbidden::class],
         backoff = Backoff(
                 delayExpression = "\${spring.rest.retry.initialDelay}",
                 multiplierExpression = "\${spring.rest.retry.multiplier}",
@@ -26,7 +26,7 @@ import org.springframework.web.util.UriComponentsBuilder
 class OppslagsService(
         @Qualifier("k9OppslagsKlient")
         private val oppslagsKlient: RestTemplate
-){
+) {
     private companion object {
         private val logger: Logger = LoggerFactory.getLogger(OppslagsService::class.java)
 
@@ -45,7 +45,13 @@ class OppslagsService(
 
     @Recover
     fun recover(error: HttpServerErrorException): OppslagRespons? {
-        logger.error("Error response = '${error.responseBodyAsString}' fra '${OppslagsService.søkerUrl.toUriString()}'")
+        logger.error("Error response = '${error.responseBodyAsString}' fra '${søkerUrl.toUriString()}'")
+        throw IllegalStateException("Feil ved henting av søkers personinformasjon")
+    }
+
+    @Recover
+    fun recover(error: HttpClientErrorException): OppslagRespons? {
+        logger.error("Error response = '${error.responseBodyAsString}' fra '${søkerUrl.toUriString()}'")
         throw IllegalStateException("Feil ved henting av søkers personinformasjon")
     }
 
