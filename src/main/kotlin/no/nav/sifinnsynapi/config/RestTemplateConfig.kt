@@ -28,11 +28,12 @@ class RestTemplateConfig(
         private val apigwConfig: ApiGwApiKeyConfig,
         @Value("\${spring.rest.retry.maxAttempts}")
         private val maxAttempts: Int
-): RetryListener {
+) : RetryListener {
 
-    private companion object{
-        val logger: Logger = LoggerFactory.getLogger(RestTemplateConfig::class.java)
+    private companion object {
+        val log: Logger = LoggerFactory.getLogger(RestTemplateConfig::class.java)
     }
+
     @Bean(name = ["k9OppslagsKlient"])
     fun restTemplate(builder: RestTemplateBuilder, tokenInterceptor: BearerTokenClientHttpRequestInterceptor, mdcInterceptor: MDCValuesPropagatingClienHttpRequesInterceptor): RestTemplate {
         return builder
@@ -45,21 +46,33 @@ class RestTemplateConfig(
     }
 
     override fun <T : Any, E : Throwable> open(context: RetryContext, callback: RetryCallback<T, E>): Boolean {
-        logger.warn("Feiler ved utgående rest-kall, kjører retry")
+        log.warn("Feiler ved utgående rest-kall, kjører retry")
         return true
     }
 
     override fun <T : Any, E : Throwable?> close(context: RetryContext, callback: RetryCallback<T, E>, throwable: Throwable?) {
-        logger.info("Gir opp etter {} av {} forsøk",
-                context.retryCount, maxAttempts)
+        val backoff = context.getAttribute("backOffContext")!!
+
+        log.info("Gir opp etter {} av {} forsøk og {} ms", context.retryCount, maxAttempts, backoff.nextInterval() - 1000)
     }
 
     override fun <T : Any, E : Throwable> onError(context: RetryContext, callback: RetryCallback<T, E>, throwable: Throwable) {
         val currentTry = context.retryCount
         val contextString = context.getAttribute("context.name") as String
+        val backoff = context.getAttribute("backOffContext")!!
+        val nextInterval = backoff.nextInterval()
 
-        logger.warn("Forsøker {} av {}, {}", currentTry, maxAttempts, contextString.split(" ")[2])
+        log.warn("Forsøk {} av {}, {}", currentTry, maxAttempts, contextString.split(" ")[2])
+
+        if (currentTry < maxAttempts) log.info("Forsøker om: {} ms", nextInterval)
     }
+}
+
+private fun Any.nextInterval(): Long {
+    val getInterval = javaClass.getMethod("getInterval")
+    getInterval.trySetAccessible()
+
+    return getInterval.invoke(this) as Long
 }
 
 internal fun k9SelvbetjeningOppslagKonfigurert(): ObjectMapper {

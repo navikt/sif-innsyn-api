@@ -22,8 +22,8 @@ spring:
   rest:
     retry:
       multiplier: 2
-      initialDelay: 100
-      maxDelay: 2000
+      initialDelay: 1000
+      maxDelay: 4000
       maxAttempts: 3
 
   application:
