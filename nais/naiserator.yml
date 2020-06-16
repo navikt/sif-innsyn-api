@@ -17,9 +17,6 @@ spec:
         - host: login.microsoftonline.com
         - host: api-gw-q1.oera.no
       rules: []
-  secrets:
-    - name: gcp.accesskey
-    - name: gcp.secretkey
   liveness:
     path: /actuator/health
     initialDelay: 60
@@ -51,6 +48,8 @@ spec:
   vault:
     enabled: false
   webproxy: true
+  envFrom:
+    - secret: apigw-api-key
   env:
   {{#each env}}
    - name: {{@key}}
