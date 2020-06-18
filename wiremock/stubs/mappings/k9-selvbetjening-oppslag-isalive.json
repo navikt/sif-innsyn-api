@@ -1,0 +1,13 @@
+{
+  "request": {
+    "urlPattern": "/k9-selvbetjening-oppslag-mock/isalive",
+    "method": "GET"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}
+
