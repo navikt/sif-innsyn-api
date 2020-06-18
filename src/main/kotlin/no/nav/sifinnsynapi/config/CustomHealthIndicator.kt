@@ -21,7 +21,7 @@ class CustomHealthIndicator(@Qualifier("k9OppslagsKlient") private val oppslagsK
     }
 
     private fun healthCheck(healthUrl: UriComponents){
-        oppslagsKlient.exchange(healthUrl.toUriString(), HttpMethod.GET, null, Any::class.java)
+        oppslagsKlient.exchange(healthUrl.toUriString(), HttpMethod.GET, null, String::class.java)
     }
 
     override fun health(): Mono<Health> {

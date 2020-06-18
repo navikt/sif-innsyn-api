@@ -4,6 +4,7 @@
     "method": "GET"
   },
   "response": {
+    "body": "UP",
     "status": 200,
     "headers": {
       "Content-Type": "application/json"
