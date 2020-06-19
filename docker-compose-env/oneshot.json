@@ -1,0 +1,21 @@
+{
+  "topics": [
+    {
+      "configEntries": {
+        "retention.ms": -1
+      },
+      "members": [
+        {
+          "member": "igroup",
+          "role": "CONSUMER"
+        },
+        {
+          "member": "igroup",
+          "role": "PRODUCER"
+        }
+      ],
+      "numPartitions": 3,
+      "topicName": "privat-sif-innsyn-mottak"
+    }
+  ]
+}
