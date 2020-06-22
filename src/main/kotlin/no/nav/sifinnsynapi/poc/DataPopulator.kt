@@ -6,7 +6,9 @@ import no.nav.sifinnsynapi.common.SøknadsStatus
 import no.nav.sifinnsynapi.common.Søknadstype
 import org.slf4j.LoggerFactory
 import org.springframework.boot.CommandLineRunner
+import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.transaction.annotation.Transactional
 
 @Configuration
 class DataPopulator(
@@ -16,9 +18,8 @@ class DataPopulator(
         val log = LoggerFactory.getLogger(CommandLineRunner::class.java)
     }
 
-   /* @Bean
+    @Bean
     //@Profile("local")
-    @Transactional(JPA_TM)*/
     fun commandlineRunner(): CommandLineRunner {
         return CommandLineRunner {
             listOf(
