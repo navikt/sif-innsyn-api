@@ -59,7 +59,7 @@ spring:
       sasl:
         mechanism: PLAIN
         jaas:
-          config: org.apache.kafka.common.security.plain.PlainLoginModule required username=igroup password=itest;
+          config: org.apache.kafka.common.security.plain.PlainLoginModule required username=${sts.username} password=${sts.password};
     consumer:
       enable-auto-commit: false
       bootstrap-servers:
