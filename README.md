@@ -52,7 +52,7 @@ For å bygge kode, kjør:
 For å kjøre kode, kjør:
 
 ```shell script
-docker build --tag sif-innsyn-api-local && docker-compose up --build 
+docker build --tag sif-innsyn-api-local . && docker-compose up --build 
 ```
 
 ### Produsere kafka meldinger

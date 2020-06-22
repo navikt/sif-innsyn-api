@@ -20,3 +20,6 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create-drop
+  kafka:
+    consumer:
+      group-id: group_id
