@@ -49,7 +49,8 @@ spec:
     enabled: false
   webproxy: true
   envFrom:
-    - secret: sif-innsyn-api
+    - secret: sif-innsyn-api.apigw-apikey
+    - secret: sif-innsyn-api.sts-credentials
   env:
   {{#each env}}
    - name: {{@key}}
