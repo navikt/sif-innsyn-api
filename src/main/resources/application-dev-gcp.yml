@@ -55,14 +55,14 @@ spring:
         registry:
           url:   https://kafka-schema-registry.nais.adeo.no
       security:
-        protocol: #SASL_SSL
+        protocol:
       sasl:
         mechanism: PLAIN
         jaas:
           config: org.apache.kafka.common.security.plain.PlainLoginModule required username=igroup password=itest;
     consumer:
       enable-auto-commit: false
-      bootstrap-servers: #b27apvl00045.preprod.local:8443,b27apvl00046.preprod.local:8443,b27apvl00047.preprod.local:8443
+      bootstrap-servers:
       group-id: group_id
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer

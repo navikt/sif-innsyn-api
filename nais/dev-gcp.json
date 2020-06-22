@@ -14,6 +14,8 @@
     "SPRING_PROFILES_ACTIVE": "dev-gcp",
     "NO_NAV_SECURITY_JWT_ISSUER_SELVBETJENING_ACCEPTEDAUDIENCE": "0090b6e1-ffcc-4c37-bc21-049f7d1f0fe5",
     "SPRING_CLOUD_VAULT_DATABASE_ROLE": "sif-innsyn-db-admin",
-    "K9_OPPSLAG_REGISTER_URL": "https://api-gw-q1.oera.no/helse-reverse-proxy/k9-selvbetjening-oppslag"
+    "K9_OPPSLAG_REGISTER_URL": "https://api-gw-q1.oera.no/helse-reverse-proxy/k9-selvbetjening-oppslag",
+    "SPRING_KAFKA_CONSUMER_BOOTSTRAP_SERVERS": "b27apvl00045.preprod.local:8443,b27apvl00046.preprod.local:8443,b27apvl00047.preprod.local:8443",
+    "SPRING_KAFKA_PROPERTIES_SECURITY_PROTOCOL": "SASL_SSL"
   }
 }
