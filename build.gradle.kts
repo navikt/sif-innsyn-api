@@ -36,12 +36,18 @@ val retryVersion by extra("1.3.0")
 
 
 
+
 repositories {
 	mavenCentral()
 
 	maven {
 		name = "github-package-registry-navikt"
 		url = uri("https://maven.pkg.github.com/navikt/maven-releas")
+	}
+
+	maven{
+		name = "confluent"
+		url = uri("http://packages.confluent.io/maven/")
 	}
 }
 
@@ -102,6 +108,14 @@ dependencies {
 	// Project Reactor
 	testImplementation("io.projectreactor:reactor-test")
 	implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
+
+	//Kafka
+	implementation("org.apache.avro:avro:$avroVersion")
+	implementation("io.confluent:kafka-connect-avro-converter:$confluentVersion")
+	implementation("io.confluent:kafka-avro-serializer:$confluentVersion")
+	implementation("org.springframework.kafka:spring-kafka")
+	testImplementation("org.springframework.kafka:spring-kafka-test")
+
 }
 
 dependencyManagement {
