@@ -61,8 +61,8 @@ services:
     env_file:
       - "./docker-compose-env/schema-registry.env"
 
-  flex-oidc-provider-gui:
-    container_name: flex-oidc-provider-gui
+  oidc-provider-gui:
+    container_name: oidc-provider-gui
     networks:
       - app-tier
     image: "docker.pkg.github.com/navikt/flex-docker-compose/flex-oidc-provider-gui:latest"
