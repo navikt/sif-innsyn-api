@@ -1,5 +1,6 @@
 package no.nav.sifinnsynapi.poc
 
+import no.nav.sifinnsynapi.config.Topics.INNSYN_MOTTATT
 import no.nav.sifinnsynapi.util.Constants.NAV_CALL_ID
 import org.slf4j.LoggerFactory
 import org.springframework.kafka.annotation.KafkaListener
@@ -9,13 +10,16 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
-class PocHendelseKonsument {
+class PocHendelseKonsument(
+        private val repository: SøknadRepository
+) {
 
     @Transactional
-    @KafkaListener(topics = ["privat-sif-innsyn-mottak"], groupId = "#{'\${spring.kafka.consumer.group-id}'}")
+    @KafkaListener(topics = [INNSYN_MOTTATT], groupId = "#{'\${spring.kafka.consumer.group-id}'}")
     fun konsumer(@Payload hendelse: String,
                  @Header(name = NAV_CALL_ID, required = false) callId: String?) {
         LOG.info("Mottok inntektsmeldinghendelse {}", hendelse)
+
     }
 
     companion object {
