@@ -16,6 +16,9 @@ spec:
         - host: www.googleapis.com
         - host: login.microsoftonline.com
         - host: api-gw-q1.oera.no
+        - host: b27apvl00045.preprod.local
+        - host: b27apvl00046.preprod.local
+        - host: b27apvl00047.preprod.local
       rules: []
   liveness:
     path: /actuator/health
