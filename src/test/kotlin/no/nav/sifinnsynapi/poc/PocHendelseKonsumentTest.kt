@@ -24,7 +24,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 
 @EmbeddedKafka(
         topics = [INNSYN_MOTTATT],
-        bootstrapServersProperty = "spring.kafka.bootstrap-servers"
+        bootstrapServersProperty = "spring.kafka.consumer.bootstrap-servers"
 )
 @ExtendWith(SpringExtension::class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)

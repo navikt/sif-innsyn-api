@@ -23,4 +23,3 @@ spring:
   kafka:
     consumer:
       group-id: group_id
-      bootstrap-servers: ${spring.kafka.bootstrap-servers}
