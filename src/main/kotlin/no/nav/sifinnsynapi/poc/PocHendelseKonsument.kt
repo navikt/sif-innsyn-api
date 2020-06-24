@@ -16,10 +16,9 @@ class PocHendelseKonsument(
 
     @Transactional
     @KafkaListener(topics = [INNSYN_MOTTATT], groupId = "#{'\${spring.kafka.consumer.group-id}'}")
-    fun konsumer(@Payload hendelse: String,
+    fun konsumer(@Payload hendelse: SøknadsHendelse,
                  @Header(name = NAV_CALL_ID, required = false) callId: String?) {
-        LOG.info("Mottok inntektsmeldinghendelse {}", hendelse)
-
+        LOG.info("Mottok hendelse {}", hendelse)
     }
 
     companion object {
