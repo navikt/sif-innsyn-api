@@ -1,26 +1,38 @@
 package no.nav.sifinnsynapi.poc
 
 import com.fasterxml.jackson.annotation.JsonCreator
+import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonProperty
 import no.nav.sifinnsynapi.common.*
-import org.springframework.lang.Nullable
 import java.time.LocalDate
-import java.time.LocalDateTime
-import java.util.*
-import javax.validation.constraints.NotNull
+import java.time.ZonedDateTime
 
 data class SøknadsHendelse @JsonCreator constructor(
         @JsonProperty("aktørId") val aktørId: AktørId,
-        @JsonProperty("fødselsnummer") val fnr: Fødselsnummer,
-        @JsonProperty("journalpostId") val journalId: String,
+        @JsonProperty("fødselsnummer") val fødselsnummer: Fødselsnummer,
+        @JsonProperty("journalpostId") val journalpostId: String,
         @JsonProperty("saksnummer") var saksnummer: String?,
         @JsonProperty("status") val status: SøknadsStatus,
         @JsonProperty("søknadstype") val søknadstype: Søknadstype,
         @JsonProperty("førsteBehandlingsdato") var førsteBehandlingsdato: LocalDate?,
-        @JsonProperty("mottattDato") val mottattDato: LocalDateTime) {
+        @JsonProperty("mottattDato") @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX", timezone = "UTC") val mottattDato: ZonedDateTime) {
 
     override fun toString(): String {
-        return "SøknadsHendelse(aktørId=$aktørId, fnr=$fnr, journalId='$journalId', saksnummer=$saksnummer, " +
+        return "SøknadsHendelse(aktørId=$aktørId, fødselsnummer=$fødselsnummer, journalpostId='$journalpostId', saksnummer=$saksnummer, " +
                 "status=$status, søknadstype=$søknadstype, førsteBehandlingsdato=$førsteBehandlingsdato, mottattDato=$mottattDato)"
     }
+
+    fun tilSøknadDAO(): SøknadDAO = SøknadDAO(
+            aktørId = aktørId,
+            saksId = saksnummer,
+            fødselsnummer = fødselsnummer,
+            journalpostId = journalpostId,
+            søknad = mapOf<String, Any>().toString(),
+            status = status,
+            søknadstype = søknadstype,
+            behandlingsdato = førsteBehandlingsdato,
+            opprettet = mottattDato.toLocalDateTime(),
+            endret = null
+    )
+
 }

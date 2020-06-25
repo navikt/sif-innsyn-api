@@ -9,7 +9,7 @@ data class SøknadDTO(
         val søknadstype: Søknadstype,
         val status: SøknadsStatus,
         val søknad: Map<String, Any>,
-        val saksId: String,
+        val saksId: String?,
         val journalpostId: String,
         val opprettet: LocalDateTime? = null,
         val endret: LocalDateTime? = null,

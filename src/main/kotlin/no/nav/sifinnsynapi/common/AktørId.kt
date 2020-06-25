@@ -5,9 +5,7 @@ import java.util.*
 import javax.persistence.Embeddable
 
 @Embeddable
-class AktørId internal constructor() {
-    @JsonValue
-    var aktørId: String? = null
+data class AktørId(@get:JsonValue var aktørId: String? = null) {
 
     override fun hashCode(): Int {
         return Objects.hashCode(aktørId)

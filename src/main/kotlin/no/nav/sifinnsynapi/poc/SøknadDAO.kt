@@ -28,7 +28,7 @@ data class SøknadDAO(
         @Enumerated(STRING) val søknadstype: Søknadstype,
         @Enumerated(STRING) val status: SøknadsStatus,
         @Type(type = "jsonb") @Column(columnDefinition = "jsonb") val søknad: String,
-        val saksId: String,
+        val saksId: String?,
         val journalpostId: String,
         @CreatedDate val opprettet: LocalDateTime? = null,
         @UpdateTimestamp val endret: LocalDateTime? = null,

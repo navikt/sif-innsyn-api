@@ -11,14 +11,17 @@ import org.springframework.transaction.annotation.Transactional
 
 @Service
 class PocHendelseKonsument(
-        private val repository: SøknadRepository
+        private val søknadRepository: SøknadRepository
 ) {
 
     @Transactional
-    @KafkaListener(topics = [INNSYN_MOTTATT], groupId = "#{'\${spring.kafka.consumer.group-id}'}")
+    @KafkaListener(topics = [INNSYN_MOTTATT], groupId = "#{'\${spring.kafka.consumer.group-id}'}", containerFactory = "kafkaJsonListenerContainerFactory")
     fun konsumer(@Payload hendelse: SøknadsHendelse,
                  @Header(name = NAV_CALL_ID, required = false) callId: String?) {
         LOG.info("Mottok hendelse {}", hendelse)
+
+        val mapTilSøknadDAO = hendelse.tilSøknadDAO()
+        søknadRepository.save(mapTilSøknadDAO)
     }
 
     companion object {

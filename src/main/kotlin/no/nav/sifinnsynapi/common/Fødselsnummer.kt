@@ -6,9 +6,8 @@ import com.google.common.base.Strings
 import javax.persistence.Embeddable
 
 @Embeddable
-class Fødselsnummer {
-    @get:JsonValue
-    var fødselsnummer: String? = null
+data class Fødselsnummer(
+        @get:JsonValue var fødselsnummer: String? = null) {
 
     override fun equals(obj: Any?): Boolean {
         if (this === obj) {

@@ -69,10 +69,16 @@ dependencies {
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     annotationProcessor("org.springframework.boot:spring-boot-autoconfigure-processor")
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
-        exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
+        exclude(group = "junit")
         exclude(module = "mockito-core")
     }
-    developmentOnly("org.springframework.boot:spring-boot-devtools")
+    testImplementation("org.junit.jupiter:junit-jupiter-api")
+    testImplementation("org.junit.jupiter:junit-jupiter-engine")
+    testImplementation("com.ninja-squad:springmockk:2.0.1")
+    testImplementation("io.mockk:mockk:1.10.0")
+
+
+    //developmentOnly("org.springframework.boot:spring-boot-devtools")
 
     // Spring Cloud
     implementation("org.springframework.cloud:spring-cloud-gcp-starter-secretmanager")
@@ -106,7 +112,6 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
-    testImplementation("com.ninja-squad:springmockk:2.0.1")
 
     // Project Reactor
     testImplementation("io.projectreactor:reactor-test")
