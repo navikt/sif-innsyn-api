@@ -1,5 +1,6 @@
 package no.nav.sifinnsynapi.poc
 
+import no.nav.sifinnsynapi.common.SøknadsStatus
 import no.nav.sifinnsynapi.config.Topics.INNSYN_MOTTATT
 import no.nav.sifinnsynapi.util.Constants.NAV_CALL_ID
 import org.slf4j.LoggerFactory
@@ -16,12 +17,28 @@ class PocHendelseKonsument(
 
     @Transactional
     @KafkaListener(topics = [INNSYN_MOTTATT], groupId = "#{'\${spring.kafka.consumer.group-id}'}", containerFactory = "kafkaJsonListenerContainerFactory")
-    fun konsumer(@Payload hendelse: SøknadsHendelse,
-                 @Header(name = NAV_CALL_ID, required = false) callId: String?) {
+    fun konsumer(@Payload hendelse: SøknadsHendelse, @Header(name = NAV_CALL_ID, required = false) callId: String?) {
         LOG.info("Mottok hendelse {}", hendelse)
 
-        val mapTilSøknadDAO = hendelse.tilSøknadDAO()
-        søknadRepository.save(mapTilSøknadDAO)
+        val hendelseSomSøknadDAO = hendelse.tilSøknadDAO()
+
+        when(hendelse.status){
+            SøknadsStatus.MOTTATT -> søknadRepository.save(hendelseSomSøknadDAO)
+            SøknadsStatus.UNDER_BEHANDLING -> {
+                val søknad = søknadRepository.findByJournalpostId(hendelse.journalpostId)
+                if (søknad != null) {
+                    val oppdatertSøknad = søknad.copy(status = hendelse.status)
+                    søknadRepository.save(oppdatertSøknad)
+                }
+            }
+            SøknadsStatus.FERDIG_BEHANDLET -> {
+                val søknad = søknadRepository.findByJournalpostId(hendelse.journalpostId)
+                if (søknad != null) {
+                    val oppdatertSøknad = søknad.copy(status = hendelse.status)
+                    søknadRepository.save(oppdatertSøknad)
+                }
+            }
+        }
     }
 
     companion object {

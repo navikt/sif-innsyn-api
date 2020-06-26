@@ -5,4 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository
 
 interface SøknadRepository: JpaRepository<SøknadDAO, Long> {
     fun findAllByAktørId(aktørId: AktørId): List<SøknadDAO>
+    fun findByJournalpostId(journalpostId: String): SøknadDAO?
 }
