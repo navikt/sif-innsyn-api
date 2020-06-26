@@ -62,7 +62,10 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-validation")
-    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-web") {
+        exclude(group = "org.springframework.boot", module = "spring-boot-starter-tomcat")
+    }
+    implementation("org.springframework.boot:spring-boot-starter-jetty")
     implementation("org.springframework.retry:spring-retry:$retryVersion")
     implementation("org.springframework:spring-aspects")
     runtimeOnly("org.springframework.boot:spring-boot-properties-migrator")
