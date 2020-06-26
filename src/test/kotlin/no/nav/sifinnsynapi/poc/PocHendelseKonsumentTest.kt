@@ -11,6 +11,7 @@ import no.nav.sifinnsynapi.config.Topics.INNSYN_MOTTATT
 import org.apache.kafka.clients.producer.Producer
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.apache.kafka.common.serialization.StringSerializer
+import org.junit.Ignore
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
@@ -66,6 +67,7 @@ class PocHendelseKonsumentTest {
         produsent = DefaultKafkaProducerFactory(configs, StringSerializer(), StringSerializer()).createProducer()
     }
 
+    @Ignore
     @Test
     fun `Prosesser og lagre melding`() {
 
