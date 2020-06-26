@@ -3,6 +3,9 @@ no.nav:
     apikey: test-key
   gateways:
     k9-selvbetjening-oppslag: http://localhost:8080
+  security:
+    cors:
+      allowed-origins: http://localhost:8080
 
 spring:
   rest:

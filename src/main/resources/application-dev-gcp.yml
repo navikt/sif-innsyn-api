@@ -4,6 +4,8 @@ no.nav:
   gateways:
     k9-selvbetjening-oppslag: ${K9_OPPSLAG_REGISTER_URL}
   security:
+    cors:
+      allowed-origins: https://sif-innsyn-api.dev-gcp.nais.io
     jwt:
       issuer:
         selvbetjening:
