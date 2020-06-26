@@ -16,11 +16,10 @@ spec:
         - host: www.googleapis.com
         - host: login.microsoftonline.com
         - host: api-gw-q1.oera.no
-        - host: b27apvl00045.preprod.local
       {{#each kafkaBootstrapServers as |server|}}
         - host: {{server}}
           ports:
-            - port: 9092
+            - port: 8443
               name: kafka
               protocol: TLS
       {{/each}}
