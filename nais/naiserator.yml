@@ -20,7 +20,7 @@ spec:
       {{#each kafkaBootstrapServers as |server|}}
         - host: {{server}}
           ports:
-            - port: 8443
+            - port: 9092
               name: kafka
               protocol: TLS
       {{/each}}
