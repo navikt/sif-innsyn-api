@@ -17,8 +17,14 @@ spec:
         - host: login.microsoftonline.com
         - host: api-gw-q1.oera.no
         - host: b27apvl00045.preprod.local
-        - host: b27apvl00046.preprod.local
-        - host: b27apvl00047.preprod.local
+      {{#each kafkaBootstrapServers as |server|}}
+        - host: {{server}}
+          ports:
+            port: 8443
+            name: kafka
+            protocol: TLS
+      {{/each}}
+
       rules: []
   liveness:
     path: /actuator/health
