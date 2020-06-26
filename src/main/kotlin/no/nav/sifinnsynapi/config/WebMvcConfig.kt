@@ -30,6 +30,8 @@ class WebMvcConfig(
     override fun addCorsMappings(registry: CorsRegistry) {
         registry.addMapping("/**")
                 .allowedOrigins(*allowedOrigins.split(",").toTypedArray())
+                .allowCredentials(true)
+
         super.addCorsMappings(registry)
     }
 }
