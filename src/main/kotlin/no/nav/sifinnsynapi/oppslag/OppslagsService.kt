@@ -1,5 +1,6 @@
 package no.nav.sifinnsynapi.oppslag
 
+import com.fasterxml.jackson.annotation.JsonProperty
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Qualifier
@@ -62,4 +63,4 @@ class OppslagsService(
     }
 }
 
-data class OppslagRespons(val aktør_id: String)
+data class OppslagRespons(@JsonProperty("aktør_id") val aktør_id: String)
