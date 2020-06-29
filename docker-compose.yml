@@ -92,7 +92,7 @@ services:
       - app-tier
     image: "rodolpheche/wiremock"
     volumes:
-      - "./wiremock/stubs:/home/wiremock"
+      - "./src/test/resources:/home/wiremock"
     ports:
       - "8000:8080"
 

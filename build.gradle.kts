@@ -31,7 +31,7 @@ val avroVersion by extra("1.9.2")
 val brukernotifikasjonVersion by extra("1.2020.03.25-11.14-c3621e6d211a")
 val logstashLogbackEncoderVersion by extra("6.3")
 val tokenValidationVersion by extra("1.1.5")
-val springCloudVersion by extra("Hoxton.SR5")
+val springCloudVersion by extra("Hoxton.SR6")
 val retryVersion by extra("1.3.0")
 
 
@@ -85,6 +85,9 @@ dependencies {
 
     // Spring Cloud
     implementation("org.springframework.cloud:spring-cloud-gcp-starter-secretmanager")
+    // https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-contract-stub-runner
+    testImplementation("org.springframework.cloud:spring-cloud-starter-contract-stub-runner")
+
 
     // SpringFox
     implementation("io.springfox:springfox-swagger2:$springfoxVersion")

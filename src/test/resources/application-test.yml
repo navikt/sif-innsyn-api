@@ -2,7 +2,7 @@ no.nav:
   apigw:
     apikey: test-key
   gateways:
-    k9-selvbetjening-oppslag: http://localhost:8080
+    k9-selvbetjening-oppslag: http://localhost:8000/k9-selvbetjening-oppslag-mock
   security:
     cors:
       allowed-origins: http://localhost:8080
@@ -10,10 +10,10 @@ no.nav:
 spring:
   rest:
     retry:
-      multiplier: 0
-      initialDelay: 1
-      maxDelay: 1
-      maxAttempts: 1
+      multiplier: 2
+      initialDelay: 10
+      maxDelay: 40
+      maxAttempts: 3
   datasource:
     url: jdbc:tc:postgresql:9.6.8:///sif-innsyn-db
     driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
