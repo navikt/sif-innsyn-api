@@ -41,6 +41,7 @@ class RestTemplateConfig(
                 .defaultHeader(X_CORRELATION_ID, UUID.randomUUID().toString())
                 .defaultHeader(CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .rootUri(oppslagsUrl)
+                .defaultMessageConverters()
                 .interceptors(tokenInterceptor, mdcInterceptor)
                 .build()
     }
