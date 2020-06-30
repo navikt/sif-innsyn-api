@@ -79,7 +79,8 @@ class PocHendelseKonsumentTest {
                 status = SøknadsStatus.MOTTATT,
                 søknadstype = Søknadstype.PP_SYKT_BARN,
                 førsteBehandlingsdato = null,
-                mottattDato = ZonedDateTime.now()
+                mottattDato = ZonedDateTime.now(),
+                søknad = mapOf()
         )
 
         val jsonString = mapper.writeValueAsString(hendelse)

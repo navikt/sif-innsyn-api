@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonProperty
 import no.nav.sifinnsynapi.common.*
+import org.json.JSONObject
 import java.time.LocalDate
 import java.time.ZonedDateTime
 
@@ -15,7 +16,8 @@ data class SøknadsHendelse @JsonCreator constructor(
         @JsonProperty("status") val status: SøknadsStatus,
         @JsonProperty("søknadstype") val søknadstype: Søknadstype,
         @JsonProperty("førsteBehandlingsdato") var førsteBehandlingsdato: LocalDate? = null,
-        @JsonProperty("mottattDato") @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX", timezone = "UTC") val mottattDato: ZonedDateTime) {
+        @JsonProperty("mottattDato") @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX", timezone = "UTC") val mottattDato: ZonedDateTime,
+        @JsonProperty("søknad") val søknad: Map<String, Any>) {
 
     override fun toString(): String {
         return "SøknadsHendelse(aktørId=$aktørId, fødselsnummer=$fødselsnummer, journalpostId='$journalpostId', saksnummer=$saksnummer, " +
@@ -27,7 +29,7 @@ data class SøknadsHendelse @JsonCreator constructor(
             saksId = saksnummer,
             fødselsnummer = fødselsnummer,
             journalpostId = journalpostId,
-            søknad = mapOf<String, Any>().toString(),
+            søknad = JSONObject(søknad).toString(),
             status = status,
             søknadstype = søknadstype,
             behandlingsdato = førsteBehandlingsdato,

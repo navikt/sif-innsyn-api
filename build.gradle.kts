@@ -87,6 +87,7 @@ dependencies {
     implementation("org.springframework.cloud:spring-cloud-gcp-starter-secretmanager")
     // https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-contract-stub-runner
     testImplementation("org.springframework.cloud:spring-cloud-starter-contract-stub-runner")
+    testImplementation("org.springframework.cloud:spring-cloud-starter")
 
 
     // SpringFox
@@ -104,7 +105,10 @@ dependencies {
     implementation("org.flywaydb:flyway-core")
     runtimeOnly("org.hibernate:hibernate-jpamodelgen")
     implementation("com.vladmihalcea:hibernate-types-52:2.3.4")
+    testImplementation("org.testcontainers:testcontainers:1.14.3")
     testImplementation("org.testcontainers:postgresql:1.14.3")
+    testImplementation("org.testcontainers:junit-jupiter:1.14.3")
+    testImplementation("com.playtika.testcontainers:embedded-postgresql:1.76")
 
     implementation("com.github.ben-manes.caffeine:caffeine")
 

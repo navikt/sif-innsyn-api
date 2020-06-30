@@ -1,13 +1,17 @@
 package no.nav.sifinnsynapi.omsorgspenger
 
+import assertk.assertThat
+import assertk.assertions.isEmpty
+import assertk.assertions.isNotEmpty
 import com.fasterxml.jackson.databind.ObjectMapper
+import no.nav.sifinnsynapi.common.AktørId
 import no.nav.sifinnsynapi.common.JournalfortMelding
 import no.nav.sifinnsynapi.common.Metadata
-import no.nav.sifinnsynapi.config.Topics
 import no.nav.sifinnsynapi.config.Topics.OMP_UTBETALING_SNF
+import no.nav.sifinnsynapi.poc.SøknadDAO
+import no.nav.sifinnsynapi.poc.SøknadRepository
 import org.apache.kafka.clients.producer.Producer
 import org.apache.kafka.clients.producer.ProducerRecord
-import org.apache.kafka.common.serialization.StringSerializer
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
@@ -15,28 +19,28 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.context.TestConfiguration
-import org.springframework.context.annotation.Bean
 import org.springframework.kafka.core.DefaultKafkaProducerFactory
 import org.springframework.kafka.test.EmbeddedKafkaBroker
 import org.springframework.kafka.test.context.EmbeddedKafka
 import org.springframework.kafka.test.utils.KafkaTestUtils
-import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit.jupiter.SpringExtension
+import org.springframework.transaction.annotation.EnableTransactionManagement
+import org.springframework.transaction.annotation.Transactional
 import java.time.ZonedDateTime
 import java.util.*
 
 @EmbeddedKafka(
-        topics = [Topics.OMP_UTBETALING_SNF, Topics.INNSYN_MOTTATT],
+        topics = [OMP_UTBETALING_SNF],
         bootstrapServersProperty = "spring.kafka.bootstrap-servers"
 )
 @ExtendWith(SpringExtension::class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@DirtiesContext
 @ActiveProfiles("test")
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+
 class OmsorgspengerutbetalingSNFHendelseKonsumentTest {
     @Autowired
     lateinit var mapper: ObjectMapper
@@ -47,18 +51,27 @@ class OmsorgspengerutbetalingSNFHendelseKonsumentTest {
 
     lateinit var produsent: Producer<String, Any>
 
+    @Autowired
+    lateinit var repository: SøknadRepository
+
+    @Autowired
+    lateinit var dataSource: DataSourceProperties
+
     companion object {
         private val log: Logger = LoggerFactory.getLogger(OmsorgspengerutbetalingSNFHendelseKonsumentTest::class.java)
+        private val aktørId = "123456744"
     }
 
     @BeforeAll
     fun setUp() {
         val configs: Map<String, Any> = HashMap(KafkaTestUtils.producerProps(embeddedKafkaBroker))
         produsent = DefaultKafkaProducerFactory<String, Any>(configs).createProducer()
-    }
 
-    @Test
-    fun `Konsumere hendelse fra oms utbetaling SNF`() {
+        log.info("----> Datasource URL: {}", dataSource.url)
+        log.info("----> Datasource USERNAME: {}", dataSource.username)
+        log.info("----> Datasource PASSWORD: {}", dataSource.password)
+
+
         val hendelse = OmsorgspengerutbetalingSNFHendelse(
                 metadata = Metadata(
                         version = 1,
@@ -70,7 +83,7 @@ class OmsorgspengerutbetalingSNFHendelseKonsumentTest {
                         "mottatt" to ZonedDateTime.now(),
                         "søker" to mapOf(
                                 "fødselsnummer" to "1234567",
-                                "aktørId" to "123456744"
+                                "aktørId" to aktørId
                         )
                 ),
                 journalførtMelding = JournalfortMelding(
@@ -84,7 +97,19 @@ class OmsorgspengerutbetalingSNFHendelseKonsumentTest {
         val pojo = mapper.readValue(jsonString, OmsorgspengerutbetalingSNFHendelse::class.java)
         log.info("hendelse tilbake til POJO: {}", pojo)
 
+        val søknaderFørProsessering: List<SøknadDAO> = repository.findAllByAktørId(AktørId.valueOf(aktørId))
+        assertThat(søknaderFørProsessering).isEmpty()
+
         produsent.send(ProducerRecord(OMP_UTBETALING_SNF, jsonString))
         produsent.flush()
     }
+
+    @Test
+    fun `Konsumere hendelse fra oms utbetaling SNF`() {
+
+        val søknaderEtterProsessering = repository.findAllByAktørId(AktørId.valueOf(aktørId))
+
+        assertThat(søknaderEtterProsessering).isNotEmpty()
+    }
 }
+

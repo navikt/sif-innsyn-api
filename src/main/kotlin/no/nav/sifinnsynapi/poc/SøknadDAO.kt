@@ -20,17 +20,16 @@ import javax.persistence.EnumType.STRING
         TypeDef(name = "jsonb", typeClass = JsonBinaryType::class)
 )
 @Entity(name = "søknad")
-@Table(name = "søknad")
 data class SøknadDAO(
-        @Id @Type(type = "pg-uuid") val id: UUID = UUID.randomUUID(),
-        @Embedded val aktørId: AktørId,
-        @Embedded val fødselsnummer: Fødselsnummer,
-        @Enumerated(STRING) val søknadstype: Søknadstype,
-        @Enumerated(STRING) val status: SøknadsStatus,
-        @Type(type = "jsonb") @Column(columnDefinition = "jsonb") val søknad: String,
-        val saksId: String?,
-        val journalpostId: String,
-        @CreatedDate val opprettet: LocalDateTime? = null,
-        @UpdateTimestamp val endret: LocalDateTime? = null,
-        val behandlingsdato: LocalDate? = null
+        @Column(name = "id") @Id @Type(type = "pg-uuid") val id: UUID = UUID.randomUUID(),
+        @Column(name = "aktør_id") @Embedded val aktørId: AktørId,
+        @Column(name = "fødselsnummer") @Embedded val fødselsnummer: Fødselsnummer,
+        @Column(name = "søknadstype") @Enumerated(STRING) val søknadstype: Søknadstype,
+        @Column(name = "status") @Enumerated(STRING) val status: SøknadsStatus,
+        @Column(name = "søknad", columnDefinition = "jsonb") @Type(type = "jsonb") val søknad: String,
+        @Column(name = "saks_id") val saksId: String?,
+        @Column(name = "journalpost_id") val journalpostId: String,
+        @Column(name = "opprettet") @CreatedDate val opprettet: LocalDateTime? = null,
+        @Column(name = "endret") @UpdateTimestamp val endret: LocalDateTime? = null,
+        @Column(name = "behandlingsdato") val behandlingsdato: LocalDate? = null
 )

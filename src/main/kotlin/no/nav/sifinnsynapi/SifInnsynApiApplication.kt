@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement
 @EnableJwtTokenValidation(ignore = ["org.springframework", "springfox.documentation"])
 @EnableRetry
 @EnableKafka
+@EnableTransactionManagement
 class SifInnsynApiApplication
 
 fun main(args: Array<String>) {

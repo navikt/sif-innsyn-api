@@ -9,5 +9,6 @@ CREATE TABLE søknad
     status          VARCHAR(50)      NOT NULL,
     opprettet       timestamp        NOT NULL,
     endret          timestamp        NOT NULL,
-    behandlingsdato timestamp
+    behandlingsdato timestamp,
+    søknad          jsonb
 )
