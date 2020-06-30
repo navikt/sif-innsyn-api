@@ -66,14 +66,19 @@ spring:
       enable-auto-commit: false
       bootstrap-servers:
       group-id: group_id
+      client-id: sif-innsyn-api
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       ssl:
         trust-store-location: file:${javax.net.ssl.trustStore}
         trust-store-password: ${javax.net.ssl.trustStorePassword}
-#    producer:
-#      bootstrap-servers: #b27apvl00045.preprod.local:8443,b27apvl00046.preprod.local:8443,b27apvl00047.preprod.local:8443
-#      key-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
-#      value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
-#      transaction-id-prefix: tx.
+    producer:
+      bootstrap-servers:
+      key-serializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-serializer: org.apache.kafka.common.serialization.StringDeserializer
+      transaction-id-prefix: tx.
+      ssl:
+        trust-store-location: file:${javax.net.ssl.trustStore}
+        trust-store-password: ${javax.net.ssl.trustStorePassword}
+      client-id: sif-innsyn-api

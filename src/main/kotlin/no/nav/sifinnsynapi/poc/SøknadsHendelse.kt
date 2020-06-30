@@ -11,10 +11,10 @@ data class SøknadsHendelse @JsonCreator constructor(
         @JsonProperty("aktørId") val aktørId: AktørId,
         @JsonProperty("fødselsnummer") val fødselsnummer: Fødselsnummer,
         @JsonProperty("journalpostId") val journalpostId: String,
-        @JsonProperty("saksnummer") var saksnummer: String?,
+        @JsonProperty("saksnummer") var saksnummer: String? = null,
         @JsonProperty("status") val status: SøknadsStatus,
         @JsonProperty("søknadstype") val søknadstype: Søknadstype,
-        @JsonProperty("førsteBehandlingsdato") var førsteBehandlingsdato: LocalDate?,
+        @JsonProperty("førsteBehandlingsdato") var førsteBehandlingsdato: LocalDate? = null,
         @JsonProperty("mottattDato") @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX", timezone = "UTC") val mottattDato: ZonedDateTime) {
 
     override fun toString(): String {
