@@ -105,7 +105,6 @@ dependencies {
     implementation("org.flywaydb:flyway-core")
     runtimeOnly("org.hibernate:hibernate-jpamodelgen")
     implementation("com.vladmihalcea:hibernate-types-52:2.3.4")
-    testImplementation("org.testcontainers:testcontainers:1.14.3")
     testImplementation("org.testcontainers:postgresql:1.14.3")
     testImplementation("org.testcontainers:junit-jupiter:1.14.3")
     testImplementation("com.playtika.testcontainers:embedded-postgresql:1.76")

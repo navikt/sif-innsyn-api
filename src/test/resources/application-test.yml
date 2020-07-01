@@ -14,6 +14,9 @@ spring:
       initialDelay: 10
       maxDelay: 40
       maxAttempts: 3
+  datasource:
+    url: jdbc:tc:postgresql:9.6:///
+    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
   flyway:
     enabled: true
   jpa:
@@ -22,6 +25,3 @@ spring:
   kafka:
     consumer:
       group-id: group_id
-#logging:
-#  level:
-#    root: DEBUG
