@@ -11,7 +11,8 @@ import no.nav.sifinnsynapi.config.Topics.INNSYN_MOTTATT
 import org.apache.kafka.clients.producer.Producer
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.apache.kafka.common.serialization.StringSerializer
-import org.junit.Ignore
+import org.awaitility.kotlin.await
+import org.awaitility.kotlin.untilAsserted
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
@@ -28,6 +29,7 @@ import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.time.ZonedDateTime
+import java.util.concurrent.TimeUnit.SECONDS
 
 
 @EmbeddedKafka(
@@ -65,6 +67,10 @@ class PocHendelseKonsumentTest {
 
         val configs: Map<String, Any> = HashMap(KafkaTestUtils.producerProps(embeddedKafkaBroker))
         produsent = DefaultKafkaProducerFactory(configs, StringSerializer(), StringSerializer()).createProducer()
+    }
+
+    @Test
+    fun `Prosesser og lagre melding`() {
 
         val hendelse = SøknadsHendelse(
                 aktørId = AktørId.valueOf("1234567"),
@@ -86,13 +92,12 @@ class PocHendelseKonsumentTest {
 
         produsent.send(ProducerRecord(INNSYN_MOTTATT, jsonString))
         produsent.flush()
-    }
 
-    @Test
-    fun `Prosesser og lagre melding`() {
-        verify(exactly = 1) {
-            val any = any<SøknadDAO>()
-            søknadRepository.save(any)
+        await.atMost(5, SECONDS) untilAsserted {
+            verify(exactly = 1) {
+                @Suppress("RemoveExplicitTypeArguments")
+                søknadRepository.save(any<SøknadDAO>())
+            }
         }
     }
 }
