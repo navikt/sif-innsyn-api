@@ -65,11 +65,6 @@ class PocHendelseKonsumentTest {
 
         val configs: Map<String, Any> = HashMap(KafkaTestUtils.producerProps(embeddedKafkaBroker))
         produsent = DefaultKafkaProducerFactory(configs, StringSerializer(), StringSerializer()).createProducer()
-    }
-
-    @Ignore
-    @Test
-    fun `Prosesser og lagre melding`() {
 
         val hendelse = SøknadsHendelse(
                 aktørId = AktørId.valueOf("1234567"),
@@ -91,7 +86,10 @@ class PocHendelseKonsumentTest {
 
         produsent.send(ProducerRecord(INNSYN_MOTTATT, jsonString))
         produsent.flush()
+    }
 
+    @Test
+    fun `Prosesser og lagre melding`() {
         verify(exactly = 1) {
             val any = any<SøknadDAO>()
             søknadRepository.save(any)
