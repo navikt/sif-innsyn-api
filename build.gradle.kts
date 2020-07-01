@@ -106,10 +106,6 @@ dependencies {
     runtimeOnly("org.hibernate:hibernate-jpamodelgen")
     implementation("com.vladmihalcea:hibernate-types-52:2.3.4")
     testImplementation("org.testcontainers:postgresql:1.14.3")
-    testImplementation("org.testcontainers:junit-jupiter:1.14.3")
-    testImplementation("com.playtika.testcontainers:embedded-postgresql:1.76")
-
-    implementation("com.github.ben-manes.caffeine:caffeine")
 
     // Jackson
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
@@ -122,10 +118,6 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
 
-    // Project Reactor
-    testImplementation("io.projectreactor:reactor-test")
-    implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
-
     //Kafka
     implementation("org.apache.avro:avro:$avroVersion")
     implementation("io.confluent:kafka-connect-avro-converter:$confluentVersion")
@@ -135,6 +127,8 @@ dependencies {
 
     // Div
     implementation("org.json:json:20200518")
+    testImplementation("org.awaitility:awaitility-kotlin:4.0.3")
+    implementation("com.github.ben-manes.caffeine:caffeine")
 
 
 }
