@@ -17,7 +17,7 @@ class KafkaConfig(val kafkaTemplate: KafkaTemplate<String, Any>, val objectMappe
         val factory = ConcurrentKafkaListenerContainerFactory<String, String>()
         factory.consumerFactory = consumerFactory
         factory.setReplyTemplate(kafkaTemplate)
-        factory.setMessageConverter(JsonMessageConverter(objectMapper))
+        factory.setMessageConverter(JsonMessageConverter())
         return factory
     }
 }

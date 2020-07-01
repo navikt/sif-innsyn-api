@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import no.nav.sifinnsynapi.common.AktørId
 import no.nav.sifinnsynapi.common.JournalfortMelding
 import no.nav.sifinnsynapi.common.Metadata
+import no.nav.sifinnsynapi.common.TopicEntry
 import no.nav.sifinnsynapi.config.Topics.OMP_UTBETALING_SNF
 import no.nav.sifinnsynapi.poc.SøknadDAO
 import no.nav.sifinnsynapi.poc.SøknadRepository
@@ -19,6 +20,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.kafka.core.DefaultKafkaProducerFactory
@@ -42,6 +44,7 @@ import java.util.concurrent.TimeUnit
 
 class OmsorgspengerutbetalingSNFHendelseKonsumentTest {
     @Autowired
+    @Qualifier("testMapper")
     lateinit var mapper: ObjectMapper
 
     @Suppress("SpringJavaInjectionPointsAutowiringInspection")
@@ -73,8 +76,8 @@ class OmsorgspengerutbetalingSNFHendelseKonsumentTest {
 
     @Test
     fun `Konsumere hendelse fra oms utbetaling SNF`() {
-        val hendelse = mapOf(
-                "data" to OmsorgspengerutbetalingSNFHendelse(
+        val hendelse = TopicEntry(
+                data = OmsorgspengerutbetalingSNFHendelse(
                         metadata = Metadata(
                                 version = 1,
                                 correlationId = UUID.randomUUID().toString(),
@@ -97,7 +100,7 @@ class OmsorgspengerutbetalingSNFHendelseKonsumentTest {
         val jsonString = mapper.writeValueAsString(hendelse)
         log.info("hendelse som jsonString: {}", jsonString)
 
-        val pojo = mapper.readValue(jsonString, OmsorgspengerutbetalingSNFHendelse::class.java)
+        val pojo = mapper.readValue(jsonString, TopicEntry::class.java)
         log.info("hendelse tilbake til POJO: {}", pojo)
 
         val søknaderFørProsessering: List<SøknadDAO> = repository.findAllByAktørId(AktørId.valueOf(aktørId))
