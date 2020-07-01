@@ -22,7 +22,6 @@ class OmsorgspengerutbetalingSNFHendelseKonsument(
         private val LOG = LoggerFactory.getLogger(OmsorgspengerutbetalingSNFHendelseKonsument::class.java)
     }
 
-    @Transactional
     @KafkaListener(topics = [OMP_UTBETALING_SNF], groupId = "#{'\${spring.kafka.consumer.group-id}'}", containerFactory = "kafkaJsonListenerContainerFactory")
     fun konsumer(@Payload hendelse: TopicEntry) {
         LOG.info("Mottok hendelse fra omsorgspengerutbetaling SNF {}", hendelse)
