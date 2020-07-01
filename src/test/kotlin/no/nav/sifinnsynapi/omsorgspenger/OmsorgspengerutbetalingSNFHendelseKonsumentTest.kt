@@ -13,6 +13,7 @@ import no.nav.sifinnsynapi.poc.SøknadRepository
 import org.apache.kafka.clients.producer.Producer
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.awaitility.kotlin.await
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
@@ -27,6 +28,7 @@ import org.springframework.kafka.core.DefaultKafkaProducerFactory
 import org.springframework.kafka.test.EmbeddedKafkaBroker
 import org.springframework.kafka.test.context.EmbeddedKafka
 import org.springframework.kafka.test.utils.KafkaTestUtils
+import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.time.ZonedDateTime
@@ -74,6 +76,11 @@ class OmsorgspengerutbetalingSNFHendelseKonsumentTest {
         log.info("----> Datasource PASSWORD: {}", dataSource.password)
     }
 
+    @AfterEach
+    internal fun tearDown() {
+        repository.deleteAll()
+    }
+
     @Test
     fun `Konsumere hendelse fra oms utbetaling SNF`() {
         val hendelse = TopicEntry(
@@ -109,11 +116,16 @@ class OmsorgspengerutbetalingSNFHendelseKonsumentTest {
         produsent.send(ProducerRecord(OMP_UTBETALING_SNF, jsonString))
         produsent.flush()
 
-        await.atMost(5, TimeUnit.SECONDS).until { repository.findAllByAktørId(AktørId.valueOf(aktørId)).isNotEmpty() }
+        await.atMost(5, TimeUnit.SECONDS).until {
+            repository.findAllByAktørId(AktørId.valueOf(aktørId)).isNotEmpty()
+        }
+
+
     }
 
     @Test
     fun `Skipper dersom duplikat`() {
+
         val hendelse = TopicEntry(
                 data = OmsorgspengerutbetalingSNFHendelse(
                         metadata = Metadata(
