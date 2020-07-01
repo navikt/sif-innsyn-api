@@ -45,10 +45,6 @@ class OmsorgspengerutbetalingSNFHendelseKonsument(
         LOG.info("Lagrer SøknadsHendelse...")
         val søknadDAO = søknadsHendelse.tilSøknadDAO()
         val save = repository.save(søknadDAO)
-        if (save == null) {
-            throw IllegalArgumentException("NOOOOOOOOOOOOOOOOOOOOOOOOOOO!!!!!!!!!!!!!!!!!!!!")
-        }
-        assertNotNull(save)
         LOG.info("SøknadsHendelse lagret: {}", save)
     }
 }
