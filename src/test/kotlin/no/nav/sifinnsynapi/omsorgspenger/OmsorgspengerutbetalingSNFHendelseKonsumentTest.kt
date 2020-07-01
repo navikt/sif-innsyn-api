@@ -73,22 +73,24 @@ class OmsorgspengerutbetalingSNFHendelseKonsumentTest {
 
     @Test
     fun `Konsumere hendelse fra oms utbetaling SNF`() {
-        val hendelse = OmsorgspengerutbetalingSNFHendelse(
-                metadata = Metadata(
-                        version = 1,
-                        correlationId = UUID.randomUUID().toString(),
-                        requestId = UUID.randomUUID().toString()
-                ),
-                melding = mapOf(
-                        "soknadId" to UUID.randomUUID().toString(),
-                        "mottatt" to ZonedDateTime.now(),
-                        "søker" to mapOf(
-                                "fødselsnummer" to "1234567",
-                                "aktørId" to aktørId
+        val hendelse = mapOf(
+                "data" to OmsorgspengerutbetalingSNFHendelse(
+                        metadata = Metadata(
+                                version = 1,
+                                correlationId = UUID.randomUUID().toString(),
+                                requestId = UUID.randomUUID().toString()
+                        ),
+                        melding = mapOf(
+                                "soknadId" to UUID.randomUUID().toString(),
+                                "mottatt" to ZonedDateTime.now(),
+                                "søker" to mapOf(
+                                        "fødselsnummer" to "1234567",
+                                        "aktørId" to aktørId
+                                )
+                        ),
+                        journalførtMelding = JournalfortMelding(
+                                journalpostId = "123456789"
                         )
-                ),
-                journalførtMelding = JournalfortMelding(
-                        journalpostId = "123456789"
                 )
         )
 

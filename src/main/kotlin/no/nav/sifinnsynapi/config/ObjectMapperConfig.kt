@@ -16,6 +16,7 @@ class ObjectMapperConfig {
         configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
         configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
         configure(SerializationFeature.WRITE_DURATIONS_AS_TIMESTAMPS, false)
+        configure(DeserializationFeature.UNWRAP_ROOT_VALUE, true)
         propertyNamingStrategy = PropertyNamingStrategy.LOWER_CAMEL_CASE
         registerModule(JavaTimeModule())
     }
