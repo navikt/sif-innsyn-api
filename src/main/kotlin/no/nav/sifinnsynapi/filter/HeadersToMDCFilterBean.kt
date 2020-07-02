@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletRequest
 @Order(Ordered.HIGHEST_PRECEDENCE)
 class HeadersToMDCFilterBean(
         private val generator: CallIdGenerator,
-        @Value("\${spring.application.name:fpinfo-historikk}") private val applicationName: String) : GenericFilterBean() {
+        @Value("\${spring.application.name:sif-innsyn-api}") private val applicationName: String) : GenericFilterBean() {
 
     @Throws(IOException::class, ServletException::class)
     override fun doFilter(request: ServletRequest, response: ServletResponse, chain: FilterChain) {
