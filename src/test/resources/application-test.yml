@@ -4,6 +4,12 @@ no.nav:
   gateways:
     k9-selvbetjening-oppslag: http://localhost:8000/k9-selvbetjening-oppslag-mock
   security:
+    jwt:
+      issuer:
+        selvbetjening:
+          discoveryUrl: http://metadata
+          accepted_audience: aud-localhost
+          cookie_name: localhost-idtoken
     cors:
       allowed-origins: http://localhost:8080
 
@@ -24,4 +30,5 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQL9Dialect
   kafka:
     consumer:
+      retry-interval: 5_000 # Egendefinert property
       group-id: group_id
