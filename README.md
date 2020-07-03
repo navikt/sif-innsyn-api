@@ -41,6 +41,12 @@ Distribusjon av tjenesten er gjort med bruk av Github Actions.
 Push/merge til master branche vil teste, bygge og deploye til produksjonsmiljø og testmiljø.
 
 # 9. Utviklingsmiljø
+## Forutsetninger
+* docker
+* docker-compose
+* Java 11
+* Kubectl
+
 ## Bygge Prosjekt
 For å bygge kode, kjør:
 
@@ -52,7 +58,12 @@ For å bygge kode, kjør:
 For å kjøre kode, kjør:
 
 ```shell script
-docker build --tag sif-innsyn-api-local . && docker-compose up --build 
+./gradlew clean build && docker build --tag sif-innsyn-api-local . && docker-compose up --build
+```
+
+Eller for å hoppe over tester under bygging:
+```shell script
+./gradlew clean build -x test && docker build --tag sif-innsyn-api-local . && docker-compose up --build
 ```
 
 ### Produsere kafka meldinger
@@ -79,17 +90,36 @@ selvbetjening-idtoken=eyJhbGciOiJSUzI1NiIsInR5cCI6Ikp.eyJzdWIiOiIwMTAxMDExMjM0NS
 
 # 10. Drift og støtte
 ## Logging
+Loggene til tjenesten kan leses på to måter:
 
+### Kibana
+For [dev-gcp: https://logs.adeo.no/goto/7db198143c27f93228b17f3b07f16e39](https://logs.adeo.no/goto/7db198143c27f93228b17f3b07f16e39)
+
+For [prod-gcp: https://logs.adeo.no/goto/e796ec96af7bb1032a11d388e6849451](https://logs.adeo.no/goto/e796ec96af7bb1032a11d388e6849451)
+
+### Kubectl
+For dev-gcp:
+```shell script
+kubectl config use-context dev-gcp
+kubectl get pods -n dusseldorf | grep sif-innsyn-api
+kubectl logs -f sif-innsyn-api-<POD-ID> --namespace dusseldorf -c sif-innsyn-api
+```
+
+For prod-gcp:
+```shell script
+kubectl config use-context prod-gcp
+kubectl get pods -n dusseldorf | grep sif-innsyn-api
+kubectl logs -f sif-innsyn-api-<POD-ID> --namespace dusseldorf -c sif-innsyn-api
+```
 
 ## Alarmer
 Vi bruker [nais-alerts](https://doc.nais.io/observability/alerts) for å sette opp alarmer. Disse finner man konfigurert i [nais/alerterator.yml](nais/alerterator.yml).
 
 ## Metrics
-n/a
 
 ## Henvendelser
 Spørsmål koden eller prosjekttet kan rettes til team dusseldorf på:
-* \#sif-brukerdialog
-* \#sif-innsynsplattform
+* [\#sif-brukerdialog](https://nav-it.slack.com/archives/CQ7QKSHJR)
+* [\#sif-innsynsplattform](https://nav-it.slack.com/archives/C013ZJTKUNB)
 
 
