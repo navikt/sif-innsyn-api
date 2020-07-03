@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("org.springframework.boot") version "2.2.7.RELEASE"
+    id("org.springframework.boot") version "2.3.1.RELEASE"
     id("io.spring.dependency-management") version "1.0.9.RELEASE"
     kotlin("jvm") version "1.3.72"
     kotlin("plugin.spring") version "1.3.72"
@@ -11,13 +11,6 @@ plugins {
 group = "no.nav"
 version = "0.0.1-SNAPSHOT"
 java.sourceCompatibility = JavaVersion.VERSION_11
-
-val developmentOnly by configurations.creating
-configurations {
-    runtimeClasspath {
-        extendsFrom(developmentOnly)
-    }
-}
 
 configurations {
     compileOnly {
@@ -33,8 +26,6 @@ val logstashLogbackEncoderVersion by extra("6.3")
 val tokenValidationVersion by extra("1.1.5")
 val springCloudVersion by extra("Hoxton.SR6")
 val retryVersion by extra("1.3.0")
-
-
 
 
 repositories {
@@ -77,10 +68,6 @@ dependencies {
     }
     testImplementation("org.junit.jupiter:junit-jupiter-api")
     testImplementation("org.junit.jupiter:junit-jupiter-engine")
-    testImplementation("com.ninja-squad:springmockk:2.0.1")
-    testImplementation("io.mockk:mockk:1.10.0")
-
-
     //developmentOnly("org.springframework.boot:spring-boot-devtools")
 
     // Spring Cloud
@@ -88,7 +75,6 @@ dependencies {
     // https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-contract-stub-runner
     testImplementation("org.springframework.cloud:spring-cloud-starter-contract-stub-runner")
     testImplementation("org.springframework.cloud:spring-cloud-starter")
-
 
     // SpringFox
     implementation("io.springfox:springfox-swagger2:$springfoxVersion")
@@ -109,7 +95,6 @@ dependencies {
 
     // Jackson
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-    testImplementation("com.willowtreeapps.assertk:assertk-jvm:0.21")
 
     // Kotlin
     implementation("org.jetbrains.kotlin:kotlin-reflect")
@@ -125,12 +110,14 @@ dependencies {
     implementation("org.springframework.kafka:spring-kafka")
     testImplementation("org.springframework.kafka:spring-kafka-test")
 
-    // Div
+    // Diverse
     implementation("org.json:json:20200518")
-    testImplementation("org.awaitility:awaitility-kotlin:4.0.3")
     implementation("com.github.ben-manes.caffeine:caffeine")
 
-
+    testImplementation("org.awaitility:awaitility-kotlin:4.0.3")
+    testImplementation("com.willowtreeapps.assertk:assertk-jvm:0.21")
+    testImplementation("com.ninja-squad:springmockk:2.0.1")
+    testImplementation("io.mockk:mockk:1.10.0")
 }
 
 dependencyManagement {
