@@ -13,6 +13,7 @@ no.nav:
     cors:
       allowed-origins: http://localhost:8080
 
+
 spring:
   rest:
     retry:
@@ -32,3 +33,5 @@ spring:
     consumer:
       retry-interval: 5_000 # Egendefinert property
       group-id: group_id
+wiremock:
+  reset-mappings-after-each-test: true
