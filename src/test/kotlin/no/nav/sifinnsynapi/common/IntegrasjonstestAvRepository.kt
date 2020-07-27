@@ -1,10 +1,6 @@
-package no.nav.sifinnsynapi.integrasjonRepository
+package no.nav.sifinnsynapi.common
 
 import no.nav.security.token.support.test.spring.TokenGeneratorConfiguration
-import no.nav.sifinnsynapi.common.AktørId
-import no.nav.sifinnsynapi.common.Fødselsnummer
-import no.nav.sifinnsynapi.common.SøknadsStatus
-import no.nav.sifinnsynapi.common.Søknadstype
 import no.nav.sifinnsynapi.poc.SøknadDAO
 import no.nav.sifinnsynapi.poc.SøknadRepository
 import org.junit.Assert.assertFalse
