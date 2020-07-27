@@ -26,6 +26,7 @@ class IntegrasjonstestAvRepository {
 
     companion object {
         private val aktørId = AktørId.valueOf("123456")
+        private val aktørIdSomIkkeEksisterer = AktørId.valueOf("54321")
         private val fødselsnummer = Fødselsnummer.valueOf("1234567")
         private val journalpostId = "12345"
     }
@@ -43,7 +44,7 @@ class IntegrasjonstestAvRepository {
 
         val found = repository.findByJournalpostId(journalpostId)
 
-        assert(found != null && found.journalpostId == journalpostId)
+        assert(found != null && found.journalpostId == journalpostId && found.aktørId == aktørId)
     }
 
     @Test
@@ -74,8 +75,6 @@ class IntegrasjonstestAvRepository {
 
     @Test
     fun `Hente søknader som ikke finnes basert på aktørId`(){
-        val aktørIdSomIkkeEksisterer = AktørId.valueOf("54321")
-
         var søknadDAO = lagSøknadDAO()
         repository.save(søknadDAO)
 
@@ -97,9 +96,7 @@ class IntegrasjonstestAvRepository {
 
     @Test
     fun `Sjekke om søknad eksisterer ved bruk av aktørId som ikke eksisterer`(){
-        val aktørIdSomIkkeEksisterer = AktørId.valueOf("54321")
         val søknadDAO = lagSøknadDAO()
-
         repository.save(søknadDAO)
 
         val found = repository.existsSøknadDAOByAktørIdAndJournalpostId(aktørIdSomIkkeEksisterer, journalpostId)
@@ -109,15 +106,19 @@ class IntegrasjonstestAvRepository {
 
     @Test
     fun `Lagrer to ulike søknader med forskjellig journalpostId men lik aktørId`(){
-        val søknadDAO = lagSøknadDAO()
+        var søknadDAO = lagSøknadDAO()
         repository.save(søknadDAO)
-
-        val ulikJournalpostId = "1111111"
-        val nySøknadDAO = lagSøknadDAO(customJournalpostId = ulikJournalpostId)
-        repository.save(nySøknadDAO)
 
         var found = repository.existsSøknadDAOByAktørIdAndJournalpostId(aktørId, journalpostId)
         assertTrue(found)
+
+        val journalpostIdSomIkkeEksisterer = "222222"
+        found = repository.existsSøknadDAOByAktørIdAndJournalpostId(aktørId, journalpostIdSomIkkeEksisterer)
+        assertFalse(found)
+
+        val ulikJournalpostId = "1111111"
+        søknadDAO = lagSøknadDAO(customJournalpostId = ulikJournalpostId)
+        repository.save(søknadDAO)
 
         found = repository.existsSøknadDAOByAktørIdAndJournalpostId(aktørId, ulikJournalpostId)
         assertTrue(found)
