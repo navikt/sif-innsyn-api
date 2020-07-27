@@ -48,7 +48,6 @@ import java.time.ZonedDateTime
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-
 @EmbeddedKafka( // Setter opp og tilgjengligjør embeded kafka broker
         topics = [OMP_UTBETALING_SNF],
         bootstrapServersProperty = "spring.kafka.bootstrap-servers" // Setter bootstrap-servers for consumer og producer.
