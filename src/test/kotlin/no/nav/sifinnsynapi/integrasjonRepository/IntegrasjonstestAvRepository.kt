@@ -29,6 +29,7 @@ class IntegrasjonstestAvRepository {
     companion object {
         private val aktørId = AktørId.valueOf("123456")
         private val fødselsnummer = Fødselsnummer.valueOf("1234567")
+        private val journalpostId = "12345"
     }
 
     @AfterEach
@@ -38,9 +39,7 @@ class IntegrasjonstestAvRepository {
 
     @Test
     fun `Lagrer søknad i repository og henter opp basert på journalpostId`() {
-        val journalpostId = "12345"
-
-        val søknadDAO = lagSøknadDAO(journalpostId)
+        val søknadDAO = lagSøknadDAO()
 
         repository.save(søknadDAO)
 
@@ -51,10 +50,9 @@ class IntegrasjonstestAvRepository {
 
     @Test
      fun `Prøver å hente opp søknad som ikke eksisterer basert på journalpostId`() {
-        val journalpostId = "12345"
         val journalpostIdSomIkkeEksisterer = "54321"
 
-        val søknadDAO = lagSøknadDAO(journalpostId)
+        val søknadDAO = lagSøknadDAO()
 
         repository.save(søknadDAO)
 
@@ -63,9 +61,34 @@ class IntegrasjonstestAvRepository {
         assert(found == null)
     }
 
-    private fun lagSøknadDAO(journalpostId: String): SøknadDAO = SøknadDAO(
+    @Test
+    fun `Lagre to søknader i repository og finne de basert på aktørId`(){
+        var søknadDAO = lagSøknadDAO()
+        repository.save(søknadDAO)
+
+        søknadDAO = lagSøknadDAO()
+        repository.save(søknadDAO)
+
+        val found = repository.findAllByAktørId(aktørId)
+
+        assert(found.size == 2)
+    }
+
+    @Test
+    fun `Hente søknader som ikke finnes basert på aktørId`(){
+        val aktørIdSomIkkeEksisterer = AktørId.valueOf("54321")
+
+        var søknadDAO = lagSøknadDAO()
+        repository.save(søknadDAO)
+
+        val found = repository.findAllByAktørId(aktørIdSomIkkeEksisterer)
+
+        assert(found.size == 0)
+    }
+
+    private fun lagSøknadDAO(customAktørId: AktørId = aktørId): SøknadDAO = SøknadDAO(
             id = UUID.randomUUID(),
-            aktørId = aktørId,
+            aktørId = customAktørId,
             fødselsnummer = fødselsnummer,
             søknadstype = Søknadstype.OMP_UTBETALING_SNF,
             status = SøknadsStatus.MOTTATT,
