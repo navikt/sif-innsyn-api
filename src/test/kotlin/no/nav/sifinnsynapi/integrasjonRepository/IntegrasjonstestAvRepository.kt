@@ -1,6 +1,5 @@
 package no.nav.sifinnsynapi.integrasjonRepository
 
-import junit.framework.Assert.assertFalse
 import no.nav.security.token.support.test.spring.TokenGeneratorConfiguration
 import no.nav.sifinnsynapi.common.AktørId
 import no.nav.sifinnsynapi.common.Fødselsnummer
@@ -8,6 +7,8 @@ import no.nav.sifinnsynapi.common.SøknadsStatus
 import no.nav.sifinnsynapi.common.Søknadstype
 import no.nav.sifinnsynapi.poc.SøknadDAO
 import no.nav.sifinnsynapi.poc.SøknadRepository
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
@@ -17,10 +18,6 @@ import org.springframework.context.annotation.Import
 import org.springframework.test.context.ActiveProfiles
 import java.time.LocalDateTime
 import java.util.*
-import assertk.assertThat
-import assertk.assertions.isEmpty
-import assertk.assertions.isEqualTo
-import junit.framework.Assert.assertTrue
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ActiveProfiles("test")
