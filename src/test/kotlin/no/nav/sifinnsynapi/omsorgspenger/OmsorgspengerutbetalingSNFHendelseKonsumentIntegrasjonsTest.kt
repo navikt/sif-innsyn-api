@@ -99,7 +99,7 @@ class OmsorgspengerutbetalingSNFHendelseKonsumentIntegrasjonsTest {
 
     @AfterEach
     internal fun tearDown() {
-        repository.deleteAll()
+        repository.deleteAll() //Tømmer databasen mellom hver test
     }
 
     @Test
