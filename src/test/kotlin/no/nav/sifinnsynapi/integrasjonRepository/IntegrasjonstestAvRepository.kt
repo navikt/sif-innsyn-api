@@ -1,5 +1,6 @@
 package no.nav.sifinnsynapi.integrasjonRepository
 
+import junit.framework.Assert.assertFalse
 import no.nav.security.token.support.test.spring.TokenGeneratorConfiguration
 import no.nav.sifinnsynapi.common.AktørId
 import no.nav.sifinnsynapi.common.Fødselsnummer
@@ -16,6 +17,10 @@ import org.springframework.context.annotation.Import
 import org.springframework.test.context.ActiveProfiles
 import java.time.LocalDateTime
 import java.util.*
+import assertk.assertThat
+import assertk.assertions.isEmpty
+import assertk.assertions.isEqualTo
+import junit.framework.Assert.assertTrue
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ActiveProfiles("test")
@@ -62,7 +67,7 @@ class IntegrasjonstestAvRepository {
     }
 
     @Test
-    fun `Lagre to søknader i repository og finne de basert på aktørId`(){
+    fun `Lagre to søknader med samme aktørId i repository og finne de basert på aktørId`(){
         var søknadDAO = lagSøknadDAO()
         repository.save(søknadDAO)
 
@@ -83,16 +88,58 @@ class IntegrasjonstestAvRepository {
 
         val found = repository.findAllByAktørId(aktørIdSomIkkeEksisterer)
 
-        assert(found.size == 0)
+        assert(found.isEmpty())
     }
 
-    private fun lagSøknadDAO(customAktørId: AktørId = aktørId): SøknadDAO = SøknadDAO(
+    @Test
+    fun `Sjekke som søknad eksisterer basert på aktørId og journalpostId`(){
+        val søknadDAO = lagSøknadDAO()
+
+        repository.save(søknadDAO)
+
+        val found = repository.existsSøknadDAOByAktørIdAndJournalpostId(aktørId, journalpostId)
+
+        assert(found)
+    }
+
+    @Test
+    fun `Sjekke om søknad eksisterer ved bruk av aktørId som ikke eksisterer`(){
+        val aktørIdSomIkkeEksisterer = AktørId.valueOf("54321")
+        val søknadDAO = lagSøknadDAO()
+
+        repository.save(søknadDAO)
+
+        val found = repository.existsSøknadDAOByAktørIdAndJournalpostId(aktørIdSomIkkeEksisterer, journalpostId)
+
+        assertFalse(found)
+    }
+
+    @Test
+    fun `Lagrer to ulike søknader med forskjellig journalpostId men lik aktørId`(){
+        val søknadDAO = lagSøknadDAO()
+        repository.save(søknadDAO)
+
+        val ulikJournalpostId = "1111111"
+        val nySøknadDAO = lagSøknadDAO(customJournalpostId = ulikJournalpostId)
+        repository.save(nySøknadDAO)
+
+        var found = repository.existsSøknadDAOByAktørIdAndJournalpostId(aktørId, journalpostId)
+        assertTrue(found)
+
+        found = repository.existsSøknadDAOByAktørIdAndJournalpostId(aktørId, ulikJournalpostId)
+        assertTrue(found)
+    }
+
+
+    private fun lagSøknadDAO(
+            customAktørId: AktørId = aktørId,
+            customJournalpostId: String = journalpostId): SøknadDAO = SøknadDAO(
             id = UUID.randomUUID(),
             aktørId = customAktørId,
             fødselsnummer = fødselsnummer,
             søknadstype = Søknadstype.OMP_UTBETALING_SNF,
             status = SøknadsStatus.MOTTATT,
-            journalpostId = journalpostId,
+            journalpostId = customJournalpostId,
             saksId = "2222",
             opprettet = LocalDateTime.now(),
             søknad =
