@@ -40,24 +40,8 @@ class IntegrasjonstestAvRepository {
     fun `Lagrer søknad i repository og henter opp basert på journalpostId`() {
         val journalpostId = "12345"
 
-        val søknadDAO = SøknadDAO(
-                id = UUID.randomUUID(),
-                aktørId = aktørId,
-                fødselsnummer = fødselsnummer,
-                søknadstype = Søknadstype.OMP_UTBETALING_SNF,
-                status = SøknadsStatus.MOTTATT,
-                journalpostId = journalpostId,
-                saksId = "2222",
-                opprettet = LocalDateTime.now(),
-                søknad =
-                //language=json
-                """
-                    {
-                        "søknadId": "05ce3630-76eb-40f4-87a3-a5d55af58e40",
-                        "språk": "nb"
-                    }
-                    """.trimIndent()
-        )
+        val søknadDAO = lagSøknadDAO(journalpostId)
+
         repository.save(søknadDAO)
 
         val found = repository.findByJournalpostId(journalpostId)
@@ -70,28 +54,31 @@ class IntegrasjonstestAvRepository {
         val journalpostId = "12345"
         val journalpostIdSomIkkeEksisterer = "54321"
 
-        val søknadDAO = SøknadDAO(
-                id = UUID.randomUUID(),
-                aktørId = aktørId,
-                fødselsnummer = fødselsnummer,
-                søknadstype = Søknadstype.OMP_UTBETALING_SNF,
-                status = SøknadsStatus.MOTTATT,
-                journalpostId = journalpostId,
-                saksId = "2222",
-                opprettet = LocalDateTime.now(),
-                søknad =
-                //language=json
-                """
-                    {
-                        "søknadId": "05ce3630-76eb-40f4-87a3-a5d55af58e40",
-                        "språk": "nb"
-                    }
-                    """.trimIndent()
-        )
+        val søknadDAO = lagSøknadDAO(journalpostId)
+
         repository.save(søknadDAO)
 
         val found = repository.findByJournalpostId(journalpostIdSomIkkeEksisterer)
 
         assert(found == null)
     }
+
+    private fun lagSøknadDAO(journalpostId: String): SøknadDAO = SøknadDAO(
+            id = UUID.randomUUID(),
+            aktørId = aktørId,
+            fødselsnummer = fødselsnummer,
+            søknadstype = Søknadstype.OMP_UTBETALING_SNF,
+            status = SøknadsStatus.MOTTATT,
+            journalpostId = journalpostId,
+            saksId = "2222",
+            opprettet = LocalDateTime.now(),
+            søknad =
+            //language=json
+            """
+                    {
+                        "søknadId": "05ce3630-76eb-40f4-87a3-a5d55af58e40",
+                        "språk": "nb"
+                    }
+                    """.trimIndent()
+    )
 }
