@@ -1,5 +1,6 @@
 package no.nav.sifinnsynapi
 
+import no.nav.security.token.support.spring.validation.interceptor.JwtTokenUnauthorizedException
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpHeaders
@@ -19,17 +20,25 @@ class ExceptionHandler {
     }
 
     @ExceptionHandler(value = [Exception::class])
-    fun handleAnyException(ex: Exception, request: WebRequest?): ResponseEntity<Any> {
+    fun håndtereGeneriskException(ex: Exception, request: WebRequest?): ResponseEntity<Any> {
         log.error("Exception kastet -------> {}, {}, {}, {}", ex.message, HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request.toString())
 
-        return ResponseEntity("Beklager, her skjedde det en feil", HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR)
+        return ResponseEntity("Generisk feilmelding", HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR)
     }
 
     @ExceptionHandler(value = [NoHandlerFoundException::class])
     @ResponseStatus(value= HttpStatus.NOT_FOUND)
-    fun handle404Exception(ex: Exception, request: WebRequest?): ResponseEntity<Any> {
+    fun håndtere404Exception(ex: Exception, request: WebRequest?): ResponseEntity<Any> {
         log.error("Exception kastet -------> {}, {}, {}, {}", ex.message, HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request.toString())
 
-        return ResponseEntity("Beklager, her skjedde det en feil. 404", HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR)
+        return ResponseEntity("404 - Not found feilmelding", HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR)
     }
+
+    @ExceptionHandler(value = [JwtTokenUnauthorizedException::class])
+    fun håndtereTokenUnauthorizedException(ex: Exception, request: WebRequest?): ResponseEntity<Any>{
+        log.error("Token Unauthorized -------> {}, {}, {}, {}", ex.message, HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request.toString())
+
+        return ResponseEntity("TokenUnauthorized", HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR)
+    }
+
 }
