@@ -18,7 +18,7 @@ class ExceptionHandler {
 
     @ExceptionHandler(value = [Exception::class])
     fun handleAnyException(ex: Exception, request: WebRequest?): ResponseEntity<Any> {
-        log.error("TEST EXCEPTION -------> {}", ex.message)
+        log.error("Exception kastet -------> {}, {}, {}, {}", ex.message, HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request.toString())
 
         return ResponseEntity(ex.message, HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR)
     }
