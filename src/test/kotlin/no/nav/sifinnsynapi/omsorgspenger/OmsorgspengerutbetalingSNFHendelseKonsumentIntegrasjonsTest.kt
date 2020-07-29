@@ -72,7 +72,7 @@ class OmsorgspengerutbetalingSNFHendelseKonsumentIntegrasjonsTest {
     lateinit var repository: SøknadRepository // Repository som brukes til databasekall.
 
     @Autowired
-    lateinit var restTemplate: TestRestTemplate // Restklient som brukes til å gjøre restkall mott endepunkter i appen.
+    lateinit var restTemplate: TestRestTemplate // Restklient som brukes til å gjøre restkall mot endepunkter i appen.
 
     lateinit var omsorgspengerutbetalingSnfProducer: Producer<String, Any> // Kafka producer som brukes til å legge på kafka meldinger. Mer spesifikk, Hendelser om mottatte oms-utbetaling-snf søknader.
 
