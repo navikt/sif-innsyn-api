@@ -20,6 +20,6 @@ class ExceptionHandler {
     fun handleAnyException(ex: Exception, request: WebRequest?): ResponseEntity<Any> {
         log.error("Exception kastet -------> {}, {}, {}, {}", ex.message, HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request.toString())
 
-        return ResponseEntity(ex.message, HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR)
+        return ResponseEntity(mapOf("Melding" to ex.message, "Ekstra" to "Test ekstra"), HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR)
     }
 }
