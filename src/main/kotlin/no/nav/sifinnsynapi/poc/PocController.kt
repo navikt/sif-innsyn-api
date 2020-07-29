@@ -23,7 +23,9 @@ class PocController(
     @Protected
     @ResponseStatus(OK)
     fun hentSøknad(): List<SøknadDTO> {
-        logger.info("henter søknader...")
-        return søknadService.hentSøknad()
+        logger.info("Forsøker å hente søknader...")
+        val søknader = søknadService.hentSøknad()
+        logger.info("Fant {} søknader", søknader.size)
+        return søknader
     }
 }

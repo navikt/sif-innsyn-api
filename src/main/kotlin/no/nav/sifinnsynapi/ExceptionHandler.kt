@@ -22,7 +22,6 @@ class ExceptionHandler {
     @ExceptionHandler(value = [Exception::class])
     fun håndtereGeneriskException(ex: Exception, request: WebRequest?): ResponseEntity<Any> {
         log.error("Exception kastet -------> {}, {}, {}, {}", ex.message, HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request.toString())
-
         return ResponseEntity("Generisk feilmelding", HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR)
     }
 
@@ -30,15 +29,13 @@ class ExceptionHandler {
     @ResponseStatus(value= HttpStatus.NOT_FOUND)
     fun håndtere404Exception(ex: Exception, request: WebRequest?): ResponseEntity<Any> {
         log.error("Exception kastet -------> {}, {}, {}, {}", ex.message, HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request.toString())
-
         return ResponseEntity("404 - Not found feilmelding", HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR)
     }
 
     @ExceptionHandler(value = [JwtTokenUnauthorizedException::class])
     fun håndtereTokenUnauthorizedException(ex: Exception, request: WebRequest?): ResponseEntity<Any>{
         log.error("Token Unauthorized -------> {}, {}, {}, {}", ex.message, HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request.toString())
-
-        return ResponseEntity("TokenUnauthorized", HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR)
+        return ResponseEntity("Token unauthorized", HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR)
     }
 
 }
