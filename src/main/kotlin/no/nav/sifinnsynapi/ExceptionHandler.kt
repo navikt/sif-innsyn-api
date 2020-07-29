@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.context.request.WebRequest
+import org.springframework.web.servlet.NoHandlerFoundException
 
 @ControllerAdvice
 class ExceptionHandler {
@@ -21,5 +22,12 @@ class ExceptionHandler {
         log.error("Exception kastet -------> {}, {}, {}, {}", ex.message, HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request.toString())
 
         return ResponseEntity("Beklager, her skjedde det en feil", HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR)
+    }
+
+    @ExceptionHandler(value = [NoHandlerFoundException::class])
+    fun handle404Exception(ex: Exception, request: WebRequest?): ResponseEntity<Any> {
+        log.error("Exception kastet -------> {}, {}, {}, {}", ex.message, HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request.toString())
+
+        return ResponseEntity("Beklager, her skjedde det en feil. 404", HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR)
     }
 }
