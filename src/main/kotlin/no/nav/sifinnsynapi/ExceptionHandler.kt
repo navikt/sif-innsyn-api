@@ -1,5 +1,6 @@
 package no.nav.sifinnsynapi
 
+import no.nav.security.token.support.core.exceptions.JwtTokenValidatorException
 import no.nav.security.token.support.spring.validation.interceptor.JwtTokenUnauthorizedException
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -36,6 +37,12 @@ class ExceptionHandler {
     fun håndtereTokenUnauthorizedException(exception: Exception, request: WebRequest?): ResponseEntity<Any>{
         log(HttpStatus.UNAUTHORIZED, exception, request)
         return ResponseEntity("Token unauthorized", HttpHeaders(), HttpStatus.UNAUTHORIZED)
+    }
+
+    @ExceptionHandler(JwtTokenValidatorException::class)
+    fun håndtereTokenUnauthenticatedException(exception: Exception, request: WebRequest?): ResponseEntity<Any?>? {
+        log(HttpStatus.FORBIDDEN, exception, request)
+        return ResponseEntity("Token unauthenticated", HttpHeaders(), HttpStatus.FORBIDDEN)
     }
 
     fun log(status: HttpStatus, exception: Exception, request: WebRequest?){
