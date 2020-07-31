@@ -77,7 +77,7 @@ class OmsorgspengerutbetalingSNFHendelseKonsumentIntegrasjonsTest {
     lateinit var omsorgspengerutbetalingSnfProducer: Producer<String, Any> // Kafka producer som brukes til å legge på kafka meldinger. Mer spesifikk, Hendelser om mottatte oms-utbetaling-snf søknader.
 
     companion object {
-        private val log: Logger = LoggerFactory.getLogger(OmsorgspengerutbetalingSNFHendelseKonsumentIntegrasjonsTest::class.java)
+        private val logger: Logger = LoggerFactory.getLogger(OmsorgspengerutbetalingSNFHendelseKonsumentIntegrasjonsTest::class.java)
         private val aktørId = AktørId.valueOf("123456")
         private val fødselsnummer = Fødselsnummer.valueOf("1234567")
 
@@ -85,7 +85,7 @@ class OmsorgspengerutbetalingSNFHendelseKonsumentIntegrasjonsTest {
 
         fun SignedJWT.toHttpEntity(): HttpEntity<String> {
             val token = serialize()
-            log.info("SignedJWT = {}", token)
+            logger.info("SignedJWT = {}", token)
             val headers = HttpHeaders()
             headers.setBearerAuth(token)
             return HttpEntity<String>(headers)

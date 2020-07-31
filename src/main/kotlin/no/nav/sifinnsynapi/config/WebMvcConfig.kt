@@ -15,12 +15,12 @@ class WebMvcConfig(
 ): WebMvcConfigurer {
 
     companion object {
-        val log: Logger = LoggerFactory.getLogger(WebMvcConfigurer::class.java)
+        val logger: Logger = LoggerFactory.getLogger(WebMvcConfigurer::class.java)
     }
 
     init {
-        log.info("Konfigurerer CORS...")
-        log.info("--- ALLOWED_ORIGINS={}", allowedOrigins)
+        logger.info("Konfigurerer CORS...")
+        logger.info("--- ALLOWED_ORIGINS={}", allowedOrigins)
     }
 
     /**

@@ -29,7 +29,7 @@ class RestTemplateConfig(
 ) : RetryListener {
 
     private companion object {
-        val log: Logger = LoggerFactory.getLogger(RestTemplateConfig::class.java)
+        val logger: Logger = LoggerFactory.getLogger(RestTemplateConfig::class.java)
     }
 
     @Bean(name = ["k9OppslagsKlient"])
@@ -47,14 +47,14 @@ class RestTemplateConfig(
     }
 
     override fun <T : Any, E : Throwable> open(context: RetryContext, callback: RetryCallback<T, E>): Boolean {
-        log.warn("Feiler ved utgående rest-kall, kjører retry")
+        logger.warn("Feiler ved utgående rest-kall, kjører retry")
         return true
     }
 
     override fun <T : Any, E : Throwable?> close(context: RetryContext, callback: RetryCallback<T, E>, throwable: Throwable?) {
         val backoff = context.getAttribute("backOffContext")!!
 
-        log.info("Gir opp etter {} av {} forsøk og {} ms", context.retryCount, maxAttempts, backoff.nextInterval() - 1000)
+        logger.info("Gir opp etter {} av {} forsøk og {} ms", context.retryCount, maxAttempts, backoff.nextInterval() - 1000)
     }
 
     override fun <T : Any, E : Throwable> onError(context: RetryContext, callback: RetryCallback<T, E>, throwable: Throwable) {
@@ -63,9 +63,9 @@ class RestTemplateConfig(
         val backoff = context.getAttribute("backOffContext")!!
         val nextInterval = backoff.nextInterval()
 
-        log.warn("Forsøk {} av {}, {}", currentTry, maxAttempts, contextString.split(" ")[2])
+        logger.warn("Forsøk {} av {}, {}", currentTry, maxAttempts, contextString.split(" ")[2])
 
-        if (currentTry < maxAttempts) log.info("Forsøker om: {} ms", nextInterval)
+        if (currentTry < maxAttempts) logger.info("Forsøker om: {} ms", nextInterval)
     }
 }
 

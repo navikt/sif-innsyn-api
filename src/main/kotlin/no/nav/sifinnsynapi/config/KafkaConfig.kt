@@ -26,7 +26,7 @@ class KafkaConfig(
         val objectMapper: ObjectMapper,
         val søknadRepository: SøknadRepository) {
     companion object{
-        private val log = LoggerFactory.getLogger(KafkaConfig::class.java)
+        private val logger = LoggerFactory.getLogger(KafkaConfig::class.java)
     }
 
     @Bean
@@ -40,11 +40,11 @@ class KafkaConfig(
             val søker = JSONObject(topicEntry.melding).getJSONObject("søker")
             when(søknadRepository.existsSøknadDAOByAktørIdAndJournalpostId(AktørId(søker.getString("aktørId")), topicEntry.journalførtMelding.journalpostId)){
                 true -> {
-                    log.info("Fant duplikat, skipper deserialisering")
+                    logger.info("Fant duplikat, skipper deserialisering")
                     true
                 }
                 false -> {
-                    log.info("Fant IKKE duplikat, deserialiserer")
+                    logger.info("Fant IKKE duplikat, deserialiserer")
                     false
                 }
             }

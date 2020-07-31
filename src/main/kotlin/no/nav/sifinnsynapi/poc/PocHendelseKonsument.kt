@@ -14,11 +14,14 @@ import org.springframework.transaction.annotation.Transactional
 class PocHendelseKonsument(
         private val søknadRepository: SøknadRepository
 ) {
+    companion object {
+        private val logger = LoggerFactory.getLogger(PocHendelseKonsument::class.java)
+    }
 
     @Transactional
     @KafkaListener(topics = [INNSYN_MOTTATT], groupId = "#{'\${spring.kafka.consumer.group-id}'}", containerFactory = "kafkaJsonListenerContainerFactory")
     fun konsumer(@Payload hendelse: SøknadsHendelse, @Header(name = NAV_CALL_ID, required = false) callId: String?) {
-        LOG.info("Mottok hendelse {}", hendelse)
+        logger.info("Mottok hendelse {}", hendelse)
 
         val hendelseSomSøknadDAO = hendelse.tilSøknadDAO()
 
@@ -39,9 +42,5 @@ class PocHendelseKonsument(
                 }
             }
         }
-    }
-
-    companion object {
-        private val LOG = LoggerFactory.getLogger(PocHendelseKonsument::class.java)
     }
 }

@@ -16,7 +16,7 @@ class DataPopulator(
         private val repo: SøknadRepository
 ) {
     companion object {
-        val log = LoggerFactory.getLogger(CommandLineRunner::class.java)
+        val logger = LoggerFactory.getLogger(CommandLineRunner::class.java)
     }
 
     @Bean
@@ -508,10 +508,10 @@ class DataPopulator(
                             """.trimIndent()
                     )
             ).map {
-                log.info("Lagrer søknad: {}", it)
+                logger.info("Lagrer søknad: {}", it)
                 repo.save(it)
             }.forEach {
-                log.info("Hentet Søknad: {}", it)
+                logger.info("Hentet Søknad: {}", it)
             }
         }
     }
