@@ -1,4 +1,4 @@
-package no.nav.sifinnsynapi.poc
+package no.nav.sifinnsynapi.soknad
 
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonFormat

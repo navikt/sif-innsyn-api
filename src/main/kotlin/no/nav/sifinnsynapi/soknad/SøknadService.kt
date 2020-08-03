@@ -1,4 +1,4 @@
-package no.nav.sifinnsynapi.poc
+package no.nav.sifinnsynapi.soknad
 
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper

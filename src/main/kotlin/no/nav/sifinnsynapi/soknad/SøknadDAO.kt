@@ -1,4 +1,4 @@
-package no.nav.sifinnsynapi.poc
+package no.nav.sifinnsynapi.soknad
 
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType
 import no.nav.sifinnsynapi.common.AktørId

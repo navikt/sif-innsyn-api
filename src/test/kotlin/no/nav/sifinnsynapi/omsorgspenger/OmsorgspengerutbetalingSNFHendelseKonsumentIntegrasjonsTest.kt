@@ -10,9 +10,9 @@ import no.nav.security.token.support.test.JwtTokenGenerator
 import no.nav.security.token.support.test.spring.TokenGeneratorConfiguration
 import no.nav.sifinnsynapi.common.*
 import no.nav.sifinnsynapi.config.Topics.OMP_UTBETALING_SNF
-import no.nav.sifinnsynapi.poc.SøknadDAO
-import no.nav.sifinnsynapi.poc.SøknadDTO
-import no.nav.sifinnsynapi.poc.SøknadRepository
+import no.nav.sifinnsynapi.soknad.SøknadDAO
+import no.nav.sifinnsynapi.soknad.SøknadDTO
+import no.nav.sifinnsynapi.soknad.SøknadRepository
 import org.apache.kafka.clients.producer.Producer
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.awaitility.kotlin.await

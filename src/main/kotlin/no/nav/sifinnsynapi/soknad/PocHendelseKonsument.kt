@@ -1,4 +1,4 @@
-package no.nav.sifinnsynapi.poc
+package no.nav.sifinnsynapi.soknad
 
 import no.nav.sifinnsynapi.common.SøknadsStatus
 import no.nav.sifinnsynapi.config.Topics.INNSYN_MOTTATT

@@ -1,4 +1,4 @@
-package no.nav.sifinnsynapi.poc
+package no.nav.sifinnsynapi.soknad
 
 import no.nav.security.token.support.core.api.Protected
 import no.nav.security.token.support.core.api.ProtectedWithClaims
@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @ProtectedWithClaims(issuer = "selvbetjening", claimMap = ["acr=Level4"])
-class PocController(
+class SøknadController(
         private val søknadService: SøknadService
 ) {
     companion object {
-        val logger = LoggerFactory.getLogger(PocController::class.java)
+        val logger = LoggerFactory.getLogger(SøknadController::class.java)
     }
 
     @GetMapping("/soknad", produces = [MediaType.APPLICATION_JSON_VALUE])

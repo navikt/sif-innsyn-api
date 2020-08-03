@@ -2,8 +2,8 @@ package no.nav.sifinnsynapi.omsorgspenger
 
 import no.nav.sifinnsynapi.common.*
 import no.nav.sifinnsynapi.config.Topics.OMP_UTBETALING_SNF
-import no.nav.sifinnsynapi.poc.SøknadRepository
-import no.nav.sifinnsynapi.poc.SøknadsHendelse
+import no.nav.sifinnsynapi.soknad.SøknadRepository
+import no.nav.sifinnsynapi.soknad.SøknadsHendelse
 import org.json.JSONObject
 import org.slf4j.LoggerFactory
 import org.springframework.kafka.annotation.KafkaListener

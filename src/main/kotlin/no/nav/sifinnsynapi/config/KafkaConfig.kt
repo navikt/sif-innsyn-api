@@ -3,7 +3,7 @@ package no.nav.sifinnsynapi.config
 import com.fasterxml.jackson.databind.ObjectMapper
 import no.nav.sifinnsynapi.common.AktørId
 import no.nav.sifinnsynapi.common.TopicEntry
-import no.nav.sifinnsynapi.poc.SøknadRepository
+import no.nav.sifinnsynapi.soknad.SøknadRepository
 import org.json.JSONObject
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
