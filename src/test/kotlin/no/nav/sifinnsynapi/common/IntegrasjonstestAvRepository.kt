@@ -1,24 +1,31 @@
 package no.nav.sifinnsynapi.common
 
-import no.nav.security.token.support.test.spring.TokenGeneratorConfiguration
 import no.nav.sifinnsynapi.poc.SøknadDAO
 import no.nav.sifinnsynapi.poc.SøknadRepository
-import org.junit.Assert.assertFalse
-import org.junit.Assert.assertTrue
+import org.junit.Assert.*
 import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
+import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.context.annotation.Import
-import org.springframework.test.context.ActiveProfiles
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
+import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.time.LocalDateTime
 import java.util.*
 
+@DataJpaTest(properties = [
+    "spring.cloud.gcp.core.enabled=false",
+    "spring.cloud.gcp.secretmanager.enabled=false",
+    "spring.datasource.url=jdbc:tc:postgresql:9.6:///",
+    "spring.datasource.driver-class-name=org.testcontainers.jdbc.ContainerDatabaseDriver"
+])
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@ActiveProfiles("test")
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT) // Integrasjonstest - Kjører opp hele Spring Context med alle konfigurerte beans.
-@Import(TokenGeneratorConfiguration::class) // Tilgjengliggjør en oicd-provider for test. Se application-test.yml -> no.nav.security.jwt.issuer.selvbetjening for konfigurasjon
+@ExtendWith(SpringExtension::class)
+@AutoConfigureTestDatabase(
+        replace = AutoConfigureTestDatabase.Replace.NONE
+)
 class IntegrasjonstestAvRepository {
 
     @Autowired
@@ -29,6 +36,11 @@ class IntegrasjonstestAvRepository {
         private val aktørIdSomIkkeEksisterer = AktørId.valueOf("54321")
         private val fødselsnummer = Fødselsnummer.valueOf("1234567")
         private val journalpostId = "12345"
+    }
+
+    @BeforeAll
+    internal fun setUp() {
+        assertNotNull(repository)
     }
 
     @AfterEach
@@ -49,7 +61,7 @@ class IntegrasjonstestAvRepository {
     }
 
     @Test
-     fun `Prøver å hente opp søknad som ikke eksisterer basert på journalpostId`() {
+    fun `Prøver å hente opp søknad som ikke eksisterer basert på journalpostId`() {
         val journalpostIdSomIkkeEksisterer = "54321"
 
         val søknadDAO = lagSøknadDAO()
@@ -60,7 +72,7 @@ class IntegrasjonstestAvRepository {
     }
 
     @Test
-    fun `Lagre to søknader med samme aktørId i repository og finne de basert på aktørId`(){
+    fun `Lagre to søknader med samme aktørId i repository og finne de basert på aktørId`() {
         var søknaderHentetFraRepository = repository.findAllByAktørId(aktørId)
         assert(søknaderHentetFraRepository.size == 0)
 
@@ -76,7 +88,7 @@ class IntegrasjonstestAvRepository {
     }
 
     @Test
-    fun `Hente søknader som ikke finnes basert på aktørId`(){
+    fun `Hente søknader som ikke finnes basert på aktørId`() {
         var søknadDAO = lagSøknadDAO()
         repository.save(søknadDAO)
         val søknaderHentetFraRepository = repository.findAllByAktørId(aktørIdSomIkkeEksisterer)
@@ -85,7 +97,7 @@ class IntegrasjonstestAvRepository {
     }
 
     @Test
-    fun `Sjekke som søknad eksisterer basert på aktørId og journalpostId`(){
+    fun `Sjekke som søknad eksisterer basert på aktørId og journalpostId`() {
         var eksistererSøknad = repository.existsSøknadDAOByAktørIdAndJournalpostId(aktørId, journalpostId)
         assertFalse(eksistererSøknad)
 
@@ -97,7 +109,7 @@ class IntegrasjonstestAvRepository {
     }
 
     @Test
-    fun `Sjekke om søknad eksisterer ved bruk av aktørId som ikke eksisterer`(){
+    fun `Sjekke om søknad eksisterer ved bruk av aktørId som ikke eksisterer`() {
         val søknadDAO = lagSøknadDAO()
         repository.save(søknadDAO)
         val eksistererSøknad = repository.existsSøknadDAOByAktørIdAndJournalpostId(aktørIdSomIkkeEksisterer, journalpostId)
@@ -106,7 +118,7 @@ class IntegrasjonstestAvRepository {
     }
 
     @Test
-    fun `Lagrer to ulike søknader med forskjellig journalpostId men lik aktørId`(){
+    fun `Lagrer to ulike søknader med forskjellig journalpostId men lik aktørId`() {
         var søknadDAO = lagSøknadDAO()
         repository.save(søknadDAO)
         var eksistererSøknad = repository.existsSøknadDAOByAktørIdAndJournalpostId(aktørId, journalpostId)
