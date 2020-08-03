@@ -1,7 +1,9 @@
-package no.nav.sifinnsynapi.common
+package no.nav.sifinnsynapi.poc
 
-import no.nav.sifinnsynapi.poc.SøknadDAO
-import no.nav.sifinnsynapi.poc.SøknadRepository
+import no.nav.sifinnsynapi.common.AktørId
+import no.nav.sifinnsynapi.common.Fødselsnummer
+import no.nav.sifinnsynapi.common.SøknadsStatus
+import no.nav.sifinnsynapi.common.Søknadstype
 import org.junit.Assert.*
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeAll
@@ -26,7 +28,7 @@ import java.util.*
 @AutoConfigureTestDatabase(
         replace = AutoConfigureTestDatabase.Replace.NONE
 )
-class IntegrasjonstestAvRepository {
+class SøknadRepositoryTest {
 
     @Autowired
     lateinit var repository: SøknadRepository // Repository som brukes til databasekall.
