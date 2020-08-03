@@ -38,11 +38,12 @@ class IntegrasjonstestAvRepository {
 
     @Test
     fun `Lagrer søknad i repository og henter opp basert på journalpostId`() {
+        var søknadHentetFraRepository = repository.findByJournalpostId(journalpostId)
+        assert(søknadHentetFraRepository == null)
+
         val søknadDAO = lagSøknadDAO()
-
         repository.save(søknadDAO)
-
-        val søknadHentetFraRepository = repository.findByJournalpostId(journalpostId)
+        søknadHentetFraRepository = repository.findByJournalpostId(journalpostId)
 
         assert(søknadHentetFraRepository != null && søknadHentetFraRepository.journalpostId == journalpostId && søknadHentetFraRepository.aktørId == aktørId)
     }
@@ -52,9 +53,7 @@ class IntegrasjonstestAvRepository {
         val journalpostIdSomIkkeEksisterer = "54321"
 
         val søknadDAO = lagSøknadDAO()
-
         repository.save(søknadDAO)
-
         val søknadHentetFraRepository = repository.findByJournalpostId(journalpostIdSomIkkeEksisterer)
 
         assert(søknadHentetFraRepository == null)
@@ -62,13 +61,16 @@ class IntegrasjonstestAvRepository {
 
     @Test
     fun `Lagre to søknader med samme aktørId i repository og finne de basert på aktørId`(){
+        var søknaderHentetFraRepository = repository.findAllByAktørId(aktørId)
+        assert(søknaderHentetFraRepository.size == 0)
+
         var søknadDAO = lagSøknadDAO()
         repository.save(søknadDAO)
 
         søknadDAO = lagSøknadDAO()
         repository.save(søknadDAO)
 
-        val søknaderHentetFraRepository = repository.findAllByAktørId(aktørId)
+        søknaderHentetFraRepository = repository.findAllByAktørId(aktørId)
 
         assert(søknaderHentetFraRepository.size == 2)
     }
@@ -77,7 +79,6 @@ class IntegrasjonstestAvRepository {
     fun `Hente søknader som ikke finnes basert på aktørId`(){
         var søknadDAO = lagSøknadDAO()
         repository.save(søknadDAO)
-
         val søknaderHentetFraRepository = repository.findAllByAktørId(aktørIdSomIkkeEksisterer)
 
         assert(søknaderHentetFraRepository.isEmpty())
@@ -85,11 +86,12 @@ class IntegrasjonstestAvRepository {
 
     @Test
     fun `Sjekke som søknad eksisterer basert på aktørId og journalpostId`(){
+        var eksistererSøknad = repository.existsSøknadDAOByAktørIdAndJournalpostId(aktørId, journalpostId)
+        assertFalse(eksistererSøknad)
+
         val søknadDAO = lagSøknadDAO()
-
         repository.save(søknadDAO)
-
-        val eksistererSøknad = repository.existsSøknadDAOByAktørIdAndJournalpostId(aktørId, journalpostId)
+        eksistererSøknad = repository.existsSøknadDAOByAktørIdAndJournalpostId(aktørId, journalpostId)
 
         assert(eksistererSøknad)
     }
@@ -98,7 +100,6 @@ class IntegrasjonstestAvRepository {
     fun `Sjekke om søknad eksisterer ved bruk av aktørId som ikke eksisterer`(){
         val søknadDAO = lagSøknadDAO()
         repository.save(søknadDAO)
-
         val eksistererSøknad = repository.existsSøknadDAOByAktørIdAndJournalpostId(aktørIdSomIkkeEksisterer, journalpostId)
 
         assertFalse(eksistererSøknad)
