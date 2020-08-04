@@ -26,6 +26,7 @@ val logstashLogbackEncoderVersion by extra("6.3")
 val tokenValidationVersion by extra("1.1.5")
 val springCloudVersion by extra("Hoxton.SR6")
 val retryVersion by extra("1.3.0")
+val zalandoVersion by extra("0.25.2")
 
 
 repositories {
@@ -113,6 +114,7 @@ dependencies {
     // Diverse
     implementation("org.json:json:20200518")
     implementation("com.github.ben-manes.caffeine:caffeine")
+    implementation("org.zalando:problem-spring-web-starter:$zalandoVersion")
 
     testImplementation("org.awaitility:awaitility-kotlin:4.0.3")
     testImplementation("com.willowtreeapps.assertk:assertk-jvm:0.21")
