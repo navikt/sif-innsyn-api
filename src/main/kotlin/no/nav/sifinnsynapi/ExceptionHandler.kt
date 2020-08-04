@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
+import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.context.request.ServletWebRequest
 import org.springframework.web.context.request.WebRequest
 import org.zalando.problem.Problem
@@ -25,19 +26,14 @@ class ExceptionHandler: ProblemHandling {
     }
 
     @ExceptionHandler(value = [Exception::class])
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     fun håndtereGeneriskException(exception: Exception, request: ServletWebRequest): ResponseEntity<Problem> {
         log(HttpStatus.INTERNAL_SERVER_ERROR, exception, request)
         return create(Status.INTERNAL_SERVER_ERROR, exception, request, URI("/problem-details/internal-server-error"))
     }
 
-    @ExceptionHandler(value = [NoHandlerFoundException::class])
-    @ResponseStatus(value= HttpStatus.NOT_FOUND)
-    fun håndtere404Exception(exception: Exception, request: WebRequest?): ResponseEntity<Any> {
-        log(HttpStatus.UNAUTHORIZED, exception, request)
-        return ResponseEntity("404 - Not found feilmelding", HttpHeaders(), HttpStatus.NOT_FOUND)
-    }
-
     @ExceptionHandler(value = [JwtTokenUnauthorizedException::class])
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
     fun håndtereTokenUnauthorizedException(exception: JwtTokenUnauthorizedException, request: ServletWebRequest): ResponseEntity<Problem>{
 
         log(HttpStatus.UNAUTHORIZED, exception, request)
@@ -52,6 +48,7 @@ class ExceptionHandler: ProblemHandling {
     }
 
     @ExceptionHandler(JwtTokenValidatorException::class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
     fun håndtereTokenUnauthenticatedException(exception: Exception, request: ServletWebRequest): ResponseEntity<Any?>? {
         log(HttpStatus.FORBIDDEN, exception, request)
         return ResponseEntity("Token unauthenticated", HttpHeaders(), HttpStatus.FORBIDDEN)
