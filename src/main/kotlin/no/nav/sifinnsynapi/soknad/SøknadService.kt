@@ -4,9 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
 import no.nav.sifinnsynapi.common.AktørId
 import no.nav.sifinnsynapi.oppslag.OppslagsService
-import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Transactional
 
 @Service
 class SøknadService(

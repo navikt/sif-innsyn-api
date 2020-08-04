@@ -1,7 +1,6 @@
 package no.nav.sifinnsynapi.soknad
 
 import no.nav.sifinnsynapi.common.AktørId
-import no.nav.sifinnsynapi.common.Søknadstype
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
