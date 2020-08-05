@@ -7,7 +7,6 @@ import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.converter.HttpMessageConverter
-import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
 import org.springframework.web.servlet.config.annotation.CorsRegistry
 import org.springframework.web.servlet.config.annotation.EnableWebMvc
@@ -31,27 +30,17 @@ class WebMvcConfig(
         logger.info("--- ALLOWED_ORIGINS={}", allowedOrigins)
     }
 
-    /**
-     * Configure the [HttpMessageConverters][HttpMessageConverter] to use for reading or writing
-     * to the body of the request or response. If no converters are added, a
-     * default list of converters is registered.
-     *
-     * **Note** that adding converters to the list, turns off
-     * default converter registration. To simply add a converter without impacting
-     * default registration, consider using the method
-     * [.extendMessageConverters] instead.
-     * @param converters initially an empty list of converters
-     */
-    override fun configureMessageConverters(converters: MutableList<HttpMessageConverter<*>>) {
-        val builder = Jackson2ObjectMapperBuilder
-                .json()
-                .modules(ProblemModule(), ConstraintViolationProblemModule(), JavaTimeModule())
+    override fun extendMessageConverters(converters: MutableList<HttpMessageConverter<*>>) {
+        val jsonConverter = converters.filterIsInstance<MappingJackson2HttpMessageConverter>().first()
+        converters.remove(jsonConverter)
+        converters.add(mappingJackson2HttpMessageConverter())
+        super.extendMessageConverters(converters)
+    }
 
-        builder.configure(mapper)
-        val objectMapper = builder.build<ObjectMapper>()
-
-        converters.add(MappingJackson2HttpMessageConverter(objectMapper))
-        super.configureMessageConverters(converters)
+    fun mappingJackson2HttpMessageConverter(): MappingJackson2HttpMessageConverter {
+        mapper.registerModules(ProblemModule(), ConstraintViolationProblemModule(), JavaTimeModule())
+        logger.info("-------> {}", mapper.registeredModuleIds)
+        return MappingJackson2HttpMessageConverter(mapper)
     }
 
     /**
