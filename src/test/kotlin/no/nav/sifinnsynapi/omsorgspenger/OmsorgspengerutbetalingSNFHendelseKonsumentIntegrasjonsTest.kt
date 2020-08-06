@@ -61,7 +61,6 @@ import java.util.concurrent.TimeUnit
 class OmsorgspengerutbetalingSNFHendelseKonsumentIntegrasjonsTest {
 
     @Autowired
-    @Qualifier("testMapper")
     lateinit var mapper: ObjectMapper
 
     @Suppress("SpringJavaInjectionPointsAutowiringInspection")
