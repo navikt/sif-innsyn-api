@@ -1,4 +1,4 @@
-package no.nav.sifinnsynapi
+package no.nav.sifinnsynapi.http
 
 import no.nav.security.token.support.core.exceptions.JwtTokenValidatorException
 import no.nav.security.token.support.spring.validation.interceptor.JwtTokenUnauthorizedException
