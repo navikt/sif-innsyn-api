@@ -33,5 +33,6 @@ spring:
     consumer:
       retry-interval: 5_000 # Egendefinert property
       group-id: group_id
+      #client-id: sif-innsyn-api
 wiremock:
   reset-mappings-after-each-test: true

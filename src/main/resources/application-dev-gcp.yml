@@ -66,7 +66,7 @@ spring:
       enable-auto-commit: false
       bootstrap-servers:
       group-id: group_id
-      client-id: sif-innsyn-api
+      #client-id: sif-innsyn-api
       auto-offset-reset: earliest
       retry-interval: 60_000 # Egendefinert property
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
