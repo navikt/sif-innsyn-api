@@ -47,14 +47,14 @@ class RestTemplateConfig(
     }
 
     override fun <T : Any, E : Throwable> open(context: RetryContext, callback: RetryCallback<T, E>): Boolean {
-        logger.warn("Feiler ved utgående rest-kall, kjører retry")
+        if (context.retryCount < 0) logger.warn("Feiler ved utgående rest-kall, kjører retry")
         return true
     }
 
     override fun <T : Any, E : Throwable?> close(context: RetryContext, callback: RetryCallback<T, E>, throwable: Throwable?) {
         val backoff = context.getAttribute("backOffContext")!!
 
-        logger.info("Gir opp etter {} av {} forsøk og {} ms", context.retryCount, maxAttempts, backoff.nextInterval() - 1000)
+        if (context.retryCount < 0) logger.info("Gir opp etter {} av {} forsøk og {} ms", context.retryCount, maxAttempts, backoff.nextInterval() - 1000)
     }
 
     override fun <T : Any, E : Throwable> onError(context: RetryContext, callback: RetryCallback<T, E>, throwable: Throwable) {
