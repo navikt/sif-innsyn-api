@@ -1,21 +1,19 @@
 package no.nav.sifinnsynapi.common
 
-import com.nimbusds.jwt.SignedJWT
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
-import no.nav.security.token.support.test.JwtTokenGenerator
 import no.nav.security.token.support.test.spring.TokenGeneratorConfiguration
 import no.nav.sifinnsynapi.soknad.SøknadController
 import no.nav.sifinnsynapi.soknad.SøknadDTO
 import no.nav.sifinnsynapi.soknad.SøknadService
 import no.nav.sifinnsynapi.util.CallIdGenerator
+import no.nav.sifinnsynapi.utils.tokenSomHttpHeader
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.context.annotation.Import
-import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.servlet.MockMvc
@@ -50,14 +48,7 @@ class SøknadControllerTest {
 
     companion object {
         private val fødselsnummer = Fødselsnummer.valueOf("1234567")
-        private val authorizationHeader = JwtTokenGenerator.createSignedJWT(fødselsnummer.fødselsnummer).toHeader()
-
-        fun SignedJWT.toHeader(): HttpHeaders {
-            val token = serialize()
-            val headers = HttpHeaders()
-            headers.setBearerAuth(token)
-            return headers
-        }
+        private val authorizationHeader = tokenSomHttpHeader(fødselsnummer)
     }
 
     @Test
