@@ -1,9 +1,9 @@
-package no.nav.sifinnsynapi.omsorgspenger
+package no.nav.sifinnsynapi.omsorgspenger.utbetaling.snf
 
 import no.nav.sifinnsynapi.common.*
 import no.nav.sifinnsynapi.config.Topics.OMP_UTBETALING_SNF
+import no.nav.sifinnsynapi.soknad.Søknad
 import no.nav.sifinnsynapi.soknad.SøknadRepository
-import no.nav.sifinnsynapi.soknad.SøknadsHendelse
 import org.json.JSONObject
 import org.slf4j.LoggerFactory
 import org.springframework.kafka.annotation.KafkaListener
@@ -25,7 +25,7 @@ class OmsorgspengerutbetalingSNFHendelseKonsument(
 
         logger.info("Mapper om fra hendelse omsorgspengerutbetaling SNF til SøknadsHendelse...")
         val melding = JSONObject(hendelse.data.melding)
-        val søknadsHendelse = SøknadsHendelse(
+        val søknadsHendelse = Søknad(
                 aktørId = AktørId(melding.getJSONObject("søker").getString("aktørId")),
                 mottattDato = ZonedDateTime.parse(melding.getString("mottatt")),
                 fødselsnummer = Fødselsnummer(melding.getJSONObject("søker").getString("fødselsnummer")),
@@ -35,9 +35,9 @@ class OmsorgspengerutbetalingSNFHendelseKonsument(
                 søknad = hendelse.data.melding
         )
 
-        logger.info("Lagrer SøknadsHendelse...")
+        logger.info("Lagrer søknadsHendelse for omsorgspengerutbetaling SNF...")
         val søknadDAO = søknadsHendelse.tilSøknadDAO()
         val save = repository.save(søknadDAO)
-        logger.info("SøknadsHendelse lagret: {}", save)
+        logger.info("SøknadsHendelse for omsorgspengerutbetaling SNF lagret: {}", save)
     }
 }

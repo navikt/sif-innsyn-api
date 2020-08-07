@@ -3,12 +3,15 @@ package no.nav.sifinnsynapi.soknad
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonProperty
-import no.nav.sifinnsynapi.common.*
+import no.nav.sifinnsynapi.common.AktørId
+import no.nav.sifinnsynapi.common.Fødselsnummer
+import no.nav.sifinnsynapi.common.SøknadsStatus
+import no.nav.sifinnsynapi.common.Søknadstype
 import org.json.JSONObject
 import java.time.LocalDate
 import java.time.ZonedDateTime
 
-data class SøknadsHendelse @JsonCreator constructor(
+data class Søknad @JsonCreator constructor(
         @JsonProperty("aktørId") val aktørId: AktørId,
         @JsonProperty("fødselsnummer") val fødselsnummer: Fødselsnummer,
         @JsonProperty("journalpostId") val journalpostId: String,
