@@ -73,7 +73,7 @@ class OmsorgspengerutbetalingArbeidstakerHendelseKonsumentIntegrasjonsTest {
 
     @BeforeAll
     fun setUp() {
-        omsorgspengerutbetalingArbeidstakerProducer = embeddedKafkaBroker.creatKafkaProducer()
+        omsorgspengerutbetalingArbeidstakerProducer = embeddedKafkaBroker.createKafkaProducer()
     }
 
     @AfterEach

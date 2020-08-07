@@ -9,7 +9,7 @@ import org.springframework.kafka.test.EmbeddedKafkaBroker
 import org.springframework.kafka.test.utils.KafkaTestUtils
 import java.util.*
 
-fun EmbeddedKafkaBroker.creatKafkaProducer(): Producer<String, Any> {
+fun EmbeddedKafkaBroker.createKafkaProducer(): Producer<String, Any> {
     return DefaultKafkaProducerFactory<String, Any>(HashMap(KafkaTestUtils.producerProps(this))).createProducer()
 }
 

@@ -73,7 +73,7 @@ class OmsorgspengerUtvidetRettHendelseKonsumentIntegrasjonsTest {
 
     @BeforeAll
     fun setUp() {
-        omsorgspengerUtvidetRettProducer = embeddedKafkaBroker.creatKafkaProducer()
+        omsorgspengerUtvidetRettProducer = embeddedKafkaBroker.createKafkaProducer()
     }
 
     @AfterEach

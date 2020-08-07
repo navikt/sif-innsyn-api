@@ -73,7 +73,7 @@ class PleiepengerSyktBarnHendelseKonsumentIntegrasjonsTest {
 
     @BeforeAll
     fun setUp() {
-        producer = embeddedKafkaBroker.creatKafkaProducer()
+        producer = embeddedKafkaBroker.createKafkaProducer()
     }
 
     @AfterEach
