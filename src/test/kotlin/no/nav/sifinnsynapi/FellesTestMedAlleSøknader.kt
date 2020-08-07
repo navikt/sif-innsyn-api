@@ -15,10 +15,12 @@ import no.nav.sifinnsynapi.config.Topics.PP_SYKT_BARN
 import no.nav.sifinnsynapi.soknad.SøknadDAO
 import no.nav.sifinnsynapi.soknad.SøknadDTO
 import no.nav.sifinnsynapi.soknad.SøknadRepository
-import no.nav.sifinnsynapi.utils.*
+import no.nav.sifinnsynapi.utils.defaultHendelse
+import no.nav.sifinnsynapi.utils.leggPåTopic
+import no.nav.sifinnsynapi.utils.somJson
+import no.nav.sifinnsynapi.utils.tokenSomHttpEntity
 import org.apache.kafka.clients.producer.Producer
 import org.awaitility.kotlin.await
-import org.junit.Ignore
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
@@ -34,10 +36,13 @@ import org.springframework.context.annotation.Import
 import org.springframework.core.ParameterizedTypeReference
 import org.springframework.http.HttpMethod
 import org.springframework.http.ResponseEntity
+import org.springframework.kafka.core.DefaultKafkaProducerFactory
 import org.springframework.kafka.test.EmbeddedKafkaBroker
 import org.springframework.kafka.test.context.EmbeddedKafka
+import org.springframework.kafka.test.utils.KafkaTestUtils
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit.jupiter.SpringExtension
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 
@@ -75,7 +80,7 @@ class FellesTestMedAlleSøknader {
 
     @BeforeAll
     fun setUp() {
-        producer = embeddedKafkaBroker.creatKafkaProducer()
+        producer = DefaultKafkaProducerFactory<String, Any>(HashMap(KafkaTestUtils.producerProps(embeddedKafkaBroker))).createProducer()
     }
 
     @AfterEach
@@ -84,7 +89,7 @@ class FellesTestMedAlleSøknader {
     }
 
     @Test
-    @Ignore
+    //@Ignore
     fun `Konsumerer hendelser fra alle søkander, persister og tilgjengligjør gjennom API`() {
 
         //Sjekker at repository er tomt
