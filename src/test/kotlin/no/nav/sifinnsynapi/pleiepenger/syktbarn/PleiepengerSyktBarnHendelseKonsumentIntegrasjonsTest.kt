@@ -62,7 +62,7 @@ class PleiepengerSyktBarnHendelseKonsumentIntegrasjonsTest {
     @Autowired
     lateinit var restTemplate: TestRestTemplate // Restklient som brukes til å gjøre restkall mot endepunkter i appen.
 
-    lateinit var producer: Producer<String, Any> // Kafka producer som brukes til å legge på kafka meldinger. Mer spesifikk, Hendelser om pp-sykt-barn //TODO Fix
+    lateinit var producer: Producer<String, Any> // Kafka producer som brukes til å legge på kafka meldinger. Mer spesifikk, Hendelser om pp-sykt-barn
 
     companion object {
         private val logger: Logger = LoggerFactory.getLogger(PleiepengerSyktBarnHendelseKonsumentIntegrasjonsTest::class.java)
