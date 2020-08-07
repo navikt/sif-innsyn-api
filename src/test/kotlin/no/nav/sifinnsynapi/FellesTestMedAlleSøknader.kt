@@ -94,7 +94,7 @@ class FellesTestMedAlleSøknader {
         //Legger en hendelse om mottatt søknad ompleiepenger sykt barn
         producer.leggPåTopic(defaultHendelse, Topics.PP_SYKT_BARN, mapper)
 
-        //Forventer at ved restkall mot "/soknad" så får vi alle tre søknadene med riktig "søknadstype" som er koblet til spesifikk aktørId
+        //Forventer at ved restkall mot "/soknad" så får vi alle søknadene med riktig "søknadstype" som er koblet til spesifikk aktørId
         await.atMost(5, TimeUnit.SECONDS).untilAsserted {
             val responseEntity = restTemplate.exchange("/soknad", HttpMethod.GET, httpEntity, object : ParameterizedTypeReference<List<SøknadDTO>>() {})
             val forventetRespons =

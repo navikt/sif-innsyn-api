@@ -21,9 +21,9 @@ class OmsorgspengerUtvidetRettHendelseKonsument(
 
     @KafkaListener(topics = [OMP_UTVIDET_RETT], groupId = "#{'\${spring.kafka.consumer.group-id}'}", containerFactory = "kafkaJsonListenerContainerFactory")
     fun konsumer(@Payload hendelse: TopicEntry) {
-        logger.info("Mottok hendelse fra omsorgspenger utvidet rett {}", hendelse)
+        logger.info("Mottok hendelse fra Omsorgspenger-Utvidet-Rett")
 
-        logger.info("Mapper om fra hendelse omsorgspenger utvidet rett til SøknadsHendelse...")
+        logger.info("Mapper om fra TopicEntry til Søknad for Omsorgspenger-Utvidet-Rett")
         val melding = JSONObject(hendelse.data.melding)
         val søknadsHendelse = Søknad(
                 aktørId = AktørId(melding.getJSONObject("søker").getString("aktørId")),
@@ -35,9 +35,9 @@ class OmsorgspengerUtvidetRettHendelseKonsument(
                 søknad = hendelse.data.melding
         )
 
-        logger.info("Lagrer søknadsHendelse for omsorgspenger utvidet rett...")
+        logger.info("Lagrer Søknad fra Omsorgspenger-Utvidet-Rett")
         val søknadDAO = søknadsHendelse.tilSøknadDAO()
         val save = repository.save(søknadDAO)
-        logger.info("SøknadsHendelse for omsorgspenger utvidet rett lagret: {}", save)
+        logger.info("Søknad for Omsorgspenger-Utvidet-Rett lagret: {}", save)
     }
 }

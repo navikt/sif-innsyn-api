@@ -21,9 +21,10 @@ class OmsorgspengerutbetalingSNFHendelseKonsument(
 
     @KafkaListener(topics = [OMP_UTBETALING_SNF], groupId = "#{'\${spring.kafka.consumer.group-id}'}", containerFactory = "kafkaJsonListenerContainerFactory")
     fun konsumer(@Payload hendelse: TopicEntry) {
-        logger.info("Mottok hendelse fra omsorgspengerutbetaling SNF {}", hendelse)
+        logger.info("Mottok hendelse fra Omsorgspenger-Utbetaling-SNF")
 
-        logger.info("Mapper om fra hendelse omsorgspengerutbetaling SNF til SøknadsHendelse...")
+        logger.info("Mapper om fra TopicEntry til Søknad for Omsorgspenger-Utbetaling-SNF")
+
         val melding = JSONObject(hendelse.data.melding)
         val søknadsHendelse = Søknad(
                 aktørId = AktørId(melding.getJSONObject("søker").getString("aktørId")),
@@ -35,9 +36,9 @@ class OmsorgspengerutbetalingSNFHendelseKonsument(
                 søknad = hendelse.data.melding
         )
 
-        logger.info("Lagrer søknadsHendelse for omsorgspengerutbetaling SNF...")
+        logger.info("Lagrer Søknad fra Omsorgspenger-Utbetaling-SNF")
         val søknadDAO = søknadsHendelse.tilSøknadDAO()
         val save = repository.save(søknadDAO)
-        logger.info("SøknadsHendelse for omsorgspengerutbetaling SNF lagret: {}", save)
+        logger.info("Søknad for Omsorgspenger-Utbetaling-SNF lagret: {}", save)
     }
 }

@@ -21,9 +21,9 @@ class PleiepengerSyktBarnHendelseKonsument(
 
     @KafkaListener(topics = [PP_SYKT_BARN], groupId = "#{'\${spring.kafka.consumer.group-id}'}", containerFactory = "kafkaJsonListenerContainerFactory")
     fun konsumer(@Payload hendelse: TopicEntry) {
-        logger.info("Mottok hendelse fra pleiepenger sykt barn {}", hendelse)
+        logger.info("Mottok hendelse fra Pleiepenger-Sykt-Barn")
 
-        logger.info("Mapper om fra hendelse pleiepenger sykt barn til SøknadsHendelse...")
+        logger.info("Mapper om fra TopicEntry til Søknad for Pleiepenger-Sykt-Barn")
         val melding = JSONObject(hendelse.data.melding)
         val søknadsHendelse = Søknad(
                 aktørId = AktørId(melding.getJSONObject("søker").getString("aktørId")),
@@ -35,9 +35,9 @@ class PleiepengerSyktBarnHendelseKonsument(
                 søknad = hendelse.data.melding
         )
 
-        logger.info("Lagrer søknadsHendelse for pleiepenger sykt barn...")
+        logger.info("Lagrer Søknad fra Pleiepenger-Sykt-Barn")
         val søknadDAO = søknadsHendelse.tilSøknadDAO()
         val save = repository.save(søknadDAO)
-        logger.info("SøknadsHendelse for pleiepenger sykt barn lagret: {}", save)
+        logger.info("Søknad for Pleiepenger-Sykt-Barn lagret: {}", save)
     }
 }
