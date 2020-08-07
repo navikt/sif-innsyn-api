@@ -18,6 +18,7 @@ import no.nav.sifinnsynapi.soknad.SøknadRepository
 import no.nav.sifinnsynapi.utils.*
 import org.apache.kafka.clients.producer.Producer
 import org.awaitility.kotlin.await
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
@@ -76,8 +77,13 @@ class FellesTestMedAlleSøknader {
         producer = embeddedKafkaBroker.creatKafkaProducer()
     }
 
+    @AfterEach
+    internal fun tearDown() {
+        repository.deleteAll() //Tømmer databasen mellom hver test
+    }
+
     @Test
-    fun `Konsumere hendelse persister og tilgjengligjør gjennom API`() {
+    fun `Konsumerer hendelser fra alle søkander, persister og tilgjengligjør gjennom API`() {
 
         //Sjekker at repository er tomt
         repository.findAllByAktørId(aktørId).ikkeEksisterer()
@@ -91,7 +97,7 @@ class FellesTestMedAlleSøknader {
         //Legger en hendelse om mottatt søknad om omsorgspenger utvidet rett
         producer.leggPåTopic(defaultHendelse, Topics.OMP_UTVIDET_RETT, mapper)
 
-        //Legger en hendelse om mottatt søknad ompleiepenger sykt barn
+        //Legger en hendelse om mottatt søknad om pleiepenger sykt barn
         producer.leggPåTopic(defaultHendelse, Topics.PP_SYKT_BARN, mapper)
 
         //Forventer at ved restkall mot "/soknad" så får vi alle søknadene med riktig "søknadstype" som er koblet til spesifikk aktørId
