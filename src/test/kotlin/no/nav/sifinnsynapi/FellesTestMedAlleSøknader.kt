@@ -84,23 +84,43 @@ class FellesTestMedAlleSøknader {
     }
 
     @Test
-    @Ignore //TODO: FIX, feiler ved deploy
+    //@Ignore //TODO: FIX, feiler ved deploy
     fun `Konsumerer hendelser fra alle søkander, persister og tilgjengligjør gjennom API`() {
 
         //Sjekker at repository er tomt
         repository.findAllByAktørId(aktørId).ikkeEksisterer()
 
         //Legger en hendelse om mottatt søknad om omsorgspengerutbetaling for selvstendig næringsdrivende og frilans
-        producer.leggPåTopic(defaultHendelse, Topics.OMP_UTBETALING_SNF, mapper)
+        var journalførtMelding = defaultHendelse.data.journalførtMelding.copy(("1"))
+        producer.leggPåTopic(defaultHendelse.copy(
+                defaultHendelse.data.copy(
+                        journalførtMelding = journalførtMelding
+                )
+        ), OMP_UTBETALING_SNF, mapper)
 
+        journalførtMelding = journalførtMelding.copy("2")
         //Legger en hendelse om mottatt søknad om omsorgspengerutbetaling for arbeidstaker
-        producer.leggPåTopic(defaultHendelse, Topics.OMP_UTBETALING_ARBEIDSTAKER, mapper)
+        producer.leggPåTopic(defaultHendelse.copy(
+                defaultHendelse.data.copy(
+                        journalførtMelding = journalførtMelding
+                )
+        ), OMP_UTBETALING_ARBEIDSTAKER, mapper)
 
+        journalførtMelding = journalførtMelding.copy("3")
         //Legger en hendelse om mottatt søknad om omsorgspenger utvidet rett
-        producer.leggPåTopic(defaultHendelse, Topics.OMP_UTVIDET_RETT, mapper)
+        producer.leggPåTopic(defaultHendelse.copy(
+                defaultHendelse.data.copy(
+                        journalførtMelding = journalførtMelding
+                )
+        ), OMP_UTVIDET_RETT, mapper)
 
+        journalførtMelding = journalførtMelding.copy("4")
         //Legger en hendelse om mottatt søknad om pleiepenger sykt barn
-        producer.leggPåTopic(defaultHendelse, Topics.PP_SYKT_BARN, mapper)
+        producer.leggPåTopic(defaultHendelse.copy(
+                defaultHendelse.data.copy(
+                        journalførtMelding = journalførtMelding
+                )
+        ), PP_SYKT_BARN, mapper)
 
         //Forventer at ved restkall mot "/soknad" så får vi alle søknadene med riktig "søknadstype" som er koblet til spesifikk aktørId
         await.atMost(5, TimeUnit.SECONDS).untilAsserted {
@@ -113,7 +133,19 @@ class FellesTestMedAlleSøknader {
                             "søknadstype": "OMP_UTBETALING_SNF",
                             "status": "MOTTATT",
                             "saksId": null,
-                            "journalpostId": "123456789",
+                            "journalpostId": "1",
+                            "søknad": {
+                              "søker": {
+                                "fødselsnummer": "1234567",
+                                "aktørId": "123456"
+                              }
+                            }
+                          },
+                          {
+                            "søknadstype": "OMP_UTBETALING_ARBEIDSTAKER",
+                            "status": "MOTTATT",
+                            "saksId": null,
+                            "journalpostId": "2",
                             "søknad": {
                               "søker": {
                                 "fødselsnummer": "1234567",
@@ -125,19 +157,7 @@ class FellesTestMedAlleSøknader {
                             "søknadstype": "OMP_UTVIDET_RETT",
                             "status": "MOTTATT",
                             "saksId": null,
-                            "journalpostId": "123456789",
-                            "søknad": {
-                              "søker": {
-                                "fødselsnummer": "1234567",
-                                "aktørId": "123456"
-                              }
-                            }
-                          },
-						  {
-                            "søknadstype": "OMP_UTBETALING_ARBEIDSTAKER",
-                            "status": "MOTTATT",
-                            "saksId": null,
-                            "journalpostId": "123456789",
+                            "journalpostId": "3",
                             "søknad": {
                               "søker": {
                                 "fødselsnummer": "1234567",
@@ -149,7 +169,7 @@ class FellesTestMedAlleSøknader {
                             "søknadstype": "PP_SYKT_BARN",
                             "status": "MOTTATT",
                             "saksId": null,
-                            "journalpostId": "123456789",
+                            "journalpostId": "4",
                             "søknad": {
                               "søker": {
                                 "fødselsnummer": "1234567",
