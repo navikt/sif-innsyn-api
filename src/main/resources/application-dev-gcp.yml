@@ -5,7 +5,7 @@ no.nav:
     k9-selvbetjening-oppslag: ${K9_OPPSLAG_REGISTER_URL}
   security:
     cors:
-      allowed-origins: https://sif-innsyn.dev-gcp.nais.io,https://sif-innsyn.dev-nav.no,https://www-q0.nav.no
+      allowed-origins: https://sif-innsyn.dev-gcp.nais.io,https://sif-innsyn.dev.nav.no,https://www-q0.nav.no
     jwt:
       issuer:
         selvbetjening:
