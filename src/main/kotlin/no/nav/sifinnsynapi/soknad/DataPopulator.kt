@@ -9,6 +9,7 @@ import org.springframework.boot.CommandLineRunner
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
+import java.time.LocalDateTime
 
 @Configuration
 @Profile("!test")
@@ -30,6 +31,7 @@ class DataPopulator(
                             journalpostId = "68493021",
                             søknadstype = Søknadstype.PP_SYKT_BARN,
                             status = SøknadsStatus.MOTTATT,
+                            opprettet = LocalDateTime.parse("2018-01-02T03:04:05.000000006Z"),
                             søknad =
                             //language=json
                             """
