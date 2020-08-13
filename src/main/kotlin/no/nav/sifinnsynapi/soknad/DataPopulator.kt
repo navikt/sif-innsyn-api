@@ -31,7 +31,7 @@ class DataPopulator(
                             journalpostId = "68493021",
                             søknadstype = Søknadstype.PP_SYKT_BARN,
                             status = SøknadsStatus.MOTTATT,
-                            opprettet = LocalDateTime.parse("2018-01-02T03:04:05.000000006Z"),
+                            opprettet = LocalDateTime.parse("2018-01-02T03:04:05"),
                             søknad =
                             //language=json
                             """
