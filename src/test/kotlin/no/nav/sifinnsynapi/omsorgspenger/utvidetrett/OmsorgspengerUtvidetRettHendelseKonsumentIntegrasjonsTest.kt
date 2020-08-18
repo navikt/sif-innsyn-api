@@ -102,12 +102,6 @@ class OmsorgspengerUtvidetRettHendelseKonsumentIntegrasjonsTest {
                             "status": "MOTTATT",
                             "saksId": null,
                             "journalpostId": "123456789",
-                            "dokummenter": [
-                              {
-                                "url": "https://saf-q1.nais.preprod.local/rest/hentdokument/123456789/dok-123/ARKIV",
-                                "tittel": null
-                              }
-                            ],
                             "søknad": {
                               "søker": {
                                 "fødselsnummer": "1234567",
