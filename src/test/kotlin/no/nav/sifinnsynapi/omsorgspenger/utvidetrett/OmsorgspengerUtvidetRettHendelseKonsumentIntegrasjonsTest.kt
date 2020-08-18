@@ -91,7 +91,7 @@ class OmsorgspengerUtvidetRettHendelseKonsumentIntegrasjonsTest {
         omsorgspengerUtvidetRettProducer.leggPåTopic(defaultHendelse, OMP_UTVIDET_RETT, mapper)
 
         // forvent at mottatt hendelse konsumeres og persisteres, samt at gitt restkall gitt forventet resultat.
-        await.atMost(5, TimeUnit.SECONDS).untilAsserted {
+        await.atMost(20, TimeUnit.SECONDS).untilAsserted {
             val responseEntity = restTemplate.exchange("/soknad", HttpMethod.GET, httpEntity, object : ParameterizedTypeReference<List<SøknadDTO>>() {})
             val forventetRespons =
                     //language=json
@@ -102,6 +102,12 @@ class OmsorgspengerUtvidetRettHendelseKonsumentIntegrasjonsTest {
                             "status": "MOTTATT",
                             "saksId": null,
                             "journalpostId": "123456789",
+                            "dokummenter": [
+                              {
+                                "url": "https://saf-q1.nais.preprod.local/rest/hentdokument/123456789/dok-123/ARKIV",
+                                "tittel": null
+                              }
+                            ],
                             "søknad": {
                               "søker": {
                                 "fødselsnummer": "1234567",
@@ -127,7 +133,7 @@ class OmsorgspengerUtvidetRettHendelseKonsumentIntegrasjonsTest {
         stubForAktørId("annenAktørID-123456", 200)
 
         // forvent at mottatt hendelse konsumeres og persisteres, samt at gitt restkall gitt forventet resultat.
-        await.atMost(5, TimeUnit.SECONDS).untilAsserted {
+        await.atMost(20, TimeUnit.SECONDS).untilAsserted {
             val responseEntity = restTemplate.exchange("/soknad", HttpMethod.GET, httpEntity, object : ParameterizedTypeReference<List<SøknadDTO>>() {})
             val forventetRespons =
                     //language=json
@@ -150,7 +156,7 @@ class OmsorgspengerUtvidetRettHendelseKonsumentIntegrasjonsTest {
         omsorgspengerUtvidetRettProducer.leggPåTopic(hendelse, OMP_UTVIDET_RETT, mapper)
 
         // forvent at kun 1 hendelse konsumeres, og at 1 duplikat ignoreres.
-        await.atMost(5, TimeUnit.SECONDS).until { repository.findAllByAktørId(aktørId).size == 1 }
+        await.atMost(20, TimeUnit.SECONDS).until { repository.findAllByAktørId(aktørId).size == 1 }
     }
 
     private fun ResponseEntity<List<SøknadDTO>>.assert(forventetResponse: String, forventetStatus: Int) {
