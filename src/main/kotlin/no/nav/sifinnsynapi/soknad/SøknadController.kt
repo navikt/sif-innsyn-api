@@ -7,6 +7,7 @@ import no.nav.sifinnsynapi.dokument.DokumentService
 import org.slf4j.LoggerFactory
 import org.springframework.core.io.ByteArrayResource
 import org.springframework.core.io.Resource
+import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus.OK
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -46,6 +47,7 @@ class SøknadController(
         val resource = ByteArrayResource(dokumentDAO!!.innhold)
 
         return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "filename=søknad.pdf")
                 .contentLength(dokumentDAO.innhold.size.toLong())
                 .body(resource)
 
