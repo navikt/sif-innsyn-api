@@ -22,6 +22,7 @@ class SøknadService(
 
         return repo.findAllByAktørId(aktørId).map {
             SøknadDTO(
+                    søknadId = it.id,
                     saksId = it.saksId,
                     journalpostId = it.journalpostId,
                     søknadstype = it.søknadstype,

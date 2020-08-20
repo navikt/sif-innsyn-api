@@ -3,6 +3,8 @@ package no.nav.sifinnsynapi.common
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
 import no.nav.security.token.support.test.spring.TokenGeneratorConfiguration
+import no.nav.sifinnsynapi.Routes.SØKNAD
+import no.nav.sifinnsynapi.dokument.DokumentService
 import no.nav.sifinnsynapi.soknad.SøknadController
 import no.nav.sifinnsynapi.soknad.SøknadDTO
 import no.nav.sifinnsynapi.soknad.SøknadService
@@ -21,6 +23,9 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import java.net.URI
+import java.net.URLDecoder
+import java.nio.charset.Charset
 import java.time.LocalDateTime
 import java.time.ZonedDateTime
 import java.util.*
@@ -46,6 +51,9 @@ class SøknadControllerTest {
     @MockkBean
     lateinit var søknadService: SøknadService
 
+    @MockkBean
+    lateinit var dokumentService: DokumentService
+
     companion object {
         private val fødselsnummer = Fødselsnummer.valueOf("1234567")
         private val authorizationHeader = tokenSomHttpHeader(fødselsnummer)
@@ -58,7 +66,7 @@ class SøknadControllerTest {
         } throws Exception("Ooops, noe gikk galt...")
 
         mockMvc.perform(MockMvcRequestBuilders
-                .get("/soknad")
+                .get(URI(URLDecoder.decode(SØKNAD, Charset.defaultCharset())))
                 .accept(MediaType.APPLICATION_JSON)
                 .headers(authorizationHeader)
         )
@@ -71,16 +79,16 @@ class SøknadControllerTest {
     @Test
     fun `uautorisert kall gir 401 med forventet problem-details`() {
         mockMvc.perform(MockMvcRequestBuilders
-                .get("/soknad")
+                .get(URI(URLDecoder.decode(SØKNAD, Charset.defaultCharset())))
                 .accept(MediaType.APPLICATION_JSON)
                 // .headers(authorizationHeader)
         )
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isUnauthorized)
-                .andExpect(jsonPath("$.type").value("/problem-details/unauthorized"))
-                .andExpect(jsonPath("$.title").value("Unauthorized"))
+                .andExpect(jsonPath("$.type").value("/problem-details/uautentisert-forespørsel"))
+                .andExpect(jsonPath("$.title").value("Ikke autentisert"))
                 .andExpect(jsonPath("$.status").value(401))
-                .andExpect(jsonPath("$.detail").value("Ikke autentisert: Forespørsel med gitt token er ikke autentisert."))
+                .andExpect(jsonPath("$.detail").value("no.nav.security.token.support.core.exceptions.JwtTokenMissingException: no valid token found in validation context"))
                 .andExpect(jsonPath("$.stackTrace").doesNotExist())
     }
 
@@ -90,6 +98,7 @@ class SøknadControllerTest {
             søknadService.hentSøknad()
         } returns listOf(
                 SøknadDTO(
+                        søknadId = UUID.randomUUID(),
                         saksId = "abc123",
                         søknadstype = Søknadstype.OMP_UTBETALING_SNF,
                         status = SøknadsStatus.MOTTATT,
@@ -107,7 +116,7 @@ class SøknadControllerTest {
         )
 
         mockMvc.perform(MockMvcRequestBuilders
-                .get("/soknad")
+                .get(URI(URLDecoder.decode(SØKNAD, Charset.defaultCharset())))
                 .accept(MediaType.APPLICATION_JSON)
                 .headers(authorizationHeader)
         )

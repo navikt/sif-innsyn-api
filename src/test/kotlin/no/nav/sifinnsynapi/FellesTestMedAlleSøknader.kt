@@ -5,9 +5,9 @@ import assertk.assertions.isEmpty
 import assertk.assertions.isEqualTo
 import com.fasterxml.jackson.databind.ObjectMapper
 import no.nav.security.token.support.test.spring.TokenGeneratorConfiguration
+import no.nav.sifinnsynapi.Routes.SØKNAD
 import no.nav.sifinnsynapi.common.AktørId
 import no.nav.sifinnsynapi.common.Fødselsnummer
-import no.nav.sifinnsynapi.config.Topics
 import no.nav.sifinnsynapi.config.Topics.OMP_UTBETALING_ARBEIDSTAKER
 import no.nav.sifinnsynapi.config.Topics.OMP_UTBETALING_SNF
 import no.nav.sifinnsynapi.config.Topics.OMP_UTVIDET_RETT
@@ -18,7 +18,6 @@ import no.nav.sifinnsynapi.soknad.SøknadRepository
 import no.nav.sifinnsynapi.utils.*
 import org.apache.kafka.clients.producer.Producer
 import org.awaitility.kotlin.await
-import org.junit.Ignore
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
@@ -84,7 +83,6 @@ class FellesTestMedAlleSøknader {
     }
 
     @Test
-    //@Ignore //TODO: FIX, feiler ved deploy
     fun `Konsumerer hendelser fra alle søkander, persister og tilgjengligjør gjennom API`() {
 
         //Sjekker at repository er tomt
@@ -122,9 +120,9 @@ class FellesTestMedAlleSøknader {
                 )
         ), PP_SYKT_BARN, mapper)
 
-        //Forventer at ved restkall mot "/soknad" så får vi alle søknadene med riktig "søknadstype" som er koblet til spesifikk aktørId
-        await.atMost(20, TimeUnit.SECONDS).untilAsserted {
-            val responseEntity = restTemplate.exchange("/soknad", HttpMethod.GET, httpEntity, object : ParameterizedTypeReference<List<SøknadDTO>>() {})
+        //Forventer at ved restkall mot "/øoknad" så får vi alle søknadene med riktig "søknadstype" som er koblet til spesifikk aktørId
+        await.atMost(60, TimeUnit.SECONDS).untilAsserted {
+            val responseEntity = restTemplate.exchange(SØKNAD, HttpMethod.GET, httpEntity, object : ParameterizedTypeReference<List<SøknadDTO>>() {})
             val forventetRespons =
                     //language=json
                     """

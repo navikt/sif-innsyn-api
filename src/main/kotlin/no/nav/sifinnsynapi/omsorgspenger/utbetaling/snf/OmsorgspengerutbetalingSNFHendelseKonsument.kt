@@ -2,6 +2,8 @@ package no.nav.sifinnsynapi.omsorgspenger.utbetaling.snf
 
 import no.nav.sifinnsynapi.common.*
 import no.nav.sifinnsynapi.config.Topics.OMP_UTBETALING_SNF
+import no.nav.sifinnsynapi.dokument.DokumentDAO
+import no.nav.sifinnsynapi.dokument.DokumentRepository
 import no.nav.sifinnsynapi.soknad.Søknad
 import no.nav.sifinnsynapi.soknad.SøknadRepository
 import org.json.JSONObject
@@ -13,7 +15,8 @@ import java.time.ZonedDateTime
 
 @Service
 class OmsorgspengerutbetalingSNFHendelseKonsument(
-        private val repository: SøknadRepository
+        private val søknadRepo: SøknadRepository,
+        private val dokumentRepo: DokumentRepository
 ) {
     companion object {
         private val logger = LoggerFactory.getLogger(OmsorgspengerutbetalingSNFHendelseKonsument::class.java)
@@ -37,8 +40,15 @@ class OmsorgspengerutbetalingSNFHendelseKonsument(
         )
 
         logger.info("Lagrer Søknad fra Omsorgspenger-Utbetaling-SNF")
-        val søknadDAO = søknadsHendelse.tilSøknadDAO()
-        val save = repository.save(søknadDAO)
-        logger.info("Søknad for Omsorgspenger-Utbetaling-SNF lagret: {}", save)
+        val søknadDAO = søknadRepo.save(søknadsHendelse.tilSøknadDAO())
+        logger.info("Søknad for Omsorgspenger-Utbetaling-SNF lagret: {}", søknadDAO)
+
+        logger.info("Lagrer vedlagt pdfdokument fra Omsorgspenger-Utbetaling-SNF")
+        val rawPdf = hendelse.data.pdfDokument
+        val dokumentDAO = dokumentRepo.save(DokumentDAO(
+                innhold = rawPdf,
+                søknadId = søknadDAO.id
+        ))
+        logger.info("Pdfdokument for Omsorgspenger-Utbetaling-SNF lagret: {}", dokumentDAO)
     }
 }

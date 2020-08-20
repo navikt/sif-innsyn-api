@@ -4,17 +4,21 @@ import no.nav.sifinnsynapi.common.AktørId
 import no.nav.sifinnsynapi.common.Fødselsnummer
 import no.nav.sifinnsynapi.common.SøknadsStatus
 import no.nav.sifinnsynapi.common.Søknadstype
+import no.nav.sifinnsynapi.dokument.DokumentDAO
+import no.nav.sifinnsynapi.dokument.DokumentRepository
 import org.slf4j.LoggerFactory
 import org.springframework.boot.CommandLineRunner
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
+import org.springframework.core.io.ClassPathResource
 import java.time.LocalDateTime
 
 @Configuration
 @Profile("!test")
 class DataPopulator(
-        private val repo: SøknadRepository
+        private val repo: SøknadRepository,
+        private val dokRepo: DokumentRepository
 ) {
     companion object {
         val logger = LoggerFactory.getLogger(CommandLineRunner::class.java)
@@ -127,7 +131,12 @@ class DataPopulator(
                     )
             ).map {
                 logger.info("Lagrer søknad: {}", it)
-                repo.save(it)
+                val søknadDAO = repo.save(it)
+                dokRepo.save(DokumentDAO(
+                        innhold = ClassPathResource("/static/eksempel-søknad.pdf").inputStream.readAllBytes(),
+                        søknadId = søknadDAO.id
+                ))
+                søknadDAO
             }.forEach {
                 logger.info("Hentet Søknad: {}", it)
             }

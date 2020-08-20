@@ -7,8 +7,10 @@ import no.nav.sifinnsynapi.common.SøknadsStatus
 import no.nav.sifinnsynapi.common.Søknadstype
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.util.*
 
 data class SøknadDTO @JsonCreator constructor(
+        @JsonProperty("søknadId") val søknadId: UUID,
         @JsonProperty("søknadstype") val søknadstype: Søknadstype,
         @JsonProperty("status") val status: SøknadsStatus,
         @JsonProperty("søknad") val søknad: Map<String, Any>,

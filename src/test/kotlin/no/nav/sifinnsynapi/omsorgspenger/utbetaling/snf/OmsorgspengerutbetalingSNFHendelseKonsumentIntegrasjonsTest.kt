@@ -5,6 +5,7 @@ import assertk.assertions.isEmpty
 import assertk.assertions.isEqualTo
 import com.fasterxml.jackson.databind.ObjectMapper
 import no.nav.security.token.support.test.spring.TokenGeneratorConfiguration
+import no.nav.sifinnsynapi.Routes.SØKNAD
 import no.nav.sifinnsynapi.common.AktørId
 import no.nav.sifinnsynapi.common.Fødselsnummer
 import no.nav.sifinnsynapi.config.Topics.OMP_UTBETALING_SNF
@@ -91,8 +92,8 @@ class OmsorgspengerutbetalingSNFHendelseKonsumentIntegrasjonsTest {
         omsorgspengerutbetalingSnfProducer.leggPåTopic(defaultHendelse, OMP_UTBETALING_SNF, mapper)
 
         // forvent at mottatt hendelse konsumeres og persisteres, samt at gitt restkall gitt forventet resultat.
-        await.atMost(20, TimeUnit.SECONDS).untilAsserted {
-            val responseEntity = restTemplate.exchange("/soknad", HttpMethod.GET, httpEntity, object : ParameterizedTypeReference<List<SøknadDTO>>() {})
+        await.atMost(60, TimeUnit.SECONDS).untilAsserted {
+            val responseEntity = restTemplate.exchange(SØKNAD, HttpMethod.GET, httpEntity, object : ParameterizedTypeReference<List<SøknadDTO>>() {})
             val forventetRespons =
                     //language=json
                     """
@@ -127,8 +128,8 @@ class OmsorgspengerutbetalingSNFHendelseKonsumentIntegrasjonsTest {
         stubForAktørId("annenAktørID-123456", 200)
 
         // forvent at mottatt hendelse konsumeres og persisteres, samt at gitt restkall gitt forventet resultat.
-        await.atMost(20, TimeUnit.SECONDS).untilAsserted {
-            val responseEntity = restTemplate.exchange("/soknad", HttpMethod.GET, httpEntity, object : ParameterizedTypeReference<List<SøknadDTO>>() {})
+        await.atMost(60, TimeUnit.SECONDS).untilAsserted {
+            val responseEntity = restTemplate.exchange(SØKNAD, HttpMethod.GET, httpEntity, object : ParameterizedTypeReference<List<SøknadDTO>>() {})
             val forventetRespons =
                     //language=json
                     """
@@ -150,7 +151,7 @@ class OmsorgspengerutbetalingSNFHendelseKonsumentIntegrasjonsTest {
         omsorgspengerutbetalingSnfProducer.leggPåTopic(hendelse, OMP_UTBETALING_SNF, mapper)
 
         // forvent at kun 1 hendelse konsumeres, og at 1 duplikat ignoreres.
-        await.atMost(20, TimeUnit.SECONDS).until { repository.findAllByAktørId(aktørId).size == 1 }
+        await.atMost(60, TimeUnit.SECONDS).until { repository.findAllByAktørId(aktørId).size == 1 }
     }
 
     private fun ResponseEntity<List<SøknadDTO>>.assert(forventetResponse: String, forventetStatus: Int) {

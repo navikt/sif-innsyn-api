@@ -32,7 +32,8 @@ val defaultHendelse = TopicEntry(
                 ),
                 journalførtMelding = JournalfortMelding(
                         journalpostId = "123456789"
-                )
+                ),
+                pdfDokument = file2ByteArray("eksempel-søknad.pdf")
         )
 )
 
