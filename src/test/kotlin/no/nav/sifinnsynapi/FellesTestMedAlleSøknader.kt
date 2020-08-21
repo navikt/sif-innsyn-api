@@ -18,6 +18,7 @@ import no.nav.sifinnsynapi.soknad.SøknadRepository
 import no.nav.sifinnsynapi.utils.*
 import org.apache.kafka.clients.producer.Producer
 import org.awaitility.kotlin.await
+import org.junit.Ignore
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
@@ -84,6 +85,7 @@ class FellesTestMedAlleSøknader {
         repository.deleteAll() //Tømmer databasen mellom hver test
     }
 
+    @Ignore
     @Test
     fun `Konsumerer hendelser fra alle søkander, persister og tilgjengligjør gjennom API`() {
 
