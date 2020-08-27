@@ -19,7 +19,7 @@ class STSClient(
         private val log: Logger = LoggerFactory.getLogger(STSClient::class.java)
     }
 
-    fun oicdToken() {
+    fun oicdToken(): String {
         if (cachedOidcToken.shouldBeRenewed()) {
             log.info("Getting token from STS.")
 
@@ -28,6 +28,7 @@ class STSClient(
                     Token::class.java
             )
         }
+        return cachedOidcToken!!.token
     }
 
     private fun Token?.shouldBeRenewed(): Boolean = this?.hasExpired() ?: true
