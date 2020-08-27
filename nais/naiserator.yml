@@ -59,6 +59,7 @@ spec:
   envFrom:
     - secret: sif-innsyn-api.apigw-apikey
     - secret: sif-innsyn-api.sts-credentials
+    - secret: sif-innsyn-api.sts-apikey
   env:
   {{#each env}}
    - name: {{@key}}
