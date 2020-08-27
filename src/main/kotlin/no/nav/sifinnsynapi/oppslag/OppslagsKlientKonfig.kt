@@ -1,6 +1,7 @@
-package no.nav.sifinnsynapi.config
+package no.nav.sifinnsynapi.oppslag
 
 import no.nav.security.token.support.spring.validation.interceptor.BearerTokenClientHttpRequestInterceptor
+import no.nav.sifinnsynapi.config.ApiGwApiKeyConfig
 import no.nav.sifinnsynapi.http.MDCValuesPropagatingClienHttpRequesInterceptor
 import no.nav.sifinnsynapi.util.Constants.X_CORRELATION_ID
 import no.nav.sifinnsynapi.util.Constants.X_NAV_APIKEY
@@ -20,7 +21,7 @@ import java.time.Duration
 import java.util.*
 
 @Configuration
-class RestTemplateConfig(
+class OppslagsKlientKonfig(
         @Value("\${no.nav.gateways.k9-selvbetjening-oppslag}")
         private val oppslagsUrl: String,
         private val apigwConfig: ApiGwApiKeyConfig,
@@ -29,7 +30,7 @@ class RestTemplateConfig(
 ) : RetryListener {
 
     private companion object {
-        val logger: Logger = LoggerFactory.getLogger(RestTemplateConfig::class.java)
+        val logger: Logger = LoggerFactory.getLogger(OppslagsKlientKonfig::class.java)
     }
 
     @Bean(name = ["k9OppslagsKlient"])
