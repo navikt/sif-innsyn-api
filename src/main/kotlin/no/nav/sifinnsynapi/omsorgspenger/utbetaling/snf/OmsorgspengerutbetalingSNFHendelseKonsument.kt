@@ -44,11 +44,13 @@ class OmsorgspengerutbetalingSNFHendelseKonsument(
         logger.info("Søknad for Omsorgspenger-Utbetaling-SNF lagret: {}", søknadDAO)
 
         logger.info("Lagrer vedlagt pdfdokument fra Omsorgspenger-Utbetaling-SNF")
-        val rawPdf = hendelse.data.pdfDokument
-        val dokumentDAO = dokumentRepo.save(DokumentDAO(
-                innhold = rawPdf,
-                søknadId = søknadDAO.id
-        ))
-        logger.info("Pdfdokument for Omsorgspenger-Utbetaling-SNF lagret: {}", dokumentDAO)
+        hendelse.data.pdfDokument?.let {
+            val dokumentDAO = dokumentRepo.save(DokumentDAO(
+                    innhold = it,
+                    søknadId = søknadDAO.id
+            ))
+            logger.info("Pdfdokument for Omsorgspenger-Utbetaling-SNF lagret: {}", dokumentDAO)
+        }
+
     }
 }
