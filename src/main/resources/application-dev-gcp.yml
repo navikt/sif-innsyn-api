@@ -1,8 +1,13 @@
 no.nav:
   apigw:
-    apikey: ${APIGW_API_KEY}
+    apikey: ${APIGW_API_KEY} # kubectl secret
+    sts-apikey: ${STS_APIKEY} # kubectl secret
   gateways:
     k9-selvbetjening-oppslag: ${K9_OPPSLAG_REGISTER_URL}
+    sts:
+      url: ${SECURITY_TOKEN_SERVICE_REST_URL}
+      username: ${STS_USERNAME}
+      password: ${STS_PASSWORD}
   security:
     cors:
       allowed-origins: https://sif-innsyn.dev-gcp.nais.io,https://sif-innsyn.dev.nav.no,https://www-q0.nav.no
