@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
-import java.net.URI
+import org.springframework.web.util.UriComponentsBuilder
 import java.time.LocalDateTime
 
 @Service
@@ -17,23 +17,26 @@ class STSClient(
 
     companion object {
         private val log: Logger = LoggerFactory.getLogger(STSClient::class.java)
+
+        val stsUrl = UriComponentsBuilder
+                .fromUriString("/rest/v1/sts/token")
+                .queryParam("grant_type", "client_credentials")
+                .queryParam("scope", "openid")
+                .build()
     }
 
     fun oicdToken(): String {
         if (cachedOidcToken.shouldBeRenewed()) {
             log.info("Getting token from STS.")
 
-            cachedOidcToken = stsClient.getForObject(
-                    URI("/rest/v1/sts/token?grant_type=client_credentials&scope=openid"),
-                    Token::class.java
-            )
+            cachedOidcToken = stsClient.getForEntity(stsUrl.toUriString(), Token::class.java).body
         }
         return cachedOidcToken!!.token
     }
 
     private fun Token?.shouldBeRenewed(): Boolean = this?.hasExpired() ?: true
 
-    data class Token(
+    private data class Token(
             @JsonProperty(value = "access_token", required = true)
             val token: String,
             @JsonProperty(value = "token_type", required = true)
