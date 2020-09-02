@@ -123,7 +123,7 @@ class PleiepengerSyktBarnHendelseKonsumentIntegrasjonsTest {
                     """.trimIndent()
             responseEntity.assert(forventetRespons, 200)
 
-            val lesMelding = dittNavConsumer.lesMelding(defaultHendelse.data.melding["soknadId"] as String)
+            val lesMelding = dittNavConsumer.lesMelding(defaultHendelse.data.melding["søknadId"] as String)
             log.info("----> dittnav melding: {}", lesMelding)
             assertThat(lesMelding).isNotEmpty()
         }

@@ -61,7 +61,7 @@ class PleiepengerSyktBarnHendelseKonsument(
 private fun JSONObject.somNøkkel(systembruker: String): Nokkel {
     return Nokkel(
             systembruker,
-            getString("soknadId")
+            getString("søknadId")
     )
 }
 

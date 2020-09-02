@@ -23,7 +23,7 @@ val defaultHendelse = TopicEntry(
         data = SøknadsHendelse(
                 metadata = defaultMetadata,
                 melding = mapOf(
-                        "soknadId" to UUID.randomUUID().toString(),
+                        "søknadId" to UUID.randomUUID().toString(),
                         "mottatt" to ZonedDateTime.now(),
                         "søker" to mapOf(
                                 "fødselsnummer" to "1234567",

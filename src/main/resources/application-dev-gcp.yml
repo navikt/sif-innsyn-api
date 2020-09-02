@@ -61,10 +61,18 @@ spring:
     hibernate:
       ddl-auto: create-drop
   kafka:
-    properties:
-      schema:
-        registry:
-          url:   https://kafka-schema-registry.nais.adeo.no
+    producer:
+      client-id: sif-innsyn-api
+      retries: 3
+      key-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+      value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+      ssl:
+        trust-store-location: file:${javax.net.ssl.trustStore}
+        trust-store-password: ${javax.net.ssl.trustStorePassword}
+      properties:
+        schema:
+          registry:
+            url: https://kafka-schema-registry.nais.preprod.local
       security:
         protocol:
       sasl:
