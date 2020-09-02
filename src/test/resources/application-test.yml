@@ -1,4 +1,11 @@
 no.nav:
+  dittnav:
+    pleiepenger-sykt-barn:
+      beskjed:
+        grupperingsId: pleiepenger-sykt-barn
+        tekst: 'Vi har mottatt din søknad om pleiepenger. Klikk på linken for mer info.'
+        link: https://sif-innsyn.dev.nav.no/familie/sykdom-i-familien/soknad/innsyn
+        dagerSynlig: 7
   apigw:
     apikey: test-key
     sts-apikey: sts-apikey
@@ -35,6 +42,15 @@ spring:
     show-sql: true
     database-platform: org.hibernate.dialect.PostgreSQL9Dialect
   kafka:
+    producer:
+      client-id: sif-innsyn-api
+      retries: 3
+      key-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+      value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+      properties:
+        schema:
+          registry:
+            url: mock://localhost #Oppretter en mock av schemaRegistry. Se io.confluent.kafka.serializers.AbstractKafkaSchemaSerDe.MOCK_URL_PREFIX
     consumer:
       retry-interval: 5_000 # Egendefinert property
       group-id: group_id

@@ -3,16 +3,21 @@ package no.nav.sifinnsynapi.pleiepenger.syktbarn
 import assertk.assertThat
 import assertk.assertions.isEmpty
 import assertk.assertions.isEqualTo
+import assertk.assertions.isNotEmpty
 import com.fasterxml.jackson.databind.ObjectMapper
+import no.nav.brukernotifikasjon.schemas.Beskjed
+import no.nav.brukernotifikasjon.schemas.Nokkel
 import no.nav.security.token.support.test.spring.TokenGeneratorConfiguration
 import no.nav.sifinnsynapi.Routes.SØKNAD
 import no.nav.sifinnsynapi.common.AktørId
 import no.nav.sifinnsynapi.common.Fødselsnummer
+import no.nav.sifinnsynapi.config.Topics.DITT_NAV_BESKJED
 import no.nav.sifinnsynapi.config.Topics.PP_SYKT_BARN
 import no.nav.sifinnsynapi.soknad.SøknadDAO
 import no.nav.sifinnsynapi.soknad.SøknadDTO
 import no.nav.sifinnsynapi.soknad.SøknadRepository
 import no.nav.sifinnsynapi.utils.*
+import org.apache.kafka.clients.consumer.Consumer
 import org.apache.kafka.clients.producer.Producer
 import org.awaitility.kotlin.await
 import org.junit.jupiter.api.AfterEach
@@ -40,7 +45,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.util.concurrent.TimeUnit
 
 @EmbeddedKafka( // Setter opp og tilgjengligjør embeded kafka broker
-        topics = [PP_SYKT_BARN],
+        topics = [PP_SYKT_BARN, DITT_NAV_BESKJED],
         bootstrapServersProperty = "spring.kafka.bootstrap-servers" // Setter bootstrap-servers for consumer og producer.
 )
 @ExtendWith(SpringExtension::class)
@@ -66,9 +71,10 @@ class PleiepengerSyktBarnHendelseKonsumentIntegrasjonsTest {
     lateinit var restTemplate: TestRestTemplate // Restklient som brukes til å gjøre restkall mot endepunkter i appen.
 
     lateinit var producer: Producer<String, Any> // Kafka producer som brukes til å legge på kafka meldinger. Mer spesifikk, Hendelser om pp-sykt-barn
+    lateinit var dittNavConsumer: Consumer<Nokkel, Beskjed> // Kafka consumer som brukes til å lese kafka meldinger.
 
     companion object {
-        private val logger: Logger = LoggerFactory.getLogger(PleiepengerSyktBarnHendelseKonsumentIntegrasjonsTest::class.java)
+        private val log: Logger = LoggerFactory.getLogger(PleiepengerSyktBarnHendelseKonsumentIntegrasjonsTest::class.java)
         private val aktørId = AktørId.valueOf("123456")
         private val fødselsnummer = Fødselsnummer.valueOf("1234567")
         private val httpEntity = tokenSomHttpEntity(fødselsnummer)
@@ -76,7 +82,8 @@ class PleiepengerSyktBarnHendelseKonsumentIntegrasjonsTest {
 
     @BeforeAll
     fun setUp() {
-        producer = embeddedKafkaBroker.createKafkaProducer()
+        producer = embeddedKafkaBroker.opprettKafkaProducer()
+        dittNavConsumer = embeddedKafkaBroker.opprettDittnavConsumer()
     }
 
     @AfterEach
@@ -115,6 +122,10 @@ class PleiepengerSyktBarnHendelseKonsumentIntegrasjonsTest {
                         ]
                     """.trimIndent()
             responseEntity.assert(forventetRespons, 200)
+
+            val lesMelding = dittNavConsumer.lesMelding(defaultHendelse.data.melding["soknadId"] as String)
+            log.info("----> dittnav melding: {}", lesMelding)
+            assertThat(lesMelding).isNotEmpty()
         }
     }
 

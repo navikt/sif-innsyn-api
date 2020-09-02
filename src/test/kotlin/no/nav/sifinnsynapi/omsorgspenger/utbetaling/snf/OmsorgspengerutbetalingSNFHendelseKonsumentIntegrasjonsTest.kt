@@ -76,7 +76,7 @@ class OmsorgspengerutbetalingSNFHendelseKonsumentIntegrasjonsTest {
 
     @BeforeAll
     fun setUp() {
-        omsorgspengerutbetalingSnfProducer = embeddedKafkaBroker.createKafkaProducer()
+        omsorgspengerutbetalingSnfProducer = embeddedKafkaBroker.opprettKafkaProducer()
     }
 
     @AfterEach

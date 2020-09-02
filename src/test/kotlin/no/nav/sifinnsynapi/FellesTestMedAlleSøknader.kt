@@ -76,7 +76,7 @@ class FellesTestMedAlleSøknader {
 
     @BeforeAll
     fun setUp() {
-        producer = embeddedKafkaBroker.createKafkaProducer()
+        producer = embeddedKafkaBroker.opprettKafkaProducer()
     }
 
     @AfterEach

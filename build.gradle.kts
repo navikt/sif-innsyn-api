@@ -21,7 +21,7 @@ val springfoxVersion by extra("2.9.2")
 val confluentVersion by extra("5.5.0")
 
 val avroVersion by extra("1.9.2")
-val brukernotifikasjonVersion by extra("1.2020.03.25-11.14-c3621e6d211a")
+val brukernotifikasjonVersion by extra("1.2020.08.21-11.47-631516352cc5")
 val logstashLogbackEncoderVersion by extra("6.3")
 val tokenValidationVersion by extra("1.1.5")
 val springCloudVersion by extra("Hoxton.SR6")
@@ -41,12 +41,16 @@ repositories {
         name = "confluent"
         url = uri("http://packages.confluent.io/maven/")
     }
+
+    maven {
+        url = uri("https://jitpack.io")
+    }
 }
 
 dependencies {
 
     // NAV
-    implementation("no.nav:brukernotifikasjon-schemas:$brukernotifikasjonVersion")
+    implementation("com.github.navikt:brukernotifikasjon-schemas:$brukernotifikasjonVersion")
     implementation("no.nav.security:token-validation-spring:$tokenValidationVersion")
     testImplementation("no.nav.security:token-validation-test-support:$tokenValidationVersion")
 
