@@ -61,6 +61,7 @@ spring:
     hibernate:
       ddl-auto: create-drop
   kafka:
+    bootstrap-servers:
     properties:
       schema:
         registry:
@@ -81,7 +82,6 @@ spring:
         trust-store-password: ${javax.net.ssl.trustStorePassword}
     consumer:
       enable-auto-commit: false
-      bootstrap-servers:
       group-id: group_id
       auto-offset-reset: earliest
       retry-interval: 60_000 # Egendefinert property
