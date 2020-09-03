@@ -18,7 +18,7 @@ spec:
         - host: kafka-schema-registry.nais-q.adeo.no
           ports:
             - port: 8443
-              name: kafka
+              name: schema-registery
               protocol: TLS
         - host: api-gw-q1.oera.no
       {{#each kafkaBootstrapServers as |server|}}
