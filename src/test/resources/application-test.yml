@@ -45,12 +45,8 @@ spring:
     producer:
       client-id: sif-innsyn-api
       retries: 3
-      key-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
-      value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
-      properties:
-        schema:
-          registry:
-            url: mock://localhost #Oppretter en mock av schemaRegistry. Se io.confluent.kafka.serializers.AbstractKafkaSchemaSerDe.MOCK_URL_PREFIX
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
     consumer:
       retry-interval: 5_000 # Egendefinert property
       group-id: group_id

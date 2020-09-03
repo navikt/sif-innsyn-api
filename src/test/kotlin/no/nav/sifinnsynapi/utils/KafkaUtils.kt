@@ -1,12 +1,9 @@
 package no.nav.sifinnsynapi.utils
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import io.confluent.kafka.serializers.AbstractKafkaAvroSerDeConfig
-import io.confluent.kafka.serializers.KafkaAvroDeserializerConfig
-import no.nav.brukernotifikasjon.schemas.Beskjed
-import no.nav.brukernotifikasjon.schemas.Nokkel
 import no.nav.sifinnsynapi.common.TopicEntry
-import no.nav.sifinnsynapi.config.Topics.DITT_NAV_BESKJED
+import no.nav.sifinnsynapi.config.Topics.INNSYN_MOTTATT
+import no.nav.sifinnsynapi.pleiepenger.syktbarn.InnsynMelding
 import org.apache.kafka.clients.consumer.Consumer
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.consumer.ConsumerRecord
@@ -28,22 +25,20 @@ fun Producer<String, Any>.leggPåTopic(hendelse: TopicEntry, topic: String, mapp
     this.flush()
 }
 
-fun EmbeddedKafkaBroker.opprettDittnavConsumer(): Consumer<Nokkel, Beskjed> {
+fun EmbeddedKafkaBroker.opprettDittnavConsumer(): Consumer<String, InnsynMelding> {
     val consumerProps = KafkaTestUtils.consumerProps("dittnv-consumer", "true", this)
-    consumerProps[ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG] = "io.confluent.kafka.serializers.KafkaAvroDeserializer"
-    consumerProps[ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG] = "io.confluent.kafka.serializers.KafkaAvroDeserializer"
-    consumerProps[KafkaAvroDeserializerConfig.SPECIFIC_AVRO_READER_CONFIG] = "true"
-    consumerProps[AbstractKafkaAvroSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG] = "mock://localhost"
+    consumerProps[ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG] = "org.apache.kafka.common.serialization.StringDeserializer"
+    consumerProps[ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG] = "org.apache.kafka.common.serialization.StringDeserializer"
 
-    val consumer = DefaultKafkaConsumerFactory<Nokkel, Beskjed>(HashMap(consumerProps)).createConsumer()
-    consumer.subscribe(listOf(DITT_NAV_BESKJED))
+    val consumer = DefaultKafkaConsumerFactory<String, InnsynMelding>(HashMap(consumerProps)).createConsumer()
+    consumer.subscribe(listOf(INNSYN_MOTTATT))
     return consumer
 }
 
-fun Consumer<Nokkel, Beskjed>.lesMelding(søknadId: String): List<ConsumerRecord<Nokkel, Beskjed>> {
+fun Consumer<String, InnsynMelding>.lesMelding(søknadId: String): List<ConsumerRecord<String, InnsynMelding>> {
     seekToBeginning(assignment())
     val consumerRecords = this.poll(Duration.ofSeconds(1))
     return consumerRecords
-            .records(DITT_NAV_BESKJED)
-            .filter { it.key().getEventId() == søknadId }
+            .records(INNSYN_MOTTATT)
+            .filter { it.key() == søknadId }
 }

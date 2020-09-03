@@ -1,6 +1,5 @@
 package no.nav.sifinnsynapi.pleiepenger.syktbarn
 
-import no.nav.brukernotifikasjon.schemas.Beskjed
 import no.nav.brukernotifikasjon.schemas.Nokkel
 import no.nav.sifinnsynapi.common.*
 import no.nav.sifinnsynapi.config.Topics.PP_SYKT_BARN
@@ -14,9 +13,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.messaging.handler.annotation.Payload
 import org.springframework.stereotype.Service
-import java.time.Instant
 import java.time.ZonedDateTime
-import java.time.temporal.ChronoUnit
 
 @Service
 class PleiepengerSyktBarnHendelseKonsument(
@@ -27,7 +24,6 @@ class PleiepengerSyktBarnHendelseKonsument(
 ) {
     companion object {
         private val logger = LoggerFactory.getLogger(PleiepengerSyktBarnHendelseKonsument::class.java)
-        const val GRUPPERINGS_ID = "pleiepengesoknad-sykt-barn"
     }
 
     @KafkaListener(topics = [PP_SYKT_BARN], groupId = "#{'\${spring.kafka.consumer.group-id}'}", containerFactory = "kafkaJsonListenerContainerFactory")
@@ -52,11 +48,20 @@ class PleiepengerSyktBarnHendelseKonsument(
         logger.info("Søknad for Pleiepenger-Sykt-Barn lagret: {}", save)
 
         dittnavService.sendBeskjed(
-                melding.somNøkkel(stsUsername),
-                melding.somBeskjed(pleiepengerDittnavBeskjedProperties)
+                melding.getString("søknadId"),
+                melding.somInnsynMelding(pleiepengerDittnavBeskjedProperties)
         )
     }
 }
+
+data class InnsynMelding(
+        val grupperingsId: String,
+        val tekst: String,
+        val link: String,
+        val dagerSynlig: Long,
+        val søkerFødselsnummer: String,
+        val eventId: String
+)
 
 private fun JSONObject.somNøkkel(systembruker: String): Nokkel {
     return Nokkel(
@@ -65,14 +70,13 @@ private fun JSONObject.somNøkkel(systembruker: String): Nokkel {
     )
 }
 
-private fun JSONObject.somBeskjed(beskjedProperties: PleiepengerDittnavBeskjedProperties): Beskjed {
-    return Beskjed(
-            System.currentTimeMillis(),
-            Instant.now().plus(beskjedProperties.dagerSynlig.toLong(), ChronoUnit.DAYS).toEpochMilli(),
-            getJSONObject("søker").getString("fødselsnummer"),
-            beskjedProperties.grupperingsId,
-            beskjedProperties.tekst,
-            beskjedProperties.link.toString(),
-            4
+private fun JSONObject.somInnsynMelding(beskjedProperties: PleiepengerDittnavBeskjedProperties): InnsynMelding {
+    return InnsynMelding(
+            søkerFødselsnummer = getJSONObject("søker").getString("fødselsnummer"),
+            tekst = beskjedProperties.tekst,
+            link = beskjedProperties.link.toString(),
+            grupperingsId = beskjedProperties.grupperingsId,
+            eventId = getString("søknadId"),
+            dagerSynlig = beskjedProperties.dagerSynlig
     )
 }

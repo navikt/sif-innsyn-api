@@ -1,20 +1,27 @@
 package no.nav.sifinnsynapi.dittnav
 
-import no.nav.brukernotifikasjon.schemas.Beskjed
-import no.nav.brukernotifikasjon.schemas.Nokkel
-import no.nav.sifinnsynapi.config.Topics.DITT_NAV_BESKJED
+import com.fasterxml.jackson.databind.ObjectMapper
+import no.nav.sifinnsynapi.config.Topics.INNSYN_MOTTATT
+import no.nav.sifinnsynapi.pleiepenger.syktbarn.InnsynMelding
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.stereotype.Service
 
 @Service
-class DittnavService(private val kafkaTemplate: KafkaTemplate<Nokkel, Beskjed>) {
+class DittnavService(
+        private val kafkaTemplate: KafkaTemplate<String, String>,
+        private val objectMapper: ObjectMapper
+) {
 
-    fun sendBeskjed(nøkkel: Nokkel, beskjed: Beskjed) {
+    fun sendBeskjed(søknadId: String, innsynMelding: InnsynMelding) {
         kafkaTemplate.send(ProducerRecord(
-                DITT_NAV_BESKJED,
-                nøkkel,
-                beskjed
+                INNSYN_MOTTATT,
+                søknadId,
+                innsynMelding.somJson(objectMapper)
         ))
     }
 }
+
+fun InnsynMelding.somJson(mapper: ObjectMapper) = mapper.writeValueAsString(this)
+
+

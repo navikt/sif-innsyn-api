@@ -15,5 +15,5 @@ data class PleiepengerDittnavBeskjedProperties(
         val grupperingsId: String,
         val tekst: String,
         val link: URI,
-        val dagerSynlig: Int
+        val dagerSynlig: Long
 )

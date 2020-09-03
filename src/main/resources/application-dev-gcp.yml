@@ -63,9 +63,6 @@ spring:
   kafka:
     bootstrap-servers:
     properties:
-      schema:
-        registry:
-          url:
       security:
         protocol:
       sasl:
@@ -75,8 +72,8 @@ spring:
     producer:
       client-id: sif-innsyn-api
       retries: 3
-      key-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
-      value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
       ssl:
         trust-store-location: file:${javax.net.ssl.trustStore}
         trust-store-password: ${javax.net.ssl.trustStorePassword}

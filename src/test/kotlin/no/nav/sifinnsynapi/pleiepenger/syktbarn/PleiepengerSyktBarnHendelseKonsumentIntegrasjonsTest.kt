@@ -11,7 +11,7 @@ import no.nav.security.token.support.test.spring.TokenGeneratorConfiguration
 import no.nav.sifinnsynapi.Routes.SØKNAD
 import no.nav.sifinnsynapi.common.AktørId
 import no.nav.sifinnsynapi.common.Fødselsnummer
-import no.nav.sifinnsynapi.config.Topics.DITT_NAV_BESKJED
+import no.nav.sifinnsynapi.config.Topics.INNSYN_MOTTATT
 import no.nav.sifinnsynapi.config.Topics.PP_SYKT_BARN
 import no.nav.sifinnsynapi.soknad.SøknadDAO
 import no.nav.sifinnsynapi.soknad.SøknadDTO
@@ -45,7 +45,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.util.concurrent.TimeUnit
 
 @EmbeddedKafka( // Setter opp og tilgjengligjør embeded kafka broker
-        topics = [PP_SYKT_BARN, DITT_NAV_BESKJED],
+        topics = [PP_SYKT_BARN, INNSYN_MOTTATT],
         bootstrapServersProperty = "spring.kafka.bootstrap-servers" // Setter bootstrap-servers for consumer og producer.
 )
 @ExtendWith(SpringExtension::class)
@@ -71,7 +71,7 @@ class PleiepengerSyktBarnHendelseKonsumentIntegrasjonsTest {
     lateinit var restTemplate: TestRestTemplate // Restklient som brukes til å gjøre restkall mot endepunkter i appen.
 
     lateinit var producer: Producer<String, Any> // Kafka producer som brukes til å legge på kafka meldinger. Mer spesifikk, Hendelser om pp-sykt-barn
-    lateinit var dittNavConsumer: Consumer<Nokkel, Beskjed> // Kafka consumer som brukes til å lese kafka meldinger.
+    lateinit var dittNavConsumer: Consumer<String, InnsynMelding> // Kafka consumer som brukes til å lese kafka meldinger.
 
     companion object {
         private val log: Logger = LoggerFactory.getLogger(PleiepengerSyktBarnHendelseKonsumentIntegrasjonsTest::class.java)
