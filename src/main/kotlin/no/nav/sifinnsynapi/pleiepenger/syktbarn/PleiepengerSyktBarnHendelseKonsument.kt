@@ -1,6 +1,5 @@
 package no.nav.sifinnsynapi.pleiepenger.syktbarn
 
-import no.nav.brukernotifikasjon.schemas.Nokkel
 import no.nav.sifinnsynapi.common.*
 import no.nav.sifinnsynapi.config.Topics.PP_SYKT_BARN
 import no.nav.sifinnsynapi.dittnav.DittnavService
@@ -62,13 +61,6 @@ data class InnsynMelding(
         val søkerFødselsnummer: String,
         val eventId: String
 )
-
-private fun JSONObject.somNøkkel(systembruker: String): Nokkel {
-    return Nokkel(
-            systembruker,
-            getString("søknadId")
-    )
-}
 
 private fun JSONObject.somInnsynMelding(beskjedProperties: PleiepengerDittnavBeskjedProperties): InnsynMelding {
     return InnsynMelding(

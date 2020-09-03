@@ -5,8 +5,6 @@ import assertk.assertions.isEmpty
 import assertk.assertions.isEqualTo
 import assertk.assertions.isNotEmpty
 import com.fasterxml.jackson.databind.ObjectMapper
-import no.nav.brukernotifikasjon.schemas.Beskjed
-import no.nav.brukernotifikasjon.schemas.Nokkel
 import no.nav.security.token.support.test.spring.TokenGeneratorConfiguration
 import no.nav.sifinnsynapi.Routes.SØKNAD
 import no.nav.sifinnsynapi.common.AktørId
