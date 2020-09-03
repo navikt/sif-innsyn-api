@@ -65,7 +65,7 @@ spring:
     properties:
       schema:
         registry:
-          url: http://kafka-schema-registry.tpa.svc.nais.local:8081
+          url: https://kafka-schema-registry.nais-q.adeo.no
       security:
         protocol:
       sasl:

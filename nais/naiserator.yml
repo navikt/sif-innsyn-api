@@ -15,6 +15,7 @@ spec:
         - host: oauth2.googleapis.com
         - host: www.googleapis.com
         - host: login.microsoftonline.com
+        - host: kafka-schema-registry.nais-q.adeo.no
         - host: api-gw-q1.oera.no
       {{#each kafkaBootstrapServers as |server|}}
         - host: {{server}}
