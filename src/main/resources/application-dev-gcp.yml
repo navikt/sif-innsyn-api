@@ -80,7 +80,7 @@ spring:
     consumer:
       enable-auto-commit: false
       group-id: group_id
-      auto-offset-reset: earliest
+      auto-offset-reset: latest
       retry-interval: 60_000 # Egendefinert property
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
