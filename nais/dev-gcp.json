@@ -6,8 +6,7 @@
   "minReplicas": "1",
   "maxReplicas": "2",
   "ingresses": [
-    "https://sif-innsyn-api.dev.nav.no",
-    "https://www-q0.nav.no/familie/sykdom-i-familien/soknad/innsyn"
+    "https://sif-innsyn-api.dev.nav.no"
   ],
   "kafkaBootstrapServers": [
     "b27apvl00045.preprod.local",
