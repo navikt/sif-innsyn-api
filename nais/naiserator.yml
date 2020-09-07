@@ -9,6 +9,9 @@ spec:
   image: {{ image }}
   port: 8080
   accessPolicy:
+    inbound:
+      rules:
+        - application: sif-innsyn
     outbound:
       external:
         - host: secretmanager.googleapis.com
