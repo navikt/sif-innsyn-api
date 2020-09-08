@@ -19,6 +19,7 @@ import org.apache.kafka.clients.consumer.Consumer
 import org.apache.kafka.clients.producer.Producer
 import org.awaitility.kotlin.await
 import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
@@ -124,6 +125,23 @@ class PleiepengerSyktBarnHendelseKonsumentIntegrasjonsTest {
             val lesMelding = dittNavConsumer.lesMelding(defaultHendelse.data.melding["søknadId"] as String)
             log.info("----> dittnav melding: {}", lesMelding)
             assertThat(lesMelding).isNotEmpty()
+        }
+    }
+
+    @Test
+    fun `Gitt feil format på melding, forvent at søknaden ikke lagres og at det ikke sendes ut dittnav beskjed`() {
+
+        // Gitt at det legges på en hendelse om mottatt søknad om pleiepenger sykt barn med manglene nødvendig data...
+        producer.leggPåTopic(defaultHendelse.copy(data = defaultHendelse.data.copy(melding = mapOf())), PP_SYKT_BARN, mapper)
+
+        await.atMost(60, TimeUnit.SECONDS).untilAsserted {
+            // forvent at innsendt søknad ikke lagres
+            val aktørId = (defaultHendelse.data.melding["søker"] as Map<*, *>)["aktørId"] as String
+            assertFalse(repository.existsSøknadDAOByAktørIdAndJournalpostId(AktørId(aktørId), defaultHendelse.data.journalførtMelding.journalpostId))
+
+            // og at det ikke sendes ut en dittnav beskjed.
+            val melding = dittNavConsumer.lesMelding(defaultHendelse.data.melding["søknadId"] as String)
+            assertThat(melding).isEmpty()
         }
     }
 
