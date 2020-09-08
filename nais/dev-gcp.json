@@ -22,5 +22,7 @@
     "SECURITY_TOKEN_SERVICE_REST_URL": "https://api-gw-q1.oera.no/security-token-service",
     "SPRING_KAFKA_BOOTSTRAP_SERVERS": "b27apvl00045.preprod.local:8443,b27apvl00046.preprod.local:8443,b27apvl00047.preprod.local:8443",
     "SPRING_KAFKA_PROPERTIES_SECURITY_PROTOCOL": "SASL_SSL"
-  }
+  },
+  "slack-channel": "sif-alerts-dev",
+  "slack-notify-type": "<!here> | sif-innsyn-api | "
 }
