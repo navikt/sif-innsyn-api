@@ -8,7 +8,6 @@ import no.nav.sifinnsynapi.soknad.Søknad
 import no.nav.sifinnsynapi.soknad.SøknadRepository
 import org.json.JSONObject
 import org.slf4j.LoggerFactory
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.messaging.handler.annotation.Payload
 import org.springframework.stereotype.Service
@@ -18,14 +17,15 @@ import java.time.ZonedDateTime
 class PleiepengerSyktBarnHendelseKonsument(
         private val repository: SøknadRepository,
         private val dittnavService: DittnavService,
-        private val pleiepengerDittnavBeskjedProperties: PleiepengerDittnavBeskjedProperties,
-        @Value("\${no.nav.gateways.sts.username}") private val stsUsername: String
+        private val pleiepengerDittnavBeskjedProperties: PleiepengerDittnavBeskjedProperties
 ) {
     companion object {
         private val logger = LoggerFactory.getLogger(PleiepengerSyktBarnHendelseKonsument::class.java)
+
+        const val LYTTER_NAVN = "pp-sykt-barn-listener"
     }
 
-    @KafkaListener(topics = [PP_SYKT_BARN], groupId = "#{'\${spring.kafka.consumer.group-id}'}", containerFactory = "kafkaJsonListenerContainerFactory")
+    @KafkaListener(topics = [PP_SYKT_BARN], id = LYTTER_NAVN, groupId = "#{'\${spring.kafka.consumer.group-id}'}", containerFactory = "kafkaJsonListenerContainerFactory")
     fun konsumer(@Payload hendelse: TopicEntry) {
         logger.info("Mottok hendelse fra Pleiepenger-Sykt-Barn")
 

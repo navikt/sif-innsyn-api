@@ -20,9 +20,11 @@ class OmsorgspengerutbetalingSNFHendelseKonsument(
 ) {
     companion object {
         private val logger = LoggerFactory.getLogger(OmsorgspengerutbetalingSNFHendelseKonsument::class.java)
+
+        const val LYTTER_NAVN = "omp-utbetaling-snf-listener"
     }
 
-    @KafkaListener(topics = [OMP_UTBETALING_SNF], groupId = "#{'\${spring.kafka.consumer.group-id}'}", containerFactory = "kafkaJsonListenerContainerFactory")
+    @KafkaListener(topics = [OMP_UTBETALING_SNF], id = LYTTER_NAVN, groupId = "#{'\${spring.kafka.consumer.group-id}'}", containerFactory = "kafkaJsonListenerContainerFactory")
     fun konsumer(@Payload hendelse: TopicEntry) {
         logger.info("Mottok hendelse fra Omsorgspenger-Utbetaling-SNF")
 
