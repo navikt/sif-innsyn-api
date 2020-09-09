@@ -21,8 +21,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 import java.net.URI
 import java.net.URLDecoder
 import java.nio.charset.Charset
@@ -74,6 +73,26 @@ class SøknadControllerTest {
                 .andExpect(status().isInternalServerError)
                 .andExpect(jsonPath("$.type").value("/problem-details/internal-server-error"))
                 .andExpect(jsonPath("$.stackTrace").doesNotExist())
+    }
+
+    @Test
+    fun `internal server error gir 500 med forventet problem-details i header`() {
+        every {
+            søknadService.hentSøknad()
+        } throws Exception("Ooops, noe gikk galt...")
+
+        mockMvc.perform(MockMvcRequestBuilders
+                .get(URI(URLDecoder.decode(SØKNAD, Charset.defaultCharset())))
+                .accept(MediaType.APPLICATION_JSON)
+                .headers(authorizationHeader)
+        )
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isInternalServerError)
+                .andExpect(header().exists("problem-details"))
+                .andExpect(header().string(
+                        "problem-details",
+                        //language=json
+                        """{"type":"/problem-details/internal-server-error","title":"Internal Server Error","status":500,"detail":"Ooops, noe gikk galt..."}""".trimIndent()))
     }
 
     @Test
