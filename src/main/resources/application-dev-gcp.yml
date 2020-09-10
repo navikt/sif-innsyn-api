@@ -3,7 +3,7 @@ no.nav:
     pleiepenger-sykt-barn:
       beskjed:
         grupperingsId: pleiepenger-sykt-barn
-        tekst: 'Vi har mottatt din søknad om pleiepenger. Klikk på linken for mer info.'
+        tekst: 'Vi har mottatt søknaden din om pleiepenger. Les mer om hva som skjer etter at du har søkt.'
         link: https://sif-innsyn.dev.nav.no/familie/sykdom-i-familien/soknad/innsyn/innlogget/dine-pleiepenger
         dagerSynlig: 7
   apigw:
