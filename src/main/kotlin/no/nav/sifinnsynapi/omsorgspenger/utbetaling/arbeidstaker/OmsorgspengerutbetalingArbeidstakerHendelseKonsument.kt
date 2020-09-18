@@ -1,7 +1,6 @@
 package no.nav.sifinnsynapi.omsorgspenger.utbetaling.arbeidstaker
 
 import no.nav.sifinnsynapi.common.*
-import no.nav.sifinnsynapi.config.Topics.OMP_UTBETALING_ARBEIDSTAKER
 import no.nav.sifinnsynapi.soknad.Søknad
 import no.nav.sifinnsynapi.soknad.SøknadRepository
 import org.json.JSONObject
@@ -17,11 +16,15 @@ class OmsorgspengerutbetalingArbeidstakerHendelseKonsument(
 ) {
     companion object {
         private val logger = LoggerFactory.getLogger(OmsorgspengerutbetalingArbeidstakerHendelseKonsument::class.java)
-
-        const val LYTTER_NAVN = "omp-utbetaling-arbeidstaker-listener"
     }
 
-    @KafkaListener(topics = [OMP_UTBETALING_ARBEIDSTAKER], id = LYTTER_NAVN, groupId = "#{'\${spring.kafka.consumer.group-id}'}", containerFactory = "kafkaJsonListenerContainerFactory")
+    @KafkaListener(
+            topics = ["#{'\${topic.listener.omp-utbetaling-arbeidstaker.navn}'}"],
+            id = "#{'\${topic.listener.omp-utbetaling-arbeidstaker.id}'}",
+            groupId = "#{'\${spring.kafka.consumer.group-id}'}",
+            containerFactory = "kafkaJsonListenerContainerFactory",
+            autoStartup = "#{'\${topic.listener.omp-utbetaling-arbeidstaker.bryter}'}"
+    )
     fun konsumer(@Payload hendelse: TopicEntry) {
         logger.info("Mottok hendelse fra Omsorgspenger-Utbetaling-Arbeidstaker")
 

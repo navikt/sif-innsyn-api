@@ -31,6 +31,10 @@ topic:
       id: pp-sykt-barn-listener
       navn: privat-pleiepengesoknad-cleanup
       bryter: true
+    omp-utbetaling-arbeidstaker:
+      id: omp-utbetaling-arbeidstaker-listener
+      navn: privat-omp-utbetalingsoknad-arbeidstaker-cleanup
+      bryter: true
 
 management:
   endpoints:
