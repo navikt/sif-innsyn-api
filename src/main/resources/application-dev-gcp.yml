@@ -28,6 +28,7 @@ no.nav:
            cookie_name: # Settes i nais/dev-gcp.json
 
 topic:
+  # Bryter betegner av/på funksjon for kafkalytter. True (på), False (av).
   listener:
     pp-sykt-barn:
       id: pp-sykt-barn-listener
@@ -36,6 +37,10 @@ topic:
     omp-utbetaling-arbeidstaker:
       id: omp-utbetaling-arbeidstaker-listener
       navn: privat-omp-utbetalingsoknad-arbeidstaker-cleanup
+      bryter: true
+    omp-utbetaling-snf:
+      id: omp-utbetaling-snf-listener
+      navn: privat-omsorgspengerutbetalingsoknad-cleanup
       bryter: true
 
 management:
