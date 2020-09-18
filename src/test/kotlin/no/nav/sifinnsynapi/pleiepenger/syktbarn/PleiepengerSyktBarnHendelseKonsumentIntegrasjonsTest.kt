@@ -141,20 +141,6 @@ class PleiepengerSyktBarnHendelseKonsumentIntegrasjonsTest {
     }
 
     @Test
-    fun `Gitt feil format på melding, forvent at søknaden ikke lagres og at det ikke sendes ut dittnav beskjed`() {
-
-        // Gitt at det legges på en hendelse om mottatt søknad om pleiepenger sykt barn med manglene nødvendig data...
-        producer.leggPåTopic(defaultHendelse.copy(data = defaultHendelse.data.copy(melding = mapOf())), PP_SYKT_BARN, mapper)
-
-        await.atMost(60, TimeUnit.SECONDS).untilAsserted {
-
-            // og at det ikke sendes ut en dittnav beskjed.
-            val melding = dittNavConsumer.lesMelding(defaultHendelse.data.melding["søknadId"] as String)
-            assertThat(melding).isEmpty()
-        }
-    }
-
-    @Test
     fun `Gitt lagrede meldinger i database, forvent kun at brukers data vises ved restkall`() {
         // Gitt at ingen hendelser med samme aktørId eksisterer...
         repository.findAllByAktørId(aktørId).ikkeEksisterer()

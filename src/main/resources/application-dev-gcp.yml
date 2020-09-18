@@ -27,6 +27,13 @@ no.nav:
            discoveryUrl: # Settes i nais/dev-gcp.json
            cookie_name: # Settes i nais/dev-gcp.json
 
+topic:
+  listener:
+    pleiepengesoknad-sykt-barn:
+      id: pp-sykt-barn-listener
+      navn: privat-pleiepengesoknad-cleanup
+      bryter: true
+
 management:
   endpoints:
     web:

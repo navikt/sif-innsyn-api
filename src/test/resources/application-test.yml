@@ -25,6 +25,13 @@ no.nav:
     cors:
       allowed-origins: http://localhost:8080
 
+topic:
+  listener:
+    pleiepengesoknad-sykt-barn:
+      id: pp-sykt-barn-listener
+      navn: privat-pleiepengesoknad-cleanup
+      bryter: true
+
 management:
   endpoints:
     web:

@@ -1,7 +1,6 @@
 package no.nav.sifinnsynapi.pleiepenger.syktbarn
 
 import no.nav.sifinnsynapi.common.*
-import no.nav.sifinnsynapi.config.Topics.PP_SYKT_BARN
 import no.nav.sifinnsynapi.dittnav.DittnavService
 import no.nav.sifinnsynapi.dittnav.PleiepengerDittnavBeskjedProperties
 import no.nav.sifinnsynapi.soknad.Søknad
@@ -21,11 +20,15 @@ class PleiepengerSyktBarnHendelseKonsument(
 ) {
     companion object {
         private val logger = LoggerFactory.getLogger(PleiepengerSyktBarnHendelseKonsument::class.java)
-
-        const val LYTTER_NAVN = "pp-sykt-barn-listener"
     }
 
-    @KafkaListener(topics = [PP_SYKT_BARN], id = LYTTER_NAVN, groupId = "#{'\${spring.kafka.consumer.group-id}'}", containerFactory = "kafkaJsonListenerContainerFactory")
+    @KafkaListener(
+            topics = ["#{'\${topic.listener.pleiepengesoknad-sykt-barn.navn}'}"],
+            id = "#{'\${topic.listener.pleiepengesoknad-sykt-barn.id}'}",
+            groupId = "#{'\${spring.kafka.consumer.group-id}'}",
+            containerFactory = "kafkaJsonListenerContainerFactory",
+            autoStartup = "#{'\${topic.listener.pleiepengesoknad-sykt-barn.bryter}'}"
+    )
     fun konsumer(@Payload hendelse: TopicEntry) {
         logger.info("Mottok hendelse fra Pleiepenger-Sykt-Barn")
 
