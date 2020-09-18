@@ -1,15 +1,11 @@
 management:
-  endpoints:
-    web:
-      exposure:
-        include: health, prometheus
   endpoint:
     health:
       show-details: always
 
 spring:
-    mvc:
-      log-request-details: true
+  mvc:
+    log-request-details: true
 
   kafka:
     properties:
