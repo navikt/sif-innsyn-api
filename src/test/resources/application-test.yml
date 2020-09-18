@@ -1,11 +1,4 @@
 no.nav:
-  dittnav:
-    pleiepenger-sykt-barn:
-      beskjed:
-        grupperingsId: pleiepenger-sykt-barn
-        tekst: 'Vi har mottatt din søknad om pleiepenger. Klikk på linken for mer info.'
-        link: https://sif-innsyn.dev.nav.no/familie/sykdom-i-familien/soknad/innsyn
-        dagerSynlig: 7
   apigw:
     apikey: test-key
     sts-apikey: sts-apikey
@@ -25,40 +18,9 @@ no.nav:
     cors:
       allowed-origins: http://localhost:8080
 
-topic:
-  # Bryter betegner av/på funksjon for kafkalytter. True (på), False (av).
-  listener:
-    # topic.listener.pp-sykt-barn
-    pp-sykt-barn:
-      id: pp-sykt-barn-listener
-      navn: privat-pleiepengesoknad-cleanup
-      bryter: true
-
-    # topic.listener.omp-utbetaling-arbeidstaker
-    omp-utbetaling-arbeidstaker:
-      id: omp-utbetaling-arbeidstaker-listener
-      navn: privat-omp-utbetalingsoknad-arbeidstaker-cleanup
-      bryter: true
-
-    # topic.listener.omp-utbetaling-snf
-    omp-utbetaling-snf:
-      id: omp-utbetaling-snf-listener
-      navn: privat-omsorgspengerutbetalingsoknad-cleanup
-      bryter: true
-
-    # topic.listener.omp-utvidet-rett
-    omp-utvidet-rett:
-      id: omp-utvidet-rett-listener
-      navn: privat-omsorgspengesoknad-cleanup
-      bryter: true
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: health, prometheus
-
 spring:
+  profiles:
+    active: test
   rest:
     retry:
       multiplier: 2
