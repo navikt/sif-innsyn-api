@@ -6,41 +6,40 @@ no.nav:
         tekst: 'Vi har mottatt søknaden din om pleiepenger. Les mer om hva som skjer etter at du har søkt.'
         link: https://sif-innsyn.dev.nav.no/familie/sykdom-i-familien/soknad/innsyn/innlogget/dine-pleiepenger
         dagerSynlig: 7
+
   apigw:
-    apikey: ${APIGW_API_KEY} # kubectl secret
-    sts-apikey: ${STS_APIKEY} # kubectl secret
+    apikey: ${APIGW_API_KEY} # kubectl secret som miljøvariabel i pod
+    sts-apikey: ${STS_APIKEY} # kubectl secret som miljøvariabel i pod
+
   gateways:
-    k9-selvbetjening-oppslag: ${K9_OPPSLAG_REGISTER_URL}
+    k9-selvbetjening-oppslag: # Settes i nais/dev-gcp.json
     sts:
-      url: ${SECURITY_TOKEN_SERVICE_REST_URL}
-      username: ${STS_USERNAME}
-      password: ${STS_PASSWORD}
+      url: # Settes i nais/dev-gcp.json
+      username: ${STS_USERNAME} # kubectl secret som miljøvariabel i pod
+      password: ${STS_PASSWORD} # kubectl secret som miljøvariabel i pod
+
   security:
     cors:
-      allowed-origins: https://sif-innsyn.dev-gcp.nais.io,https://sif-innsyn.dev.nav.no,https://www-q0.nav.no
+      allowed-origins: # Settes i nais/dev-gcp.json
     jwt:
       issuer:
         selvbetjening:
-           discoveryUrl: https://login.microsoftonline.com/NAVtestB2C.onmicrosoft.com/v2.0/.well-known/openid-configuration?p=B2C_1A_idporten_ver1
-           cookie_name: selvbetjening-idtoken
+           discoveryUrl: # Settes i nais/dev-gcp.json
+           cookie_name: # Settes i nais/dev-gcp.json
 
 management:
-   endpoints:
-      web:
-         exposure:
-            include: health, prometheus
-   endpoint:
-      health:
-         show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: health, prometheus
+  endpoint:
+    health:
+      show-details: always
+
 spring:
-  rest:
-    retry:
-      multiplier: 2
-      initialDelay: 1000
-      maxDelay: 4000
-      maxAttempts: 3
   application:
-    name: sif-innsyn-api
+    name: # Settes i nais/dev-gcp.json
+
   datasource:
     hikari:
       connection-test-query: SELECT 1
@@ -49,19 +48,20 @@ spring:
     username: ${NAIS_DATABASE_SIF_INNSYN_API_SIF_INNSYN_DB_USERNAME}
     password: ${NAIS_DATABASE_SIF_INNSYN_API_SIF_INNSYN_DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
-  flyway:
-    baselineOnMigrate: true
-    enabled: true
-    clean-on-validation-error: true
-  jpa:
-    show-sql: true
-    properties:
+    flyway:
+      baselineOnMigrate: true
+      enabled: true
+      clean-on-validation-error: true
+    jpa:
+      show-sql: true
+      properties:
+        hibernate:
+          dialect: org.hibernate.dialect.PostgreSQLDialect
       hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-    hibernate:
-      ddl-auto: none
+        ddl-auto: none
+
   kafka:
-    bootstrap-servers:
+    bootstrap-servers: # Settes i nais/dev-gcp.json
     properties:
       security:
         protocol:
@@ -87,5 +87,13 @@ spring:
       ssl:
         trust-store-location: file:${javax.net.ssl.trustStore}
         trust-store-password: ${javax.net.ssl.trustStorePassword}
-  mvc:
-    log-request-details: true
+    mvc:
+      log-request-details: true
+
+  rest:
+    retry:
+      multiplier: 2
+      initialDelay: 1000
+      maxDelay: 4000
+      maxAttempts: 3
+
