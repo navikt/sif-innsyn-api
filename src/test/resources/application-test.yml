@@ -21,12 +21,7 @@ no.nav:
 spring:
   profiles:
     active: test
-  rest:
-    retry:
-      multiplier: 2
-      initialDelay: 10
-      maxDelay: 40
-      maxAttempts: 3
+
   datasource:
     url: jdbc:tc:postgresql:9.6:///
     driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver

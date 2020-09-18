@@ -64,6 +64,13 @@ spring:
   application:
     name: # Settes i nais/<cluster>.json
 
+  rest:
+    retry:
+      multiplier: 2
+      initialDelay: 1000
+      maxDelay: 4000
+      maxAttempts: 3
+
   datasource:
     hikari:
       connection-test-query: SELECT 1

@@ -11,13 +11,6 @@ spring:
     mvc:
       log-request-details: true
 
-  rest:
-    retry:
-      multiplier: 2
-      initialDelay: 1000
-      maxDelay: 4000
-      maxAttempts: 3
-
   kafka:
     properties:
       security:
