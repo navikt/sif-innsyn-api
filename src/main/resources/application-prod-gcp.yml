@@ -11,10 +11,6 @@ topic:
       bryter: false
 
 management:
-  endpoints:
-    web:
-      exposure:
-        include: health, prometheus
   endpoint:
     health:
       show-details: never
