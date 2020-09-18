@@ -27,7 +27,7 @@ no.nav:
 
 topic:
   listener:
-    pleiepengesoknad-sykt-barn:
+    pp-sykt-barn:
       id: pp-sykt-barn-listener
       navn: privat-pleiepengesoknad-cleanup
       bryter: true

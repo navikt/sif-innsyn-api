@@ -23,11 +23,11 @@ class PleiepengerSyktBarnHendelseKonsument(
     }
 
     @KafkaListener(
-            topics = ["#{'\${topic.listener.pleiepengesoknad-sykt-barn.navn}'}"],
-            id = "#{'\${topic.listener.pleiepengesoknad-sykt-barn.id}'}",
+            topics = ["#{'\${topic.listener.pp-sykt-barn.navn}'}"],
+            id = "#{'\${topic.listener.pp-sykt-barn.id}'}",
             groupId = "#{'\${spring.kafka.consumer.group-id}'}",
             containerFactory = "kafkaJsonListenerContainerFactory",
-            autoStartup = "#{'\${topic.listener.pleiepengesoknad-sykt-barn.bryter}'}"
+            autoStartup = "#{'\${topic.listener.pp-sykt-barn.bryter}'}"
     )
     fun konsumer(@Payload hendelse: TopicEntry) {
         logger.info("Mottok hendelse fra Pleiepenger-Sykt-Barn")
