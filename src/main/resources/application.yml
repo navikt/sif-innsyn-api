@@ -1,0 +1,110 @@
+no.nav:
+  dittnav:
+    pleiepenger-sykt-barn:
+      beskjed:
+        grupperingsId: pleiepenger-sykt-barn
+        tekst: 'Vi har mottatt søknaden din om pleiepenger. Les mer om hva som skjer etter at du har søkt.'
+        link: https://sif-innsyn.dev.nav.no/familie/sykdom-i-familien/soknad/innsyn/innlogget/dine-pleiepenger
+        dagerSynlig: 7
+
+  apigw:
+    apikey: ${APIGW_API_KEY} # kubectl secret som miljøvariabel i pod
+    sts-apikey: ${STS_APIKEY} # kubectl secret som miljøvariabel i pod
+
+  gateways:
+    k9-selvbetjening-oppslag: # Settes i nais/<cluster>.json
+    sts:
+      url: # Settes i nais/dev-gcp.json
+      username: ${STS_USERNAME} # kubectl secret som miljøvariabel i pod
+      password: ${STS_PASSWORD} # kubectl secret som miljøvariabel i pod
+
+  security:
+    cors:
+      allowed-origins: # Settes i nais/<cluster>.json
+    jwt:
+      issuer:
+        selvbetjening:
+          discoveryUrl: # Settes i nais/<cluster>.json
+          cookie_name: # Settes inais/<cluster>.json
+
+topic:
+  # Bryter betegner av/på funksjon for kafkalytter. True (på), False (av).
+  listener:
+    # topic.listener.pp-sykt-barn
+    pp-sykt-barn:
+      id: pp-sykt-barn-listener
+      navn: privat-pleiepengesoknad-cleanup
+      bryter: true
+
+    # topic.listener.omp-utbetaling-arbeidstaker
+    omp-utbetaling-arbeidstaker:
+      id: omp-utbetaling-arbeidstaker-listener
+      navn: privat-omp-utbetalingsoknad-arbeidstaker-cleanup
+      bryter: true
+
+    # topic.listener.omp-utbetaling-snf
+    omp-utbetaling-snf:
+      id: omp-utbetaling-snf-listener
+      navn: privat-omsorgspengerutbetalingsoknad-cleanup
+      bryter: true
+
+    # topic.listener.omp-utvidet-rett
+    omp-utvidet-rett:
+      id: omp-utvidet-rett-listener
+      navn: privat-omsorgspengesoknad-cleanup
+      bryter: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, prometheus
+
+spring:
+  application:
+    name: # Settes i nais/<cluster>.json
+
+  rest:
+    retry:
+      multiplier: 2
+      initialDelay: 1000
+      maxDelay: 4000
+      maxAttempts: 3
+
+  datasource:
+    hikari:
+      connection-test-query: SELECT 1
+      maximum-pool-size: 2
+    url: jdbc:postgresql://${NAIS_DATABASE_SIF_INNSYN_API_SIF_INNSYN_DB_HOST}:${NAIS_DATABASE_SIF_INNSYN_API_SIF_INNSYN_DB_PORT}/${NAIS_DATABASE_SIF_INNSYN_API_SIF_INNSYN_DB_DATABASE}
+    username: ${NAIS_DATABASE_SIF_INNSYN_API_SIF_INNSYN_DB_USERNAME}
+    password: ${NAIS_DATABASE_SIF_INNSYN_API_SIF_INNSYN_DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+    flyway:
+      baselineOnMigrate: true
+      enabled: true
+      clean-on-validation-error: true
+    jpa:
+      show-sql: true
+      properties:
+        hibernate:
+          dialect: org.hibernate.dialect.PostgreSQLDialect
+      hibernate:
+        ddl-auto: none
+
+  kafka:
+    #bootstrap-servers: # Settes i nais/<cluster>.json
+    producer:
+      client-id: sif-innsyn-api
+      retries: 3
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    consumer:
+      enable-auto-commit: false
+      group-id: group_id
+      auto-offset-reset: latest
+      retry-interval: 60_000 # Egendefinert property
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      ssl:
+        trust-store-location: file:${javax.net.ssl.trustStore}
+        trust-store-password: ${javax.net.ssl.trustStorePassword}

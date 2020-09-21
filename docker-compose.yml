@@ -47,7 +47,21 @@ services:
       - "8840:8080"
     env_file:
       - "./docker-compose-env/kafka-admin-rest.env"
-    command: bash apply-oneshot.sh
+    depends_on:
+      - kafka
+
+  setup:
+    image: "curlimages/curl"
+    networks:
+      - app-tier
+    ports:
+      - "8841:8080"
+    volumes:
+      - "./docker-compose-env/setup.sh:/usr/local/bin/setup.sh"
+      - "./docker-compose-env/oneshot.json:/usr/local/bin/oneshot.json"
+    entrypoint: setup.sh
+    depends_on:
+      - kafkadminrest
 
   schema-registry:
     image: "confluentinc/cp-schema-registry:5.0.1"
@@ -122,3 +136,4 @@ services:
     depends_on:
       - db
       - kafka
+      - kafkadminrest

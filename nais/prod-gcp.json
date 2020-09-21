@@ -6,11 +6,29 @@
   "minReplicas": "1",
   "maxReplicas": "2",
   "ingresses": [
-    "https://sif-innsyn-api.nav.no",
-    "https://sif-innsyn-api.prod-gcp.nais.io"
+    "https://sif-innsyn-api.nav.no"
+  ],
+  "kafkaBootstrapServers": [
+    "a01apvl00145.adeo.no",
+    "a01apvl00146.adeo.no",
+    "a01apvl00147.adeo.no",
+    "a01apvl00149.adeo.no",
+    "a01apvl00149.adeo.no",
+    "a01apvl00150.adeo.no"
   ],
   "env": {
     "SERVER_PORT": "8080",
-    "SPRING_PROFILES_ACTIVE": "prod-gcp"
-  }
+    "SPRING_APPLICATION_NAME": "sif-innsyn-api",
+    "SPRING_PROFILES_ACTIVE": "prod-gcp",
+    "SPRING_KAFKA_BOOTSTRAP_SERVERS": "a01apvl00145.adeo.no:8443,a01apvl00146.adeo.no:8443,a01apvl00147.adeo.no:8443,a01apvl00148.adeo.no:8443,a01apvl00149.adeo.no:8443,a01apvl00150.adeo.no:8443",
+    "SPRING_KAFKA_PROPERTIES_SECURITY_PROTOCOL": "SASL_SSL",
+    "NO_NAV_SECURITY_JWT_ISSUER_SELVBETJENING_ACCEPTEDAUDIENCE": "45104d6a-f5bc-4e8c-b352-4bbfc9381f25",
+    "NO_NAV_SECURITY_JWT_ISSUER_SELVBETJENING_DISCOVERY_URL": "https://login.microsoftonline.com/navnob2c.onmicrosoft.com/v2.0/.well-known/openid-configuration?p=B2C_1A_idporten",
+    "NO_NAV_SECURITY_JWT_ISSUER_SELVBETJENING_COOKIE_NAME": "selvbetjening-idtoken",
+    "NO_NAV_SECURITY_CORS_ALLOWED_ORIGINS": "https://www.nav.no",
+    "NO_NAV_GATEWAYS_K9_SELVBETJENING_OPPSLAG": "https://api-gw.oera.no/helse-reverse-proxy/k9-selvbetjening-oppslag",
+    "NO_NAV_GATEWAYS_STS_URL": "https://api-gw.oera.no/security-token-service"
+  },
+  "slack-channel": "sif-alerts",
+  "slack-notify-type": "<!here> | sif-innsyn-api | "
 }

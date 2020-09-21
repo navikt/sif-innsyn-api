@@ -1,7 +1,6 @@
 package no.nav.sifinnsynapi.omsorgspenger.utvidetrett
 
 import no.nav.sifinnsynapi.common.*
-import no.nav.sifinnsynapi.config.Topics.OMP_UTVIDET_RETT
 import no.nav.sifinnsynapi.soknad.Søknad
 import no.nav.sifinnsynapi.soknad.SøknadRepository
 import org.json.JSONObject
@@ -17,11 +16,15 @@ class OmsorgspengerUtvidetRettHendelseKonsument(
 ) {
     companion object {
         private val logger = LoggerFactory.getLogger(OmsorgspengerUtvidetRettHendelseKonsument::class.java)
-
-        const val LYTTER_NAVN = "omp-utvidet-rett-listener"
     }
 
-    @KafkaListener(topics = [OMP_UTVIDET_RETT], id = LYTTER_NAVN, groupId = "#{'\${spring.kafka.consumer.group-id}'}", containerFactory = "kafkaJsonListenerContainerFactory")
+    @KafkaListener(
+            topics = ["#{'\${topic.listener.omp-utvidet-rett.navn}'}"],
+            id = "#{'\${topic.listener.omp-utvidet-rett.id}'}",
+            groupId = "#{'\${spring.kafka.consumer.group-id}'}",
+            containerFactory = "kafkaJsonListenerContainerFactory",
+            autoStartup = "#{'\${topic.listener.omp-utvidet-rett.bryter}'}"
+    )
     fun konsumer(@Payload hendelse: TopicEntry) {
         logger.info("Mottok hendelse fra Omsorgspenger-Utvidet-Rett")
 

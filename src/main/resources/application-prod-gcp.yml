@@ -1,11 +1,23 @@
+topic:
+  # Bryter betegner av/på funksjon for kafkalytter. True (på), False (av).
+  listener:
+    pp-sykt-barn:
+      bryter: false
+    omp-utbetaling-arbeidstaker:
+      bryter: false
+    omp-utbetaling-snf:
+      bryter: false
+    omp-utvidet-rett:
+      bryter: false
+
 management:
   endpoint:
     health:
-      show-details: always
+      show-details: never
 
 spring:
-  mvc:
-    log-request-details: true
+    mvc:
+      log-request-details: false
 
   kafka:
     properties:
@@ -28,6 +40,6 @@ spring:
 
     datasource:
       jpa:
-        show-sql: true
+        show-sql: false
         hibernate:
-          ddl-auto: drop
+          ddl-auto: none

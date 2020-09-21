@@ -19,7 +19,6 @@ import org.apache.kafka.clients.consumer.Consumer
 import org.apache.kafka.clients.producer.Producer
 import org.awaitility.kotlin.await
 import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
@@ -121,27 +120,23 @@ class PleiepengerSyktBarnHendelseKonsumentIntegrasjonsTest {
                         ]
                     """.trimIndent()
             responseEntity.assert(forventetRespons, 200)
-
-            val lesMelding = dittNavConsumer.lesMelding(defaultHendelse.data.melding["søknadId"] as String)
-            log.info("----> dittnav melding: {}", lesMelding)
-            assertThat(lesMelding).isNotEmpty()
         }
     }
 
     @Test
-    fun `Gitt feil format på melding, forvent at søknaden ikke lagres og at det ikke sendes ut dittnav beskjed`() {
+    fun `Konsumere hendelse om Pleiepenger - Sykt barn, forevnt at dittnav beskjed blir sendt ut`() {
 
-        // Gitt at det legges på en hendelse om mottatt søknad om pleiepenger sykt barn med manglene nødvendig data...
-        producer.leggPåTopic(defaultHendelse.copy(data = defaultHendelse.data.copy(melding = mapOf())), PP_SYKT_BARN, mapper)
+        // Gitt at ingen hendelser med samme aktørId eksisterer...
+        repository.findAllByAktørId(aktørId).ikkeEksisterer()
 
+        // legg på 1 hendelse om mottatt søknad om pleiepenger sykt barn...
+        producer.leggPåTopic(defaultHendelse, PP_SYKT_BARN, mapper)
+
+        // forvent at mottatt hendelse konsumeres og persisteres, samt at gitt restkall gitt forventet resultat.
         await.atMost(60, TimeUnit.SECONDS).untilAsserted {
-            // forvent at innsendt søknad ikke lagres
-            val aktørId = (defaultHendelse.data.melding["søker"] as Map<*, *>)["aktørId"] as String
-            assertFalse(repository.existsSøknadDAOByAktørIdAndJournalpostId(AktørId(aktørId), defaultHendelse.data.journalførtMelding.journalpostId))
-
-            // og at det ikke sendes ut en dittnav beskjed.
-            val melding = dittNavConsumer.lesMelding(defaultHendelse.data.melding["søknadId"] as String)
-            assertThat(melding).isEmpty()
+            val lesMelding = dittNavConsumer.lesMelding(defaultHendelse.data.melding["søknadId"] as String)
+            log.info("----> dittnav melding: {}", lesMelding)
+            assertThat(lesMelding).isNotEmpty()
         }
     }
 
