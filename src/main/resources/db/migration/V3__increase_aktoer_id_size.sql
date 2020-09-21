@@ -1,0 +1,2 @@
+ALTER TABLE søknad
+    ALTER COLUMN aktør_id TYPE VARCHAR(20);
