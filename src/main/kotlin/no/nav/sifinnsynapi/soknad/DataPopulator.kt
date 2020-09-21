@@ -15,7 +15,7 @@ import org.springframework.core.io.ClassPathResource
 import java.time.LocalDateTime
 
 @Configuration
-@Profile("!test", "!prod-gcp")
+@Profile("dev-gcp")
 class DataPopulator(
         private val repo: SøknadRepository,
         private val dokRepo: DokumentRepository
