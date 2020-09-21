@@ -16,8 +16,8 @@ management:
       show-details: never
 
 spring:
-    mvc:
-      log-request-details: false
+  mvc:
+    log-request-details: false
 
   kafka:
     properties:
