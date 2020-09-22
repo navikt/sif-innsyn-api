@@ -94,13 +94,13 @@ spring:
   kafka:
     #bootstrap-servers: # Settes i nais/<cluster>.json
     producer:
-      client-id: sif-innsyn-api
+      client-id: ${spring.application.name}
       retries: 3
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
     consumer:
       enable-auto-commit: false
-      group-id: group_id
+      group-id: ${spring.application.name}
       auto-offset-reset: latest
       retry-interval: 60_000 # Egendefinert property
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
