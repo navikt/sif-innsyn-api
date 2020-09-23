@@ -66,12 +66,13 @@ data class InnsynMelding(
 )
 
 private fun JSONObject.somInnsynMelding(beskjedProperties: PleiepengerDittnavBeskjedProperties): InnsynMelding {
+    val søknadId = getString("søknadId")
     return InnsynMelding(
             søkerFødselsnummer = getJSONObject("søker").getString("fødselsnummer"),
             tekst = beskjedProperties.tekst,
-            link = beskjedProperties.link.toString(),
-            grupperingsId = getString("søknadId"),
-            eventId = getString("søknadId"),
+            link = "${beskjedProperties.link}/$søknadId",
+            grupperingsId = søknadId,
+            eventId = søknadId,
             dagerSynlig = beskjedProperties.dagerSynlig
     )
 }
