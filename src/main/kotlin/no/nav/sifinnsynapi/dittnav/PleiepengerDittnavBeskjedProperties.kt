@@ -9,10 +9,6 @@ import java.net.URI
 @ConfigurationProperties(prefix = "no.nav.dittnav.pleiepenger-sykt-barn.beskjed")
 @Validated
 data class PleiepengerDittnavBeskjedProperties(
-        /**
-         * Id å gruppere dittnav beskjeder på
-         */
-        val grupperingsId: String,
         val tekst: String,
         val link: URI,
         val dagerSynlig: Long

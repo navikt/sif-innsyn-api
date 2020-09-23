@@ -70,7 +70,7 @@ private fun JSONObject.somInnsynMelding(beskjedProperties: PleiepengerDittnavBes
             søkerFødselsnummer = getJSONObject("søker").getString("fødselsnummer"),
             tekst = beskjedProperties.tekst,
             link = beskjedProperties.link.toString(),
-            grupperingsId = beskjedProperties.grupperingsId,
+            grupperingsId = getString("søknadId"),
             eventId = getString("søknadId"),
             dagerSynlig = beskjedProperties.dagerSynlig
     )
