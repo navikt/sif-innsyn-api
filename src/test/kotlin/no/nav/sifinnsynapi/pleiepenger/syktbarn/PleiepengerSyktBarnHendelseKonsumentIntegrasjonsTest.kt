@@ -40,6 +40,7 @@ import org.springframework.kafka.test.context.EmbeddedKafka
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit.jupiter.SpringExtension
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 @EmbeddedKafka( // Setter opp og tilgjengligjør embeded kafka broker
@@ -96,7 +97,7 @@ class PleiepengerSyktBarnHendelseKonsumentIntegrasjonsTest {
         repository.findAllByAktørId(aktørId).ikkeEksisterer()
 
         // legg på 1 hendelse om mottatt søknad om pleiepenger sykt barn...
-        producer.leggPåTopic(defaultHendelse, PP_SYKT_BARN, mapper)
+        producer.leggPåTopic(defaultHendelse(), PP_SYKT_BARN, mapper)
 
         // forvent at mottatt hendelse konsumeres og persisteres, samt at gitt restkall gitt forventet resultat.
         await.atMost(60, TimeUnit.SECONDS).untilAsserted {
@@ -130,8 +131,9 @@ class PleiepengerSyktBarnHendelseKonsumentIntegrasjonsTest {
         repository.findAllByAktørId(aktørId).ikkeEksisterer()
 
         // legg på 1 hendelse om mottatt søknad om pleiepenger sykt barn...
-        val søknadId = defaultHendelse.data.melding["søknadId"] as String
-        producer.leggPåTopic(defaultHendelse, PP_SYKT_BARN, mapper)
+        val hendelse = defaultHendelse()
+        val søknadId = hendelse.data.melding["søknadId"] as String
+        producer.leggPåTopic(hendelse, PP_SYKT_BARN, mapper)
 
         // forvent at mottatt hendelse konsumeres og persisteres, samt at gitt restkall gitt forventet resultat.
         await.atMost(60, TimeUnit.SECONDS).untilAsserted {
@@ -164,11 +166,12 @@ class PleiepengerSyktBarnHendelseKonsumentIntegrasjonsTest {
         repository.findAllByAktørId(aktørId).ikkeEksisterer()
 
         // legg på 1 hendelse om mottatt søknad om pleiepenger sykt barn...
-        producer.leggPåTopic(defaultHendelse, PP_SYKT_BARN, mapper)
+        val hendelse = defaultHendelse()
+        producer.leggPåTopic(hendelse, PP_SYKT_BARN, mapper)
 
         // forvent at mottatt hendelse konsumeres og persisteres, samt at gitt restkall gitt forventet resultat.
         await.atMost(60, TimeUnit.SECONDS).untilAsserted {
-            val lesMelding = dittNavConsumer.lesMelding(defaultHendelse.data.melding["søknadId"] as String)
+            val lesMelding = dittNavConsumer.lesMelding(hendelse.data.melding["søknadId"] as String)
             log.info("----> dittnav melding: {}", lesMelding)
             assertThat(lesMelding).isNotEmpty()
         }
@@ -180,7 +183,7 @@ class PleiepengerSyktBarnHendelseKonsumentIntegrasjonsTest {
         repository.findAllByAktørId(aktørId).ikkeEksisterer()
 
         // legg på 1 hendelse om mottatt søknad om pleiepenger sykt barn...
-        producer.leggPåTopic(defaultHendelse, PP_SYKT_BARN, mapper)
+        producer.leggPåTopic(defaultHendelse(), PP_SYKT_BARN, mapper)
 
         // Stub bruker aktørId, ulikt aktørId på hendelse
         stubForAktørId("annenAktørID-123456", 200)
@@ -199,7 +202,7 @@ class PleiepengerSyktBarnHendelseKonsumentIntegrasjonsTest {
 
     @Test
     fun `Dersom hendelse med journalpostId og aktørId eksisterer, skip deserialisering av duplikat`() {
-        val hendelse = defaultHendelse
+        val hendelse = defaultHendelse()
 
         // Gitt at ingen hendelser med samme aktørId eksisterer...
         repository.findAllByAktørId(aktørId).ikkeEksisterer()

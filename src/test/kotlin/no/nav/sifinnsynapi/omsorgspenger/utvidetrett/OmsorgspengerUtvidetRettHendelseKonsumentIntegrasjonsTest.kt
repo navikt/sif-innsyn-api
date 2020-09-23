@@ -91,7 +91,7 @@ class OmsorgspengerUtvidetRettHendelseKonsumentIntegrasjonsTest {
         repository.findAllByAktørId(aktørId).ikkeEksisterer()
 
         // legg på 1 hendelse om mottatt søknad om omsorgspenger utvidet rett...
-        omsorgspengerUtvidetRettProducer.leggPåTopic(defaultHendelse, OMP_UTVIDET_RETT, mapper)
+        omsorgspengerUtvidetRettProducer.leggPåTopic(defaultHendelse(), OMP_UTVIDET_RETT, mapper)
 
         // forvent at mottatt hendelse konsumeres og persisteres, samt at gitt restkall gitt forventet resultat.
         await.atMost(60, TimeUnit.SECONDS).untilAsserted {
@@ -124,7 +124,7 @@ class OmsorgspengerUtvidetRettHendelseKonsumentIntegrasjonsTest {
         repository.findAllByAktørId(aktørId).ikkeEksisterer()
 
         // legg på 1 hendelse om mottatt søknad om omsorgspenger utvidet rett...
-        omsorgspengerUtvidetRettProducer.leggPåTopic(defaultHendelse, OMP_UTVIDET_RETT, mapper)
+        omsorgspengerUtvidetRettProducer.leggPåTopic(defaultHendelse(), OMP_UTVIDET_RETT, mapper)
 
         // Stub bruker aktørId, ulikt aktørId på hendelse
         stubForAktørId("annenAktørID-123456", 200)
@@ -143,7 +143,7 @@ class OmsorgspengerUtvidetRettHendelseKonsumentIntegrasjonsTest {
 
     @Test
     fun `Dersom hendelse med journalpostId og aktørId eksisterer, skip deserialisering av duplikat`() {
-        val hendelse = defaultHendelse
+        val hendelse = defaultHendelse()
 
         // Gitt at ingen hendelser med samme aktørId eksisterer...
         repository.findAllByAktørId(aktørId).ikkeEksisterer()

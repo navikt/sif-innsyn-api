@@ -20,11 +20,11 @@ val defaultMetadata = Metadata(
         requestId = UUID.randomUUID().toString()
 )
 
-val defaultHendelse = TopicEntry(
+fun defaultHendelse(søknadId: UUID = UUID.randomUUID(), journalpostId: String = "123456789") = TopicEntry(
         data = SøknadsHendelse(
                 metadata = defaultMetadata,
                 melding = mapOf(
-                        "søknadId" to UUID.randomUUID().toString(),
+                        "søknadId" to "$søknadId",
                         "mottatt" to ZonedDateTime.now(),
                         "søker" to mapOf(
                                 "fødselsnummer" to "1234567",
@@ -32,7 +32,7 @@ val defaultHendelse = TopicEntry(
                         )
                 ),
                 journalførtMelding = JournalfortMelding(
-                        journalpostId = "123456789"
+                        journalpostId = "$journalpostId"
                 ),
                 pdfDokument = file2ByteArray("eksempel-søknad.pdf")
         )

@@ -38,6 +38,7 @@ import org.springframework.kafka.test.context.EmbeddedKafka
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit.jupiter.SpringExtension
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 
@@ -91,36 +92,16 @@ class FellesTestMedAlleSøknader {
         repository.findAllByAktørId(aktørId).ikkeEksisterer()
 
         //Legger en hendelse om mottatt søknad om omsorgspengerutbetaling for selvstendig næringsdrivende og frilans
-        var journalførtMelding = defaultHendelse.data.journalførtMelding.copy(("1"))
-        producer.leggPåTopic(defaultHendelse.copy(
-                defaultHendelse.data.copy(
-                        journalførtMelding = journalførtMelding
-                )
-        ), OMP_UTBETALING_SNF, mapper)
+        producer.leggPåTopic(defaultHendelse(journalpostId = "1"), OMP_UTBETALING_SNF, mapper)
 
-        journalførtMelding = journalførtMelding.copy("2")
         //Legger en hendelse om mottatt søknad om omsorgspengerutbetaling for arbeidstaker
-        producer.leggPåTopic(defaultHendelse.copy(
-                defaultHendelse.data.copy(
-                        journalførtMelding = journalførtMelding
-                )
-        ), OMP_UTBETALING_ARBEIDSTAKER, mapper)
+        producer.leggPåTopic(defaultHendelse(journalpostId = "2"), OMP_UTBETALING_ARBEIDSTAKER, mapper)
 
-        journalførtMelding = journalførtMelding.copy("3")
         //Legger en hendelse om mottatt søknad om omsorgspenger utvidet rett
-        producer.leggPåTopic(defaultHendelse.copy(
-                defaultHendelse.data.copy(
-                        journalførtMelding = journalførtMelding
-                )
-        ), OMP_UTVIDET_RETT, mapper)
+        producer.leggPåTopic(defaultHendelse(journalpostId = "3"), OMP_UTVIDET_RETT, mapper)
 
-        journalførtMelding = journalførtMelding.copy("4")
         //Legger en hendelse om mottatt søknad om pleiepenger sykt barn
-        producer.leggPåTopic(defaultHendelse.copy(
-                defaultHendelse.data.copy(
-                        journalførtMelding = journalførtMelding
-                )
-        ), PP_SYKT_BARN, mapper)
+        producer.leggPåTopic(defaultHendelse(journalpostId = "4"), PP_SYKT_BARN, mapper)
 
         //Forventer at ved restkall mot "/øoknad" så får vi alle søknadene med riktig "søknadstype" som er koblet til spesifikk aktørId
         await.atMost(60, TimeUnit.SECONDS).untilAsserted {
