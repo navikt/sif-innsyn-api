@@ -31,11 +31,19 @@ class SøknadController(
     @GetMapping(SØKNAD, produces = [MediaType.APPLICATION_JSON_VALUE])
     @Protected
     @ResponseStatus(OK)
-    fun hentSøknad(): List<SøknadDTO> {
+    fun hentSøknader(): List<SøknadDTO> {
         logger.info("Forsøker å hente søknader...")
-        val søknader = søknadService.hentSøknad()
+        val søknader = søknadService.hentSøknader()
         logger.info("Fant {} søknader", søknader.size)
         return søknader
+    }
+
+    @GetMapping("$SØKNAD/{søknadId}", produces = [MediaType.APPLICATION_JSON_VALUE])
+    @Protected
+    @ResponseStatus(OK)
+    fun hentSøknad(@PathVariable søknadId: UUID): SøknadDTO {
+        logger.info("Forsøker å hente søknad med id : {}...", søknadId)
+        return søknadService.hentSøknad(søknadId)
     }
 
     @GetMapping("$SØKNAD/{søknadId}/dokument", produces = [MediaType.APPLICATION_OCTET_STREAM_VALUE])

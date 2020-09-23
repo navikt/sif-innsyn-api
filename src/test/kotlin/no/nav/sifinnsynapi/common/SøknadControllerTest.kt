@@ -5,6 +5,7 @@ import io.mockk.every
 import no.nav.security.token.support.test.spring.TokenGeneratorConfiguration
 import no.nav.sifinnsynapi.Routes.SØKNAD
 import no.nav.sifinnsynapi.dokument.DokumentService
+import no.nav.sifinnsynapi.http.SøknadNotFoundException
 import no.nav.sifinnsynapi.soknad.SøknadController
 import no.nav.sifinnsynapi.soknad.SøknadDTO
 import no.nav.sifinnsynapi.soknad.SøknadService
@@ -61,7 +62,7 @@ class SøknadControllerTest {
     @Test
     fun `internal server error gir 500 med forventet problem-details`() {
         every {
-            søknadService.hentSøknad()
+            søknadService.hentSøknader()
         } throws Exception("Ooops, noe gikk galt...")
 
         mockMvc.perform(MockMvcRequestBuilders
@@ -78,7 +79,7 @@ class SøknadControllerTest {
     @Test
     fun `internal server error gir 500 med forventet problem-details i header`() {
         every {
-            søknadService.hentSøknad()
+            søknadService.hentSøknader()
         } throws Exception("Ooops, noe gikk galt...")
 
         mockMvc.perform(MockMvcRequestBuilders
@@ -114,7 +115,7 @@ class SøknadControllerTest {
     @Test
     fun `Gitt 200 respons, forvent korrekt format på liste av søknader`() {
         every {
-            søknadService.hentSøknad()
+            søknadService.hentSøknader()
         } returns listOf(
                 SøknadDTO(
                         søknadId = UUID.randomUUID(),
@@ -154,5 +155,69 @@ class SøknadControllerTest {
                 .andExpect(jsonPath("[0].endret").doesNotExist())
                 .andExpect(jsonPath("[0].behandlingsdato").doesNotExist())
                 .andExpect(jsonPath("[0].søknad").isMap)
+    }
+
+    @Test
+    fun `Gitt 200 respons, forvent korrekt format ved henting av søknad`() {
+        val søknadId = UUID.randomUUID()
+        every {
+            søknadService.hentSøknad(any())
+        } returns
+                SøknadDTO(
+                        søknadId = søknadId,
+                        saksId = "abc123",
+                        søknadstype = Søknadstype.OMP_UTBETALING_SNF,
+                        status = SøknadsStatus.MOTTATT,
+                        journalpostId = "123456789",
+                        opprettet = LocalDateTime.parse("2020-08-04T10:30:00"),
+                        søknad = mapOf(
+                                "soknadId" to søknadId.toString(),
+                                "mottatt" to ZonedDateTime.now(),
+                                "søker" to mapOf(
+                                        "fødselsnummer" to "1234567",
+                                        "aktørId" to AktørId.valueOf("123456")
+                                )
+                        )
+                )
+
+        mockMvc.perform(MockMvcRequestBuilders
+                .get(URI(URLDecoder.decode("${SØKNAD}/$søknadId", Charset.defaultCharset())))
+                .accept(MediaType.APPLICATION_JSON)
+                .headers(authorizationHeader)
+        )
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk)
+                .andExpect(jsonPath("$.saksId").isString)
+                .andExpect(jsonPath("$.saksId").value("abc123"))
+                .andExpect(jsonPath("$.søknadstype").isString)
+                .andExpect(jsonPath("$.søknadstype").value("OMP_UTBETALING_SNF"))
+                .andExpect(jsonPath("$.status").isString)
+                .andExpect(jsonPath("$.status").value("MOTTATT"))
+                .andExpect(jsonPath("$.journalpostId").isString)
+                .andExpect(jsonPath("$.journalpostId").value("123456789"))
+                .andExpect(jsonPath("$.opprettet").isString)
+                .andExpect(jsonPath("$.opprettet").value("2020-08-04T10:30:00"))
+                .andExpect(jsonPath("$.endret").doesNotExist())
+                .andExpect(jsonPath("$.behandlingsdato").doesNotExist())
+                .andExpect(jsonPath("$.søknad").isMap)
+    }
+
+    @Test
+    fun `gitt at søknad ikke blir funnet, forvent status 404 med problem-details`() {
+        val søknadId = UUID.randomUUID()
+        every { søknadService.hentSøknad(any()) } throws SøknadNotFoundException(søknadId.toString())
+
+        mockMvc.perform(MockMvcRequestBuilders
+                .get(URI(URLDecoder.decode("${SØKNAD}/$søknadId", Charset.defaultCharset())))
+                .accept(MediaType.APPLICATION_JSON)
+                .headers(authorizationHeader)
+        )
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isNotFound)
+                .andExpect(jsonPath("$.type").value("/problem-details/søknad-ikke-funnet"))
+                .andExpect(jsonPath("$.title").value("Søknad ikke funnet"))
+                .andExpect(jsonPath("$.status").value(404))
+                .andExpect(jsonPath("$.detail").value("Søknad med søknadId = $søknadId ble ikke funnet."))
+                .andExpect(jsonPath("$.stackTrace").doesNotExist())
     }
 }

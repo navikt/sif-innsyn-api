@@ -51,6 +51,25 @@ class ExceptionHandler : ProblemHandling, AdviceTrait {
         )
     }
 
+    @ExceptionHandler(value = [SøknadNotFoundException::class])
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    fun håndterSøknadIkkeFunnet(
+            exception: SøknadNotFoundException,
+            request: ServletWebRequest): ResponseEntity<Problem> {
+
+        val throwableProblem = Problem.builder()
+                .withType(URI("/problem-details/søknad-ikke-funnet"))
+                .withTitle("Søknad ikke funnet")
+                .withStatus(Status.NOT_FOUND)
+                .withDetail(exception.message)
+                .withInstance(URI(URLDecoder.decode(request.request.requestURL.toString(), Charset.defaultCharset())))
+                .build()
+
+        return create(
+                throwableProblem, request
+        )
+    }
+
     @ExceptionHandler(value = [JwtTokenUnauthorizedException::class])
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     fun håndtereTokenUnauthorizedException(exception: JwtTokenUnauthorizedException, request: ServletWebRequest): ResponseEntity<Problem> {
@@ -90,3 +109,4 @@ class ExceptionHandler : ProblemHandling, AdviceTrait {
 }
 
 class DocumentNotFoundException(søknadId: String) : RuntimeException("Dokument med søknadId = $søknadId ble ikke funnet.")
+class SøknadNotFoundException(søknadId: String) : RuntimeException("Søknad med søknadId = $søknadId ble ikke funnet.")

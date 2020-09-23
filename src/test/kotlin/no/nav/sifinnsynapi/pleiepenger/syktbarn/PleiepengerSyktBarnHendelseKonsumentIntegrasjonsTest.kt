@@ -119,6 +119,40 @@ class PleiepengerSyktBarnHendelseKonsumentIntegrasjonsTest {
                           }
                         ]
                     """.trimIndent()
+            responseEntity.listAssert(forventetRespons, 200)
+        }
+    }
+
+    @Test
+    fun `Konsumere hendelse om Pleiepenger - Sykt barn, hente søknad med id`() {
+
+        // Gitt at ingen hendelser med samme aktørId eksisterer...
+        repository.findAllByAktørId(aktørId).ikkeEksisterer()
+
+        // legg på 1 hendelse om mottatt søknad om pleiepenger sykt barn...
+        val søknadId = defaultHendelse.data.melding["søknadId"] as String
+        producer.leggPåTopic(defaultHendelse, PP_SYKT_BARN, mapper)
+
+        // forvent at mottatt hendelse konsumeres og persisteres, samt at gitt restkall gitt forventet resultat.
+        await.atMost(60, TimeUnit.SECONDS).untilAsserted {
+            val responseEntity = restTemplate.exchange("${SØKNAD}/${søknadId}", HttpMethod.GET, httpEntity, SøknadDTO::class.java)
+            val forventetRespons =
+                    //language=json
+                    """
+                          {
+                            "søknadId": "$søknadId",
+                            "søknadstype": "PP_SYKT_BARN",
+                            "status": "MOTTATT",
+                            "saksId": null,
+                            "journalpostId": "123456789",
+                            "søknad": {
+                              "søker": {
+                                "fødselsnummer": "1234567",
+                                "aktørId": "123456"
+                              }
+                            }
+                          }
+                    """.trimIndent()
             responseEntity.assert(forventetRespons, 200)
         }
     }
@@ -159,7 +193,7 @@ class PleiepengerSyktBarnHendelseKonsumentIntegrasjonsTest {
                     """
                        []
                     """.trimIndent()
-            responseEntity.assert(forventetRespons, 200)
+            responseEntity.listAssert(forventetRespons, 200)
         }
     }
 
@@ -178,7 +212,12 @@ class PleiepengerSyktBarnHendelseKonsumentIntegrasjonsTest {
         await.atMost(60, TimeUnit.SECONDS).until { repository.findAllByAktørId(aktørId).size == 1 }
     }
 
-    private fun ResponseEntity<List<SøknadDTO>>.assert(forventetResponse: String, forventetStatus: Int) {
+    private fun ResponseEntity<List<SøknadDTO>>.listAssert(forventetResponse: String, forventetStatus: Int) {
+        assertThat(statusCodeValue).isEqualTo(forventetStatus)
+        JSONAssert.assertEquals(forventetResponse, body!!.somJson(mapper), JSONCompareMode.LENIENT)
+    }
+
+    private fun ResponseEntity<SøknadDTO>.assert(forventetResponse: String, forventetStatus: Int) {
         assertThat(statusCodeValue).isEqualTo(forventetStatus)
         JSONAssert.assertEquals(forventetResponse, body!!.somJson(mapper), JSONCompareMode.LENIENT)
     }
