@@ -10,6 +10,7 @@ import no.nav.sifinnsynapi.common.Søknadstype
 import org.json.JSONObject
 import java.time.LocalDate
 import java.time.ZonedDateTime
+import java.util.*
 
 data class Søknad @JsonCreator constructor(
         @JsonProperty("aktørId") val aktørId: AktørId,
@@ -28,6 +29,7 @@ data class Søknad @JsonCreator constructor(
     }
 
     fun tilSøknadDAO(): SøknadDAO = SøknadDAO(
+            id = UUID.fromString(søknad["søknadId"] as String),
             aktørId = aktørId,
             saksId = saksnummer,
             fødselsnummer = fødselsnummer,
