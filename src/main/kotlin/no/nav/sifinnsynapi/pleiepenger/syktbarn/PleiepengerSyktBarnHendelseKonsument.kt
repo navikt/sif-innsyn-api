@@ -7,6 +7,7 @@ import no.nav.sifinnsynapi.soknad.Søknad
 import no.nav.sifinnsynapi.soknad.SøknadRepository
 import org.json.JSONObject
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.messaging.handler.annotation.Payload
 import org.springframework.stereotype.Service
@@ -16,7 +17,8 @@ import java.time.ZonedDateTime
 class PleiepengerSyktBarnHendelseKonsument(
         private val repository: SøknadRepository,
         private val dittnavService: DittnavService,
-        private val pleiepengerDittnavBeskjedProperties: PleiepengerDittnavBeskjedProperties
+        private val pleiepengerDittnavBeskjedProperties: PleiepengerDittnavBeskjedProperties,
+        @Value("\${topic.listener.pp-sykt-barn.dry-run}") private val dryRun: Boolean
 ) {
     companion object {
         private val logger = LoggerFactory.getLogger(PleiepengerSyktBarnHendelseKonsument::class.java)
@@ -30,29 +32,49 @@ class PleiepengerSyktBarnHendelseKonsument(
             autoStartup = "#{'\${topic.listener.pp-sykt-barn.bryter}'}"
     )
     fun konsumer(@Payload hendelse: TopicEntry) {
-        logger.info("Mottok hendelse fra Pleiepenger-Sykt-Barn")
 
-        logger.info("Mapper om fra TopicEntry til Søknad for Pleiepenger-Sykt-Barn")
-        val melding = JSONObject(hendelse.data.melding)
-        val søknadsHendelse = Søknad(
-                aktørId = AktørId(melding.getJSONObject("søker").getString("aktørId")),
-                mottattDato = ZonedDateTime.parse(melding.getString("mottatt")),
-                fødselsnummer = Fødselsnummer(melding.getJSONObject("søker").getString("fødselsnummer")),
-                journalpostId = hendelse.data.journalførtMelding.journalpostId,
-                søknadstype = Søknadstype.PP_SYKT_BARN,
-                status = SøknadsStatus.MOTTATT,
-                søknad = hendelse.data.melding
-        )
+        if (dryRun) {
+            logger.info("DRY_RUN --> Mottok hendelse fra Pleiepenger-Sykt-Barn")
+            logger.info("DRY_RUN --> Mapper fra TopicEntry til Søknad for Pleiepenger-Sykt-Barn")
+            try {
+                val melding = JSONObject(hendelse.data.melding)
+                val søknadsHendelse = Søknad(
+                        aktørId = AktørId(melding.getJSONObject("søker").getString("aktørId")),
+                        mottattDato = ZonedDateTime.parse(melding.getString("mottatt")),
+                        fødselsnummer = Fødselsnummer(melding.getJSONObject("søker").getString("fødselsnummer")),
+                        journalpostId = hendelse.data.journalførtMelding.journalpostId,
+                        søknadstype = Søknadstype.PP_SYKT_BARN,
+                        status = SøknadsStatus.MOTTATT,
+                        søknad = hendelse.data.melding
+                )
+            } catch (ex: Exception) {
+                logger.error("DRY_RUN --> Feilet med å mappe om TopicEntry til Søknad for Pleiepenger-Sykt-Barn")
+            }
+        } else {
+            logger.info("Mottok hendelse fra Pleiepenger-Sykt-Barn")
 
-        logger.info("Lagrer Søknad fra Pleiepenger-Sykt-Barn")
-        val søknadDAO = søknadsHendelse.tilSøknadDAO()
-        val save = repository.save(søknadDAO)
-        logger.info("Søknad for Pleiepenger-Sykt-Barn lagret: {}", save)
+            logger.info("Mapper om fra TopicEntry til Søknad for Pleiepenger-Sykt-Barn")
+            val melding = JSONObject(hendelse.data.melding)
+            val søknadsHendelse = Søknad(
+                    aktørId = AktørId(melding.getJSONObject("søker").getString("aktørId")),
+                    mottattDato = ZonedDateTime.parse(melding.getString("mottatt")),
+                    fødselsnummer = Fødselsnummer(melding.getJSONObject("søker").getString("fødselsnummer")),
+                    journalpostId = hendelse.data.journalførtMelding.journalpostId,
+                    søknadstype = Søknadstype.PP_SYKT_BARN,
+                    status = SøknadsStatus.MOTTATT,
+                    søknad = hendelse.data.melding
+            )
 
-        dittnavService.sendBeskjed(
-                melding.getString("søknadId"),
-                melding.somInnsynMelding(pleiepengerDittnavBeskjedProperties)
-        )
+            logger.info("Lagrer Søknad fra Pleiepenger-Sykt-Barn")
+            val søknadDAO = søknadsHendelse.tilSøknadDAO()
+            val save = repository.save(søknadDAO)
+            logger.info("Søknad for Pleiepenger-Sykt-Barn lagret: {}", save)
+
+            dittnavService.sendBeskjed(
+                    melding.getString("søknadId"),
+                    melding.somInnsynMelding(pleiepengerDittnavBeskjedProperties)
+            )
+        }
     }
 }
 
