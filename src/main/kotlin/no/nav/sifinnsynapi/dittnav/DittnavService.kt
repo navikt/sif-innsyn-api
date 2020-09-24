@@ -2,7 +2,7 @@ package no.nav.sifinnsynapi.dittnav
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import no.nav.sifinnsynapi.config.Topics.INNSYN_MOTTATT
-import no.nav.sifinnsynapi.pleiepenger.syktbarn.InnsynMelding
+import no.nav.sifinnsynapi.pleiepenger.syktbarn.K9Beskjed
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -19,16 +19,16 @@ class DittnavService(
         private val log: Logger = LoggerFactory.getLogger(DittnavService::class.java)
     }
 
-    fun sendBeskjed(søknadId: String, innsynMelding: InnsynMelding) {
+    fun sendBeskjed(søknadId: String, k9Beskjed: K9Beskjed) {
         log.info("Sender ut dittnav beskjed med eventID: {}", søknadId)
         kafkaTemplate.send(ProducerRecord(
                 INNSYN_MOTTATT,
                 søknadId,
-                innsynMelding.somJson(objectMapper)
+                k9Beskjed.somJson(objectMapper)
         ))
     }
 }
 
-fun InnsynMelding.somJson(mapper: ObjectMapper) = mapper.writeValueAsString(this)
+fun K9Beskjed.somJson(mapper: ObjectMapper) = mapper.writeValueAsString(this)
 
 

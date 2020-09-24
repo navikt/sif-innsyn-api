@@ -3,7 +3,7 @@ package no.nav.sifinnsynapi.utils
 import com.fasterxml.jackson.databind.ObjectMapper
 import no.nav.sifinnsynapi.common.TopicEntry
 import no.nav.sifinnsynapi.config.Topics.INNSYN_MOTTATT
-import no.nav.sifinnsynapi.pleiepenger.syktbarn.InnsynMelding
+import no.nav.sifinnsynapi.pleiepenger.syktbarn.K9Beskjed
 import org.apache.kafka.clients.consumer.Consumer
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.consumer.ConsumerRecord
@@ -25,17 +25,17 @@ fun Producer<String, Any>.leggPåTopic(hendelse: TopicEntry, topic: String, mapp
     this.flush()
 }
 
-fun EmbeddedKafkaBroker.opprettDittnavConsumer(): Consumer<String, InnsynMelding> {
+fun EmbeddedKafkaBroker.opprettDittnavConsumer(): Consumer<String, K9Beskjed> {
     val consumerProps = KafkaTestUtils.consumerProps("dittnv-consumer", "true", this)
     consumerProps[ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG] = "org.apache.kafka.common.serialization.StringDeserializer"
     consumerProps[ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG] = "org.apache.kafka.common.serialization.StringDeserializer"
 
-    val consumer = DefaultKafkaConsumerFactory<String, InnsynMelding>(HashMap(consumerProps)).createConsumer()
+    val consumer = DefaultKafkaConsumerFactory<String, K9Beskjed>(HashMap(consumerProps)).createConsumer()
     consumer.subscribe(listOf(INNSYN_MOTTATT))
     return consumer
 }
 
-fun Consumer<String, InnsynMelding>.lesMelding(søknadId: String): List<ConsumerRecord<String, InnsynMelding>> {
+fun Consumer<String, K9Beskjed>.lesMelding(søknadId: String): List<ConsumerRecord<String, K9Beskjed>> {
     seekToBeginning(assignment())
     val consumerRecords = this.poll(Duration.ofSeconds(1))
     return consumerRecords

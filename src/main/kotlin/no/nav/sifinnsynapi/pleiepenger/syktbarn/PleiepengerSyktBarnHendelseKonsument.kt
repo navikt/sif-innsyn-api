@@ -54,6 +54,7 @@ class PleiepengerSyktBarnHendelseKonsument(
             logger.info("Mottok hendelse fra Pleiepenger-Sykt-Barn")
 
             logger.info("Mapper om fra TopicEntry til Søknad for Pleiepenger-Sykt-Barn")
+
             val melding = JSONObject(hendelse.data.melding)
             val søknadsHendelse = Søknad(
                     aktørId = AktørId(melding.getJSONObject("søker").getString("aktørId")),
@@ -72,13 +73,14 @@ class PleiepengerSyktBarnHendelseKonsument(
 
             dittnavService.sendBeskjed(
                     melding.getString("søknadId"),
-                    melding.somInnsynMelding(pleiepengerDittnavBeskjedProperties)
+                    melding.somK9Beskjed(hendelse.data.metadata, pleiepengerDittnavBeskjedProperties)
             )
         }
     }
 }
 
-data class InnsynMelding(
+data class K9Beskjed(
+        val metadata: Metadata,
         val grupperingsId: String,
         val tekst: String,
         val link: String,
@@ -87,9 +89,10 @@ data class InnsynMelding(
         val eventId: String
 )
 
-private fun JSONObject.somInnsynMelding(beskjedProperties: PleiepengerDittnavBeskjedProperties): InnsynMelding {
+private fun JSONObject.somK9Beskjed(metadata: Metadata, beskjedProperties: PleiepengerDittnavBeskjedProperties): K9Beskjed {
     val søknadId = getString("søknadId")
-    return InnsynMelding(
+    return K9Beskjed(
+            metadata = metadata,
             søkerFødselsnummer = getJSONObject("søker").getString("fødselsnummer"),
             tekst = beskjedProperties.tekst,
             link = "${beskjedProperties.link}/$søknadId",
