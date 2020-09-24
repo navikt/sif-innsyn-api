@@ -2,7 +2,7 @@ no.nav:
   dittnav:
     pleiepenger-sykt-barn:
       beskjed:
-        tekst: 'Vi har mottatt søknaden din om pleiepenger. Les mer om hva som skjer etter at du har søkt.'
+        tekst: 'Vi har mottatt søknaden din om pleiepenger.'
         link: https://sif-innsyn.dev.nav.no/familie/sykdom-i-familien/soknad/innsyn/dine-pleiepenger
         dagerSynlig: 7
 
