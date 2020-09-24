@@ -9,7 +9,7 @@ import no.nav.security.token.support.test.spring.TokenGeneratorConfiguration
 import no.nav.sifinnsynapi.Routes.SØKNAD
 import no.nav.sifinnsynapi.common.AktørId
 import no.nav.sifinnsynapi.common.Fødselsnummer
-import no.nav.sifinnsynapi.config.Topics.INNSYN_MOTTATT
+import no.nav.sifinnsynapi.config.Topics.K9_DITTNAV_VARSEL_BESKJED
 import no.nav.sifinnsynapi.config.Topics.PP_SYKT_BARN
 import no.nav.sifinnsynapi.soknad.SøknadDAO
 import no.nav.sifinnsynapi.soknad.SøknadDTO
@@ -43,7 +43,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.util.concurrent.TimeUnit
 
 @EmbeddedKafka( // Setter opp og tilgjengligjør embeded kafka broker
-        topics = [PP_SYKT_BARN, INNSYN_MOTTATT],
+        topics = [PP_SYKT_BARN, K9_DITTNAV_VARSEL_BESKJED],
         bootstrapServersProperty = "spring.kafka.bootstrap-servers" // Setter bootstrap-servers for consumer og producer.
 )
 @ExtendWith(SpringExtension::class)
