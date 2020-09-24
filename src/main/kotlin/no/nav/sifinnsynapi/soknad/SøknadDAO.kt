@@ -32,4 +32,8 @@ data class SøknadDAO(
         @Column(name = "opprettet") @CreatedDate val opprettet: LocalDateTime? = null,
         @Column(name = "endret") @UpdateTimestamp val endret: LocalDateTime? = null,
         @Column(name = "behandlingsdato") val behandlingsdato: LocalDate? = null
-)
+) {
+    override fun toString(): String {
+        return "SøknadDAO(id=$id, aktørId=$aktørId, fødselsnummer=$fødselsnummer, søknadstype=$søknadstype, status=$status, saksId=$saksId, journalpostId='$journalpostId', opprettet=$opprettet, endret=$endret, behandlingsdato=$behandlingsdato)"
+    }
+}
