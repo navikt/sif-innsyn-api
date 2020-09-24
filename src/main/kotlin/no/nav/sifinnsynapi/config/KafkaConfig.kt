@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import no.nav.sifinnsynapi.common.AktørId
 import no.nav.sifinnsynapi.common.TopicEntry
 import no.nav.sifinnsynapi.soknad.SøknadRepository
+import no.nav.sifinnsynapi.util.Constants
+import no.nav.sifinnsynapi.util.MDCUtil
 import org.json.JSONObject
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
@@ -24,7 +26,9 @@ class KafkaConfig(
         val retryInterval: Long,
         @Suppress("SpringJavaInjectionPointsAutowiringInspection") val kafkaTemplate: KafkaTemplate<String, Any>,
         val objectMapper: ObjectMapper,
-        val søknadRepository: SøknadRepository) {
+        val søknadRepository: SøknadRepository,
+        @Value("\${spring.application.name:sif-innsyn-api}") private val applicationName: String
+) {
     companion object{
         private val logger = LoggerFactory.getLogger(KafkaConfig::class.java)
     }
@@ -37,6 +41,10 @@ class KafkaConfig(
         factory.setMessageConverter(JsonMessageConverter(objectMapper))
         factory.setRecordFilterStrategy {
             val topicEntry = objectMapper.readValue(it.value(), TopicEntry::class.java).data
+            val correlationId = topicEntry.metadata.correlationId
+            MDCUtil.toMDC(Constants.NAV_CALL_ID, correlationId)
+            MDCUtil.toMDC(Constants.NAV_CONSUMER_ID, applicationName)
+
             val søker = JSONObject(topicEntry.melding).getJSONObject("søker")
             when(søknadRepository.existsSøknadDAOByAktørIdAndJournalpostId(AktørId(søker.getString("aktørId")), topicEntry.journalførtMelding.journalpostId)){
                 true -> {
