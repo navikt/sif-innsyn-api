@@ -12,6 +12,7 @@ import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.messaging.handler.annotation.Payload
 import org.springframework.stereotype.Service
 import java.time.ZonedDateTime
+import java.util.*
 
 @Service
 class PleiepengerSyktBarnHendelseKonsument(
@@ -97,7 +98,7 @@ private fun JSONObject.somK9Beskjed(metadata: Metadata, beskjedProperties: Pleie
             tekst = beskjedProperties.tekst,
             link = "${beskjedProperties.link}/$søknadId",
             grupperingsId = søknadId,
-            eventId = søknadId,
+            eventId = UUID.randomUUID().toString(),
             dagerSynlig = beskjedProperties.dagerSynlig
     )
 }
