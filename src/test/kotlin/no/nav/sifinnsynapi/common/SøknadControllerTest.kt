@@ -27,6 +27,7 @@ import java.net.URI
 import java.net.URLDecoder
 import java.nio.charset.Charset
 import java.time.LocalDateTime
+import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.util.*
 
@@ -123,7 +124,7 @@ class SøknadControllerTest {
                         søknadstype = Søknadstype.OMP_UTBETALING_SNF,
                         status = SøknadsStatus.MOTTATT,
                         journalpostId = "123456789",
-                        opprettet = LocalDateTime.parse("2020-08-04T10:30:00"),
+                        opprettet = ZonedDateTime.parse("2020-08-04T10:30:00").withZoneSameInstant(ZoneId.of("Europe/Oslo")),
                         søknad = mapOf(
                                 "soknadId" to UUID.randomUUID().toString(),
                                 "mottatt" to ZonedDateTime.now(),
@@ -169,7 +170,7 @@ class SøknadControllerTest {
                         søknadstype = Søknadstype.OMP_UTBETALING_SNF,
                         status = SøknadsStatus.MOTTATT,
                         journalpostId = "123456789",
-                        opprettet = LocalDateTime.parse("2020-08-04T10:30:00"),
+                        opprettet = ZonedDateTime.parse("2020-08-04T10:30:00").withZoneSameInstant(ZoneId.of("Europe/Oslo")),
                         søknad = mapOf(
                                 "soknadId" to søknadId.toString(),
                                 "mottatt" to ZonedDateTime.now(),

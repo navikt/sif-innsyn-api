@@ -12,6 +12,7 @@ import org.hibernate.annotations.UpdateTimestamp
 import org.springframework.data.annotation.CreatedDate
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.ZonedDateTime
 import java.util.*
 import javax.persistence.*
 import javax.persistence.EnumType.STRING
@@ -29,7 +30,7 @@ data class SøknadDAO(
         @Column(name = "søknad", columnDefinition = "jsonb") @Type(type = "jsonb") val søknad: String,
         @Column(name = "saks_id") val saksId: String?,
         @Column(name = "journalpost_id") val journalpostId: String,
-        @Column(name = "opprettet") @CreatedDate val opprettet: LocalDateTime? = null,
+        @Column(name = "opprettet") @CreatedDate val opprettet: ZonedDateTime? = null,
         @Column(name = "endret") @UpdateTimestamp val endret: LocalDateTime? = null,
         @Column(name = "behandlingsdato") val behandlingsdato: LocalDate? = null
 ) {

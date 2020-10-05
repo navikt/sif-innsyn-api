@@ -18,6 +18,7 @@ import org.springframework.context.annotation.Import
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.time.LocalDateTime
+import java.time.ZonedDateTime
 import java.util.*
 
 @DataJpaTest
@@ -148,7 +149,7 @@ class SøknadRepositoryTest {
             status = SøknadsStatus.MOTTATT,
             journalpostId = customJournalpostId,
             saksId = "2222",
-            opprettet = LocalDateTime.now(),
+            opprettet = ZonedDateTime.now(),
             søknad =
             //language=json
             """

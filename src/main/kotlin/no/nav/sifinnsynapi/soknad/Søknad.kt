@@ -20,7 +20,7 @@ data class Søknad @JsonCreator constructor(
         @JsonProperty("status") val status: SøknadsStatus,
         @JsonProperty("søknadstype") val søknadstype: Søknadstype,
         @JsonProperty("førsteBehandlingsdato") var førsteBehandlingsdato: LocalDate? = null,
-        @JsonProperty("mottattDato") @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX", timezone = "UTC") val mottattDato: ZonedDateTime,
+        @JsonProperty("mottattDato") @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX", timezone = "Europe/Oslo") val mottattDato: ZonedDateTime,
         @JsonProperty("søknad") val søknad: Map<String, Any>) {
 
     override fun toString(): String {
@@ -38,7 +38,7 @@ data class Søknad @JsonCreator constructor(
             status = status,
             søknadstype = søknadstype,
             behandlingsdato = førsteBehandlingsdato,
-            opprettet = mottattDato.toLocalDateTime(),
+            opprettet = mottattDato,
             endret = null
     )
 
