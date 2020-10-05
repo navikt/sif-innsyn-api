@@ -124,7 +124,7 @@ class SøknadControllerTest {
                         søknadstype = Søknadstype.OMP_UTBETALING_SNF,
                         status = SøknadsStatus.MOTTATT,
                         journalpostId = "123456789",
-                        opprettet = ZonedDateTime.parse("2020-08-04T10:30:00Z").withZoneSameInstant(ZoneId.of("Europe/Oslo")),
+                        opprettet = ZonedDateTime.parse("2020-08-04T10:30:00Z").withZoneSameInstant(ZoneId.of("UTC")),
                         søknad = mapOf(
                                 "soknadId" to UUID.randomUUID().toString(),
                                 "mottatt" to ZonedDateTime.now(),
@@ -152,7 +152,7 @@ class SøknadControllerTest {
                 .andExpect(jsonPath("[0].journalpostId").isString)
                 .andExpect(jsonPath("[0].journalpostId").value("123456789"))
                 .andExpect(jsonPath("[0].opprettet").isString)
-                .andExpect(jsonPath("[0].opprettet").value("2020-08-04T12:30:00.000+02"))
+                .andExpect(jsonPath("[0].opprettet").value("2020-08-04T10:30:00.000Z"))
                 .andExpect(jsonPath("[0].endret").doesNotExist())
                 .andExpect(jsonPath("[0].behandlingsdato").doesNotExist())
                 .andExpect(jsonPath("[0].søknad").isMap)
@@ -170,7 +170,7 @@ class SøknadControllerTest {
                         søknadstype = Søknadstype.OMP_UTBETALING_SNF,
                         status = SøknadsStatus.MOTTATT,
                         journalpostId = "123456789",
-                        opprettet = ZonedDateTime.parse("2020-08-04T10:30:00Z").withZoneSameInstant(ZoneId.of("Europe/Oslo")),
+                        opprettet = ZonedDateTime.parse("2020-08-04T10:30:00Z").withZoneSameInstant(ZoneId.of("UTC")),
                         søknad = mapOf(
                                 "soknadId" to søknadId.toString(),
                                 "mottatt" to ZonedDateTime.now(),
@@ -197,7 +197,7 @@ class SøknadControllerTest {
                 .andExpect(jsonPath("$.journalpostId").isString)
                 .andExpect(jsonPath("$.journalpostId").value("123456789"))
                 .andExpect(jsonPath("$.opprettet").isString)
-                .andExpect(jsonPath("$.opprettet").value("2020-08-04T12:30:00.000+02"))
+                .andExpect(jsonPath("$.opprettet").value("2020-08-04T10:30:00.000Z"))
                 .andExpect(jsonPath("$.endret").doesNotExist())
                 .andExpect(jsonPath("$.behandlingsdato").doesNotExist())
                 .andExpect(jsonPath("$.søknad").isMap)

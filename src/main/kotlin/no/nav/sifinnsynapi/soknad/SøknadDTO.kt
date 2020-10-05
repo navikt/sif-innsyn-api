@@ -17,7 +17,7 @@ data class SøknadDTO @JsonCreator constructor(
         @JsonProperty("søknad") val søknad: Map<String, Any>,
         @JsonProperty("saksId") val saksId: String?,
         @JsonProperty("journalpostId") val journalpostId: String,
-        @JsonProperty("opprettet") @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX", timezone = "Europe/Oslo") val opprettet: ZonedDateTime? = null,
+        @JsonProperty("opprettet") @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX", timezone = "UTC") val opprettet: ZonedDateTime? = null,
         @JsonProperty("endret") @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss") val endret: LocalDateTime? = null,
         @JsonProperty("behandlingsdato") @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss") val behandlingsdato: LocalDate? = null
 )
