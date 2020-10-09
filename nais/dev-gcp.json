@@ -8,11 +8,6 @@
   "ingresses": [
     "https://sif-innsyn-api.dev.nav.no"
   ],
-  "kafkaBootstrapServers": [
-    "b27apvl00045.preprod.local",
-    "b27apvl00046.preprod.local",
-    "b27apvl00047.preprod.local"
-  ],
   "env": {
     "SERVER_PORT": "8080",
     "SPRING_APPLICATION_NAME": "sif-innsyn-api",
