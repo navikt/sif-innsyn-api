@@ -14,11 +14,9 @@ spec:
         - application: sif-innsyn
     outbound:
       external:
-        - host: secretmanager.googleapis.com
-        - host: oauth2.googleapis.com
-        - host: www.googleapis.com
-        - host: login.microsoftonline.com
-        - host: api-gw-q1.oera.no
+        {{#each externalHosts as |host|}}
+        - host: {{host}}
+        {{/each}}
       rules: []
   liveness:
     path: /actuator/health
