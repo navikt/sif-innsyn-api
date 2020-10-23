@@ -6,6 +6,7 @@ import no.nav.sifinnsynapi.common.TopicEntry
 import no.nav.sifinnsynapi.soknad.SøknadRepository
 import no.nav.sifinnsynapi.util.Constants
 import no.nav.sifinnsynapi.util.MDCUtil
+import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.json.JSONObject
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
@@ -19,6 +20,7 @@ import org.springframework.kafka.listener.ContainerProperties
 import org.springframework.kafka.listener.SeekToCurrentErrorHandler
 import org.springframework.kafka.support.converter.JsonMessageConverter
 import org.springframework.util.backoff.FixedBackOff
+import java.util.function.BiConsumer
 
 @Configuration
 class KafkaConfig(
@@ -60,8 +62,12 @@ class KafkaConfig(
 
         factory.containerProperties.isAckOnError = false;
         factory.containerProperties.ackMode = ContainerProperties.AckMode.RECORD;
-        factory.setErrorHandler(SeekToCurrentErrorHandler(FixedBackOff(retryInterval, FixedBackOff.UNLIMITED_ATTEMPTS)))
+        factory.setErrorHandler(SeekToCurrentErrorHandler(reoverer(), FixedBackOff(retryInterval, FixedBackOff.UNLIMITED_ATTEMPTS)))
 
         return factory
+    }
+
+    private fun reoverer() = BiConsumer { cr: ConsumerRecord<*, *>, ex: Exception ->
+        logger.error("Konsumering av melding feilet.", ex)
     }
 }
