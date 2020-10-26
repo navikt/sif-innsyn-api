@@ -74,9 +74,6 @@ class ExceptionHandler : ProblemHandling, AdviceTrait {
     @ExceptionHandler(value = [JwtTokenUnauthorizedException::class])
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     fun håndtereTokenUnauthorizedException(exception: JwtTokenUnauthorizedException, request: ServletWebRequest): ResponseEntity<Problem> {
-
-        log(HttpStatus.UNAUTHORIZED, exception, request)
-
         val throwableProblem = Problem.builder()
                 .withType(URI("/problem-details/uautentisert-forespørsel"))
                 .withTitle("Ikke autentisert")
