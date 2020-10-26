@@ -1,5 +1,6 @@
 package no.nav.sifinnsynapi.http
 
+import no.nav.security.token.support.core.exceptions.JwtTokenMissingException
 import no.nav.security.token.support.core.exceptions.JwtTokenValidatorException
 import no.nav.security.token.support.spring.validation.interceptor.JwtTokenUnauthorizedException
 import org.slf4j.Logger
@@ -96,6 +97,20 @@ class ExceptionHandler : ProblemHandling, AdviceTrait {
                 .withType(URI("/problem-details/uautorisert-forespørsel"))
                 .withTitle("Ikke uautorisert")
                 .withStatus(Status.FORBIDDEN)
+                .withDetail(exception.message)
+                .withInstance(URI(URLDecoder.decode(request.request.requestURL.toString(), Charset.defaultCharset())))
+                .build()
+
+        return create(throwableProblem, request)
+    }
+
+    @ExceptionHandler(JwtTokenMissingException::class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    fun håndtereJwtTokenMissingException(exception: JwtTokenMissingException, request: ServletWebRequest): ResponseEntity<Problem> {
+        val throwableProblem = Problem.builder()
+                .withType(URI("/problem-details/uautorisert-forespørsel"))
+                .withTitle("Ikke uautorisert")
+                .withStatus(Status.UNAUTHORIZED)
                 .withDetail(exception.message)
                 .withInstance(URI(URLDecoder.decode(request.request.requestURL.toString(), Charset.defaultCharset())))
                 .build()
