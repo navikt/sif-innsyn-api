@@ -85,7 +85,7 @@ services:
     depends_on:
       - oidc-provider
     environment:
-      REDIRECT_URL: "http://localhost:8080"
+      REDIRECT_URL: "http://localhost:8080/soknad"
       AUTO_REDIRECT_TO_FRONTEND: "true"
 
   oidc-provider:

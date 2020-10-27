@@ -11,7 +11,7 @@ no.nav:
   security:
     jwt:
       issuer:
-        selvbetjening:
+        loginservice:
           discoveryUrl: http://metadata
           accepted_audience: aud-localhost
           cookie_name: localhost-idtoken

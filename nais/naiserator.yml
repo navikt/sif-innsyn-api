@@ -53,6 +53,7 @@ spec:
     - secret: sif-innsyn-api.apigw-apikey
     - secret: sif-innsyn-api.sts-credentials
     - secret: sif-innsyn-api.sts-apikey
+    - configmap: loginservice-idporten
   env:
   {{#each env}}
    - name: {{@key}}

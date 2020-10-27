@@ -22,8 +22,7 @@ no.nav:
       allowed-origins: # Settes i nais/<cluster>.json
     jwt:
       issuer:
-        selvbetjening:
-          discoveryUrl: # Settes i nais/<cluster>.json
+        loginservice:
           cookie_name: # Settes inais/<cluster>.json
 
 topic:
