@@ -44,3 +44,8 @@ spring:
         show-sql: false
         hibernate:
           ddl-auto: none
+
+no.nav.security.jwt.issuer:
+  loginservice:
+    discoveryUrl: ${LOGINSERVICE_IDPORTEN_DISCOVERY_URL} # settes av configmap: loginservice-idporten i naiserator.yml
+    accepted_audience: ${LOGINSERVICE_IDPORTEN_AUDIENCE} # settes av configmap: loginservice-idporten i naiserator.yml

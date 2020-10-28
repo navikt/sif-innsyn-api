@@ -40,9 +40,9 @@ import java.util.*
         properties = [
             "spring.cloud.gcp.core.enabled=false",
             "spring.cloud.gcp.secretmanager.enabled=false",
-            "no.nav.security.jwt.issuer.selvbetjening.discoveryUrl=http://metadata",
-            "no.nav.security.jwt.issuer.selvbetjening.accepted_audience=aud-localhost",
-            "no.nav.security.jwt.issuer.selvbetjening.cookie_name=localhost-idtoken"
+            "no.nav.security.jwt.issuer.loginservice.discoveryUrl=http://metadata",
+            "no.nav.security.jwt.issuer.loginservice.accepted_audience=aud-localhost",
+            "no.nav.security.jwt.issuer.loginservice.cookie_name=localhost-idtoken"
         ])
 class SøknadControllerTest {
 
