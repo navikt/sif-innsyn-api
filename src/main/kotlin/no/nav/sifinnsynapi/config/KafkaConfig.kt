@@ -62,7 +62,9 @@ class KafkaConfig(
 
         factory.containerProperties.isAckOnError = false;
         factory.containerProperties.ackMode = ContainerProperties.AckMode.RECORD;
-        factory.setErrorHandler(SeekToCurrentErrorHandler(recoverer(), FixedBackOff(retryInterval, FixedBackOff.UNLIMITED_ATTEMPTS)))
+        val seekToCurrentErrorHandler = SeekToCurrentErrorHandler(recoverer(), FixedBackOff(retryInterval, Long.MAX_VALUE))
+
+        factory.setErrorHandler(seekToCurrentErrorHandler)
         return factory
     }
 

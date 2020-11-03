@@ -4,6 +4,7 @@ import no.nav.sifinnsynapi.common.*
 import no.nav.sifinnsynapi.dokument.DokumentDAO
 import no.nav.sifinnsynapi.dokument.DokumentRepository
 import no.nav.sifinnsynapi.soknad.Søknad
+import no.nav.sifinnsynapi.soknad.SøknadDAO
 import no.nav.sifinnsynapi.soknad.SøknadRepository
 import org.json.JSONObject
 import org.slf4j.LoggerFactory
@@ -11,6 +12,7 @@ import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.messaging.handler.annotation.Payload
 import org.springframework.stereotype.Service
 import java.time.ZonedDateTime
+import java.util.*
 
 @Service
 class OmsorgspengerutbetalingSNFHendelseKonsument(
@@ -58,4 +60,18 @@ class OmsorgspengerutbetalingSNFHendelseKonsument(
         }
 
     }
+
+    private fun Søknad.tilSøknadDAO(): SøknadDAO = SøknadDAO(
+            id = UUID.fromString(søknad["soknadId"] as String),
+            aktørId = aktørId,
+            saksId = saksnummer,
+            fødselsnummer = fødselsnummer,
+            journalpostId = journalpostId,
+            søknad = JSONObject(søknad).toString(),
+            status = status,
+            søknadstype = søknadstype,
+            behandlingsdato = førsteBehandlingsdato,
+            opprettet = mottattDato,
+            endret = null
+    )
 }

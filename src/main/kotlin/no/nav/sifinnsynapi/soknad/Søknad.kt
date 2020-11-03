@@ -27,19 +27,4 @@ data class Søknad @JsonCreator constructor(
         return "SøknadsHendelse(aktørId=$aktørId, fødselsnummer=$fødselsnummer, journalpostId='$journalpostId', saksnummer=$saksnummer, " +
                 "status=$status, søknadstype=$søknadstype, førsteBehandlingsdato=$førsteBehandlingsdato, mottattDato=$mottattDato)"
     }
-
-    fun tilSøknadDAO(): SøknadDAO = SøknadDAO(
-            id = UUID.fromString(søknad["søknadId"] as String),
-            aktørId = aktørId,
-            saksId = saksnummer,
-            fødselsnummer = fødselsnummer,
-            journalpostId = journalpostId,
-            søknad = JSONObject(søknad).toString(),
-            status = status,
-            søknadstype = søknadstype,
-            behandlingsdato = førsteBehandlingsdato,
-            opprettet = mottattDato,
-            endret = null
-    )
-
 }

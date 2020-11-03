@@ -20,11 +20,11 @@ val defaultMetadata = Metadata(
         requestId = UUID.randomUUID().toString()
 )
 
-fun defaultHendelse(søknadId: UUID = UUID.randomUUID(), journalpostId: String = "123456789") = TopicEntry(
+fun defaultHendelse(søknadIdKey: String = "søknadId", søknadId: UUID = UUID.randomUUID(), journalpostId: String = "123456789") = TopicEntry(
         data = SøknadsHendelse(
                 metadata = defaultMetadata,
                 melding = mapOf(
-                        "søknadId" to "$søknadId",
+                        "$søknadIdKey" to "$søknadId",
                         "mottatt" to ZonedDateTime.now(),
                         "søker" to mapOf(
                                 "fødselsnummer" to "1234567",

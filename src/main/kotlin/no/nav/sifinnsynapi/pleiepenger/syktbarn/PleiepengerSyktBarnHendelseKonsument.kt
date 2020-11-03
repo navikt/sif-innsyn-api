@@ -4,6 +4,7 @@ import no.nav.sifinnsynapi.common.*
 import no.nav.sifinnsynapi.dittnav.DittnavService
 import no.nav.sifinnsynapi.dittnav.PleiepengerDittnavBeskjedProperties
 import no.nav.sifinnsynapi.soknad.Søknad
+import no.nav.sifinnsynapi.soknad.SøknadDAO
 import no.nav.sifinnsynapi.soknad.SøknadRepository
 import org.json.JSONObject
 import org.slf4j.LoggerFactory
@@ -78,6 +79,20 @@ class PleiepengerSyktBarnHendelseKonsument(
             )
         }
     }
+
+    private fun Søknad.tilSøknadDAO(): SøknadDAO = SøknadDAO(
+            id = UUID.fromString(søknad["søknadId"] as String),
+            aktørId = aktørId,
+            saksId = saksnummer,
+            fødselsnummer = fødselsnummer,
+            journalpostId = journalpostId,
+            søknad = JSONObject(søknad).toString(),
+            status = status,
+            søknadstype = søknadstype,
+            behandlingsdato = førsteBehandlingsdato,
+            opprettet = mottattDato,
+            endret = null
+    )
 }
 
 data class K9Beskjed(

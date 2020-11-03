@@ -92,10 +92,10 @@ class FellesTestMedAlleSøknader {
         repository.findAllByAktørId(aktørId).ikkeEksisterer()
 
         //Legger en hendelse om mottatt søknad om omsorgspengerutbetaling for selvstendig næringsdrivende og frilans
-        producer.leggPåTopic(defaultHendelse(journalpostId = "1"), OMP_UTBETALING_SNF, mapper)
+        producer.leggPåTopic(defaultHendelse(søknadIdKey = "soknadId", journalpostId = "1"), OMP_UTBETALING_SNF, mapper)
 
         //Legger en hendelse om mottatt søknad om omsorgspengerutbetaling for arbeidstaker
-        producer.leggPåTopic(defaultHendelse(journalpostId = "2"), OMP_UTBETALING_ARBEIDSTAKER, mapper)
+        producer.leggPåTopic(defaultHendelse(søknadIdKey = "soknadId", journalpostId = "2"), OMP_UTBETALING_ARBEIDSTAKER, mapper)
 
         //Legger en hendelse om mottatt søknad om omsorgspenger utvidet rett
         producer.leggPåTopic(defaultHendelse(journalpostId = "3"), OMP_UTVIDET_RETT, mapper)
