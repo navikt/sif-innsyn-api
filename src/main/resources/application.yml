@@ -97,7 +97,7 @@ spring:
     #bootstrap-servers: # Settes i nais/<cluster>.json
     producer:
       client-id: ${spring.application.name}
-      retries: 3
+      retries: 10
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
     consumer:
