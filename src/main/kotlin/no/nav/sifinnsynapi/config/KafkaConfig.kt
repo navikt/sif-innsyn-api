@@ -62,12 +62,11 @@ class KafkaConfig(
 
         factory.containerProperties.isAckOnError = false;
         factory.containerProperties.ackMode = ContainerProperties.AckMode.RECORD;
-        factory.setErrorHandler(SeekToCurrentErrorHandler(reoverer(), FixedBackOff(retryInterval, FixedBackOff.UNLIMITED_ATTEMPTS)))
-
+        factory.setErrorHandler(SeekToCurrentErrorHandler(recoverer(), FixedBackOff(retryInterval, FixedBackOff.UNLIMITED_ATTEMPTS)))
         return factory
     }
 
-    private fun reoverer() = BiConsumer { cr: ConsumerRecord<*, *>, ex: Exception ->
-        logger.error("Konsumering av melding feilet.", ex)
+    private fun recoverer() = BiConsumer { cr: ConsumerRecord<*, *>, ex: Exception ->
+        logger.error("Retry attempts exhausted for ${cr.topic()}-${cr.partition()}@${cr.offset()}", ex)
     }
 }
