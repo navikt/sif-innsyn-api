@@ -3,7 +3,7 @@ topic:
   listener:
     pp-sykt-barn:
       bryter: true
-      dry-run: true
+      dry-run: false
     omp-utbetaling-arbeidstaker:
       bryter: false
     omp-utbetaling-snf:
