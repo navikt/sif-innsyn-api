@@ -50,7 +50,7 @@ spec:
 
     - alert: "\{{ $labels.name }} feiler i \{{ $labels.app }}."
       severity: danger
-      expr: floor(increase(spring_kafka_listener_seconds_count{result="failure", app="{{app}}"}[3m])) > 0
+      expr: ceil(increase(spring_kafka_listener_seconds_count{result="failure", app="{{app}}"}[3m])) > 0
       for: 1m
       description: "Konsumering av melding i \{{ $labels.name }} feiler. Sjekk loggene for å finne ut hvorfor dette feiler."
       action: "`kubectl logs \{{ $labels.kubernetes_pod_name }} -n \{{ $labels.kubernetes_namespace }} -c \{{ $labels.app }}`"
