@@ -62,7 +62,7 @@ class OmsorgspengerutbetalingSNFHendelseKonsument(
     }
 
     private fun Søknad.tilSøknadDAO(): SøknadDAO = SøknadDAO(
-            id = UUID.fromString(søknad["soknadId"] as String),
+            id = UUID.fromString(søknad["søknadId"] as String),
             aktørId = aktørId,
             saksId = saksnummer,
             fødselsnummer = fødselsnummer,
