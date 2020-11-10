@@ -99,11 +99,13 @@ spring:
       client-id: ${spring.application.name}
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      transaction-id-prefix: tx
     consumer:
       enable-auto-commit: true
       group-id: ${spring.application.name}
       auto-offset-reset: latest
-      retry-interval: 60_000 # Egendefinert property
+      isolation-level: read_committed
+      retry-interval: 10_000 # Egendefinert property
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       ssl:

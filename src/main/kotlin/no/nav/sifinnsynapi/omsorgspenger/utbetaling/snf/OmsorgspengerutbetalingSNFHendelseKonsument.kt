@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.messaging.handler.annotation.Payload
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.time.ZonedDateTime
 import java.util.*
 
@@ -23,6 +24,7 @@ class OmsorgspengerutbetalingSNFHendelseKonsument(
         private val logger = LoggerFactory.getLogger(OmsorgspengerutbetalingSNFHendelseKonsument::class.java)
     }
 
+    @Transactional(transactionManager = "kafkaTransactionManager")
     @KafkaListener(
             topics = ["#{'\${topic.listener.omp-utbetaling-snf.navn}'}"],
             id = "#{'\${topic.listener.omp-utbetaling-snf.id}'}",
