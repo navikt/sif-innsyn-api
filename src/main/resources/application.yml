@@ -100,7 +100,7 @@ spring:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
     consumer:
-      enable-auto-commit: false
+      enable-auto-commit: true
       group-id: ${spring.application.name}
       auto-offset-reset: latest
       retry-interval: 60_000 # Egendefinert property
