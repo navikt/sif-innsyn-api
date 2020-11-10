@@ -1,6 +1,7 @@
 package no.nav.sifinnsynapi.omsorgspenger.utbetaling.snf
 
 import no.nav.sifinnsynapi.common.*
+import no.nav.sifinnsynapi.config.TxConfiguration.Companion.KAFKA_TM
 import no.nav.sifinnsynapi.dokument.DokumentDAO
 import no.nav.sifinnsynapi.dokument.DokumentRepository
 import no.nav.sifinnsynapi.soknad.Søknad
@@ -24,7 +25,7 @@ class OmsorgspengerutbetalingSNFHendelseKonsument(
         private val logger = LoggerFactory.getLogger(OmsorgspengerutbetalingSNFHendelseKonsument::class.java)
     }
 
-    @Transactional(transactionManager = "kafkaTransactionManager")
+    @Transactional(transactionManager = KAFKA_TM)
     @KafkaListener(
             topics = ["#{'\${topic.listener.omp-utbetaling-snf.navn}'}"],
             id = "#{'\${topic.listener.omp-utbetaling-snf.id}'}",

@@ -1,6 +1,7 @@
 package no.nav.sifinnsynapi.omsorgspenger.utvidetrett
 
 import no.nav.sifinnsynapi.common.*
+import no.nav.sifinnsynapi.config.TxConfiguration
 import no.nav.sifinnsynapi.soknad.Søknad
 import no.nav.sifinnsynapi.soknad.SøknadDAO
 import no.nav.sifinnsynapi.soknad.SøknadRepository
@@ -9,6 +10,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.messaging.handler.annotation.Payload
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.time.ZonedDateTime
 import java.util.*
 
@@ -20,6 +22,7 @@ class OmsorgspengerUtvidetRettHendelseKonsument(
         private val logger = LoggerFactory.getLogger(OmsorgspengerUtvidetRettHendelseKonsument::class.java)
     }
 
+    @Transactional(transactionManager = TxConfiguration.KAFKA_TM)
     @KafkaListener(
             topics = ["#{'\${topic.listener.omp-utvidet-rett.navn}'}"],
             id = "#{'\${topic.listener.omp-utvidet-rett.id}'}",
