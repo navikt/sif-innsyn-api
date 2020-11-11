@@ -19,7 +19,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ExtendWith(SpringExtension::class)
 @ActiveProfiles("test")
-@AutoConfigureWireMock(port = 8000)
+@AutoConfigureWireMock
 @Import(TokenGeneratorConfiguration::class)
 internal class STSClientTest {
 

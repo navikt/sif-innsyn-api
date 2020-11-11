@@ -3,9 +3,9 @@ no.nav:
     apikey: test-key
     sts-apikey: sts-apikey
   gateways:
-    k9-selvbetjening-oppslag: http://localhost:8000/k9-selvbetjening-oppslag-mock
+    k9-selvbetjening-oppslag: http://localhost:${wiremock.server.port}/k9-selvbetjening-oppslag-mock
     sts:
-      url: http://localhost:8000/security-token-service
+      url: http://localhost:${wiremock.server.port}/security-token-service
       username: sts-username
       password: sts-password
   security:

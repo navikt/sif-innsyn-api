@@ -1,9 +1,13 @@
 package no.nav.sifinnsynapi.pleiepenger.syktbarn
 
 import no.nav.sifinnsynapi.common.*
-import no.nav.sifinnsynapi.config.TxConfiguration
 import no.nav.sifinnsynapi.dittnav.DittnavService
 import no.nav.sifinnsynapi.dittnav.PleiepengerDittnavBeskjedProperties
+import no.nav.sifinnsynapi.pleiepenger.syktbarn.PleiepengerSyktBarnHendelseKonsument.Companion.Keys.AKTØR_ID
+import no.nav.sifinnsynapi.pleiepenger.syktbarn.PleiepengerSyktBarnHendelseKonsument.Companion.Keys.FØDSELSNUMMER
+import no.nav.sifinnsynapi.pleiepenger.syktbarn.PleiepengerSyktBarnHendelseKonsument.Companion.Keys.MOTTATT
+import no.nav.sifinnsynapi.pleiepenger.syktbarn.PleiepengerSyktBarnHendelseKonsument.Companion.Keys.SØKER
+import no.nav.sifinnsynapi.pleiepenger.syktbarn.PleiepengerSyktBarnHendelseKonsument.Companion.Keys.SØKNAD_ID
 import no.nav.sifinnsynapi.soknad.Søknad
 import no.nav.sifinnsynapi.soknad.SøknadDAO
 import no.nav.sifinnsynapi.soknad.SøknadRepository
@@ -26,9 +30,18 @@ class PleiepengerSyktBarnHendelseKonsument(
 ) {
     companion object {
         private val logger = LoggerFactory.getLogger(PleiepengerSyktBarnHendelseKonsument::class.java)
+        private val YTELSE = "'pleiepenger - sykt barn'"
+
+        internal object Keys {
+            const val SØKNAD_ID = "søknadId"
+            const val SØKER = "søker"
+            const val AKTØR_ID = "aktørId"
+            const val MOTTATT = "mottatt"
+            const val FØDSELSNUMMER = "fødselsnummer"
+        }
     }
 
-    @Transactional(transactionManager = TxConfiguration.KAFKA_TM)
+    @Transactional
     @KafkaListener(
             topics = ["#{'\${topic.listener.pp-sykt-barn.navn}'}"],
             id = "#{'\${topic.listener.pp-sykt-barn.id}'}",
@@ -36,55 +49,57 @@ class PleiepengerSyktBarnHendelseKonsument(
             containerFactory = "kafkaJsonListenerContainerFactory",
             autoStartup = "#{'\${topic.listener.pp-sykt-barn.bryter}'}"
     )
-    fun konsumer(@Payload hendelse: TopicEntry) {
+    fun konsumer(
+            @Payload hendelse: TopicEntry
+    ) {
+        val melding = JSONObject(hendelse.data.melding)
+        val søknadId = melding.getString(SØKNAD_ID)
 
         if (dryRun) {
-            logger.info("DRY_RUN --> Mottok hendelse fra Pleiepenger-Sykt-Barn")
-            logger.info("DRY_RUN --> Mapper fra TopicEntry til Søknad for Pleiepenger-Sykt-Barn")
+            logger.info("DRY_RUN --> Mottok hendelse om $YTELSE med søknadId: $søknadId")
+            logger.info("DRY_RUN --> Mapper fra TopicEntry til Søknad for $YTELSE")
             try {
-                val melding = JSONObject(hendelse.data.melding)
                 val søknadsHendelse = Søknad(
-                        aktørId = AktørId(melding.getJSONObject("søker").getString("aktørId")),
-                        mottattDato = ZonedDateTime.parse(melding.getString("mottatt")),
-                        fødselsnummer = Fødselsnummer(melding.getJSONObject("søker").getString("fødselsnummer")),
+                        aktørId = AktørId(melding.getJSONObject(SØKER).getString(AKTØR_ID)),
+                        mottattDato = ZonedDateTime.parse(melding.getString(MOTTATT)),
+                        fødselsnummer = Fødselsnummer(melding.getJSONObject(SØKER).getString(FØDSELSNUMMER)),
                         journalpostId = hendelse.data.journalførtMelding.journalpostId,
                         søknadstype = Søknadstype.PP_SYKT_BARN,
                         status = SøknadsStatus.MOTTATT,
                         søknad = hendelse.data.melding
                 )
             } catch (ex: Exception) {
-                logger.error("DRY_RUN --> Feilet med å mappe om TopicEntry til Søknad for Pleiepenger-Sykt-Barn")
+                logger.error("DRY_RUN --> Feilet med å mappe om TopicEntry til Søknad for $YTELSE")
             }
         } else {
-            logger.info("Mottok hendelse fra Pleiepenger-Sykt-Barn")
+            logger.info("Mottok hendelse om $YTELSE med søknadId: $søknadId\"")
 
-            logger.info("Mapper om fra TopicEntry til Søknad for Pleiepenger-Sykt-Barn")
+            logger.info("Mapper om fra TopicEntry til Søknad for $YTELSE")
 
-            val melding = JSONObject(hendelse.data.melding)
             val søknadsHendelse = Søknad(
-                    aktørId = AktørId(melding.getJSONObject("søker").getString("aktørId")),
-                    mottattDato = ZonedDateTime.parse(melding.getString("mottatt")),
-                    fødselsnummer = Fødselsnummer(melding.getJSONObject("søker").getString("fødselsnummer")),
+                    aktørId = AktørId(melding.getJSONObject(SØKER).getString(AKTØR_ID)),
+                    mottattDato = ZonedDateTime.parse(melding.getString(MOTTATT)),
+                    fødselsnummer = Fødselsnummer(melding.getJSONObject(SØKER).getString(FØDSELSNUMMER)),
                     journalpostId = hendelse.data.journalførtMelding.journalpostId,
                     søknadstype = Søknadstype.PP_SYKT_BARN,
                     status = SøknadsStatus.MOTTATT,
                     søknad = hendelse.data.melding
             )
 
-            logger.info("Lagrer Søknad fra Pleiepenger-Sykt-Barn")
+            logger.info("Lagrer Søknad for $YTELSE")
             val søknadDAO = søknadsHendelse.tilSøknadDAO()
             val save = repository.save(søknadDAO)
-            logger.info("Søknad for Pleiepenger-Sykt-Barn lagret: {}", save)
+            logger.info("Søknad for $YTELSE lagret: {}", save)
 
             dittnavService.sendBeskjed(
-                    melding.getString("søknadId"),
+                    melding.getString(SØKNAD_ID),
                     melding.somK9Beskjed(hendelse.data.metadata, pleiepengerDittnavBeskjedProperties)
             )
         }
     }
 
     private fun Søknad.tilSøknadDAO(): SøknadDAO = SøknadDAO(
-            id = UUID.fromString(søknad["søknadId"] as String),
+            id = UUID.fromString(JSONObject(søknad).getString(SØKNAD_ID)),
             aktørId = aktørId,
             saksId = saksnummer,
             fødselsnummer = fødselsnummer,
@@ -109,10 +124,10 @@ data class K9Beskjed(
 )
 
 private fun JSONObject.somK9Beskjed(metadata: Metadata, beskjedProperties: PleiepengerDittnavBeskjedProperties): K9Beskjed {
-    val søknadId = getString("søknadId")
+    val søknadId = getString(SØKNAD_ID)
     return K9Beskjed(
             metadata = metadata,
-            søkerFødselsnummer = getJSONObject("søker").getString("fødselsnummer"),
+            søkerFødselsnummer = getJSONObject(SØKER).getString(FØDSELSNUMMER),
             tekst = beskjedProperties.tekst,
             link = "${beskjedProperties.link}/$søknadId",
             grupperingsId = søknadId,

@@ -50,7 +50,7 @@ import java.util.concurrent.TimeUnit
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT) // Integrasjonstest - Kjører opp hele Spring Context med alle konfigurerte beans.
 @Import(TokenGeneratorConfiguration::class) // Tilgjengliggjør en oicd-provider for test. Se application-test.yml -> no.nav.security.jwt.issuer.selvbetjening for konfigurasjon
-@AutoConfigureWireMock(port = 8000) // Konfigurerer og setter opp en wiremockServer. Default leses src/test/resources/__files og src/test/resources/mappings
+@AutoConfigureWireMock // Konfigurerer og setter opp en wiremockServer. Default leses src/test/resources/__files og src/test/resources/mappings
 class OmsorgspengerutbetalingSNFHendelseKonsumentIntegrasjonsTest {
 
     @Autowired
@@ -77,6 +77,7 @@ class OmsorgspengerutbetalingSNFHendelseKonsumentIntegrasjonsTest {
 
     @BeforeAll
     fun setUp() {
+        repository.deleteAll() //Tømmer databasen mellom hver test
         omsorgspengerutbetalingSnfProducer = embeddedKafkaBroker.opprettKafkaProducer()
     }
 
@@ -92,7 +93,7 @@ class OmsorgspengerutbetalingSNFHendelseKonsumentIntegrasjonsTest {
         repository.findAllByAktørId(aktørId).ikkeEksisterer()
 
         // legg på 1 hendelse om mottatt søknad om omsorgspengerutbetaling for selvstending næringsdrivende og frilans...
-        omsorgspengerutbetalingSnfProducer.leggPåTopic(defaultHendelse(søknadIdKey = "søknadId"), OMP_UTBETALING_SNF, mapper)
+        omsorgspengerutbetalingSnfProducer.leggPåTopic(defaultHendelse(søknadIdKey = "soknadId"), OMP_UTBETALING_SNF, mapper)
 
         // forvent at mottatt hendelse konsumeres og persisteres, samt at gitt restkall gitt forventet resultat.
         await.atMost(60, TimeUnit.SECONDS).untilAsserted {
@@ -125,7 +126,7 @@ class OmsorgspengerutbetalingSNFHendelseKonsumentIntegrasjonsTest {
         repository.findAllByAktørId(aktørId).ikkeEksisterer()
 
         // legg på 1 hendelse om mottatt søknad om omsorgspengerutbetaling for selvstending næringsdrivende og frilans...
-        omsorgspengerutbetalingSnfProducer.leggPåTopic(defaultHendelse(søknadIdKey = "søknadId"), OMP_UTBETALING_SNF, mapper)
+        omsorgspengerutbetalingSnfProducer.leggPåTopic(defaultHendelse(søknadIdKey = "soknadId"), OMP_UTBETALING_SNF, mapper)
 
         // Stub bruker aktørId, ulikt aktørId på hendelse
         stubForAktørId("annenAktørID-123456", 200)
@@ -144,7 +145,7 @@ class OmsorgspengerutbetalingSNFHendelseKonsumentIntegrasjonsTest {
 
     @Test
     fun `Dersom hendelse med journalpostId og aktørId eksisterer, skip deserialisering av duplikat`() {
-        val hendelse = defaultHendelse(søknadIdKey = "søknadId")
+        val hendelse = defaultHendelse(søknadIdKey = "soknadId")
 
         // Gitt at ingen hendelser med samme aktørId eksisterer...
         repository.findAllByAktørId(aktørId).ikkeEksisterer()

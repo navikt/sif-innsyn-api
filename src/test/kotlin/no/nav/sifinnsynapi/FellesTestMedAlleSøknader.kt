@@ -53,7 +53,7 @@ import java.util.concurrent.TimeUnit
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT) // Integrasjonstest - Kjører opp hele Spring Context med alle konfigurerte beans.
 @Import(TokenGeneratorConfiguration::class) // Tilgjengliggjør en oicd-provider for test. Se application-test.yml -> no.nav.security.jwt.issuer.selvbetjening for konfigurasjon
-@AutoConfigureWireMock(port = 8000) // Konfigurerer og setter opp en wiremockServer. Default leses src/test/resources/__files og src/test/resources/mappings
+@AutoConfigureWireMock // Konfigurerer og setter opp en wiremockServer. Default leses src/test/resources/__files og src/test/resources/mappings
 class FellesTestMedAlleSøknader {
     @Autowired
     lateinit var mapper: ObjectMapper
@@ -78,6 +78,7 @@ class FellesTestMedAlleSøknader {
 
     @BeforeAll
     fun setUp() {
+        repository.deleteAll() //Tømmer databasen mellom hver test
         producer = embeddedKafkaBroker.opprettKafkaProducer()
     }
 
@@ -93,7 +94,7 @@ class FellesTestMedAlleSøknader {
         repository.findAllByAktørId(aktørId).ikkeEksisterer()
 
         //Legger en hendelse om mottatt søknad om omsorgspengerutbetaling for selvstendig næringsdrivende og frilans
-        producer.leggPåTopic(defaultHendelse(søknadIdKey = "søknadId", journalpostId = "1"), OMP_UTBETALING_SNF, mapper)
+        producer.leggPåTopic(defaultHendelse(søknadIdKey = "soknadId", journalpostId = "1"), OMP_UTBETALING_SNF, mapper)
 
         //Legger en hendelse om mottatt søknad om omsorgspengerutbetaling for arbeidstaker
         producer.leggPåTopic(defaultHendelse(søknadIdKey = "soknadId", journalpostId = "2"), OMP_UTBETALING_ARBEIDSTAKER, mapper)

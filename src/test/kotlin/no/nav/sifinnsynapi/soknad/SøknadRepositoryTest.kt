@@ -44,6 +44,7 @@ class SøknadRepositoryTest {
     @BeforeAll
     internal fun setUp() {
         assertNotNull(repository)
+        repository.deleteAll() //Tømmer databasen mellom hver test
     }
 
     @AfterEach
