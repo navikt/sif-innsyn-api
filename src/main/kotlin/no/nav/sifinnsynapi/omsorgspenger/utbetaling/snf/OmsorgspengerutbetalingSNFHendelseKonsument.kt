@@ -30,7 +30,7 @@ class OmsorgspengerutbetalingSNFHendelseKonsument(
         private val YTELSE = "'omsorgspengerutbetaling - snf'"
 
         private object Keys {
-            const val SØKNAD_ID = "soknadId"
+            const val SØKNAD_ID = "søknadId"
             const val SØKER = "søker"
             const val AKTØR_ID = "aktørId"
             const val MOTTATT = "mottatt"
