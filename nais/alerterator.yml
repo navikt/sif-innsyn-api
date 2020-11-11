@@ -48,7 +48,7 @@ spec:
                     Sjekk loggene for å se hvorfor dette feiler"
       action: "`kubectl logs \{{ $labels.kubernetes_pod_name }} -n \{{ $labels.kubernetes_namespace }} -c \{{ $labels.app }}`"
 
-    - alert: "\{{ $labels.name }} feiler i \{{ $labels.app }}."
+    - alert: Konsumering av meldinger feiler
       severity: danger
       expr: ceil(increase(spring_kafka_listener_seconds_count{result="failure", app="{{app}}"}[3m])) > 0
       for: 1m
