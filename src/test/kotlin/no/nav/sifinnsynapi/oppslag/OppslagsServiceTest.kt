@@ -26,7 +26,7 @@ import java.time.Duration
 import java.util.*
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, properties = ["spring.main.allow-bean-definition-overriding=true"])
-@AutoConfigureWireMock(port = 8000)
+@AutoConfigureWireMock
 @ActiveProfiles("test")
 @Import(TokenGeneratorConfiguration::class)
 internal class OppslagsServiceTest {

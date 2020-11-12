@@ -1,8 +1,12 @@
 package no.nav.sifinnsynapi.omsorgspenger.utbetaling.snf
 
 import no.nav.sifinnsynapi.common.*
-import no.nav.sifinnsynapi.dokument.DokumentDAO
 import no.nav.sifinnsynapi.dokument.DokumentRepository
+import no.nav.sifinnsynapi.omsorgspenger.utbetaling.snf.OmsorgspengerutbetalingSNFHendelseKonsument.Companion.Keys.AKTØR_ID
+import no.nav.sifinnsynapi.omsorgspenger.utbetaling.snf.OmsorgspengerutbetalingSNFHendelseKonsument.Companion.Keys.FØDSELSNUMMER
+import no.nav.sifinnsynapi.omsorgspenger.utbetaling.snf.OmsorgspengerutbetalingSNFHendelseKonsument.Companion.Keys.MOTTATT
+import no.nav.sifinnsynapi.omsorgspenger.utbetaling.snf.OmsorgspengerutbetalingSNFHendelseKonsument.Companion.Keys.SØKER
+import no.nav.sifinnsynapi.omsorgspenger.utbetaling.snf.OmsorgspengerutbetalingSNFHendelseKonsument.Companion.Keys.SØKNAD_ID
 import no.nav.sifinnsynapi.soknad.Søknad
 import no.nav.sifinnsynapi.soknad.SøknadDAO
 import no.nav.sifinnsynapi.soknad.SøknadRepository
@@ -11,8 +15,10 @@ import org.slf4j.LoggerFactory
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.messaging.handler.annotation.Payload
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.time.ZonedDateTime
 import java.util.*
+
 
 @Service
 class OmsorgspengerutbetalingSNFHendelseKonsument(
@@ -21,8 +27,18 @@ class OmsorgspengerutbetalingSNFHendelseKonsument(
 ) {
     companion object {
         private val logger = LoggerFactory.getLogger(OmsorgspengerutbetalingSNFHendelseKonsument::class.java)
+        private val YTELSE = "'omsorgspengerutbetaling - snf'"
+
+        private object Keys {
+            const val SØKNAD_ID = "soknadId"
+            const val SØKER = "søker"
+            const val AKTØR_ID = "aktørId"
+            const val MOTTATT = "mottatt"
+            const val FØDSELSNUMMER = "fødselsnummer"
+        }
     }
 
+    @Transactional
     @KafkaListener(
             topics = ["#{'\${topic.listener.omp-utbetaling-snf.navn}'}"],
             id = "#{'\${topic.listener.omp-utbetaling-snf.id}'}",
@@ -30,39 +46,31 @@ class OmsorgspengerutbetalingSNFHendelseKonsument(
             containerFactory = "kafkaJsonListenerContainerFactory",
             autoStartup = "#{'\${topic.listener.omp-utbetaling-snf.bryter}'}"
     )
-    fun konsumer(@Payload hendelse: TopicEntry) {
-        logger.info("Mottok hendelse fra Omsorgspenger-Utbetaling-SNF")
-
-        logger.info("Mapper om fra TopicEntry til Søknad for Omsorgspenger-Utbetaling-SNF")
-
+    fun konsumer(
+            @Payload hendelse: TopicEntry
+    ) {
         val melding = JSONObject(hendelse.data.melding)
+        val søknadId = melding.getString(SØKNAD_ID)
+        logger.info("Mottok hendelse om $YTELSE med søknadId: $søknadId")
+
+        logger.info("Mapper om fra TopicEntry til Søknad for $YTELSE")
         val søknadsHendelse = Søknad(
-                aktørId = AktørId(melding.getJSONObject("søker").getString("aktørId")),
-                mottattDato = ZonedDateTime.parse(melding.getString("mottatt")),
-                fødselsnummer = Fødselsnummer(melding.getJSONObject("søker").getString("fødselsnummer")),
+                aktørId = AktørId(melding.getJSONObject(SØKER).getString(AKTØR_ID)),
+                mottattDato = ZonedDateTime.parse(melding.getString(MOTTATT)),
+                fødselsnummer = Fødselsnummer(melding.getJSONObject(SØKER).getString(FØDSELSNUMMER)),
                 journalpostId = hendelse.data.journalførtMelding.journalpostId,
                 søknadstype = Søknadstype.OMP_UTBETALING_SNF,
                 status = SøknadsStatus.MOTTATT,
                 søknad = hendelse.data.melding
         )
 
-        logger.info("Lagrer Søknad fra Omsorgspenger-Utbetaling-SNF")
+        logger.info("Lagrer Søknad for $YTELSE")
         val søknadDAO = søknadRepo.save(søknadsHendelse.tilSøknadDAO())
-        logger.info("Søknad for Omsorgspenger-Utbetaling-SNF lagret: {}", søknadDAO)
-
-        logger.info("Lagrer vedlagt pdfdokument fra Omsorgspenger-Utbetaling-SNF")
-        hendelse.data.pdfDokument?.let {
-            val dokumentDAO = dokumentRepo.save(DokumentDAO(
-                    innhold = it,
-                    søknadId = søknadDAO.id
-            ))
-            logger.info("Pdfdokument for Omsorgspenger-Utbetaling-SNF lagret: {}", dokumentDAO)
-        }
-
+        logger.info("Søknad for $YTELSE lagret: {}", søknadDAO)
     }
 
     private fun Søknad.tilSøknadDAO(): SøknadDAO = SøknadDAO(
-            id = UUID.fromString(søknad["soknadId"] as String),
+            id = UUID.fromString(JSONObject(søknad).getString(SØKNAD_ID)),
             aktørId = aktørId,
             saksId = saksnummer,
             fødselsnummer = fødselsnummer,

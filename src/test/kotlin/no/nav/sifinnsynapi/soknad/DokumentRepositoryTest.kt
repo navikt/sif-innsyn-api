@@ -35,6 +35,7 @@ class DokumentRepositoryTest {
 
     @BeforeAll
     internal fun setUp() {
+        repository.deleteAll() //Tømmer databasen mellom hver test
         assertNotNull(repository)
     }
 

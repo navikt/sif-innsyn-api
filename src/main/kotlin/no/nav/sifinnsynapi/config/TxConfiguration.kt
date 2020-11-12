@@ -18,7 +18,7 @@ import org.springframework.kafka.transaction.KafkaTransactionManager
 import org.springframework.orm.jpa.JpaTransactionManager
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean
 
-/*@Configuration
+@Configuration
 class TxConfiguration(
         private val validator: LocalValidatorFactoryBean
 ) : KafkaListenerConfigurer {
@@ -60,4 +60,4 @@ class TxConfiguration(
         const val KAFKA_TM = "kafkaTM"
         const val JPA_TM = "jpaTM"
     }
-}*/
+}

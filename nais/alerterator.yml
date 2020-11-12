@@ -48,12 +48,12 @@ spec:
                     Sjekk loggene for å se hvorfor dette feiler"
       action: "`kubectl logs \{{ $labels.kubernetes_pod_name }} -n \{{ $labels.kubernetes_namespace }} -c \{{ $labels.app }}`"
 
-    - alert: "\{{ $labels.name }} feiler i \{{ $labels.app }}."
+    - alert: Konsumering av meldinger feiler
       severity: danger
-      expr: floor(increase(spring_kafka_listener_seconds_count{result="failure", app="{{app}}"}[3m])) > 0
+      expr: ceil(increase(spring_kafka_listener_seconds_count{result="failure", app="{{app}}"}[3m])) > 0
       for: 1m
       description: "Konsumering av melding i \{{ $labels.name }} feiler. Sjekk loggene for å finne ut hvorfor dette feiler."
-      action: "`kubectl logs \{{ $labels.kubernetes_pod_name }} -n \{{ $labels.kubernetes_namespace }} -c \{{ $labels.app }}`"
+      action: "`kubectl logs \{{ $labels.pod_name }} -n \{{ $labels.namespace }} -c \{{ $labels.app }}`"
 
     - alert: Helsesjekk feiler
       expr: floor(increase(http_server_requests_seconds_count{status!~"200", uri="/actuator/health", app="{{app}}"}[3m])) > 0
