@@ -100,7 +100,7 @@ class FellesTestMedAlleSøknader {
         producer.leggPåTopic(defaultHendelse(søknadIdKey = "soknadId", journalpostId = "2"), OMP_UTBETALING_ARBEIDSTAKER, mapper)
 
         //Legger en hendelse om mottatt søknad om omsorgspenger utvidet rett
-        producer.leggPåTopic(defaultHendelse(journalpostId = "3"), OMP_UTVIDET_RETT, mapper)
+        producer.leggPåTopic(defaultHendelse(søknadIdKey = "soknadId", journalpostId = "3"), OMP_UTVIDET_RETT, mapper)
 
         //Legger en hendelse om mottatt søknad om pleiepenger sykt barn
         producer.leggPåTopic(defaultHendelse(journalpostId = "4"), PP_SYKT_BARN, mapper)
