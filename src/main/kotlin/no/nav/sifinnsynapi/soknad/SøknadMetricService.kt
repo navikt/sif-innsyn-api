@@ -20,7 +20,7 @@ class SøknadMetricService(
     @Scheduled(fixedRateString = "#{'\${no.nav.metrics.interval}'}")
     fun reportSøknadMetrics() {
 
-        søknadRepository.finnAnntallUnikeSøkere().let {
+        søknadRepository.finnAntallUnikeSøkere().let {
             logger.info("Måling: antall unike brukere = $it")
             Gauge.builder("sif_innsyn_antall_unike_brukere") { it }
                     .description("Måler for antall unike brukere i databasen")

@@ -147,7 +147,7 @@ class SøknadRepositoryTest {
                 lagSøknadDAO(customAktørId = AktørId("789010"))
         ))
 
-        assertk.assertThat(repository.finnAnntallUnikeSøkere()).isEqualTo(2)
+        assertk.assertThat(repository.finnAntallUnikeSøkere()).isEqualTo(2)
     }
 
 

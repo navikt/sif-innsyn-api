@@ -17,7 +17,7 @@ interface SøknadRepository : JpaRepository<SøknadDAO, UUID> {
             value = "SELECT COUNT(DISTINCT aktør_id) FROM søknad",
             nativeQuery = true
     )
-    fun finnAnntallUnikeSøkere(): Long
+    fun finnAntallUnikeSøkere(): Long
 
     @Query(
             value = "SELECT COUNT(*) FROM søknad WHERE søknadstype = ?1",
