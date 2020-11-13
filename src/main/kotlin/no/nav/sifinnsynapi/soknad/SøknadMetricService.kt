@@ -22,8 +22,15 @@ class SøknadMetricService(
         val antallBrukere = søknadRepository.finnAnntallUnikeSøkere()
         logger.info("Måling: antall unike brukere = $antallBrukere")
 
+        val antallSøknader = søknadRepository.count()
+        logger.info("Måling: antall søknader = $antallSøknader")
+
         Gauge.builder("sif_innsyn_antall_unike_brukere") { antallBrukere }
                 .description("Måler for antall unike brukere i databasen")
+                .register(meterRegistry)
+
+        Gauge.builder("sif_innsyn_antall_soknader") { antallSøknader }
+                .description("Måler for antall søknader i databasen")
                 .register(meterRegistry)
     }
 }
