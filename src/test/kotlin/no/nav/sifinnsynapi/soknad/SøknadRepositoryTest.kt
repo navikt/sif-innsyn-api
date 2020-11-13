@@ -1,5 +1,6 @@
 package no.nav.sifinnsynapi.soknad
 
+import assertk.assertions.isEqualTo
 import no.nav.security.token.support.test.spring.TokenGeneratorConfiguration
 import no.nav.sifinnsynapi.common.AktørId
 import no.nav.sifinnsynapi.common.Fødselsnummer
@@ -17,7 +18,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.context.annotation.Import
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit.jupiter.SpringExtension
-import java.time.LocalDateTime
 import java.time.ZonedDateTime
 import java.util.*
 
@@ -139,14 +139,43 @@ class SøknadRepositoryTest {
         assertTrue(eksistererSøknad)
     }
 
+    @Test
+    fun `gitt søknader i database, forvent 2 unike brukere`() {
+        repository.saveAll(listOf(
+                lagSøknadDAO(),
+                lagSøknadDAO(customAktørId = AktørId("789010")),
+                lagSøknadDAO(customAktørId = AktørId("789010"))
+        ))
+
+        assertk.assertThat(repository.finnAntallUnikeSøkere()).isEqualTo(2)
+    }
+
+
+    @Test
+    fun `gitt lagrede søknader, forvent 1 av hver søknadstype`() {
+        repository.saveAll(listOf(
+                lagSøknadDAO(søknadstype = Søknadstype.PP_SYKT_BARN),
+                lagSøknadDAO(søknadstype = Søknadstype.PP_ETTERSENDING),
+                lagSøknadDAO(søknadstype = Søknadstype.OMP_UTVIDET_RETT),
+                lagSøknadDAO(søknadstype = Søknadstype.OMP_UTBETALING_ARBEIDSTAKER),
+                lagSøknadDAO(søknadstype = Søknadstype.OMP_UTBETALING_SNF),
+                lagSøknadDAO(søknadstype = Søknadstype.OMP_ETTERSENDING),
+                lagSøknadDAO(søknadstype = Søknadstype.OMD_OVERFØRING)
+        )).forEach {
+            assertk.assertThat(repository.finnAntallSøknaderGittSøknadstype(it.søknadstype.name)).isEqualTo(1)
+        }
+    }
+
 
     private fun lagSøknadDAO(
             customAktørId: AktørId = aktørId,
-            customJournalpostId: String = journalpostId): SøknadDAO = SøknadDAO(
+            customJournalpostId: String = journalpostId,
+            søknadstype: Søknadstype = Søknadstype.OMP_UTBETALING_SNF
+    ): SøknadDAO = SøknadDAO(
             id = UUID.randomUUID(),
             aktørId = customAktørId,
             fødselsnummer = fødselsnummer,
-            søknadstype = Søknadstype.OMP_UTBETALING_SNF,
+            søknadstype = søknadstype,
             status = SøknadsStatus.MOTTATT,
             journalpostId = customJournalpostId,
             saksId = "2222",

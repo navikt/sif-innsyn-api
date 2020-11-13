@@ -18,6 +18,9 @@ no.nav:
     cors:
       allowed-origins: http://localhost:8080
 
+  metrics:
+    interval: 5
+
 spring:
   profiles:
     active: test
