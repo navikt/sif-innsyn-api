@@ -1,6 +1,7 @@
 package no.nav.sifinnsynapi.soknad
 
 import no.nav.sifinnsynapi.common.AktørId
+import no.nav.sifinnsynapi.common.Søknadstype
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.transaction.annotation.Transactional
@@ -17,4 +18,10 @@ interface SøknadRepository : JpaRepository<SøknadDAO, UUID> {
             nativeQuery = true
     )
     fun finnAnntallUnikeSøkere(): Long
+
+    @Query(
+            value = "SELECT COUNT(*) FROM søknad WHERE søknadstype = ?1",
+            nativeQuery = true
+    )
+    fun finnAntallSøknaderGittSøknadstype(søknadstype: String): Long
 }

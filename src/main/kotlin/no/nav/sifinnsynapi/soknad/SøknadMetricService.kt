@@ -2,6 +2,7 @@ package no.nav.sifinnsynapi.soknad
 
 import io.micrometer.core.instrument.Gauge
 import io.micrometer.core.instrument.MeterRegistry
+import no.nav.sifinnsynapi.common.Søknadstype
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Scheduled
@@ -19,18 +20,25 @@ class SøknadMetricService(
     @Scheduled(fixedRateString = "#{'\${no.nav.metrics.interval.antall_brukere}'}")
     fun reportSøknadMetrics() {
 
-        val antallBrukere = søknadRepository.finnAnntallUnikeSøkere()
-        logger.info("Måling: antall unike brukere = $antallBrukere")
+        søknadRepository.finnAnntallUnikeSøkere().let {
+            logger.info("Måling: antall unike brukere = $it")
+            Gauge.builder("sif_innsyn_antall_unike_brukere") { it }
+                    .description("Måler for antall unike brukere i databasen")
+                    .register(meterRegistry)
+        }
 
-        val antallSøknader = søknadRepository.count()
-        logger.info("Måling: antall søknader = $antallSøknader")
+        søknadRepository.count().let {
+            logger.info("Måling: antall søknader = $it")
+            Gauge.builder("sif_innsyn_antall_soknader") { it }
+                    .description("Måler for antall søknader i databasen")
+                    .register(meterRegistry)
+        }
 
-        Gauge.builder("sif_innsyn_antall_unike_brukere") { antallBrukere }
-                .description("Måler for antall unike brukere i databasen")
-                .register(meterRegistry)
-
-        Gauge.builder("sif_innsyn_antall_soknader") { antallSøknader }
-                .description("Måler for antall søknader i databasen")
-                .register(meterRegistry)
+        søknadRepository.finnAntallSøknaderGittSøknadstype(Søknadstype.PP_SYKT_BARN.name).let {
+            logger.info("Måling: antall pleiepengesøknader = $it")
+            Gauge.builder("sif_innsyn_antall_pleiepengesoknader") { it }
+                    .description("Måler for antall pleiepengesøknader i databasen")
+                    .register(meterRegistry)
+        }
     }
 }

@@ -140,28 +140,42 @@ class SøknadRepositoryTest {
     }
 
     @Test
-    fun `gitt 3 søknader i database, forvent 2 unike brukere`() {
-        val søknadDAO1 = lagSøknadDAO()
-        repository.save(søknadDAO1)
-
-        val søknadDAO2 = lagSøknadDAO(customAktørId = AktørId("789010"))
-        repository.save(søknadDAO2)
-
-        val søknadDAO3 = lagSøknadDAO(customAktørId = AktørId("789010"))
-        repository.save(søknadDAO3)
+    fun `gitt søknader i database, forvent 2 unike brukere`() {
+        repository.saveAll(listOf(
+                lagSøknadDAO(),
+                lagSøknadDAO(customAktørId = AktørId("789010")),
+                lagSøknadDAO(customAktørId = AktørId("789010"))
+        ))
 
         assertk.assertThat(repository.finnAnntallUnikeSøkere()).isEqualTo(2)
+    }
 
+
+    @Test
+    fun `gitt lagrede søknader, forvent 1 av hver søknadstype`() {
+        repository.saveAll(listOf(
+                lagSøknadDAO(søknadstype = Søknadstype.PP_SYKT_BARN),
+                lagSøknadDAO(søknadstype = Søknadstype.PP_ETTERSENDING),
+                lagSøknadDAO(søknadstype = Søknadstype.OMP_UTVIDET_RETT),
+                lagSøknadDAO(søknadstype = Søknadstype.OMP_UTBETALING_ARBEIDSTAKER),
+                lagSøknadDAO(søknadstype = Søknadstype.OMP_UTBETALING_SNF),
+                lagSøknadDAO(søknadstype = Søknadstype.OMP_ETTERSENDING),
+                lagSøknadDAO(søknadstype = Søknadstype.OMD_OVERFØRING)
+        )).forEach {
+            assertk.assertThat(repository.finnAntallSøknaderGittSøknadstype(it.søknadstype.name)).isEqualTo(1)
+        }
     }
 
 
     private fun lagSøknadDAO(
             customAktørId: AktørId = aktørId,
-            customJournalpostId: String = journalpostId): SøknadDAO = SøknadDAO(
+            customJournalpostId: String = journalpostId,
+            søknadstype: Søknadstype = Søknadstype.OMP_UTBETALING_SNF
+    ): SøknadDAO = SøknadDAO(
             id = UUID.randomUUID(),
             aktørId = customAktørId,
             fødselsnummer = fødselsnummer,
-            søknadstype = Søknadstype.OMP_UTBETALING_SNF,
+            søknadstype = søknadstype,
             status = SøknadsStatus.MOTTATT,
             journalpostId = customJournalpostId,
             saksId = "2222",
