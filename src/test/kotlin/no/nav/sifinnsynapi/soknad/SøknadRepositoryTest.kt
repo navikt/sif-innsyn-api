@@ -1,5 +1,6 @@
 package no.nav.sifinnsynapi.soknad
 
+import assertk.assertions.isEqualTo
 import no.nav.security.token.support.test.spring.TokenGeneratorConfiguration
 import no.nav.sifinnsynapi.common.AktørId
 import no.nav.sifinnsynapi.common.Fødselsnummer
@@ -17,7 +18,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.context.annotation.Import
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit.jupiter.SpringExtension
-import java.time.LocalDateTime
 import java.time.ZonedDateTime
 import java.util.*
 
@@ -137,6 +137,21 @@ class SøknadRepositoryTest {
         repository.save(søknadDAO)
         eksistererSøknad = repository.existsSøknadDAOByAktørIdAndJournalpostId(aktørId, ulikJournalpostId)
         assertTrue(eksistererSøknad)
+    }
+
+    @Test
+    fun `gitt 3 søknader i database, forvent 2 unike brukere`() {
+        val søknadDAO1 = lagSøknadDAO()
+        repository.save(søknadDAO1)
+
+        val søknadDAO2 = lagSøknadDAO(customAktørId = AktørId("789010"))
+        repository.save(søknadDAO2)
+
+        val søknadDAO3 = lagSøknadDAO(customAktørId = AktørId("789010"))
+        repository.save(søknadDAO3)
+
+        assertk.assertThat(repository.finnAnntallUnikeSøkere()).isEqualTo(2)
+
     }
 
 

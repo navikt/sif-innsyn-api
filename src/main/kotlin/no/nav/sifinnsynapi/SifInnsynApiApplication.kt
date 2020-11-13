@@ -7,6 +7,7 @@ import org.springframework.boot.context.properties.ConfigurationPropertiesScan
 import org.springframework.boot.runApplication
 import org.springframework.kafka.annotation.EnableKafka
 import org.springframework.retry.annotation.EnableRetry
+import org.springframework.scheduling.annotation.EnableScheduling
 import org.springframework.transaction.annotation.EnableTransactionManagement
 
 @SpringBootApplication(exclude = [
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement
 @EnableRetry
 @EnableKafka
 @EnableTransactionManagement
+@EnableScheduling
 @ConfigurationPropertiesScan("no.nav.sifinnsynapi")
 class SifInnsynApiApplication
 

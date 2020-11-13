@@ -25,6 +25,11 @@ no.nav:
         loginservice:
           cookie_name: # Settes inais/<cluster>.json
 
+  metrics:
+    interval:
+      antall_brukere: 60_000
+      antall_søknader: 60_000
+
 topic:
   # Bryter betegner av/på funksjon for kafkalytter. True (på), False (av).
   listener:
