@@ -17,7 +17,7 @@ class SøknadMetricService(
         private val logger: Logger = LoggerFactory.getLogger(SøknadMetricService::class.java)
     }
 
-    @Scheduled(fixedRateString = "#{'\${no.nav.metrics.interval.antall_brukere}'}")
+    @Scheduled(fixedRateString = "#{'\${no.nav.metrics.interval}'}")
     fun reportSøknadMetrics() {
 
         søknadRepository.finnAnntallUnikeSøkere().let {
