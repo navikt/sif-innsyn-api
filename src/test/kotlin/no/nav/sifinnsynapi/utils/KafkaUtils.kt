@@ -3,7 +3,7 @@ package no.nav.sifinnsynapi.utils
 import com.fasterxml.jackson.databind.ObjectMapper
 import no.nav.sifinnsynapi.common.TopicEntry
 import no.nav.sifinnsynapi.config.Topics.K9_DITTNAV_VARSEL_BESKJED
-import no.nav.sifinnsynapi.pleiepenger.syktbarn.K9Beskjed
+import no.nav.sifinnsynapi.dittnav.K9Beskjed
 import org.apache.kafka.clients.consumer.Consumer
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.consumer.ConsumerRecord

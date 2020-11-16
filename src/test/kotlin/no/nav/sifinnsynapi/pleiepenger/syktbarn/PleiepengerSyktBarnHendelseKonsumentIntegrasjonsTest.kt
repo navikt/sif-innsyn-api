@@ -41,6 +41,7 @@ import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.util.concurrent.TimeUnit
+import no.nav.sifinnsynapi.dittnav.K9Beskjed
 
 @EmbeddedKafka( // Setter opp og tilgjengligjør embeded kafka broker
         count = 3,
