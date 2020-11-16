@@ -47,23 +47,9 @@ class OmsorgsdagerOverforingHendelseKonsument(
             autoStartup = "#{'\${topic.listener.omd-overforing.bryter}'}"
     )
     fun konsumer(
-            @Payload hendelse: String // TODO: Oppdatere med riktig type
+            @Payload hendelse: Object // TODO: Oppdatere med riktig type
     ) {
         logger.info("Konsumerer hendelse om $YTELSE")
     }
-
-    private fun Søknad.tilSøknadDAO(): SøknadDAO = SøknadDAO(
-            id = UUID.fromString(JSONObject(søknad).getString(SØKNAD_ID)),
-            aktørId = aktørId,
-            saksId = saksnummer,
-            fødselsnummer = fødselsnummer,
-            journalpostId = journalpostId,
-            søknad = JSONObject(søknad).toString(),
-            status = status,
-            søknadstype = søknadstype,
-            behandlingsdato = førsteBehandlingsdato,
-            opprettet = mottattDato,
-            endret = null
-    )
 }
 
