@@ -43,19 +43,47 @@ class KafkaConfig(
     fun kafkaJsonListenerContainerFactory(
             @Suppress("SpringJavaInjectionPointsAutowiringInspection") consumerFactory: ConsumerFactory<String, String>,
             chainedTransactionManager: ChainedTransactionManager
-    ): KafkaListenerContainerFactory<*> {
+    ): KafkaListenerContainerFactory<*> = ConcurrentKafkaListenerContainerFactory<String, String>()
+            .konfigurerProperties(consumerFactory, chainedTransactionManager)
+            .cleanupRecordFilterStrategy()
 
-        val factory = ConcurrentKafkaListenerContainerFactory<String, String>()
+    @Bean
+    fun kafkaK9RapidJsonListenerContainerFactory(
+            @Suppress("SpringJavaInjectionPointsAutowiringInspection") consumerFactory: ConsumerFactory<String, String>,
+            chainedTransactionManager: ChainedTransactionManager
+    ): KafkaListenerContainerFactory<*> = ConcurrentKafkaListenerContainerFactory<String, String>()
+            .konfigurerProperties(consumerFactory, chainedTransactionManager)
+            .k9RapidRecordFilterStrategy()
 
-        factory.consumerFactory = consumerFactory
-
-        factory.setReplyTemplate(kafkaTemplate)
+    private fun ConcurrentKafkaListenerContainerFactory<String, String>.konfigurerProperties(cf: ConsumerFactory<String, String>, ctm: ChainedTransactionManager) = apply {
+        consumerFactory = cf
+        setReplyTemplate(kafkaTemplate)
 
         // https://docs.spring.io/spring-kafka/docs/2.5.2.RELEASE/reference/html/#payload-conversion-with-batch
-        factory.setMessageConverter(JsonMessageConverter(objectMapper))
+        setMessageConverter(JsonMessageConverter(objectMapper))
 
+        // https://docs.spring.io/spring-kafka/docs/2.5.2.RELEASE/reference/html/#chained-transaction-manager
+        containerProperties.transactionManager = ctm
+
+        // https://docs.spring.io/spring-kafka/docs/2.5.2.RELEASE/reference/html/#exactly-once
+        containerProperties.eosMode = ContainerProperties.EOSMode.BETA
+
+        // https://docs.spring.io/spring-kafka/docs/2.5.2.RELEASE/reference/html/#committing-offsets
+        containerProperties.ackMode = ContainerProperties.AckMode.RECORD;
+
+        // https://docs.spring.io/spring-kafka/docs/2.5.2.RELEASE/reference/html/#delivery-header
+        containerProperties.isDeliveryAttemptHeader = true
+
+        //https://docs.spring.io/spring-kafka/docs/2.5.2.RELEASE/reference/html/#after-rollback
+        val defaultAfterRollbackProcessor = DefaultAfterRollbackProcessor<String, String>(recoverer(), FixedBackOff(retryInterval, Long.MAX_VALUE))
+        defaultAfterRollbackProcessor.setClassifications(mapOf(), true)
+        setAfterRollbackProcessor(defaultAfterRollbackProcessor)
+    }
+
+    private fun ConcurrentKafkaListenerContainerFactory<String, String>.cleanupRecordFilterStrategy() = apply {
         // https://docs.spring.io/spring-kafka/docs/2.5.2.RELEASE/reference/html/#filtering-messages
-        factory.setRecordFilterStrategy {
+        
+        setRecordFilterStrategy {
             val antallForsøk = ByteBuffer.wrap(it.headers()
                     .lastHeader(KafkaHeaders.DELIVERY_ATTEMPT).value())
                     .int
@@ -79,25 +107,15 @@ class KafkaConfig(
                 }
             }
         }
+    }
 
-        // https://docs.spring.io/spring-kafka/docs/2.5.2.RELEASE/reference/html/#chained-transaction-manager
-        factory.containerProperties.transactionManager = chainedTransactionManager;
-
-        // https://docs.spring.io/spring-kafka/docs/2.5.2.RELEASE/reference/html/#exactly-once
-        factory.containerProperties.eosMode = ContainerProperties.EOSMode.BETA
-
-        // https://docs.spring.io/spring-kafka/docs/2.5.2.RELEASE/reference/html/#committing-offsets
-        factory.containerProperties.ackMode = ContainerProperties.AckMode.RECORD;
-
-        // https://docs.spring.io/spring-kafka/docs/2.5.2.RELEASE/reference/html/#delivery-header
-        factory.containerProperties.isDeliveryAttemptHeader = true
-
-        //https://docs.spring.io/spring-kafka/docs/2.5.2.RELEASE/reference/html/#after-rollback
-        val defaultAfterRollbackProcessor = DefaultAfterRollbackProcessor<String, String>(recoverer(), FixedBackOff(retryInterval, Long.MAX_VALUE))
-        defaultAfterRollbackProcessor.setClassifications(mapOf(), true)
-        factory.setAfterRollbackProcessor(defaultAfterRollbackProcessor)
-
-        return factory
+    private fun ConcurrentKafkaListenerContainerFactory<String, String>.k9RapidRecordFilterStrategy() = apply {
+       setRecordFilterStrategy {
+           val k9RapidKey = it.key()
+           val k9RapidMelding = JSONObject(it.value()).toString()
+           logger.info("key: {}, value: {}", k9RapidKey, k9RapidMelding)
+           false
+       }
     }
 
     private fun recoverer() = BiConsumer { cr: ConsumerRecord<*, *>, ex: Exception ->

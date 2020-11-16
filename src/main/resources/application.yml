@@ -59,6 +59,13 @@ topic:
       bryter: true
       dry-run: false
 
+    # topic.listener.omd-overforing
+    omd-overforing:
+      id: omd-overforing-listener
+      navn: k9-rapid-v2
+      bryter: true
+      dry-run: false
+
 management:
   endpoints:
     web:
