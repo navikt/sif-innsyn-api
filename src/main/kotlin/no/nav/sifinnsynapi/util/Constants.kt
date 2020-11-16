@@ -7,6 +7,7 @@ object Constants {
     const val UKJENT_KODEVERKSVERDI = "-"
     const val NAV_CONSUMER_ID = "Nav-Consumer-Id"
     const val NAV_CALL_ID = "Nav-CallId"
+    const val NAV_BEHOVSEKVENS_ID = "Nav-Behovsekvens-Id"
     const val NAV_CALL_ID1 = "Nav-Call-Id"
     const val CALL_ID = "callId"
     const val NAV_USER_ID = "Nav-User-Id"

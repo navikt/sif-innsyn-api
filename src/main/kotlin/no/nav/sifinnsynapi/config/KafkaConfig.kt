@@ -1,6 +1,8 @@
 package no.nav.sifinnsynapi.config
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import no.nav.k9.rapid.losning.OverføreOmsorgsdagerLøsningResolver
+import no.nav.k9.rapid.losning.somMelding
 import no.nav.sifinnsynapi.common.AktørId
 import no.nav.sifinnsynapi.common.TopicEntry
 import no.nav.sifinnsynapi.soknad.SøknadRepository
@@ -111,9 +113,20 @@ class KafkaConfig(
 
     private fun ConcurrentKafkaListenerContainerFactory<String, String>.k9RapidRecordFilterStrategy() = apply {
        setRecordFilterStrategy {
-           val k9RapidKey = it.key()
-           val k9RapidMelding = JSONObject(it.value()).toString()
-           logger.info("key: {}, value: {}", k9RapidKey, k9RapidMelding)
+           val value = JSONObject(it.value())
+           val correlationId = value.getString("@correlationId")
+
+           val harLøsningPåOmsorgsdagerOverføring = it.value().somMelding().harLøsningPå(OverføreOmsorgsdagerLøsningResolver.Instance)
+           if (harLøsningPåOmsorgsdagerOverføring) {
+               val (behovSekvensId, løsning) = it.value().somMelding().løsningPå(OverføreOmsorgsdagerLøsningResolver.Instance)
+
+               MDCUtil.toMDC(Constants.NAV_CALL_ID, correlationId)
+               MDCUtil.toMDC(Constants.NAV_CONSUMER_ID, applicationName)
+               MDCUtil.toMDC(Constants.NAV_BEHOVSEKVENS_ID, behovSekvensId)
+
+               logger.info("Løsning: {}", løsning)
+           }
+
            false
        }
     }
