@@ -47,7 +47,7 @@ class OmsorgsdagerOverforingHendelseKonsument(
             autoStartup = "#{'\${topic.listener.omd-overforing.bryter}'}"
     )
     fun konsumer(
-            @Payload hendelse: Object // TODO: Oppdatere med riktig type
+            @Payload hendelse: Any // TODO: Oppdatere med riktig type
     ) {
         logger.info("Konsumerer hendelse om $YTELSE")
     }
