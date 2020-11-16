@@ -23,6 +23,7 @@ val confluentVersion by extra("5.5.0")
 val avroVersion by extra("1.9.2")
 val logstashLogbackEncoderVersion by extra("6.3")
 val tokenValidationVersion by extra("1.1.5")
+val k9RapidVersion by extra("1.f3af2d5")
 val springCloudVersion by extra("Hoxton.SR6")
 val retryVersion by extra("1.3.0")
 val zalandoVersion by extra("0.25.2")
@@ -40,6 +41,15 @@ repositories {
         name = "confluent"
         url = uri("http://packages.confluent.io/maven/")
     }
+
+    maven {
+        name = "GitHubPackages"
+        url = uri("https://maven.pkg.github.com/navikt/k9-rapid")
+        credentials {
+            username = project.findProperty("gpr.user") as String? ?: System.getenv("GITHUB_USERNAME")
+            password = project.findProperty("gpr.key") as String? ?: System.getenv("GITHUB_TOKEN")
+        }
+    }
 }
 
 dependencies {
@@ -47,6 +57,11 @@ dependencies {
     // NAV
     implementation("no.nav.security:token-validation-spring:$tokenValidationVersion")
     testImplementation("no.nav.security:token-validation-test-support:$tokenValidationVersion")
+
+    // K9 Rapid
+    implementation("no.nav.k9.rapid:losning:$k9RapidVersion")
+    implementation("no.nav.k9.rapid:overfore-omsorgsdager:$k9RapidVersion")
+
 
     // Spring Boot
     implementation("org.springframework.boot:spring-boot-starter-actuator")
