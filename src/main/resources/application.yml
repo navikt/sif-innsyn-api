@@ -6,6 +6,12 @@ no.nav:
         link: https://sif-innsyn.dev.nav.no/familie/sykdom-i-familien/soknad/innsyn/dine-pleiepenger
         dagerSynlig: 7
 
+    omsorgsdager-overforing:
+      beskjed:
+        tekst: 'Vi har mottatt søknaden din om overføring av omsorgsdager.'
+        link: https://sif-innsyn.dev.nav.no/familie/sykdom-i-familien/soknad/innsyn/dine-omsorgsdager
+        dagerSynlig: 7
+
   apigw:
     apikey: ${APIGW_API_KEY} # kubectl secret som miljøvariabel i pod
     sts-apikey: ${STS_APIKEY} # kubectl secret som miljøvariabel i pod
@@ -59,9 +65,16 @@ topic:
       bryter: true
       dry-run: false
 
-    # topic.listener.omd-overforing
-    omd-overforing:
-      id: omd-overforing-listener
+    # topic.listener.omd-overforing-mottatt
+    omd-overforing-mottatt:
+      id: omd-overforing-mottatt-listener
+      navn: privat-dele-omsorgsdager-melding-cleanup
+      bryter: true
+      dry-run: false
+
+    # topic.listener.omd-overforing-losning
+    omd-overforing-losning:
+      id: omd-overforing-losning-listener
       navn: k9-rapid-v2
       bryter: true
       dry-run: false
