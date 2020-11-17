@@ -54,7 +54,7 @@ no.nav:
   dittnav:
     pleiepenger-sykt-barn:
       beskjed:
-        tekst: 'Vi har mottatt søknaden din om pleiepenger.'
+        tekst: 'Vi beklager at vi sendte feil lenke i forrige melding om mottatt pleiepengesøknad. Her får du riktig lenke:'
         link: https://sif-innsyn.nav.no/familie/sykdom-i-familien/soknad/innsyn/dine-pleiepenger
         dagerSynlig: 7
 
