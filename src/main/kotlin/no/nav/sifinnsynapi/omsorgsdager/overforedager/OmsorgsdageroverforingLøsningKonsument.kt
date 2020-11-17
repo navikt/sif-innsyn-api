@@ -10,13 +10,13 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
-class OmsorgsdagerOverforingHendelseKonsument(
+class OmsorgsdagerOverforingLøsningKonsument(
         private val repository: SøknadRepository,
         @Value("\${topic.listener.omd-overforing.dry-run}") private val dryRun: Boolean
 ) {
     companion object {
-        private val logger = LoggerFactory.getLogger(OmsorgsdagerOverforingHendelseKonsument::class.java)
-        private val YTELSE = "'omsorgsdager - overføring'"
+        private val logger = LoggerFactory.getLogger(OmsorgsdagerOverforingLøsningKonsument::class.java)
+        private val YTELSE = "'løsning på omsorgsdager - overføring'"
     }
 
     @Transactional
@@ -31,7 +31,7 @@ class OmsorgsdagerOverforingHendelseKonsument(
             @Payload hendelse: OverføreOmsorgsdagerLøsning
     ) {
         val (id, løsning) = hendelse
-        logger.info("Mottatt løsning: {}", løsning)
+        logger.info("Mottatt $YTELSE. {}", løsning)
     }
 }
 
