@@ -16,7 +16,6 @@ import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.messaging.handler.annotation.Payload
-import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.ZonedDateTime
@@ -41,32 +40,6 @@ class PleiepengerSyktBarnHendelseKonsument(
             const val MOTTATT = "mottatt"
             const val FØDSELSNUMMER = "fødselsnummer"
         }
-    }
-
-    @Scheduled(fixedRate = 86_400_000)
-    fun commandLineRunner() {
-        val søknader = repository.findAll()
-        logger.info("HOTFIX - Hentet opp ${søknader.size} søknader.")
-        søknader.stream().forEach {
-            logger.info("HOTFIX - sender dittnav beskjed for søknad med id: ${it.id}.")
-            dittnavService.sendBeskjed(
-                    søknadId = it.id.toString(),
-                    k9Beskjed = K9Beskjed(
-                            metadata = Metadata(
-                                    version = 1,
-                                    correlationId = "hotfix-soknad-id-${it.id}",
-                                    requestId = "${UUID.randomUUID()}"
-                            ),
-                            eventId = UUID.randomUUID().toString(),
-                            søkerFødselsnummer = it.fødselsnummer.fødselsnummer!!,
-                            grupperingsId = it.id.toString(),
-                            tekst = pleiepengerDittnavBeskjedProperties.tekst,
-                            link = "${pleiepengerDittnavBeskjedProperties.link}/${it.id}",
-                            dagerSynlig = pleiepengerDittnavBeskjedProperties.dagerSynlig
-                    )
-            )
-        }
-        logger.info("HOTFIX - alle dittnav beskjeder sendt ut.")
     }
 
     @Transactional
