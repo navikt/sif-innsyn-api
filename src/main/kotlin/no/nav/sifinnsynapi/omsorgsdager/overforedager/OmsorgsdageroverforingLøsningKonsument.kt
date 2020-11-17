@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class OmsorgsdagerOverforingLøsningKonsument(
         private val repository: SøknadRepository,
-        @Value("\${topic.listener.omd-overforing.dry-run}") private val dryRun: Boolean
+        @Value("\${topic.listener.omd-overforing-losning.dry-run}") private val dryRun: Boolean
 ) {
     companion object {
         private val logger = LoggerFactory.getLogger(OmsorgsdagerOverforingLøsningKonsument::class.java)
@@ -21,11 +21,11 @@ class OmsorgsdagerOverforingLøsningKonsument(
 
     @Transactional
     @KafkaListener(
-            topics = ["#{'\${topic.listener.omd-overforing.navn}'}"],
-            id = "#{'\${topic.listener.omd-overforing.id}'}",
+            topics = ["#{'\${topic.listener.omd-overforing-losning.navn}'}"],
+            id = "#{'\${topic.listener.omd-overforing-losning.id}'}",
             groupId = "#{'\${spring.kafka.consumer.group-id}'}",
             containerFactory = "kafkaK9RapidJsonListenerContainerFactory",
-            autoStartup = "#{'\${topic.listener.omd-overforing.bryter}'}"
+            autoStartup = "#{'\${topic.listener.omd-overforing-losning.bryter}'}"
     )
     fun konsumer(
             @Payload hendelse: OverføreOmsorgsdagerLøsning
