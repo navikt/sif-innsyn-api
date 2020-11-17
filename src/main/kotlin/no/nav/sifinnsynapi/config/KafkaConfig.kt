@@ -116,18 +116,22 @@ class KafkaConfig(
            val value = JSONObject(it.value())
            val correlationId = value.getString("@correlationId")
 
-           val harLøsningPåOmsorgsdagerOverføring = it.value().somMelding().harLøsningPå(OverføreOmsorgsdagerLøsningResolver.Instance)
-           if (harLøsningPåOmsorgsdagerOverføring) {
-               val (behovSekvensId, løsning) = it.value().somMelding().løsningPå(OverføreOmsorgsdagerLøsningResolver.Instance)
+           val melding = it.value().somMelding()
+           when(melding.harLøsningPå(OverføreOmsorgsdagerLøsningResolver.Instance)) {
+               true -> {
+                   val (behovSekvensId, løsning) = melding.løsningPå(OverføreOmsorgsdagerLøsningResolver.Instance)
 
-               MDCUtil.toMDC(Constants.NAV_CALL_ID, correlationId)
-               MDCUtil.toMDC(Constants.NAV_CONSUMER_ID, applicationName)
-               MDCUtil.toMDC(Constants.NAV_BEHOVSEKVENS_ID, behovSekvensId)
+                   MDCUtil.toMDC(Constants.NAV_CALL_ID, correlationId)
+                   MDCUtil.toMDC(Constants.NAV_CONSUMER_ID, applicationName)
+                   MDCUtil.toMDC(Constants.NAV_BEHOVSEKVENS_ID, behovSekvensId)
 
-               logger.info("Løsning: {}", løsning)
-               false
-           } else {
-               true
+                   logger.info("Melding inneholder løsning: {}", løsning)
+                   false
+               }
+               else -> {
+                   logger.info("Skipper melding som ikke inneholder løsning.")
+                   true
+               }
            }
 
        }
