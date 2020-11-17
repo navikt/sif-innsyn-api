@@ -125,9 +125,11 @@ class KafkaConfig(
                MDCUtil.toMDC(Constants.NAV_BEHOVSEKVENS_ID, behovSekvensId)
 
                logger.info("Løsning: {}", løsning)
+               false
+           } else {
+               true
            }
 
-           false
        }
     }
 
