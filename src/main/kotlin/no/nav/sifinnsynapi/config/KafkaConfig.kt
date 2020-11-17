@@ -129,11 +129,10 @@ class KafkaConfig(
                    false
                }
                else -> {
-                   logger.info("Skipper melding som ikke inneholder løsning.")
+                   logger.info("Skipper melding som ikke inneholder løsning på 'OverføreOmsorgsdagerLøsning'.")
                    true
                }
            }
-
        }
     }
 
