@@ -2,7 +2,7 @@ topic:
   # Bryter betegner av/på funksjon for kafkalytter. True (på), False (av).
   listener:
     pp-sykt-barn:
-      bryter: true
+      bryter: false
       dry-run: false
     omp-utbetaling-arbeidstaker:
       bryter: false
