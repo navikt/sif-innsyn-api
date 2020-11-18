@@ -76,7 +76,7 @@ topic:
     omd-overforing-losning:
       id: omd-overforing-losning-listener
       navn: k9-rapid-v2
-      bryter: true
+      bryter: false
       dry-run: false
 
 management:
