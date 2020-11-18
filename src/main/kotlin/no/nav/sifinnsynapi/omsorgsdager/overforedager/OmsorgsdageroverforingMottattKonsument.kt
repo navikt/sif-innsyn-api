@@ -34,7 +34,7 @@ class OmsorgsdagerOverforingMottattKonsument(
         private val YTELSE = "'omsorgsdager - overføring'"
 
         internal object Keys {
-            const val SØKNAD_ID = "søknadId"
+            const val SØKNAD_ID = "soknadId"
             const val SØKER = "søker"
             const val AKTØR_ID = "aktørId"
             const val MOTTATT = "mottatt"
