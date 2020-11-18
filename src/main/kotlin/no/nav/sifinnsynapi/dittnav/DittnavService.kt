@@ -7,6 +7,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class DittnavService(
@@ -18,6 +19,7 @@ class DittnavService(
         private val log: Logger = LoggerFactory.getLogger(DittnavService::class.java)
     }
 
+    @Transactional
     fun sendBeskjed(søknadId: String, k9Beskjed: K9Beskjed) {
         log.info("Sender ut dittnav beskjed med eventID: {}", søknadId)
         kafkaTemplate.send(ProducerRecord(

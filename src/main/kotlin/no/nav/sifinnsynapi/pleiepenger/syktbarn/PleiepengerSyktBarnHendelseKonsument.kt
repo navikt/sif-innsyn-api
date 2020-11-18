@@ -29,6 +29,7 @@ class PleiepengerSyktBarnHendelseKonsument(
         private val pleiepengerDittnavBeskjedProperties: PleiepengerDittnavBeskjedProperties,
         @Value("\${topic.listener.pp-sykt-barn.dry-run}") private val dryRun: Boolean
 ) {
+
     companion object {
         private val logger = LoggerFactory.getLogger(PleiepengerSyktBarnHendelseKonsument::class.java)
         private val YTELSE = "'pleiepenger - sykt barn'"
@@ -112,6 +113,7 @@ class PleiepengerSyktBarnHendelseKonsument(
             opprettet = mottattDato,
             endret = null
     )
+
 }
 
 private fun JSONObject.somK9Beskjed(metadata: Metadata, beskjedProperties: PleiepengerDittnavBeskjedProperties): K9Beskjed {
