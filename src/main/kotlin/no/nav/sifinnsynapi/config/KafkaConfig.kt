@@ -86,7 +86,8 @@ class KafkaConfig(
         // https://docs.spring.io/spring-kafka/docs/2.5.2.RELEASE/reference/html/#filtering-messages
         
         setRecordFilterStrategy {
-            val antallForsøk = ByteBuffer.wrap(it.headers()
+            true
+            /*val antallForsøk = ByteBuffer.wrap(it.headers()
                     .lastHeader(KafkaHeaders.DELIVERY_ATTEMPT).value())
                     .int
 
@@ -107,7 +108,7 @@ class KafkaConfig(
                     logger.info("Fant IKKE duplikat, deserialiserer")
                     false
                 }
-            }
+            }*/
         }
     }
 
