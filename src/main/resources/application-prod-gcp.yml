@@ -54,6 +54,7 @@ no.nav:
   dittnav:
     pleiepenger-sykt-barn:
       beskjed:
+        tekst: 'Vi beklager at vi sendte feil lenke i forrige melding om mottatt pleiepengesøknad. Her får du riktig lenke:'
         link: https://www.nav.no/familie/sykdom-i-familien/soknad/innsyn/dine-pleiepenger
 
   metrics:
