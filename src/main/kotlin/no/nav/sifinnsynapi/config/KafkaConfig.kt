@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import no.nav.k9.rapid.losning.OverføreOmsorgsdagerLøsningResolver
 import no.nav.k9.rapid.losning.somMelding
 import no.nav.sifinnsynapi.common.AktørId
+import no.nav.sifinnsynapi.common.ConsumerRecordData
 import no.nav.sifinnsynapi.common.TopicEntry
 import no.nav.sifinnsynapi.soknad.SøknadRepository
 import no.nav.sifinnsynapi.util.Constants
@@ -47,6 +48,7 @@ class KafkaConfig(
             chainedTransactionManager: ChainedTransactionManager
     ): KafkaListenerContainerFactory<*> = ConcurrentKafkaListenerContainerFactory<String, String>()
             .konfigurerProperties(consumerFactory, chainedTransactionManager)
+            .interceptRecord()
             .cleanupRecordFilterStrategy()
 
     @Bean
@@ -82,6 +84,22 @@ class KafkaConfig(
         setAfterRollbackProcessor(defaultAfterRollbackProcessor)
     }
 
+    private fun ConcurrentKafkaListenerContainerFactory<String, String>.interceptRecord() = apply {
+        setRecordInterceptor {
+            val topic = it.topic()
+            val partition = it.partition()
+            val offset = it.offset()
+            val (correlationId) = objectMapper.readValue(it.value(), ConsumerRecordData::class.java).data.metadata
+
+            MDCUtil.toMDC(Constants.NAV_CALL_ID, correlationId)
+            MDCUtil.toMDC(Constants.NAV_CONSUMER_ID, applicationName)
+
+            logger.info("Leser melding på topic={}-{} med offset={}", topic, partition, offset)
+
+            it
+        }
+    }
+
     private fun ConcurrentKafkaListenerContainerFactory<String, String>.cleanupRecordFilterStrategy() = apply {
         // https://docs.spring.io/spring-kafka/docs/2.5.2.RELEASE/reference/html/#filtering-messages
 
@@ -92,12 +110,7 @@ class KafkaConfig(
 
             if (antallForsøk > 1) logger.warn("Konsumering av ${it.topic()}-${it.partition()} med offset ${it.offset()} feilet første gang. Prøver for $antallForsøk gang.")
 
-            if (it.topic() == "privat-dele-omsorgsdager-melding-cleanup") return@setRecordFilterStrategy true
-
             val topicEntry = objectMapper.readValue(it.value(), TopicEntry::class.java).data
-            val correlationId = topicEntry.metadata.correlationId
-            MDCUtil.toMDC(Constants.NAV_CALL_ID, correlationId)
-            MDCUtil.toMDC(Constants.NAV_CONSUMER_ID, applicationName)
 
             val søker = JSONObject(topicEntry.melding).getJSONObject("søker")
             when (søknadRepository.existsSøknadDAOByAktørIdAndJournalpostId(AktørId(søker.getString("aktørId")), topicEntry.journalførtMelding.journalpostId)) {
