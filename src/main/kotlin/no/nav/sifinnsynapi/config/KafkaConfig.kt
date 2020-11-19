@@ -84,14 +84,15 @@ class KafkaConfig(
 
     private fun ConcurrentKafkaListenerContainerFactory<String, String>.cleanupRecordFilterStrategy() = apply {
         // https://docs.spring.io/spring-kafka/docs/2.5.2.RELEASE/reference/html/#filtering-messages
-        
+
         setRecordFilterStrategy {
-            true
-            /*val antallForsøk = ByteBuffer.wrap(it.headers()
+            val antallForsøk = ByteBuffer.wrap(it.headers()
                     .lastHeader(KafkaHeaders.DELIVERY_ATTEMPT).value())
                     .int
 
             if (antallForsøk > 1) logger.warn("Konsumering av ${it.topic()}-${it.partition()} med offset ${it.offset()} feilet første gang. Prøver for $antallForsøk gang.")
+
+            if (it.topic() == "privat-dele-omsorgsdager-melding-cleanup") return@setRecordFilterStrategy true
 
             val topicEntry = objectMapper.readValue(it.value(), TopicEntry::class.java).data
             val correlationId = topicEntry.metadata.correlationId
@@ -108,7 +109,7 @@ class KafkaConfig(
                     logger.info("Fant IKKE duplikat, deserialiserer")
                     false
                 }
-            }*/
+            }
         }
     }
 
