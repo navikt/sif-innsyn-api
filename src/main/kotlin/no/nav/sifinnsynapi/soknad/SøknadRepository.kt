@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
-@Transactional()
+@Transactional
 interface SøknadRepository : JpaRepository<SøknadDAO, UUID> {
     fun findAllByAktørId(aktørId: AktørId): List<SøknadDAO>
     fun findByJournalpostId(journalpostId: String): SøknadDAO?
