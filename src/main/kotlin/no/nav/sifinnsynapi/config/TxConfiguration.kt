@@ -16,6 +16,7 @@ import org.springframework.kafka.listener.ConcurrentMessageListenerContainer
 import org.springframework.kafka.support.converter.StringJsonMessageConverter
 import org.springframework.kafka.transaction.KafkaTransactionManager
 import org.springframework.orm.jpa.JpaTransactionManager
+import org.springframework.transaction.support.AbstractPlatformTransactionManager.SYNCHRONIZATION_ON_ACTUAL_TRANSACTION
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean
 
 @Configuration
@@ -34,6 +35,7 @@ class TxConfiguration(
     fun kafkaTM(pf: ProducerFactory<Any, Any>): KafkaTransactionManager<Any, Any> {
         val tm = KafkaTransactionManager(pf)
         tm.isNestedTransactionAllowed = true
+        tm.transactionSynchronization = SYNCHRONIZATION_ON_ACTUAL_TRANSACTION
         return tm
     }
 

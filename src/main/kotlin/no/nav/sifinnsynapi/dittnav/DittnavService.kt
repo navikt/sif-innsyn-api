@@ -22,11 +22,24 @@ class DittnavService(
     @Transactional
     fun sendBeskjed(søknadId: String, k9Beskjed: K9Beskjed) {
         log.info("Sender ut dittnav beskjed med eventID: {}", søknadId)
-        kafkaTemplate.send(ProducerRecord(
-                K9_DITTNAV_VARSEL_BESKJED,
-                søknadId,
-                k9Beskjed.somJson(objectMapper)
-        ))
+        return kafkaTemplate.executeInTransaction {
+            it.send(ProducerRecord(
+                    K9_DITTNAV_VARSEL_BESKJED,
+                    søknadId,
+                    k9Beskjed.somJson(objectMapper)
+            ))
+                    .addCallback(
+                            { result ->
+                                result?.let {
+                                    log.info("Sendte melding {} med offset {} på {}", result.producerRecord, result.recordMetadata.offset(), result.producerRecord.topic());
+                                }
+                            },
+                            { ex ->
+                                log.warn("Kunne ikke sende melding {} på {}", k9Beskjed, K9_DITTNAV_VARSEL_BESKJED, ex);
+                                throw ex
+                            }
+                    )
+        }
     }
 }
 
