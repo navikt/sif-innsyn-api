@@ -89,7 +89,7 @@ class KafkaConfig(
             val topic = it.topic()
             val partition = it.partition()
             val offset = it.offset()
-            val (correlationId) = objectMapper.readValue(it.value(), ConsumerRecordData::class.java).data.metadata
+            val correlationId = objectMapper.readValue(it.value(), ConsumerRecordData::class.java).data.metadata.correlationId
 
             MDCUtil.toMDC(Constants.NAV_CALL_ID, correlationId)
             MDCUtil.toMDC(Constants.NAV_CONSUMER_ID, applicationName)
