@@ -2,7 +2,7 @@ topic:
   # Bryter betegner av/på funksjon for kafkalytter. True (på), False (av).
   listener:
     pp-sykt-barn:
-      bryter: true
+      bryter: false
       dry-run: false
     omp-utbetaling-arbeidstaker:
       bryter: false
@@ -54,7 +54,7 @@ no.nav:
   dittnav:
     pleiepenger-sykt-barn:
       beskjed:
-        link: https://sif-innsyn.nav.no/familie/sykdom-i-familien/soknad/innsyn/dine-pleiepenger
+        link: https://www.nav.no/familie/sykdom-i-familien/soknad/innsyn/dine-pleiepenger
 
   metrics:
     interval: 3_600_000 # 1 time
