@@ -82,7 +82,7 @@ class OmsorgsdagerOverforingMottattKonsument(
                     mottattDato = ZonedDateTime.parse(melding.getString(MOTTATT)),
                     fødselsnummer = Fødselsnummer(melding.getJSONObject(SØKER).getString(FØDSELSNUMMER)),
                     journalpostId = hendelse.data.journalførtMelding.journalpostId,
-                    søknadstype = Søknadstype.PP_SYKT_BARN,
+                    søknadstype = Søknadstype.OMD_OVERFØRING,
                     status = SøknadsStatus.MOTTATT,
                     søknad = hendelse.data.melding
             )
