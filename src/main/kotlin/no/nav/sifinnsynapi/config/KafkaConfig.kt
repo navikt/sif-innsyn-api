@@ -128,7 +128,7 @@ class KafkaConfig(
 
     private fun ConcurrentKafkaListenerContainerFactory<String, String>.k9RapidRecordFilterStrategy() = apply {
        setRecordFilterStrategy {
-           /*val value = JSONObject(it.value())
+           val value = JSONObject(it.value())
            val correlationId = value.getString("@correlationId")
 
            val melding = it.value().somMelding()
@@ -141,14 +141,13 @@ class KafkaConfig(
                    MDCUtil.toMDC(Constants.NAV_BEHOVSEKVENS_ID, behovSekvensId)
 
                    logger.info("Melding inneholder løsning: {}", løsning)
-                   false
+                   true
                }
                else -> {
                    logger.info("Skipper melding som ikke inneholder løsning på 'OverføreOmsorgsdagerLøsning'.")
                    true
                }
-           }*/
-           true
+           }
        }
     }
 
