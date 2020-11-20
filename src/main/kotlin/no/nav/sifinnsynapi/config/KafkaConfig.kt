@@ -128,15 +128,11 @@ class KafkaConfig(
 
     private fun ConcurrentKafkaListenerContainerFactory<String, String>.k9RapidRecordFilterStrategy() = apply {
        setRecordFilterStrategy {
-           val value = JSONObject(it.value())
-           val correlationId = value.getString("@correlationId")
-
            val melding = it.value().somMelding()
            when(melding.harLøsningPå(OverføreOmsorgsdagerLøsningResolver.Instance)) {
                true -> {
                    val (behovSekvensId, løsning) = melding.løsningPå(OverføreOmsorgsdagerLøsningResolver.Instance)
 
-                   MDCUtil.toMDC(Constants.NAV_CALL_ID, correlationId)
                    MDCUtil.toMDC(Constants.NAV_CONSUMER_ID, applicationName)
                    MDCUtil.toMDC(Constants.NAV_BEHOVSEKVENS_ID, behovSekvensId)
 
