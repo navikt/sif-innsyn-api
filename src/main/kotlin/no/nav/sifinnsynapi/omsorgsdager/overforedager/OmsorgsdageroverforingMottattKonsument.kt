@@ -57,8 +57,8 @@ class OmsorgsdagerOverforingMottattKonsument(
         val søknadId = melding.getString(SØKNAD_ID)
 
         if (dryRun) {
-            logger.info("DRY_RUN --> Mottok hendelse om ${YTELSE} med søknadId: $søknadId")
-            logger.info("DRY_RUN --> Mapper fra TopicEntry til Søknad for ${YTELSE}")
+            logger.info("DRY_RUN --> Mottok hendelse om $YTELSE med søknadId: $søknadId")
+            logger.info("DRY_RUN --> Mapper fra TopicEntry til Søknad for $YTELSE")
             try {
                 val søknadsHendelse = Søknad(
                         aktørId = AktørId(melding.getJSONObject(SØKER).getString(AKTØR_ID)),
@@ -70,12 +70,12 @@ class OmsorgsdagerOverforingMottattKonsument(
                         søknad = hendelse.data.melding
                 )
             } catch (ex: Exception) {
-                logger.error("DRY_RUN --> Feilet med å mappe om TopicEntry til Søknad for ${YTELSE}")
+                logger.error("DRY_RUN --> Feilet med å mappe om TopicEntry til Søknad for $YTELSE")
             }
         } else {
-            logger.info("Mottok hendelse om ${YTELSE} med søknadId: $søknadId")
+            logger.info("Mottok hendelse om $YTELSE med søknadId: $søknadId")
 
-            logger.info("Mapper om fra TopicEntry til Søknad for ${YTELSE}")
+            logger.info("Mapper om fra TopicEntry til Søknad for $YTELSE")
 
             val søknadsHendelse = Søknad(
                     aktørId = AktørId(melding.getJSONObject(SØKER).getString(AKTØR_ID)),
@@ -87,10 +87,10 @@ class OmsorgsdagerOverforingMottattKonsument(
                     søknad = hendelse.data.melding
             )
 
-            logger.info("Lagrer Søknad for ${YTELSE}")
+            logger.info("Lagrer Søknad for $YTELSE")
             val søknadDAO = søknadsHendelse.tilSøknadDAO()
             val save = repository.save(søknadDAO)
-            logger.info("Søknad for ${YTELSE} lagret: {}", save)
+            logger.info("Søknad for $YTELSE lagret: {}", save)
 
             dittnavService.sendBeskjed(
                     melding.getString(SØKNAD_ID),
