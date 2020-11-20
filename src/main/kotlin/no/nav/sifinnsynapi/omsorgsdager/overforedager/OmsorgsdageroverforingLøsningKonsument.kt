@@ -30,8 +30,7 @@ class OmsorgsdagerOverforingLøsningKonsument(
     fun konsumer(
             @Payload hendelse: OverføreOmsorgsdagerLøsning
     ) {
-        val (id, løsning) = hendelse
-        logger.info("Mottatt $YTELSE. {}", løsning)
+        logger.info("Mottatt $YTELSE. {}", hendelse)
     }
 }
 
