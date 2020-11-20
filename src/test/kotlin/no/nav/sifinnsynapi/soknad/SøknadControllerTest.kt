@@ -1,14 +1,15 @@
-package no.nav.sifinnsynapi.common
+package no.nav.sifinnsynapi.soknad
 
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
 import no.nav.security.token.support.test.spring.TokenGeneratorConfiguration
 import no.nav.sifinnsynapi.Routes.SØKNAD
+import no.nav.sifinnsynapi.common.AktørId
+import no.nav.sifinnsynapi.common.Fødselsnummer
+import no.nav.sifinnsynapi.common.SøknadsStatus
+import no.nav.sifinnsynapi.common.Søknadstype
 import no.nav.sifinnsynapi.dokument.DokumentService
 import no.nav.sifinnsynapi.http.SøknadNotFoundException
-import no.nav.sifinnsynapi.soknad.SøknadController
-import no.nav.sifinnsynapi.soknad.SøknadDTO
-import no.nav.sifinnsynapi.soknad.SøknadService
 import no.nav.sifinnsynapi.util.CallIdGenerator
 import no.nav.sifinnsynapi.utils.tokenSomHttpHeader
 import org.junit.jupiter.api.Test
@@ -26,7 +27,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 import java.net.URI
 import java.net.URLDecoder
 import java.nio.charset.Charset
-import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.util.*
