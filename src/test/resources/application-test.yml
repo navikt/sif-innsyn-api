@@ -21,6 +21,8 @@ no.nav:
   metrics:
     interval: 5
 
+sif.innsyn.base.url: https://sif-innsyn.dev.nav.no/familie/sykdom-i-familien/soknad/innsyn
+
 spring:
   profiles:
     active: test

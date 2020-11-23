@@ -3,13 +3,13 @@ no.nav:
     pleiepenger-sykt-barn:
       beskjed:
         tekst: 'Vi har mottatt søknaden din om pleiepenger.'
-        link: https://sif-innsyn.dev.nav.no/familie/sykdom-i-familien/soknad/innsyn/dine-pleiepenger
+        link: ${sif.innsyn.base.url}/dine-pleiepenger
         dagerSynlig: 7
 
     omsorgsdager-overforing:
       beskjed:
         tekst: 'Vi har mottatt søknaden din om overføring av omsorgsdager.'
-        link: https://sif-innsyn.dev.nav.no/familie/sykdom-i-familien/soknad/innsyn/dine-omsorgsdager
+        link: ${sif.innsyn.base.url}/dine-omsorgsdager
         dagerSynlig: 7
 
   apigw:

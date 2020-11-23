@@ -51,10 +51,5 @@ no.nav:
       discoveryUrl: ${LOGINSERVICE_IDPORTEN_DISCOVERY_URL} # settes av configmap: loginservice-idporten i naiserator.yml
       accepted_audience: ${LOGINSERVICE_IDPORTEN_AUDIENCE} # settes av configmap: loginservice-idporten i naiserator.yml
 
-  dittnav:
-    pleiepenger-sykt-barn:
-      beskjed:
-        link: https://www.nav.no/familie/sykdom-i-familien/soknad/innsyn/dine-pleiepenger
-
   metrics:
     interval: 3_600_000 # 1 time

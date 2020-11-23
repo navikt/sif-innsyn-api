@@ -24,7 +24,8 @@
     "NO_NAV_SECURITY_JWT_ISSUER_LOGINSERVICE_COOKIE_NAME": "selvbetjening-idtoken",
     "NO_NAV_SECURITY_CORS_ALLOWED_ORIGINS": "https://www.nav.no",
     "NO_NAV_GATEWAYS_K9_SELVBETJENING_OPPSLAG": "https://api-gw.oera.no/helse-reverse-proxy/k9-selvbetjening-oppslag",
-    "NO_NAV_GATEWAYS_STS_URL": "https://api-gw.oera.no/security-token-service"
+    "NO_NAV_GATEWAYS_STS_URL": "https://api-gw.oera.no/security-token-service",
+    "SIF_INNSYN_BASE_URL": "https://www.nav.no/familie/sykdom-i-familien/soknad/innsyn"
   },
   "slack-channel": "sif-alerts",
   "slack-notify-type": "<!here> | sif-innsyn-api | "
