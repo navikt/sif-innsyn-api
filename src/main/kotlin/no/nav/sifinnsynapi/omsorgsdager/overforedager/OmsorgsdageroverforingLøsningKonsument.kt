@@ -2,6 +2,7 @@ package no.nav.sifinnsynapi.omsorgsdager.overforedager
 
 import no.nav.k9.rapid.losning.OverføreOmsorgsdagerLøsning
 import no.nav.sifinnsynapi.soknad.SøknadRepository
+import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.kafka.annotation.KafkaListener
@@ -28,8 +29,9 @@ class OmsorgsdagerOverforingLøsningKonsument(
             autoStartup = "#{'\${topic.listener.omd-overforing-losning.bryter}'}"
     )
     fun konsumer(
-            @Payload hendelse: OverføreOmsorgsdagerLøsning
+            @Payload hendelse: ConsumerRecord<String, OverføreOmsorgsdagerLøsning>
     ) {
+
         logger.info("Mottatt $YTELSE. {}", hendelse)
     }
 }

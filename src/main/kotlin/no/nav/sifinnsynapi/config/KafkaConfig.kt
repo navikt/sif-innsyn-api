@@ -131,13 +131,13 @@ class KafkaConfig(
            val melding = it.value().somMelding()
            when(melding.harLøsningPå(OverføreOmsorgsdagerLøsningResolver.Instance)) {
                true -> {
-                   val (behovSekvensId, løsning) = melding.løsningPå(OverføreOmsorgsdagerLøsningResolver.Instance)
+                   //val (behovSekvensId, løsning) = melding.løsningPå(OverføreOmsorgsdagerLøsningResolver.Instance)
 
                    MDCUtil.toMDC(Constants.NAV_CONSUMER_ID, applicationName)
-                   MDCUtil.toMDC(Constants.NAV_BEHOVSEKVENS_ID, behovSekvensId)
+                   //MDCUtil.toMDC(Constants.NAV_BEHOVSEKVENS_ID, behovSekvensId)
 
-                   logger.info("Melding inneholder løsning: {}", løsning)
-                   false
+                   logger.info("Melding inneholder løsning")
+                   true
                }
                else -> {
                    logger.info("Skipper melding uten løsning på 'OverføreOmsorgsdagerLøsning'.")
