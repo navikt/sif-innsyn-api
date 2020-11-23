@@ -86,7 +86,7 @@ spring:
     driver-class-name: org.postgresql.Driver
     flyway:
       baselineOnMigrate: true
-      enabled: true
+      enabled: false
       clean-on-validation-error: true
     jpa:
       show-sql: true
