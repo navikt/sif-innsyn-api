@@ -4,6 +4,9 @@ management:
       show-details: always
 
 spring:
+  flyway:
+    url: jdbc:postgresql://${NAIS_DATABASE_SIF_INNSYN_API_SIF_INNSYN_DB_HOST}:${NAIS_DATABASE_SIF_INNSYN_API_SIF_INNSYN_DB_PORT}/${NAIS_DATABASE_SIF_INNSYN_API_SIF_INNSYN_DB_DATABASE}?ssl=true
+
   mvc:
     log-request-details: true
 
@@ -26,11 +29,10 @@ spring:
         trust-store-location: file:${javax.net.ssl.trustStore}
         trust-store-password: ${javax.net.ssl.trustStorePassword}
 
-    datasource:
-      jpa:
-        show-sql: true
-        hibernate:
-          ddl-auto: drop
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none
 
 no.nav.security.jwt.issuer:
   loginservice:
