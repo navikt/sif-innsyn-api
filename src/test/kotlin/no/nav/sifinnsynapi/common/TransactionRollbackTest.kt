@@ -1,7 +1,6 @@
 package no.nav.sifinnsynapi.common
 
 import assertk.assertThat
-import assertk.assertions.isEmpty
 import assertk.assertions.isEqualTo
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.ninjasquad.springmockk.MockkBean
@@ -10,7 +9,6 @@ import no.nav.security.token.support.test.spring.TokenGeneratorConfiguration
 import no.nav.sifinnsynapi.config.Topics.K9_DITTNAV_VARSEL_BESKJED
 import no.nav.sifinnsynapi.config.Topics.PP_SYKT_BARN
 import no.nav.sifinnsynapi.dittnav.DittnavService
-import no.nav.sifinnsynapi.soknad.SøknadDAO
 import no.nav.sifinnsynapi.soknad.SøknadRepository
 import no.nav.sifinnsynapi.utils.defaultHendelse
 import no.nav.sifinnsynapi.utils.leggPåTopic
@@ -68,7 +66,6 @@ class TransactionRollbackTest {
 
     @BeforeAll
     fun setUp() {
-        repository.deleteAll() //Tømmer databasen mellom hver test
         producer = embeddedKafkaBroker.opprettKafkaProducer()
     }
 
@@ -79,9 +76,7 @@ class TransactionRollbackTest {
 
     @Test
     fun `Konsumere hendelse, forevnt rolback ved feil`() {
-
-        // Gitt at ingen hendelser med samme aktørId eksisterer...
-        repository.findAllByAktørId(aktørId).ikkeEksisterer()
+        repository.deleteAll() //Tømmer databasen mellom hver test
 
         // legg på 1 hendelse om mottatt søknad om pleiepenger sykt barn...
         val hendelse = defaultHendelse()
@@ -95,10 +90,6 @@ class TransactionRollbackTest {
         await.atMost(60, TimeUnit.SECONDS).untilAsserted {
             assertThat(repository.count()).isEqualTo(0)
         }
-    }
-
-    private fun List<SøknadDAO>.ikkeEksisterer() {
-        assertThat(this).isEmpty()
     }
 }
 

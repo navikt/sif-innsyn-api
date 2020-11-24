@@ -61,6 +61,10 @@ spec:
   {{/each}}
   gcp:
     sqlInstances:
-      - type: POSTGRES_11
+      - type: {{ database.type }}
+        tier: {{ database.tier }}
+        diskSize: {{ database.diskSize }}
+        diskAutoresize: {{ database.diskAutoresize }}
+        highAvailability: {{ database.highAvailability }}
         databases:
-          - name: sif-innsyn-db
+          - name: {{ database.name }}
