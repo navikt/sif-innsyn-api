@@ -78,7 +78,7 @@ spring:
 
   flyway:
     baselineOnMigrate: true
-    enabled: false
+    enabled: true
     clean-on-validation-error: true
   jpa:
     show-sql: true
@@ -92,7 +92,7 @@ spring:
       connection-test-query: SELECT 1
       maximum-pool-size: 2
       connection-timeout: 1000
-    url: jdbc:postgresql://${NAIS_DATABASE_SIF_INNSYN_API_SIF_INNSYN_DB_HOST}:${NAIS_DATABASE_SIF_INNSYN_API_SIF_INNSYN_DB_PORT}/${NAIS_DATABASE_SIF_INNSYN_API_SIF_INNSYN_DB_DATABASE}?sslmode=allow&gssEncMode=allow
+    url: jdbc:postgresql://${NAIS_DATABASE_SIF_INNSYN_API_SIF_INNSYN_DB_HOST}:${NAIS_DATABASE_SIF_INNSYN_API_SIF_INNSYN_DB_PORT}/${NAIS_DATABASE_SIF_INNSYN_API_SIF_INNSYN_DB_DATABASE}
     username: ${NAIS_DATABASE_SIF_INNSYN_API_SIF_INNSYN_DB_USERNAME}
     password: ${NAIS_DATABASE_SIF_INNSYN_API_SIF_INNSYN_DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
