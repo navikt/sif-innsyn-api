@@ -18,7 +18,7 @@
   "database": {
     "name": "sif-innsyn-db",
     "type": "POSTGRES_11",
-    "tier": "db-n1-standard-1",
+    "tier": "db-custom-1-3840",
     "diskSize": "10",
     "diskAutoresize": "false",
     "highAvailability": "false"
