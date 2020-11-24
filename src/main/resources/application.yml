@@ -59,6 +59,13 @@ topic:
       bryter: true
       dry-run: false
 
+    # topic.listener.omp-midlertidig-alene
+    omp-midlertidig-alene:
+      id: omp-midlertidig-alene-listener
+      navn: privat-omsorgspenger-midlertidig-alene-cleanup
+      bryter: true
+      dry-run: false
+
 management:
   endpoints:
     web:

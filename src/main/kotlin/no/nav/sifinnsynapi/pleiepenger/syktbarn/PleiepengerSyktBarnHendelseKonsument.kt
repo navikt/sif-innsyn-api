@@ -125,7 +125,7 @@ data class K9Beskjed(
         val eventId: String
 )
 
-private fun JSONObject.somK9Beskjed(metadata: Metadata, beskjedProperties: PleiepengerDittnavBeskjedProperties): K9Beskjed {
+internal fun JSONObject.somK9Beskjed(metadata: Metadata, beskjedProperties: PleiepengerDittnavBeskjedProperties): K9Beskjed {
     val søknadId = getString(SØKNAD_ID)
     return K9Beskjed(
             metadata = metadata,
