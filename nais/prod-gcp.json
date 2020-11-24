@@ -15,6 +15,14 @@
     "login.microsoftonline.com",
     "api-gw.oera.no"
   ],
+  "database": {
+    "name": "sif-innsyn-db",
+    "type": "POSTGRES_11",
+    "tier": "db-n1-standard-2",
+    "diskSize": "100",
+    "diskAutoresize": "true",
+    "highAvailability": "true"
+  },
   "env": {
     "SERVER_PORT": "8080",
     "SPRING_APPLICATION_NAME": "sif-innsyn-api",
