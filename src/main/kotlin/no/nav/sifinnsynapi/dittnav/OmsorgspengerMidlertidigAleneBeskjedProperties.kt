@@ -10,5 +10,5 @@ import org.springframework.validation.annotation.Validated
 data class OmsorgspengerMidlertidigAleneBeskjedProperties (
         val tekst: String,
         val dagerSynlig: Long,
-        val link: String = ""
+        val link: String? = null
 )
