@@ -4,10 +4,8 @@ import assertk.assertThat
 import assertk.assertions.isNotEmpty
 import com.fasterxml.jackson.databind.ObjectMapper
 import no.nav.security.token.support.test.spring.TokenGeneratorConfiguration
-import no.nav.sifinnsynapi.common.AktørId
-import no.nav.sifinnsynapi.common.Fødselsnummer
 import no.nav.sifinnsynapi.config.Topics
-import no.nav.sifinnsynapi.pleiepenger.syktbarn.K9Beskjed
+import no.nav.sifinnsynapi.dittnav.K9Beskjed
 import no.nav.sifinnsynapi.utils.*
 import org.apache.kafka.clients.consumer.Consumer
 import org.apache.kafka.clients.producer.Producer
@@ -55,9 +53,6 @@ class OmsorgspengerMidlertidigAleneKonsumentTest {
 
     companion object {
         private val log: Logger = LoggerFactory.getLogger(OmsorgspengerMidlertidigAleneKonsumentTest::class.java)
-        private val aktørId = AktørId.valueOf("123456")
-        private val fødselsnummer = Fødselsnummer.valueOf("1234567")
-        private val httpEntity = tokenSomHttpEntity(fødselsnummer)
     }
 
     @BeforeAll

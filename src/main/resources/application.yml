@@ -5,6 +5,10 @@ no.nav:
         tekst: 'Vi har mottatt søknaden din om pleiepenger.'
         link: https://sif-innsyn.dev.nav.no/familie/sykdom-i-familien/soknad/innsyn/dine-pleiepenger
         dagerSynlig: 7
+    omsorgspenger-midlertidig-alene:
+      beskjed:
+        tekst: 'Vi har mottatt søknaden din om å bli regnet som midlertidig alene for omsorgen'
+        dagerSynlig: 7
 
   apigw:
     apikey: ${APIGW_API_KEY} # kubectl secret som miljøvariabel i pod

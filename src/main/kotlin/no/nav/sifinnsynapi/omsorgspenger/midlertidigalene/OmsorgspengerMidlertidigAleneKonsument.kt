@@ -1,22 +1,26 @@
 package no.nav.sifinnsynapi.omsorgspenger.midlertidigalene
 
+import no.nav.sifinnsynapi.common.Metadata
 import no.nav.sifinnsynapi.common.TopicEntry
 import no.nav.sifinnsynapi.dittnav.DittnavService
-import no.nav.sifinnsynapi.dittnav.PleiepengerDittnavBeskjedProperties
+import no.nav.sifinnsynapi.dittnav.K9Beskjed
+import no.nav.sifinnsynapi.dittnav.OmsorgspengerMidlertidigAleneBeskjedProperties
+import no.nav.sifinnsynapi.omsorgspenger.midlertidigalene.OmsorgspengerMidlertidigAleneKonsument.Companion.Keys.FØDSELSNUMMER
+import no.nav.sifinnsynapi.omsorgspenger.midlertidigalene.OmsorgspengerMidlertidigAleneKonsument.Companion.Keys.SØKER
 import no.nav.sifinnsynapi.omsorgspenger.midlertidigalene.OmsorgspengerMidlertidigAleneKonsument.Companion.Keys.SØKNAD_ID
-import no.nav.sifinnsynapi.pleiepenger.syktbarn.somK9Beskjed
 import org.json.JSONObject
 import org.slf4j.LoggerFactory
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.messaging.handler.annotation.Payload
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.util.*
 
 @Service
 class OmsorgspengerMidlertidigAleneKonsument(
         private val dittNavService: DittnavService,
-        private val pleiepengerDittnavBeskjedProperties: PleiepengerDittnavBeskjedProperties, //Må lage egen for oms. Kanskje refaktoreres til en felles klasse og subklasser. Uten link
-        ){
+        private val omsorgspengerMidlertidigAleneBeskjedProperties: OmsorgspengerMidlertidigAleneBeskjedProperties
+    ){
 
     companion object {
         private val logger = LoggerFactory.getLogger(OmsorgspengerMidlertidigAleneKonsument::class.java)
@@ -46,12 +50,25 @@ class OmsorgspengerMidlertidigAleneKonsument(
         val søknadId = melding.getString(SØKNAD_ID)
         logger.info("Mottok hendelse om ${YTELSE} med søknadId: $søknadId")
 
-        val dittNavBeskjed = melding.somK9Beskjed(hendelse.data.metadata, pleiepengerDittnavBeskjedProperties)
-
+        logger.info("Sender DittNav beskjed for ytelse $YTELSE")
         dittNavService.sendBeskjed(
                 melding.getString(SØKNAD_ID),
-                dittNavBeskjed
+                melding.somK9Beskjed(hendelse.data.metadata, omsorgspengerMidlertidigAleneBeskjedProperties)
         )
     }
+}
 
+private fun JSONObject.somK9Beskjed(metadata: Metadata, beskjedProperties: OmsorgspengerMidlertidigAleneBeskjedProperties): K9Beskjed {
+    val søknadId = getString(SØKNAD_ID)
+    val link = if(beskjedProperties.link == null) null else "${beskjedProperties.link}/$søknadId"
+
+    return K9Beskjed(
+            metadata = metadata,
+            søkerFødselsnummer = getJSONObject(SØKER).getString(FØDSELSNUMMER),
+            tekst = beskjedProperties.tekst,
+            link = link,
+            grupperingsId = søknadId,
+            eventId = UUID.randomUUID().toString(),
+            dagerSynlig = beskjedProperties.dagerSynlig
+    )
 }

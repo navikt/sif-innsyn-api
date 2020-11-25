@@ -2,6 +2,7 @@ package no.nav.sifinnsynapi.pleiepenger.syktbarn
 
 import no.nav.sifinnsynapi.common.*
 import no.nav.sifinnsynapi.dittnav.DittnavService
+import no.nav.sifinnsynapi.dittnav.K9Beskjed
 import no.nav.sifinnsynapi.dittnav.PleiepengerDittnavBeskjedProperties
 import no.nav.sifinnsynapi.pleiepenger.syktbarn.PleiepengerSyktBarnHendelseKonsument.Companion.Keys.AKTØR_ID
 import no.nav.sifinnsynapi.pleiepenger.syktbarn.PleiepengerSyktBarnHendelseKonsument.Companion.Keys.FØDSELSNUMMER
@@ -115,17 +116,7 @@ class PleiepengerSyktBarnHendelseKonsument(
 
 }
 
-data class K9Beskjed(
-        val metadata: Metadata,
-        val grupperingsId: String,
-        val tekst: String,
-        val link: String,
-        val dagerSynlig: Long,
-        val søkerFødselsnummer: String,
-        val eventId: String
-)
-
-internal fun JSONObject.somK9Beskjed(metadata: Metadata, beskjedProperties: PleiepengerDittnavBeskjedProperties): K9Beskjed {
+private fun JSONObject.somK9Beskjed(metadata: Metadata, beskjedProperties: PleiepengerDittnavBeskjedProperties): K9Beskjed {
     val søknadId = getString(SØKNAD_ID)
     return K9Beskjed(
             metadata = metadata,
