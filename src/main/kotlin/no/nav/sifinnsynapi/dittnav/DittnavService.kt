@@ -44,5 +44,3 @@ class DittnavService(
 }
 
 fun K9Beskjed.somJson(mapper: ObjectMapper) = mapper.writeValueAsString(this)
-
-

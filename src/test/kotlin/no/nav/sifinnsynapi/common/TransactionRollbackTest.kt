@@ -15,9 +15,9 @@ import no.nav.sifinnsynapi.utils.leggPåTopic
 import no.nav.sifinnsynapi.utils.opprettKafkaProducer
 import org.apache.kafka.clients.producer.Producer
 import org.awaitility.kotlin.await
-import org.junit.Ignore
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -55,7 +55,7 @@ class TransactionRollbackTest {
     @Autowired
     lateinit var repository: SøknadRepository // Repository som brukes til databasekall.
 
-    @MockkBean(relaxed = true)
+    @MockkBean()
     lateinit var dittnavService: DittnavService
 
     lateinit var producer: Producer<String, Any> // Kafka producer som brukes til å legge på kafka meldinger. Mer spesifikk, Hendelser om pp-sykt-barn
@@ -74,18 +74,18 @@ class TransactionRollbackTest {
         repository.deleteAll() //Tømmer databasen mellom hver test
     }
 
-    @Ignore
-    //@Test TODO: Hvorfor feiler denne
+    @Test
     fun `Konsumere hendelse, forevnt rolback ved feil`() {
         repository.deleteAll() //Tømmer databasen mellom hver test
-
-        // legg på 1 hendelse om mottatt søknad om pleiepenger sykt barn...
-        val hendelse = defaultHendelse()
-        producer.leggPåTopic(hendelse, PP_SYKT_BARN, mapper)
 
         every {
             dittnavService.sendBeskjed(any(), any())
         } throws Exception("Ooops, noe gikk galt...")
+
+        // legg på 1 hendelse om mottatt søknad om pleiepenger sykt barn...
+        val hendelse = defaultHendelse(journalpostId = "0000000")
+        producer.leggPåTopic(hendelse, PP_SYKT_BARN, mapper)
+
 
         // forvent at det som ble persistert blir rullet tilbake.
         await.atMost(60, TimeUnit.SECONDS).untilAsserted {
