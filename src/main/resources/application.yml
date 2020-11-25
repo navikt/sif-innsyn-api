@@ -7,7 +7,7 @@ no.nav:
         dagerSynlig: 7
     omsorgspenger-midlertidig-alene:
       beskjed:
-        tekst: 'Vi har mottatt søknaden din om å bli regnet som midlertidig alene for omsorgen'
+        tekst: 'Vi har mottatt omsorgspengesøknad fra deg om å bli regnet som alene om omsorgen for barn.'
         dagerSynlig: 7
 
   apigw:
