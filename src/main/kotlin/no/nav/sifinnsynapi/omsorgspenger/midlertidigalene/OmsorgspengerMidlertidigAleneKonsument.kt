@@ -60,13 +60,11 @@ class OmsorgspengerMidlertidigAleneKonsument(
 
 private fun JSONObject.somK9Beskjed(metadata: Metadata, beskjedProperties: OmsorgspengerMidlertidigAleneBeskjedProperties): K9Beskjed {
     val søknadId = getString(SØKNAD_ID)
-    val link = if(beskjedProperties.link == null) null else "${beskjedProperties.link}/$søknadId"
-
     return K9Beskjed(
             metadata = metadata,
             søkerFødselsnummer = getJSONObject(SØKER).getString(FØDSELSNUMMER),
             tekst = beskjedProperties.tekst,
-            link = link,
+            link = beskjedProperties.link,
             grupperingsId = søknadId,
             eventId = UUID.randomUUID().toString(),
             dagerSynlig = beskjedProperties.dagerSynlig
