@@ -10,6 +10,8 @@ topic:
       bryter: false
     omp-utvidet-rett:
       bryter: false
+    omp-midlertidig-alene:
+      bryter: true
 
 management:
   endpoint:

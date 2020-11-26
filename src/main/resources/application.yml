@@ -5,6 +5,10 @@ no.nav:
         tekst: 'Vi har mottatt søknaden din om pleiepenger.'
         link: https://sif-innsyn.dev.nav.no/familie/sykdom-i-familien/soknad/innsyn/dine-pleiepenger
         dagerSynlig: 7
+    omsorgspenger-midlertidig-alene:
+      beskjed:
+        tekst: 'Vi har mottatt omsorgspengesøknad fra deg om å bli regnet som alene om omsorgen for barn.'
+        dagerSynlig: 7
 
   apigw:
     apikey: ${APIGW_API_KEY} # kubectl secret som miljøvariabel i pod
@@ -56,6 +60,13 @@ topic:
     omp-utvidet-rett:
       id: omp-utvidet-rett-listener
       navn: privat-omsorgspengesoknad-cleanup
+      bryter: true
+      dry-run: false
+
+    # topic.listener.omp-midlertidig-alene
+    omp-midlertidig-alene:
+      id: omp-midlertidig-alene-listener
+      navn: privat-omsorgspenger-midlertidig-alene-cleanup
       bryter: true
       dry-run: false
 

@@ -11,6 +11,7 @@ import no.nav.sifinnsynapi.common.AktørId
 import no.nav.sifinnsynapi.common.Fødselsnummer
 import no.nav.sifinnsynapi.config.Topics.K9_DITTNAV_VARSEL_BESKJED
 import no.nav.sifinnsynapi.config.Topics.PP_SYKT_BARN
+import no.nav.sifinnsynapi.dittnav.K9Beskjed
 import no.nav.sifinnsynapi.soknad.SøknadDAO
 import no.nav.sifinnsynapi.soknad.SøknadDTO
 import no.nav.sifinnsynapi.soknad.SøknadRepository

@@ -1,25 +1,21 @@
-package no.nav.sifinnsynapi.common
+package no.nav.sifinnsynapi.omsorgspenger.midlertidigalene
 
 import assertk.assertThat
-import assertk.assertions.isEqualTo
+import assertk.assertions.isNotEmpty
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.ninjasquad.springmockk.MockkBean
-import io.mockk.every
 import no.nav.security.token.support.test.spring.TokenGeneratorConfiguration
-import no.nav.sifinnsynapi.config.Topics.K9_DITTNAV_VARSEL_BESKJED
-import no.nav.sifinnsynapi.config.Topics.PP_SYKT_BARN
-import no.nav.sifinnsynapi.dittnav.DittnavService
-import no.nav.sifinnsynapi.soknad.SøknadRepository
-import no.nav.sifinnsynapi.utils.defaultHendelse
-import no.nav.sifinnsynapi.utils.leggPåTopic
-import no.nav.sifinnsynapi.utils.opprettKafkaProducer
+import no.nav.sifinnsynapi.config.Topics
+import no.nav.sifinnsynapi.dittnav.K9Beskjed
+import no.nav.sifinnsynapi.utils.*
+import org.apache.kafka.clients.consumer.Consumer
 import org.apache.kafka.clients.producer.Producer
 import org.awaitility.kotlin.await
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.extension.ExtendWith
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock
@@ -33,7 +29,7 @@ import java.util.concurrent.TimeUnit
 
 @EmbeddedKafka( // Setter opp og tilgjengligjør embeded kafka broker
         count = 3,
-        topics = [PP_SYKT_BARN, K9_DITTNAV_VARSEL_BESKJED],
+        topics = [Topics.OMP_MIDLERTIDIG_ALENE, Topics.K9_DITTNAV_VARSEL_BESKJED],
         bootstrapServersProperty = "spring.kafka.bootstrap-servers" // Setter bootstrap-servers for consumer og producer.
 )
 @ExtendWith(SpringExtension::class)
@@ -43,7 +39,7 @@ import java.util.concurrent.TimeUnit
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT) // Integrasjonstest - Kjører opp hele Spring Context med alle konfigurerte beans.
 @Import(TokenGeneratorConfiguration::class) // Tilgjengliggjør en oicd-provider for test. Se application-test.yml -> no.nav.security.jwt.issuer.selvbetjening for konfigurasjon
 @AutoConfigureWireMock // Konfigurerer og setter opp en wiremockServer. Default leses src/test/resources/__files og src/test/resources/mappings
-class TransactionRollbackTest {
+class OmsorgspengerMidlertidigAleneKonsumentTest {
 
     @Autowired
     lateinit var mapper: ObjectMapper
@@ -52,45 +48,30 @@ class TransactionRollbackTest {
     @Autowired
     private lateinit var embeddedKafkaBroker: EmbeddedKafkaBroker // Broker som brukes til å konfigurere opp en kafka producer.
 
-    @Autowired
-    lateinit var repository: SøknadRepository // Repository som brukes til databasekall.
-
-    @MockkBean()
-    lateinit var dittnavService: DittnavService
-
     lateinit var producer: Producer<String, Any> // Kafka producer som brukes til å legge på kafka meldinger. Mer spesifikk, Hendelser om pp-sykt-barn
+    lateinit var dittNavConsumer: Consumer<String, K9Beskjed> // Kafka consumer som brukes til å lese kafka meldinger.
 
     companion object {
-        private val aktørId = AktørId.valueOf("123456")
+        private val log: Logger = LoggerFactory.getLogger(OmsorgspengerMidlertidigAleneKonsumentTest::class.java)
     }
 
     @BeforeAll
     fun setUp() {
         producer = embeddedKafkaBroker.opprettKafkaProducer()
-    }
-
-    @AfterEach
-    internal fun tearDown() {
-        repository.deleteAll() //Tømmer databasen mellom hver test
+        dittNavConsumer = embeddedKafkaBroker.opprettDittnavConsumer()
     }
 
     @Test
-    fun `Konsumere hendelse, forevnt rolback ved feil`() {
-        repository.deleteAll() //Tømmer databasen mellom hver test
+    fun `Konsumer hendelse om å bli regnet som midlertidig alene og forvent at dittNav beskjed blir sendt ut`(){
+        val hendelse = defaultHendelse()
+        producer.leggPåTopic(hendelse, Topics.OMP_MIDLERTIDIG_ALENE, mapper)
 
-        every {
-            dittnavService.sendBeskjed(any(), any())
-        } throws Exception("Ooops, noe gikk galt...")
-
-        // legg på 1 hendelse om mottatt søknad om pleiepenger sykt barn...
-        val hendelse = defaultHendelse(journalpostId = "0000000")
-        producer.leggPåTopic(hendelse, PP_SYKT_BARN, mapper)
-
-
-        // forvent at det som ble persistert blir rullet tilbake.
+        // forvent at dittNav melding blir sendt
         await.atMost(60, TimeUnit.SECONDS).untilAsserted {
-            assertThat(repository.count()).isEqualTo(0)
+            val lesMelding = dittNavConsumer.lesMelding(hendelse.data.melding["søknadId"] as String)
+            log.info("----> dittnav melding: {}", lesMelding)
+            assertThat(lesMelding).isNotEmpty()
         }
     }
-}
 
+}

@@ -2,7 +2,6 @@ package no.nav.sifinnsynapi.dittnav
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import no.nav.sifinnsynapi.config.Topics.K9_DITTNAV_VARSEL_BESKJED
-import no.nav.sifinnsynapi.pleiepenger.syktbarn.K9Beskjed
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -45,5 +44,3 @@ class DittnavService(
 }
 
 fun K9Beskjed.somJson(mapper: ObjectMapper) = mapper.writeValueAsString(this)
-
-
