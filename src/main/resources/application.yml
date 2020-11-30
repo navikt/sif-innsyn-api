@@ -114,7 +114,7 @@ spring:
       client-id: ${spring.application.name}
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
-      transaction-id-prefix: tx.
+      transaction-id-prefix: ${spring.application.name}.tx.
     consumer:
       enable-auto-commit: false
       group-id: ${spring.application.name}
