@@ -113,7 +113,7 @@ kubectl logs -f sif-innsyn-api-<POD-ID> --namespace dusseldorf -c sif-innsyn-api
 ```
 
 ## Alarmer
-Vi bruker [nais-alerts](https://doc.nais.io/observability/alerts) for å sette opp alarmer. Disse finner man konfigurert i [nais/alerterator.yml](nais/alerterator.yml).
+Vi bruker [nais-alerts](https://doc.nais.io/observability/alerts) for å sette opp alarmer. Disse finner man konfigurert i [nais/alerterator-prod.yml](nais/alerterator-prod.yml).
 
 ## Metrics
 
