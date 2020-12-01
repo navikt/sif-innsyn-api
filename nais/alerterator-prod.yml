@@ -57,7 +57,7 @@ spec:
 
     - alert: Ingen konsumerte meldinger observert siste 48 timer.
       severity: warning
-      expr: sum by (name) (ceil(increase(spring_kafka_listener_seconds_count{result="success", app="sif-innsyn-api"}[48h]))) < 1
+      expr: sum by (name) (ceil(increase(spring_kafka_listener_seconds_count{result="success", app="{{app}}"}[48h]))) < 1
       description: "Ingen konsumerte meldinger i \{{ $labels.name }} observert de siste 48 timer."
       action: "Sjekk loggene for å finne ut hvorfor."
 
