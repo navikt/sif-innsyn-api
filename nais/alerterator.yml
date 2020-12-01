@@ -59,8 +59,8 @@ spec:
       severity: warning
       expr: sum by (name) (ceil(increase(spring_kafka_listener_seconds_count{result="success", app="sif-innsyn-api"}[48h]))) < 1
       for: 1m
-      description: "Ingen konsumerte meldinger i \{{ $labels.name }} observert de siste 48 timer. Sjekk loggene for å finne ut hvorfor."
-      action: "`kubectl logs \{{ $labels.pod_name }} -n \{{ $labels.namespace }} -c \{{ $labels.app }}`"
+      description: "Ingen konsumerte meldinger i \{{ $labels.name }} observert de siste 48 timer."
+      action: "Sjekk loggene for å finne ut hvorfor."
 
     - alert: Helsesjekk feiler
       expr: floor(increase(http_server_requests_seconds_count{status!~"200", uri="/actuator/health", app="{{app}}"}[3m])) > 0
