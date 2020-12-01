@@ -8,6 +8,7 @@ on:
       - 'LICENCE'
       - 'CODEOWNERS'
       - '.github/workflows/apply-alerts.yml'
+      - 'nais/alerterator-*'
     branches:
 
 env:

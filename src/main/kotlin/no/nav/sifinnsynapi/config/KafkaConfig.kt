@@ -23,6 +23,7 @@ import org.springframework.kafka.support.KafkaHeaders
 import org.springframework.kafka.support.converter.JsonMessageConverter
 import org.springframework.util.backoff.FixedBackOff
 import java.nio.ByteBuffer
+import java.time.Duration
 import java.util.function.BiConsumer
 
 
@@ -81,7 +82,7 @@ class KafkaConfig(
         }
 
         // https://docs.spring.io/spring-kafka/docs/2.5.2.RELEASE/reference/html/#chained-transaction-manager
-        factory.containerProperties.transactionManager = chainedTransactionManager;
+        factory.containerProperties.transactionManager = chainedTransactionManager
 
         // https://docs.spring.io/spring-kafka/docs/2.5.2.RELEASE/reference/html/#exactly-once
         factory.containerProperties.eosMode = ContainerProperties.EOSMode.BETA
@@ -91,6 +92,9 @@ class KafkaConfig(
 
         // https://docs.spring.io/spring-kafka/docs/2.5.2.RELEASE/reference/html/#delivery-header
         factory.containerProperties.isDeliveryAttemptHeader = true
+
+        // https://docs.spring.io/spring-kafka/reference/html/#listener-container
+        factory.containerProperties.authorizationExceptionRetryInterval = Duration.ofSeconds(10L)
 
         //https://docs.spring.io/spring-kafka/docs/2.5.2.RELEASE/reference/html/#after-rollback
         val defaultAfterRollbackProcessor = DefaultAfterRollbackProcessor<String, String>(recoverer(), FixedBackOff(retryInterval, Long.MAX_VALUE))
