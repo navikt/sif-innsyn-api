@@ -3,7 +3,7 @@ name: Alerts
 on:
   push:
     paths:
-      - 'nais/alerterator-dev.yml'
+      - 'nais/alerterator-*'
       - 'nais/dev-gcp.json'
       - 'nais/prod-gcp.json'
       - '.github/workflows/apply-alerts.yml'
