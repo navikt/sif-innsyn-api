@@ -1,8 +1,0 @@
-embedded.postgresql.enabled: true
-spring:
-  cloud:
-    gcp:
-      core:
-        enabled: false
-      secretmanager:
-        enabled: false

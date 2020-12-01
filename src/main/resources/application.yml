@@ -42,27 +42,6 @@ topic:
       bryter: true
       dry-run: false
 
-    # topic.listener.omp-utbetaling-arbeidstaker
-    omp-utbetaling-arbeidstaker:
-      id: omp-utbetaling-arbeidstaker-listener
-      navn: privat-omp-utbetalingsoknad-arbeidstaker-cleanup
-      bryter: true
-      dry-run: false
-
-    # topic.listener.omp-utbetaling-snf
-    omp-utbetaling-snf:
-      id: omp-utbetaling-snf-listener
-      navn: privat-omsorgspengerutbetalingsoknad-cleanup
-      bryter: true
-      dry-run: false
-
-    # topic.listener.omp-utvidet-rett
-    omp-utvidet-rett:
-      id: omp-utvidet-rett-listener
-      navn: privat-omsorgspengesoknad-cleanup
-      bryter: true
-      dry-run: false
-
     # topic.listener.omp-midlertidig-alene
     omp-midlertidig-alene:
       id: omp-midlertidig-alene-listener

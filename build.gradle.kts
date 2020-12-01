@@ -70,7 +70,6 @@ dependencies {
     //developmentOnly("org.springframework.boot:spring-boot-devtools")
 
     // Spring Cloud
-    implementation("org.springframework.cloud:spring-cloud-gcp-starter-secretmanager")
     // https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-contract-stub-runner
     testImplementation("org.springframework.cloud:spring-cloud-starter-contract-stub-runner")
     testImplementation("org.springframework.cloud:spring-cloud-starter")
