@@ -119,7 +119,7 @@ dependencies {
     testImplementation("org.awaitility:awaitility-kotlin:4.0.3")
     testImplementation("com.willowtreeapps.assertk:assertk-jvm:0.21")
     testImplementation("com.ninja-squad:springmockk:2.0.3")
-    testImplementation("io.mockk:mockk:1.10.0")
+    testImplementation("io.mockk:mockk:1.10.3-jdk8")
 }
 
 dependencyManagement {
