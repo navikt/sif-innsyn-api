@@ -7,6 +7,6 @@ updates:
     open-pull-requests-limit: 10
 
   - package-ecosystem: gradle
-    directory: "/"
+    directory: "/dependabot/"
     schedule:
       interval: daily
