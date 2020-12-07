@@ -9,7 +9,7 @@ dependencies {
     compile 'org.apache.avro:avro:1.9.2'
     compile 'io.confluent:kafka-connect-avro-converter:5.5.0'
     compile 'io.confluent:kafka-avro-serializer:5.5.0'
-    compile 'org.json:json:20200518'
+    compile 'org.json:json:20201115'
     compile 'org.zalando:problem-spring-web-starter:0.26.2'
     testCompile 'no.nav.security:token-validation-test-support:1.1.5'
     testCompile 'org.testcontainers:postgresql:1.15.0'
