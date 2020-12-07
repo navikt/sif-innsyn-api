@@ -112,7 +112,7 @@ dependencies {
     testImplementation("org.scala-lang:scala-library:2.12.11")
 
     // Diverse
-    implementation("org.json:json:20200518")
+    implementation("org.json:json:20201115")
     implementation("com.github.ben-manes.caffeine:caffeine")
     implementation("org.zalando:problem-spring-web-starter:$zalandoVersion")
 
