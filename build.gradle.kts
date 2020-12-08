@@ -17,7 +17,7 @@ configurations {
         extendsFrom(configurations.annotationProcessor.get())
     }
 }
-val springfoxVersion by extra("2.9.2")
+val springfoxVersion by extra("3.0.0")
 val confluentVersion by extra("5.5.0")
 
 val avroVersion by extra("1.9.2")
@@ -67,7 +67,7 @@ dependencies {
     }
     testImplementation("org.junit.jupiter:junit-jupiter-api")
     testImplementation("org.junit.jupiter:junit-jupiter-engine")
-    //developmentOnly("org.springframework.boot:spring-boot-devtools")
+    //developmentOnl("org.springframework.boot:spring-boot-devtools")
 
     // Spring Cloud
     // https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-contract-stub-runner
@@ -75,8 +75,7 @@ dependencies {
     testImplementation("org.springframework.cloud:spring-cloud-starter")
 
     // SpringFox
-    implementation("io.springfox:springfox-swagger2:$springfoxVersion")
-    implementation("io.springfox:springfox-swagger-ui:$springfoxVersion")
+    implementation("io.springfox:springfox-boot-starter:$springfoxVersion")
 
     // Metrics
     implementation("io.micrometer:micrometer-registry-prometheus")
