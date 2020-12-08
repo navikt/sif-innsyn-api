@@ -20,7 +20,6 @@ configurations {
 val springfoxVersion by extra("2.9.2")
 val confluentVersion by extra("5.5.0")
 
-val avroVersion by extra("1.9.2")
 val logstashLogbackEncoderVersion by extra("6.3")
 val tokenValidationVersion by extra("1.1.5")
 val springCloudVersion by extra("Hoxton.SR6")
@@ -102,9 +101,6 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
 
     //Kafka
-    implementation("org.apache.avro:avro:$avroVersion")
-    implementation("io.confluent:kafka-connect-avro-converter:$confluentVersion")
-    implementation("io.confluent:kafka-avro-serializer:$confluentVersion")
     implementation("org.springframework.kafka:spring-kafka")
     testImplementation("org.springframework.kafka:spring-kafka-test")
 
