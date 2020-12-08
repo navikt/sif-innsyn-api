@@ -2,6 +2,7 @@
 
 ![CI / CD](https://github.com/navikt/sif-innsyn-api/workflows/CI%20/%20CD/badge.svg)
 ![Alerts](https://github.com/navikt/sif-innsyn-api/workflows/Alerts/badge.svg)
+![Vulnerabilities scanning of dependencies](https://github.com/navikt/sif-innsyn-api/workflows/Vulnerabilities%20scanning%20of%20dependencies/badge.svg)
 
 # Innholdsoversikt
 * [1. Kontekst](#1-kontekst)
