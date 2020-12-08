@@ -18,7 +18,6 @@ configurations {
     }
 }
 val springfoxVersion by extra("2.9.2")
-val confluentVersion by extra("5.5.0")
 
 val logstashLogbackEncoderVersion by extra("6.3")
 val tokenValidationVersion by extra("1.1.5")
