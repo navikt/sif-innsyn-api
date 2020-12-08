@@ -9,10 +9,8 @@ import org.springframework.core.env.Environment
 import springfox.documentation.builders.RequestHandlerSelectors
 import springfox.documentation.spi.DocumentationType
 import springfox.documentation.spring.web.plugins.Docket
-import springfox.documentation.swagger2.annotations.EnableSwagger2
 
 @Configuration
-@EnableSwagger2
 @Profile("local", "dev-gcp")
 class SwaggerConfiguration : EnvironmentAware {
     private var env: Environment? = null
