@@ -21,7 +21,7 @@ configurations {
 val springfoxVersion by extra("3.0.0")
 val confluentVersion by extra("5.5.0")
 
-val logstashLogbackEncoderVersion by extra("6.3")
+val logstashLogbackEncoderVersion by extra("6.5")
 val tokenValidationVersion by extra("1.1.5")
 val springCloudVersion by extra("Hoxton.SR6")
 val retryVersion by extra("1.3.0")
