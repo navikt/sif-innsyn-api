@@ -15,7 +15,7 @@ dependencies {
     testCompile 'org.testcontainers:postgresql:1.15.0'
     testCompile 'org.scala-lang:scala-library:2.12.11'
     testCompile 'org.awaitility:awaitility-kotlin:4.0.3'
-    testCompile 'com.willowtreeapps.assertk:assertk-jvm:0.21'
+    testCompile 'com.willowtreeapps.assertk:assertk-jvm:0.23'
     testCompile 'com.ninja-squad:springmockk:2.0.3'
     testCompile 'io.mockk:mockk:1.10.3-jdk8'
     testCompile 'no.nav.security:token-validation-spring:1.1.5'
