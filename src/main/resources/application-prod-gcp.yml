@@ -11,7 +11,7 @@ topic:
     omp-utvidet-rett:
       bryter: false
     omp-midlertidig-alene:
-      bryter: false
+      bryter: true
 
 management:
   endpoint:
