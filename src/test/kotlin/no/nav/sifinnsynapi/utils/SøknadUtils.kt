@@ -38,6 +38,25 @@ fun defaultHendelse(søknadIdKey: String = "søknadId", søknadId: UUID = UUID.r
         )
 )
 
+fun defaultHendelseOmsorgsdagerMelding(søknadIdKey: String = "søknadId", søknadId: UUID = UUID.randomUUID(), journalpostId: String = "123456789", type: String) = TopicEntry(
+        data = SøknadsHendelse(
+                metadata = defaultMetadata,
+                melding = mapOf(
+                        "$søknadIdKey" to "$søknadId",
+                        "mottatt" to ZonedDateTime.now(),
+                        "søker" to mapOf(
+                                "fødselsnummer" to "1234567",
+                                "aktørId" to "123456"
+                        ),
+                        "type" to "$type"
+                ),
+                journalførtMelding = JournalfortMelding(
+                        journalpostId = "$journalpostId"
+                ),
+                pdfDokument = file2ByteArray("eksempel-søknad.pdf")
+        )
+)
+
 
 
 

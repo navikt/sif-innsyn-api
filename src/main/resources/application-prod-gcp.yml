@@ -12,6 +12,8 @@ topic:
       bryter: false
     omp-midlertidig-alene:
       bryter: true
+    omd-melding:
+      bryter: false
 
 management:
   endpoint:

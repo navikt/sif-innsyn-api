@@ -9,6 +9,18 @@ no.nav:
       beskjed:
         tekst: 'Vi har mottatt omsorgspengesøknad fra deg om å bli regnet som alene om omsorgen for barn.'
         dagerSynlig: 7
+    omsorgsdager-melding-korona:
+      beskjed:
+        tekst: 'Vi har mottatt melding fra deg om å overføre omsorgsdager pga korona'
+        dagerSynlig: 7
+    omsorgsdager-melding-overfore:
+      beskjed:
+        tekst: 'Vi har mottatt melding fra deg om å overføre omsorgsdager'
+        dagerSynlig: 7
+    omsorgsdager-melding-fordele:
+      beskjed:
+        tekst: 'Vi har mottatt melding fra deg om å fordele omsorgsdager til samværsforelder'
+        dagerSynlig: 7
 
   apigw:
     apikey: ${APIGW_API_KEY} # kubectl secret som miljøvariabel i pod
@@ -46,6 +58,13 @@ topic:
     omp-midlertidig-alene:
       id: omp-midlertidig-alene-listener
       navn: privat-omsorgspenger-midlertidig-alene-cleanup
+      bryter: true
+      dry-run: false
+
+    # topic.listener.omd-melding
+    omd-melding:
+      id: omd-melding-listener
+      navn: privat-omsorgsdager-melding-cleanup
       bryter: true
       dry-run: false
 
