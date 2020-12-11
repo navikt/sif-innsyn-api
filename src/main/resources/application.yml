@@ -11,15 +11,15 @@ no.nav:
         dagerSynlig: 7
     omsorgsdager-melding-korona:
       beskjed:
-        tekst: 'Vi har mottatt melding fra deg om å overføre omsorgsdager pga korona'
+        tekst: 'Vi har mottatt melding fra deg om å dele omsorgsdager'
         dagerSynlig: 7
     omsorgsdager-melding-overfore:
       beskjed:
-        tekst: 'Vi har mottatt melding fra deg om å overføre omsorgsdager'
+        tekst: 'Vi har mottatt melding fra deg om å dele omsorgsdager'
         dagerSynlig: 7
     omsorgsdager-melding-fordele:
       beskjed:
-        tekst: 'Vi har mottatt melding fra deg om å fordele omsorgsdager til samværsforelder'
+        tekst: 'Vi har mottatt melding fra deg om å dele omsorgsdager'
         dagerSynlig: 7
 
   apigw:
