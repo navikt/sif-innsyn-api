@@ -106,7 +106,7 @@ dependencies {
     implementation("org.json:json:20201115")
     implementation("com.github.ben-manes.caffeine:caffeine")
     implementation("org.zalando:problem-spring-web-starter:$zalandoVersion")
-    implementation("com.google.guava:guava:12.0")
+    implementation("com.google.guava:guava:23.0")
 
     testImplementation("org.awaitility:awaitility-kotlin:4.0.3")
     testImplementation("com.willowtreeapps.assertk:assertk-jvm:0.23")
