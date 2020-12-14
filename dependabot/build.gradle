@@ -8,7 +8,7 @@ dependencies {
     compile 'org.json:json:20201115'
     compile 'org.zalando:problem-spring-web-starter:0.26.2'
     compile 'com.google.guava:guava:23.0'
-    testCompile 'no.nav.security:token-validation-test-support:1.1.5'
+    testCompile 'no.nav.security:token-validation-test-support:1.3.2'
     testCompile 'org.testcontainers:postgresql:1.15.1'
     testCompile 'org.scala-lang:scala-library:2.12.11'
     testCompile 'org.awaitility:awaitility-kotlin:4.0.3'
