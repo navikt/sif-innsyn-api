@@ -61,7 +61,6 @@ class OmsorgsdagerMeldingKonsumentTest {
         dittNavConsumer = embeddedKafkaBroker.opprettDittnavConsumer()
     }
 
-    //TODO Kanskje lage en assert på at riktig melding for riktig type blir sendt ut?
     @Test
     fun `Konsumer hendelse om å koronaoverføre omsorgsdager og forvent at dittNav beskjed blir sendt ut`(){
         val hendelse = defaultHendelseOmsorgsdagerMelding(type = "KORONA")
