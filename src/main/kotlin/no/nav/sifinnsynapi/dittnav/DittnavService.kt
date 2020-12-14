@@ -31,7 +31,7 @@ class DittnavService(
                     .addCallback(
                             { result ->
                                 result?.let {
-                                    log.info("Sendte melding {} med offset {} på {}", result.producerRecord, result.recordMetadata.offset(), result.producerRecord.topic());
+                                    log.info("Sendte melding med offset {} på {}", result.recordMetadata.offset(), result.producerRecord.topic());
                                 }
                             },
                             { ex ->
