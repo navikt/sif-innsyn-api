@@ -33,8 +33,7 @@ fun defaultHendelse(søknadIdKey: String = "søknadId", søknadId: UUID = UUID.r
                 ),
                 journalførtMelding = JournalfortMelding(
                         journalpostId = "$journalpostId"
-                ),
-                pdfDokument = file2ByteArray("eksempel-søknad.pdf")
+                )
         )
 )
 
@@ -52,11 +51,6 @@ fun defaultHendelseOmsorgsdagerMelding(søknadIdKey: String = "søknadId", søkn
                 ),
                 journalførtMelding = JournalfortMelding(
                         journalpostId = "$journalpostId"
-                ),
-                pdfDokument = file2ByteArray("eksempel-søknad.pdf")
+                )
         )
 )
-
-
-
-
