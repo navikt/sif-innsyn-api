@@ -2,7 +2,7 @@ package no.nav.sifinnsynapi.soknad
 
 import assertk.assertions.hasSameSizeAs
 import assertk.assertions.isNotNull
-import no.nav.security.token.support.test.spring.TokenGeneratorConfiguration
+import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
 import no.nav.sifinnsynapi.dokument.DokumentDAO
 import no.nav.sifinnsynapi.dokument.DokumentRepository
 import no.nav.sifinnsynapi.utils.file2ByteArray
@@ -22,7 +22,7 @@ import java.util.*
 
 @DataJpaTest
 @ActiveProfiles("test")
-@Import(TokenGeneratorConfiguration::class) // Tilgjengliggjør en oicd-provider for test. Se application-test.yml -> no.nav.security.jwt.issuer.selvbetjening for konfigurasjon
+@EnableMockOAuth2Server // Tilgjengliggjør en oicd-provider for test. Se application-test.yml -> no.nav.security.jwt.issuer.selvbetjening for konfigurasjon
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(SpringExtension::class)
 @AutoConfigureTestDatabase(

@@ -12,9 +12,9 @@ no.nav:
     jwt:
       issuer:
         loginservice:
-          discoveryUrl: http://metadata
+          discoveryurl: http://localhost:${mock-oauth2-server.port}/loginservice/.well-known/openid-configuration
           accepted_audience: aud-localhost
-          cookie_name: localhost-idtoken
+          cookie_name: loginservice-idtoken
     cors:
       allowed-origins: http://localhost:8080
 
@@ -46,3 +46,5 @@ spring:
       auto-offset-reset: earliest
 wiremock:
   reset-mappings-after-each-test: true
+  server:
+    port: 8888

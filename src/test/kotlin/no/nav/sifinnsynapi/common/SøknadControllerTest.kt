@@ -2,7 +2,8 @@ package no.nav.sifinnsynapi.common
 
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
-import no.nav.security.token.support.test.spring.TokenGeneratorConfiguration
+import no.nav.security.mock.oauth2.MockOAuth2Server
+import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
 import no.nav.sifinnsynapi.Routes.SØKNAD
 import no.nav.sifinnsynapi.dokument.DokumentService
 import no.nav.sifinnsynapi.http.SøknadNotFoundException
@@ -11,13 +12,17 @@ import no.nav.sifinnsynapi.soknad.SøknadDTO
 import no.nav.sifinnsynapi.soknad.SøknadService
 import no.nav.sifinnsynapi.util.CallIdGenerator
 import no.nav.sifinnsynapi.utils.tokenSomHttpHeader
+import org.junit.Assert.assertNotNull
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.context.annotation.Import
+import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
+import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
@@ -26,7 +31,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 import java.net.URI
 import java.net.URLDecoder
 import java.nio.charset.Charset
-import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.util.*
@@ -34,20 +38,18 @@ import java.util.*
 
 @ExtendWith(SpringExtension::class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Import(TokenGeneratorConfiguration::class, CallIdGenerator::class) // Tilgjengliggjør en oicd-provider for test. Se application-test.yml -> no.nav.security.jwt.issuer.selvbetjening for konfigurasjon
-@WebMvcTest(
-        controllers = [SøknadController::class],
-        properties = [
-            "spring.cloud.gcp.core.enabled=false",
-            "spring.cloud.gcp.secretmanager.enabled=false",
-            "no.nav.security.jwt.issuer.loginservice.discoveryUrl=http://metadata",
-            "no.nav.security.jwt.issuer.loginservice.accepted_audience=aud-localhost",
-            "no.nav.security.jwt.issuer.loginservice.cookie_name=localhost-idtoken"
-        ])
+@EnableMockOAuth2Server // Tilgjengliggjør en oicd-provider for test.
+@Import(CallIdGenerator::class)
+@WebMvcTest(controllers = [SøknadController::class])
+@ActiveProfiles("test")
 class SøknadControllerTest {
 
     @Autowired
     lateinit var mockMvc: MockMvc
+
+    @Autowired
+    lateinit var mockOAuth2Server: MockOAuth2Server
+    private lateinit var authorizationHeader: HttpHeaders
 
     @MockkBean
     lateinit var søknadService: SøknadService
@@ -57,7 +59,12 @@ class SøknadControllerTest {
 
     companion object {
         private val fødselsnummer = Fødselsnummer.valueOf("1234567")
-        private val authorizationHeader = tokenSomHttpHeader(fødselsnummer)
+    }
+
+    @BeforeAll
+    internal fun setUp() {
+        assertNotNull(mockOAuth2Server)
+       authorizationHeader = mockOAuth2Server.issueToken(fødselsnummer.fødselsnummer!!).tokenSomHttpHeader()
     }
 
     @Test

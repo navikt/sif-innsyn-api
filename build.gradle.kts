@@ -22,26 +22,31 @@ val springfoxVersion by extra("3.0.0")
 val confluentVersion by extra("5.5.0")
 
 val logstashLogbackEncoderVersion by extra("6.6")
-val tokenValidationVersion by extra("1.1.5")
+val tokenValidationVersion by extra("1.3.2")
 val springCloudVersion by extra("Hoxton.SR6")
 val retryVersion by extra("1.3.0")
 val zalandoVersion by extra("0.26.2")
 
+ext["okhttp3.version"] = "4.9.0"
 
 repositories {
-    mavenCentral()
-
     maven {
         name = "github-package-registry-navikt"
         url = uri("https://maven.pkg.github.com/navikt/maven-releas")
     }
+
+    mavenCentral()
+
 }
 
 dependencies {
 
     // NAV
     implementation("no.nav.security:token-validation-spring:$tokenValidationVersion")
-    testImplementation("no.nav.security:token-validation-test-support:$tokenValidationVersion")
+    testImplementation("no.nav.security:token-validation-spring-test:$tokenValidationVersion")
+    // https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp
+    testImplementation("com.squareup.okhttp3:okhttp:4.9.0")
+
 
     // Spring Boot
     implementation("org.springframework.boot:spring-boot-starter-actuator")
@@ -118,6 +123,7 @@ dependencyManagement {
     imports {
         mavenBom("org.springframework.cloud:spring-cloud-dependencies:${property("springCloudVersion")}")
     }
+    applyMavenExclusions(false)
 }
 
 tasks.withType<Test> {
