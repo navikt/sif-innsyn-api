@@ -1,11 +1,11 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("org.springframework.boot") version "2.3.6.RELEASE"
+    id("org.springframework.boot") version "2.3.7.RELEASE"
     id("io.spring.dependency-management") version "1.0.10.RELEASE"
-    kotlin("jvm") version "1.4.20"
-    kotlin("plugin.spring") version "1.4.20"
-    kotlin("plugin.jpa") version "1.4.20"
+    kotlin("jvm") version "1.4.21"
+    kotlin("plugin.spring") version "1.4.21"
+    kotlin("plugin.jpa") version "1.4.21"
 }
 
 group = "no.nav"
@@ -22,7 +22,7 @@ val springfoxVersion by extra("3.0.0")
 val confluentVersion by extra("5.5.0")
 
 val logstashLogbackEncoderVersion by extra("6.6")
-val tokenValidationVersion by extra("1.3.2")
+val tokenValidationVersion by extra("1.3.1")
 val springCloudVersion by extra("Hoxton.SR6")
 val retryVersion by extra("1.3.0")
 val zalandoVersion by extra("0.26.2")
@@ -30,13 +30,11 @@ val zalandoVersion by extra("0.26.2")
 ext["okhttp3.version"] = "4.9.0"
 
 repositories {
+    mavenCentral()
     maven {
         name = "github-package-registry-navikt"
         url = uri("https://maven.pkg.github.com/navikt/maven-releas")
     }
-
-    mavenCentral()
-
 }
 
 dependencies {
@@ -44,9 +42,7 @@ dependencies {
     // NAV
     implementation("no.nav.security:token-validation-spring:$tokenValidationVersion")
     testImplementation("no.nav.security:token-validation-spring-test:$tokenValidationVersion")
-    // https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp
     testImplementation("com.squareup.okhttp3:okhttp:4.9.0")
-
 
     // Spring Boot
     implementation("org.springframework.boot:spring-boot-starter-actuator")
@@ -67,7 +63,6 @@ dependencies {
     }
     testImplementation("org.junit.jupiter:junit-jupiter-api")
     testImplementation("org.junit.jupiter:junit-jupiter-engine")
-    //developmentOnl("org.springframework.boot:spring-boot-devtools")
 
     // Spring Cloud
     // https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-contract-stub-runner
@@ -123,7 +118,6 @@ dependencyManagement {
     imports {
         mavenBom("org.springframework.cloud:spring-cloud-dependencies:${property("springCloudVersion")}")
     }
-    applyMavenExclusions(false)
 }
 
 tasks.withType<Test> {
