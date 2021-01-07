@@ -3,7 +3,7 @@ package no.nav.sifinnsynapi.omsorgsdager.melding
 import assertk.assertThat
 import assertk.assertions.isNotEmpty
 import com.fasterxml.jackson.databind.ObjectMapper
-import no.nav.security.token.support.test.spring.TokenGeneratorConfiguration
+import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
 import no.nav.sifinnsynapi.config.Topics
 import no.nav.sifinnsynapi.dittnav.K9Beskjed
 import no.nav.sifinnsynapi.utils.*
@@ -37,7 +37,7 @@ import java.util.concurrent.TimeUnit
 @DirtiesContext
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT) // Integrasjonstest - Kjører opp hele Spring Context med alle konfigurerte beans.
-@Import(TokenGeneratorConfiguration::class) // Tilgjengliggjør en oicd-provider for test. Se application-test.yml -> no.nav.security.jwt.issuer.selvbetjening for konfigurasjon
+@EnableMockOAuth2Server // Tilgjengliggjør en oicd-provider for test. Se application-test.yml -> no.nav.security.jwt.issuer.selvbetjening for konfigurasjon
 @AutoConfigureWireMock // Konfigurerer og setter opp en wiremockServer. Default leses src/test/resources/__files og src/test/resources/mappings
 class OmsorgsdagerMeldingKonsumentTest {
 

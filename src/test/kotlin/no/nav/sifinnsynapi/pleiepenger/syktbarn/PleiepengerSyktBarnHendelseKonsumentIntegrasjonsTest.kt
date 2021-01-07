@@ -5,10 +5,12 @@ import assertk.assertions.isEmpty
 import assertk.assertions.isEqualTo
 import assertk.assertions.isNotEmpty
 import com.fasterxml.jackson.databind.ObjectMapper
-import no.nav.security.token.support.test.spring.TokenGeneratorConfiguration
+import no.nav.security.mock.oauth2.MockOAuth2Server
+import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
 import no.nav.sifinnsynapi.Routes.SØKNAD
+import no.nav.sifinnsynapi.SifInnsynApiApplication
 import no.nav.sifinnsynapi.common.AktørId
-import no.nav.sifinnsynapi.common.Fødselsnummer
+import no.nav.sifinnsynapi.config.SecurityConfiguration
 import no.nav.sifinnsynapi.config.Topics.K9_DITTNAV_VARSEL_BESKJED
 import no.nav.sifinnsynapi.config.Topics.PP_SYKT_BARN
 import no.nav.sifinnsynapi.dittnav.K9Beskjed
@@ -19,6 +21,7 @@ import no.nav.sifinnsynapi.utils.*
 import org.apache.kafka.clients.consumer.Consumer
 import org.apache.kafka.clients.producer.Producer
 import org.awaitility.kotlin.await
+import org.junit.Assert.assertNotNull
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
@@ -34,6 +37,7 @@ import org.springframework.boot.test.web.client.TestRestTemplate
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock
 import org.springframework.context.annotation.Import
 import org.springframework.core.ParameterizedTypeReference
+import org.springframework.http.HttpEntity
 import org.springframework.http.HttpMethod
 import org.springframework.http.ResponseEntity
 import org.springframework.kafka.test.EmbeddedKafkaBroker
@@ -52,8 +56,9 @@ import java.util.concurrent.TimeUnit
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @DirtiesContext
 @ActiveProfiles("test")
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT) // Integrasjonstest - Kjører opp hele Spring Context med alle konfigurerte beans.
-@Import(TokenGeneratorConfiguration::class) // Tilgjengliggjør en oicd-provider for test. Se application-test.yml -> no.nav.security.jwt.issuer.selvbetjening for konfigurasjon
+@SpringBootTest(classes = [SifInnsynApiApplication::class], webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT) // Integrasjonstest - Kjører opp hele Spring Context med alle konfigurerte beans.
+@EnableMockOAuth2Server // Tilgjengliggjør en oicd-provider for test. Se application-test.yml -> no.nav.security.jwt.issuer.selvbetjening for konfigurasjon
+@Import(SecurityConfiguration::class)
 @AutoConfigureWireMock // Konfigurerer og setter opp en wiremockServer. Default leses src/test/resources/__files og src/test/resources/mappings
 class PleiepengerSyktBarnHendelseKonsumentIntegrasjonsTest {
 
@@ -70,18 +75,21 @@ class PleiepengerSyktBarnHendelseKonsumentIntegrasjonsTest {
     @Autowired
     lateinit var restTemplate: TestRestTemplate // Restklient som brukes til å gjøre restkall mot endepunkter i appen.
 
+    @Suppress("SpringJavaInjectionPointsAutowiringInspection")
+    @Autowired
+    lateinit var mockOAuth2Server: MockOAuth2Server
+
     lateinit var producer: Producer<String, Any> // Kafka producer som brukes til å legge på kafka meldinger. Mer spesifikk, Hendelser om pp-sykt-barn
     lateinit var dittNavConsumer: Consumer<String, K9Beskjed> // Kafka consumer som brukes til å lese kafka meldinger.
 
     companion object {
         private val log: Logger = LoggerFactory.getLogger(PleiepengerSyktBarnHendelseKonsumentIntegrasjonsTest::class.java)
         private val aktørId = AktørId.valueOf("123456")
-        private val fødselsnummer = Fødselsnummer.valueOf("1234567")
-        private val httpEntity = tokenSomHttpEntity(fødselsnummer)
     }
 
     @BeforeAll
     fun setUp() {
+        assertNotNull(mockOAuth2Server)
         repository.deleteAll() //Tømmer databasen mellom hver test
         producer = embeddedKafkaBroker.opprettKafkaProducer()
         dittNavConsumer = embeddedKafkaBroker.opprettDittnavConsumer()
@@ -103,7 +111,7 @@ class PleiepengerSyktBarnHendelseKonsumentIntegrasjonsTest {
 
         // forvent at mottatt hendelse konsumeres og persisteres, samt at gitt restkall gitt forventet resultat.
         await.atMost(60, TimeUnit.SECONDS).untilAsserted {
-            val responseEntity = restTemplate.exchange(SØKNAD, HttpMethod.GET, httpEntity, object : ParameterizedTypeReference<List<SøknadDTO>>() {})
+            val responseEntity = restTemplate.exchange(SØKNAD, HttpMethod.GET, hentToken(), object : ParameterizedTypeReference<List<SøknadDTO>>() {})
             val forventetRespons =
                     //language=json
                     """
@@ -139,7 +147,7 @@ class PleiepengerSyktBarnHendelseKonsumentIntegrasjonsTest {
 
         // forvent at mottatt hendelse konsumeres og persisteres, samt at gitt restkall gitt forventet resultat.
         await.atMost(60, TimeUnit.SECONDS).untilAsserted {
-            val responseEntity = restTemplate.exchange("${SØKNAD}/${søknadId}", HttpMethod.GET, httpEntity, SøknadDTO::class.java)
+            val responseEntity = restTemplate.exchange("${SØKNAD}/${søknadId}", HttpMethod.GET, hentToken(), SøknadDTO::class.java)
             val forventetRespons =
                     //language=json
                     """
@@ -192,7 +200,7 @@ class PleiepengerSyktBarnHendelseKonsumentIntegrasjonsTest {
 
         // forvent at mottatt hendelse konsumeres og persisteres, samt at gitt restkall gitt forventet resultat.
         await.atMost(60, TimeUnit.SECONDS).untilAsserted {
-            val responseEntity = restTemplate.exchange(SØKNAD, HttpMethod.GET, httpEntity, object : ParameterizedTypeReference<List<SøknadDTO>>() {})
+            val responseEntity = restTemplate.exchange(SØKNAD, HttpMethod.GET, hentToken(), object : ParameterizedTypeReference<List<SøknadDTO>>() {})
             val forventetRespons =
                     //language=json
                     """
@@ -230,5 +238,7 @@ class PleiepengerSyktBarnHendelseKonsumentIntegrasjonsTest {
     private fun List<SøknadDAO>.ikkeEksisterer() {
         assertThat(this).isEmpty()
     }
+
+    private fun hentToken(): HttpEntity<String> = mockOAuth2Server.hentToken().tokenTilHttpEntity()
 }
 

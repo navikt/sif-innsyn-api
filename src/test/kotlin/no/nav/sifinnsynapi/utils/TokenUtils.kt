@@ -1,25 +1,24 @@
 package no.nav.sifinnsynapi.utils
 
 import com.nimbusds.jwt.SignedJWT
-import no.nav.security.token.support.test.JwtTokenGenerator
-import no.nav.sifinnsynapi.common.Fødselsnummer
+import no.nav.security.mock.oauth2.MockOAuth2Server
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 
-fun tokenSomHttpEntity(fødselsnummer: Fødselsnummer): HttpEntity<String>{
-    return JwtTokenGenerator.createSignedJWT(fødselsnummer.fødselsnummer).tokenTilHttpEntity()
-}
+fun MockOAuth2Server.hentToken(
+    subject: String = "12345678910",
+    issuerId: String = "loginservice",
+    claims: Map<String, String> = mapOf("acr" to "level4"),
+    audience: String = "aud-localhost",
+    expiry: Long = 3600
+): SignedJWT = issueToken(issuerId = issuerId, subject = subject, claims = claims, audience = audience, expiry = expiry)
 
-fun tokenSomHttpHeader(fødselsnummer: Fødselsnummer): HttpHeaders{
-    return JwtTokenGenerator.createSignedJWT(fødselsnummer.fødselsnummer).tokenTilHeader()
-}
-
-private fun SignedJWT.tokenTilHttpEntity(): HttpEntity<String> {
+fun SignedJWT.tokenTilHttpEntity(): HttpEntity<String> {
     val headers = this.tokenTilHeader()
     return HttpEntity<String>(headers)
 }
 
-private fun SignedJWT.tokenTilHeader(): HttpHeaders {
+fun SignedJWT.tokenTilHeader(): HttpHeaders {
     val token = serialize()
     val headers = HttpHeaders()
     headers.setBearerAuth(token)

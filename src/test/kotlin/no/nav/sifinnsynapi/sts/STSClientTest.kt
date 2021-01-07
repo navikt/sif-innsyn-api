@@ -3,7 +3,7 @@ package no.nav.sifinnsynapi.sts
 import assertk.assertThat
 import assertk.assertions.isNotEqualTo
 import assertk.assertions.isNotNull
-import no.nav.security.token.support.test.spring.TokenGeneratorConfiguration
+import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
 import no.nav.sifinnsynapi.utils.stubStsToken
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
@@ -20,7 +20,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 @ExtendWith(SpringExtension::class)
 @ActiveProfiles("test")
 @AutoConfigureWireMock
-@Import(TokenGeneratorConfiguration::class)
+@EnableMockOAuth2Server // Tilgjengliggjør en oicd-provider for test. Se application-test.yml -> no.nav.security.jwt.issuer.selvbetjening for konfigurasjon
 internal class STSClientTest {
 
     @Autowired

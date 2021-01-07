@@ -2,8 +2,8 @@ package no.nav.sifinnsynapi.oppslag
 
 import assertk.assertThat
 import assertk.assertions.isNotNull
+import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
 import no.nav.security.token.support.spring.validation.interceptor.BearerTokenClientHttpRequestInterceptor
-import no.nav.security.token.support.test.spring.TokenGeneratorConfiguration
 import no.nav.sifinnsynapi.config.ApiGwApiKeyConfig
 import no.nav.sifinnsynapi.http.MDCValuesPropagatingClienHttpRequesInterceptor
 import no.nav.sifinnsynapi.util.Constants
@@ -28,7 +28,7 @@ import java.util.*
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, properties = ["spring.main.allow-bean-definition-overriding=true"])
 @AutoConfigureWireMock
 @ActiveProfiles("test")
-@Import(TokenGeneratorConfiguration::class)
+@EnableMockOAuth2Server // Tilgjengliggjør en oicd-provider for test. Se application-test.yml -> no.nav.security.jwt.issuer.selvbetjening for konfigurasjon
 internal class OppslagsServiceTest {
 
     @TestConfiguration
