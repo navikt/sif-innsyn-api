@@ -1,7 +1,7 @@
 // Do not edit manually! This file was created by the 'createDependabotFile' task defined in the root build.gradle.kts file.
 dependencies {
     compile 'no.nav.security:token-validation-spring:1.3.2'
-    compile 'org.springframework.retry:spring-retry:1.3.0'
+    compile 'org.springframework.retry:spring-retry:1.3.1'
     compile 'io.springfox:springfox-boot-starter:3.0.0'
     compile 'net.logstash.logback:logstash-logback-encoder:6.6'
     compile 'com.vladmihalcea:hibernate-types-52:2.10.2'
