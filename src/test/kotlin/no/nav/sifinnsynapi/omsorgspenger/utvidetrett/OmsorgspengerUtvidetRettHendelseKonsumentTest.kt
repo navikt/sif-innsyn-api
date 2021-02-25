@@ -1,4 +1,4 @@
-package no.nav.sifinnsynapi.omsorgspenger.midlertidigalene
+package no.nav.sifinnsynapi.omsorgspenger.utvidetrett
 
 import assertk.assertThat
 import assertk.assertions.isNotEmpty
@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
 import no.nav.sifinnsynapi.config.Topics
 import no.nav.sifinnsynapi.dittnav.K9Beskjed
+import no.nav.sifinnsynapi.omsorgspenger.utvidetrett.OmsorgspengerUtvidetRettHendelseKonsument.Companion.Keys.SØKNAD_ID
 import no.nav.sifinnsynapi.utils.*
 import org.apache.kafka.clients.consumer.Consumer
 import org.apache.kafka.clients.producer.Producer
@@ -28,7 +29,7 @@ import java.util.concurrent.TimeUnit
 
 @EmbeddedKafka( // Setter opp og tilgjengligjør embeded kafka broker
         count = 3,
-        topics = [Topics.OMP_MIDLERTIDIG_ALENE, Topics.K9_DITTNAV_VARSEL_BESKJED],
+        topics = [Topics.OMP_UTVIDET_RETT, Topics.K9_DITTNAV_VARSEL_BESKJED],
         bootstrapServersProperty = "spring.kafka.bootstrap-servers" // Setter bootstrap-servers for consumer og producer.
 )
 @ExtendWith(SpringExtension::class)
@@ -38,7 +39,7 @@ import java.util.concurrent.TimeUnit
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT) // Integrasjonstest - Kjører opp hele Spring Context med alle konfigurerte beans.
 @EnableMockOAuth2Server // Tilgjengliggjør en oicd-provider for test. Se application-test.yml -> no.nav.security.jwt.issuer.selvbetjening for konfigurasjon
 @AutoConfigureWireMock // Konfigurerer og setter opp en wiremockServer. Default leses src/test/resources/__files og src/test/resources/mappings
-class OmsorgspengerMidlertidigAleneKonsumentTest {
+class OmsorgspengerUtvidetRettHendelseKonsumentTest {
 
     @Autowired
     lateinit var mapper: ObjectMapper
@@ -51,7 +52,7 @@ class OmsorgspengerMidlertidigAleneKonsumentTest {
     lateinit var dittNavConsumer: Consumer<String, K9Beskjed> // Kafka consumer som brukes til å lese kafka meldinger.
 
     companion object {
-        private val log: Logger = LoggerFactory.getLogger(OmsorgspengerMidlertidigAleneKonsumentTest::class.java)
+        private val log: Logger = LoggerFactory.getLogger(OmsorgspengerUtvidetRettHendelseKonsumentTest::class.java)
     }
 
     @BeforeAll
@@ -61,16 +62,15 @@ class OmsorgspengerMidlertidigAleneKonsumentTest {
     }
 
     @Test
-    fun `Konsumer hendelse om å bli regnet som midlertidig alene og forvent at dittNav beskjed blir sendt ut`(){
-        val hendelse = defaultHendelse()
-        producer.leggPåTopic(hendelse, Topics.OMP_MIDLERTIDIG_ALENE, mapper)
+    fun `Konsumer hendelse om omsorgspenger - utvidet rett og forvent at dittNav beskjed blir sendt ut`(){
+        val hendelse = defaultHendelse(søknadIdKey = SØKNAD_ID)
+        producer.leggPåTopic(hendelse, Topics.OMP_UTVIDET_RETT, mapper)
 
         // forvent at dittNav melding blir sendt
         await.atMost(60, TimeUnit.SECONDS).untilAsserted {
-            val lesMelding = dittNavConsumer.lesMelding(hendelse.data.melding["søknadId"] as String)
+            val lesMelding = dittNavConsumer.lesMelding(hendelse.data.melding[SØKNAD_ID] as String)
             log.info("----> dittnav melding: {}", lesMelding)
             assertThat(lesMelding).isNotEmpty()
         }
     }
-
 }
