@@ -9,7 +9,7 @@ topic:
     omp-utbetaling-snf:
       bryter: false
     omp-utvidet-rett:
-      bryter: false
+      bryter: true
     omp-midlertidig-alene:
       bryter: true
     omd-melding:
