@@ -21,6 +21,10 @@ no.nav:
       beskjed:
         tekst: 'Vi har mottatt melding fra deg om å dele omsorgsdager'
         dagerSynlig: 7
+    omsorgspenger-utvidet-rett:
+      beskjed:
+        tekst: 'Søknad om ekstra omsorgsdager er mottatt'
+        dagerSynlig: 7
 
   apigw:
     apikey: ${APIGW_API_KEY} # kubectl secret som miljøvariabel i pod
@@ -58,6 +62,13 @@ topic:
     omp-midlertidig-alene:
       id: omp-midlertidig-alene-listener
       navn: privat-omsorgspenger-midlertidig-alene-cleanup
+      bryter: true
+      dry-run: false
+
+    # topic.listener.omp-utvidet-rett
+    omp-utvidet-rett:
+      id: omp-utvidet-rett-listener
+      navn: privat-omsorgspengesoknad-cleanup
       bryter: true
       dry-run: false
 
