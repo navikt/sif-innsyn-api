@@ -27,11 +27,11 @@ no.nav:
         dagerSynlig: 7
     omsorgspengerutbetaling-arbeidstaker:
       beskjed:
-        tekst: 'Søknad om ekstra omsorgspengerutbetaling er mottatt'
+        tekst: 'Søknad om utbetaling av omsorgspenger er mottatt.'
         dagerSynlig: 7
     omsorgspengerutbetaling-snf:
       beskjed:
-        tekst: 'Søknad om ekstra omsorgspengerutbetaling snf er mottatt'
+        tekst: 'Søknad om utbetaling av omsorgspenger er mottatt.'
         dagerSynlig: 7
 
   apigw:
