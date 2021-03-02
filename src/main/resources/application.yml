@@ -25,6 +25,14 @@ no.nav:
       beskjed:
         tekst: 'Søknad om ekstra omsorgsdager er mottatt'
         dagerSynlig: 7
+    omsorgspengerutbetaling-arbeidstaker:
+      beskjed:
+        tekst: 'Søknad om utbetaling av omsorgspenger er mottatt.'
+        dagerSynlig: 7
+    omsorgspengerutbetaling-snf:
+      beskjed:
+        tekst: 'Søknad om utbetaling av omsorgspenger er mottatt.'
+        dagerSynlig: 7
 
   apigw:
     apikey: ${APIGW_API_KEY} # kubectl secret som miljøvariabel i pod
@@ -69,6 +77,20 @@ topic:
     omp-utvidet-rett:
       id: omp-utvidet-rett-listener
       navn: privat-omsorgspengesoknad-cleanup
+      bryter: true
+      dry-run: false
+
+    # topic.listener.omp-utbetaling-arbeidstaker
+    omp-utbetaling-arbeidstaker:
+      id: omp-utbetaling-arbeidstaker-listener
+      navn: privat-omp-utbetalingsoknad-arbeidstaker-cleanup
+      bryter: true
+      dry-run: false
+
+    # topic.listener.omp-utbetaling-snf
+    omp-utbetaling-snf:
+      id: omp-utbetaling-snf-listener
+      navn: privat-omsorgspengerutbetalingsoknad-cleanup
       bryter: true
       dry-run: false
 
