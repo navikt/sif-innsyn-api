@@ -5,9 +5,9 @@ topic:
       bryter: true
       dry-run: false
     omp-utbetaling-arbeidstaker:
-      bryter: false
+      bryter: true
     omp-utbetaling-snf:
-      bryter: false
+      bryter: true
     omp-utvidet-rett:
       bryter: true
     omp-midlertidig-alene:
