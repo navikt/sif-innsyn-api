@@ -37,7 +37,12 @@ fun defaultHendelse(søknadIdKey: String = "søknadId", søknadId: UUID = UUID.r
         )
 )
 
-fun defaultHendelseOmsorgsdagerMelding(søknadIdKey: String = "søknadId", søknadId: UUID = UUID.randomUUID(), journalpostId: String = "123456789", type: String) = TopicEntry(
+fun defaultHendelseOmsorgsdagerMelding(
+        søknadIdKey: String = "søknadId",
+        søknadId: UUID = UUID.randomUUID(),
+        journalpostId: String = "123456789",
+        type: String
+) = TopicEntry(
         data = SøknadsHendelse(
                 metadata = defaultMetadata,
                 melding = mapOf(
@@ -48,6 +53,30 @@ fun defaultHendelseOmsorgsdagerMelding(søknadIdKey: String = "søknadId", søkn
                                 "aktørId" to "123456"
                         ),
                         "type" to "$type"
+                ),
+                journalførtMelding = JournalfortMelding(
+                        journalpostId = "$journalpostId"
+                )
+        )
+)
+
+
+fun defaultHendelseK9Ettersending(
+        søknadIdKey: String = "søknadId",
+        søknadId: UUID = UUID.randomUUID(),
+        journalpostId: String = "123456789",
+        søknadstype: String
+) = TopicEntry(
+        data = SøknadsHendelse(
+                metadata = defaultMetadata,
+                melding = mapOf(
+                        "$søknadIdKey" to "$søknadId",
+                        "mottatt" to ZonedDateTime.now(),
+                        "søker" to mapOf(
+                                "fødselsnummer" to "1234567",
+                                "aktørId" to "123456"
+                        ),
+                        "søknadstype" to "$søknadstype"
                 ),
                 journalførtMelding = JournalfortMelding(
                         journalpostId = "$journalpostId"
