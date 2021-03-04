@@ -29,7 +29,7 @@ import java.util.concurrent.TimeUnit
 
 @EmbeddedKafka( // Setter opp og tilgjengligjør embeded kafka broker
         count = 3,
-        topics = [Topics.OMD_MELDING, Topics.K9_DITTNAV_VARSEL_BESKJED],
+        topics = [Topics.K9_ETTERSENDING, Topics.K9_DITTNAV_VARSEL_BESKJED],
         bootstrapServersProperty = "spring.kafka.bootstrap-servers" // Setter bootstrap-servers for consumer og producer.
 )
 @ExtendWith(SpringExtension::class)
