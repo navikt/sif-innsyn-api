@@ -62,7 +62,7 @@ fun defaultHendelseOmsorgsdagerMelding(
 
 
 fun defaultHendelseK9Ettersending(
-        søknadIdKey: String = "søknadId",
+        søknadIdKey: String = "soknadId",
         søknadId: UUID = UUID.randomUUID(),
         journalpostId: String = "123456789",
         søknadstype: String

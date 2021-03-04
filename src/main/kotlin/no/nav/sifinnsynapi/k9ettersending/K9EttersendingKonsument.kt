@@ -2,7 +2,8 @@ package no.nav.sifinnsynapi.k9ettersending
 
 import no.nav.sifinnsynapi.common.Metadata
 import no.nav.sifinnsynapi.common.TopicEntry
-import no.nav.sifinnsynapi.dittnav.*
+import no.nav.sifinnsynapi.dittnav.DittnavService
+import no.nav.sifinnsynapi.dittnav.K9Beskjed
 import no.nav.sifinnsynapi.k9ettersending.K9EttersendingKonsument.Companion.Keys.FØDSELSNUMMER
 import no.nav.sifinnsynapi.k9ettersending.K9EttersendingKonsument.Companion.Keys.SØKER
 import no.nav.sifinnsynapi.k9ettersending.K9EttersendingKonsument.Companion.Keys.SØKNAD_ID
@@ -27,7 +28,7 @@ class K9EttersendingKonsument(
         private val YTELSE = "ettersending"
 
         internal object Keys {
-            const val SØKNAD_ID = "søknadId"
+            const val SØKNAD_ID = "soknadId"
             const val SØKER = "søker"
             const val FØDSELSNUMMER = "fødselsnummer"
             const val SØKNAD_TYPE = "søknadstype"
