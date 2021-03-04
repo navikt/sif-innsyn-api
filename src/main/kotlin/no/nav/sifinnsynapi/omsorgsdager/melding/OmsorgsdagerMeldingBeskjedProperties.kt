@@ -1,4 +1,4 @@
-package no.nav.sifinnsynapi.dittnav
+package no.nav.sifinnsynapi.omsorgsdager.melding
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.ConstructorBinding

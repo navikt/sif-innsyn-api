@@ -1,6 +1,6 @@
 @file:Suppress("ConfigurationProperties")
 
-package no.nav.sifinnsynapi.dittnav
+package no.nav.sifinnsynapi.k9ettersending
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.ConstructorBinding

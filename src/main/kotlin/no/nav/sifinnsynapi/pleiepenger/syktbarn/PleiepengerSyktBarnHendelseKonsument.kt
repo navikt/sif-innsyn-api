@@ -3,7 +3,6 @@ package no.nav.sifinnsynapi.pleiepenger.syktbarn
 import no.nav.sifinnsynapi.common.*
 import no.nav.sifinnsynapi.dittnav.DittnavService
 import no.nav.sifinnsynapi.dittnav.K9Beskjed
-import no.nav.sifinnsynapi.dittnav.PleiepengerDittnavBeskjedProperties
 import no.nav.sifinnsynapi.pleiepenger.syktbarn.PleiepengerSyktBarnHendelseKonsument.Companion.Keys.AKTØR_ID
 import no.nav.sifinnsynapi.pleiepenger.syktbarn.PleiepengerSyktBarnHendelseKonsument.Companion.Keys.FØDSELSNUMMER
 import no.nav.sifinnsynapi.pleiepenger.syktbarn.PleiepengerSyktBarnHendelseKonsument.Companion.Keys.MOTTATT

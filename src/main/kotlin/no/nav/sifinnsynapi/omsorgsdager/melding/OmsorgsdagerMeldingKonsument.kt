@@ -2,7 +2,8 @@ package no.nav.sifinnsynapi.omsorgsdager.melding
 
 import no.nav.sifinnsynapi.common.Metadata
 import no.nav.sifinnsynapi.common.TopicEntry
-import no.nav.sifinnsynapi.dittnav.*
+import no.nav.sifinnsynapi.dittnav.DittnavService
+import no.nav.sifinnsynapi.dittnav.K9Beskjed
 import no.nav.sifinnsynapi.omsorgsdager.melding.OmsorgsdagerMeldingKonsument.Companion.Keys.FØDSELSNUMMER
 import no.nav.sifinnsynapi.omsorgsdager.melding.OmsorgsdagerMeldingKonsument.Companion.Keys.MELDING_TYPE
 import no.nav.sifinnsynapi.omsorgsdager.melding.OmsorgsdagerMeldingKonsument.Companion.Keys.SØKER
