@@ -69,7 +69,7 @@ class K9EttersendingKonsumentTest {
 
         // forvent at dittNav melding blir sendt
         await.atMost(60, TimeUnit.SECONDS).untilAsserted {
-            val lesMelding = dittNavConsumer.lesMelding(hendelse.data.melding["søknadId"] as String)
+            val lesMelding = dittNavConsumer.lesMelding(hendelse.data.melding["soknadId"] as String)
             log.info("----> dittnav melding: {}", lesMelding)
             assertThat(lesMelding).isNotEmpty()
             assertTrue(lesMelding.toString().contains(søknadstype))
@@ -84,7 +84,7 @@ class K9EttersendingKonsumentTest {
 
         // forvent at dittNav melding blir sendt
         await.atMost(60, TimeUnit.SECONDS).untilAsserted {
-            val lesMelding = dittNavConsumer.lesMelding(hendelse.data.melding["søknadId"] as String)
+            val lesMelding = dittNavConsumer.lesMelding(hendelse.data.melding["soknadId"] as String)
             log.info("----> dittnav melding: {}", lesMelding)
             assertThat(lesMelding).isNotEmpty()
             assertTrue(lesMelding.toString().contains(søknadstype))
