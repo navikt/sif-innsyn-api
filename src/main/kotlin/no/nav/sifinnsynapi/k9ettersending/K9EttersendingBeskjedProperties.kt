@@ -2,15 +2,10 @@
 
 package no.nav.sifinnsynapi.k9ettersending
 
+import no.nav.sifinnsynapi.dittnav.K9BeskjedProperties
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.ConstructorBinding
 import org.springframework.validation.annotation.Validated
-
-interface K9EttersendingBeskjedProperties{
-    val tekst: String
-    val dagerSynlig: Long
-    val link: String?
-}
 
 @ConstructorBinding
 @ConfigurationProperties(prefix = "no.nav.dittnav.k9-ettersending-pp.beskjed")
@@ -19,7 +14,7 @@ data class K9EttersendingPPBeskjedProperties (
         override val tekst: String,
         override val dagerSynlig: Long,
         override val link: String? = null
-) : K9EttersendingBeskjedProperties
+) : K9BeskjedProperties
 
 
 @ConstructorBinding
@@ -29,4 +24,4 @@ data class K9EttersendingOMSBeskjedProperties (
         override val tekst: String,
         override val dagerSynlig: Long,
         override val link: String? = null
-) : K9EttersendingBeskjedProperties
+) : K9BeskjedProperties

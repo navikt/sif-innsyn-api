@@ -4,6 +4,7 @@ import no.nav.sifinnsynapi.common.Metadata
 import no.nav.sifinnsynapi.common.TopicEntry
 import no.nav.sifinnsynapi.dittnav.DittnavService
 import no.nav.sifinnsynapi.dittnav.K9Beskjed
+import no.nav.sifinnsynapi.dittnav.K9BeskjedProperties
 import no.nav.sifinnsynapi.k9ettersending.K9EttersendingKonsument.Companion.Keys.FØDSELSNUMMER
 import no.nav.sifinnsynapi.k9ettersending.K9EttersendingKonsument.Companion.Keys.SØKER
 import no.nav.sifinnsynapi.k9ettersending.K9EttersendingKonsument.Companion.Keys.SØKNAD_ID
@@ -73,7 +74,7 @@ class K9EttersendingKonsument(
     }
 }
 
-private fun JSONObject.somK9Beskjed(metadata: Metadata, beskjedProperties: K9EttersendingBeskjedProperties): K9Beskjed {
+private fun JSONObject.somK9Beskjed(metadata: Metadata, beskjedProperties: K9BeskjedProperties): K9Beskjed {
     val søknadId = getString(SØKNAD_ID)
     return K9Beskjed(
             metadata = metadata,

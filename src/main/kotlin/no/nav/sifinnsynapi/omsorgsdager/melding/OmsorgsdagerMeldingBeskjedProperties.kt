@@ -1,5 +1,6 @@
 package no.nav.sifinnsynapi.omsorgsdager.melding
 
+import no.nav.sifinnsynapi.dittnav.K9BeskjedProperties
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.ConstructorBinding
 import org.springframework.validation.annotation.Validated
@@ -11,7 +12,7 @@ data class OmsorgsdagerMeldingKoronaBeskjedProperties (
         override val tekst: String,
         override val dagerSynlig: Long,
         override val link: String? = null
-) : OmsorgsdagerMeldingBeskjedProperties
+) : K9BeskjedProperties
 
 @ConstructorBinding
 @ConfigurationProperties(prefix = "no.nav.dittnav.omsorgsdager-melding-overfore.beskjed")
@@ -20,7 +21,7 @@ data class OmsorgsdagerMeldingOverforeBeskjedProperties (
         override val tekst: String,
         override val dagerSynlig: Long,
         override val link: String? = null
-) : OmsorgsdagerMeldingBeskjedProperties
+) : K9BeskjedProperties
 
 @ConstructorBinding
 @ConfigurationProperties(prefix = "no.nav.dittnav.omsorgsdager-melding-fordele.beskjed")
@@ -29,10 +30,4 @@ data class OmsorgsdagerMeldingFordeleBeskjedProperties (
         override val tekst: String,
         override val dagerSynlig: Long,
         override val link: String? = null
-) : OmsorgsdagerMeldingBeskjedProperties
-
-interface OmsorgsdagerMeldingBeskjedProperties{
-    val tekst: String
-    val dagerSynlig: Long
-    val link: String?
-}
+) : K9BeskjedProperties

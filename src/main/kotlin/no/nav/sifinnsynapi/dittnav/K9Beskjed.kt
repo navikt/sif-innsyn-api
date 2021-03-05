@@ -15,3 +15,9 @@ data class K9Beskjed(
         return "K9Beskjed(metadata=$metadata, grupperingsId='$grupperingsId', tekst='$tekst', link=$link, dagerSynlig=$dagerSynlig, eventId='$eventId')"
     }
 }
+
+interface K9BeskjedProperties{
+    val tekst: String
+    val dagerSynlig: Long
+    val link: String?
+}
