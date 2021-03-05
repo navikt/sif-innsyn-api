@@ -1,14 +1,14 @@
-package no.nav.sifinnsynapi.k9ettersending
+package no.nav.sifinnsynapi.konsumenter.k9ettersending
 
 import no.nav.sifinnsynapi.common.Metadata
 import no.nav.sifinnsynapi.common.TopicEntry
 import no.nav.sifinnsynapi.dittnav.DittnavService
 import no.nav.sifinnsynapi.dittnav.K9Beskjed
 import no.nav.sifinnsynapi.dittnav.K9BeskjedProperties
-import no.nav.sifinnsynapi.k9ettersending.K9EttersendingKonsument.Companion.Keys.FØDSELSNUMMER
-import no.nav.sifinnsynapi.k9ettersending.K9EttersendingKonsument.Companion.Keys.SØKER
-import no.nav.sifinnsynapi.k9ettersending.K9EttersendingKonsument.Companion.Keys.SØKNAD_ID
-import no.nav.sifinnsynapi.k9ettersending.K9EttersendingKonsument.Companion.Keys.SØKNAD_TYPE
+import no.nav.sifinnsynapi.konsumenter.k9ettersending.K9EttersendingKonsument.Companion.Keys.FØDSELSNUMMER
+import no.nav.sifinnsynapi.konsumenter.k9ettersending.K9EttersendingKonsument.Companion.Keys.SØKER
+import no.nav.sifinnsynapi.konsumenter.k9ettersending.K9EttersendingKonsument.Companion.Keys.SØKNAD_ID
+import no.nav.sifinnsynapi.konsumenter.k9ettersending.K9EttersendingKonsument.Companion.Keys.SØKNAD_TYPE
 import org.json.JSONObject
 import org.slf4j.LoggerFactory
 import org.springframework.kafka.annotation.KafkaListener

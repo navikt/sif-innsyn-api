@@ -1,6 +1,6 @@
 @file:Suppress("ConfigurationProperties")
 
-package no.nav.sifinnsynapi.k9ettersending
+package no.nav.sifinnsynapi.konsumenter.k9ettersending
 
 import no.nav.sifinnsynapi.dittnav.K9BeskjedProperties
 import org.springframework.boot.context.properties.ConfigurationProperties

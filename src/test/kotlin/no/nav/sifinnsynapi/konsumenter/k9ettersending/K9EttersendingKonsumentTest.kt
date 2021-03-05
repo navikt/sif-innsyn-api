@@ -1,4 +1,4 @@
-package no.nav.sifinnsynapi.k9ettersending
+package no.nav.sifinnsynapi.konsumenter.k9ettersending
 
 import assertk.assertThat
 import assertk.assertions.isNotEmpty
