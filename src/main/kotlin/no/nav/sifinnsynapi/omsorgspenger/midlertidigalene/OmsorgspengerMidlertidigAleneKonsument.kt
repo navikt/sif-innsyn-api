@@ -4,7 +4,6 @@ import no.nav.sifinnsynapi.common.Metadata
 import no.nav.sifinnsynapi.common.TopicEntry
 import no.nav.sifinnsynapi.dittnav.DittnavService
 import no.nav.sifinnsynapi.dittnav.K9Beskjed
-import no.nav.sifinnsynapi.dittnav.OmsorgspengerMidlertidigAleneBeskjedProperties
 import no.nav.sifinnsynapi.omsorgspenger.midlertidigalene.OmsorgspengerMidlertidigAleneKonsument.Companion.Keys.FØDSELSNUMMER
 import no.nav.sifinnsynapi.omsorgspenger.midlertidigalene.OmsorgspengerMidlertidigAleneKonsument.Companion.Keys.SØKER
 import no.nav.sifinnsynapi.omsorgspenger.midlertidigalene.OmsorgspengerMidlertidigAleneKonsument.Companion.Keys.SØKNAD_ID

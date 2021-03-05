@@ -1,13 +1,13 @@
-package no.nav.sifinnsynapi.dittnav
+package no.nav.sifinnsynapi.omsorgspenger.utbetaling.snf
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.ConstructorBinding
 import org.springframework.validation.annotation.Validated
 
 @ConstructorBinding
-@ConfigurationProperties(prefix = "no.nav.dittnav.omsorgspengerutbetaling-arbeidstaker.beskjed")
+@ConfigurationProperties(prefix = "no.nav.dittnav.omsorgspengerutbetaling-snf.beskjed")
 @Validated
-data class OmsorgspengerutbetalingArbeidstakerBeskjedProperties (
+data class OmsorgspengerutbetalingSNFBeskjedProperties (
         val tekst: String,
         val dagerSynlig: Long,
         val link: String? = null
