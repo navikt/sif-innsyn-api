@@ -21,29 +21,16 @@
 
         <section id="informasjon">
             <h1>Til {{arbeidsgiver_navn}}</h1>
-            <p>
-                NAV har mottatt følgende opplysninger:<br /><br />
-                <strong>{{arbeidstaker_navn}} er ansatt hos {{arbeidsgiver_navn}}</strong><br /><br />
-                Søker om pleiepenger for perioden:<br />
-            </p>
+            <p><strong>{{arbeidstaker_navn}}</strong> har søkt om pleiepenger for perioden</p>
             <ul>
                 <li>
-                    {{periode.fom}} - {{periode.tom}}
+                   <strong>{{periode.fom}} - {{periode.tom}}</strong>
                 </li>
             </ul>
 
-            <div class="alertstripe-info">
-                <div class="alertstripe-content">
-                    <div class="alertstripe-info-ikon">
-                        <img src="{{image "InformasjonIkon.png" }}" alt="ikon" />
-                    </div>
-                    <div class="alertstripe-info-tekst">
-                        <p>Vi ber om at inntektsmeldingen blir sendt til oss så snart som mulig.</p>
-                        <p><strong>Det er viktig at du krysser av for at inntektsmeldingen gjelder pleiepenger</strong>.</p>
-                        <p>Hvis inntektsmeldingen allerede er sendt, kan du se bort fra denne meldingen.</p>
-                    </div>
-                </div>
-            </div>
+            <p>I den forbindelse ber vi om at inntektsmeldingen blir sendt til oss så snart som mulig. Husk å krysse
+                av for at inntektsmeldingen gjelder pleiepenger. Hvis inntektsmeldingen allerede er sendt, kan du se
+                bort fra denne meldingen.</p>
         </section>
 
 
@@ -55,11 +42,14 @@
             </p>
             <p>
                 Fyll inn periode som samsvarer med arbeidstakers søknad.
-                <strong>{{arbeidstaker_navn}}</strong> har søkt pleiepenger for perioden <strong>{{periode.fom}} til {{periode.tom}}</strong>.
-                Hvis datoene ikke stemmer med hva dere har avtalt, må dere avklare dette dere imellom før du sender inntektsmeldingen.
+                <strong>{{arbeidstaker_navn}}</strong> har søkt pleiepenger for perioden <strong>{{periode.fom}} til
+                    {{periode.tom}}</strong>.
+                Hvis datoene ikke stemmer med hva dere har avtalt, må dere avklare dette dere imellom før du sender
+                inntektsmeldingen.
             </p>
             <p>
-                Du får mer informasjon om inntektsmeldingen på <a href="https://www.nav.no/inntektsmelding">nav.no/inntektsmelding</a>
+                Du får mer informasjon om inntektsmeldingen på <a
+                    href="https://www.nav.no/inntektsmelding">nav.no/inntektsmelding</a>
             </p>
         </section>
     </div>
