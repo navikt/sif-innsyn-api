@@ -3,7 +3,6 @@ package no.nav.sifinnsynapi.soknad
 import no.nav.security.token.support.core.api.Protected
 import no.nav.security.token.support.core.api.ProtectedWithClaims
 import no.nav.sifinnsynapi.Routes.SØKNAD
-import no.nav.sifinnsynapi.dokument.DokumentService
 import org.slf4j.LoggerFactory
 import org.springframework.core.io.ByteArrayResource
 import org.springframework.core.io.Resource
@@ -11,18 +10,13 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus.OK
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.ResponseStatus
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import java.util.*
-
 
 @RestController
 @ProtectedWithClaims(issuer = "selvbetjening", claimMap = ["acr=Level4"])
 class SøknadController(
-        private val søknadService: SøknadService,
-        private val dokumentService: DokumentService
+        private val søknadService: SøknadService
 ) {
     companion object {
         val logger = LoggerFactory.getLogger(SøknadController::class.java)
@@ -46,18 +40,15 @@ class SøknadController(
         return søknadService.hentSøknad(søknadId)
     }
 
-    @GetMapping("$SØKNAD/{søknadId}/dokument", produces = [MediaType.APPLICATION_OCTET_STREAM_VALUE])
+    @GetMapping("$SØKNAD/{søknadId}/arbeidsgivermelding", produces = [MediaType.APPLICATION_OCTET_STREAM_VALUE])
     @Protected
     @ResponseStatus(OK)
-    fun hentDokument(@PathVariable søknadId: UUID): ResponseEntity<Resource> {
-        logger.info("Forsøker å hente dokument for søknad med id : {}...", søknadId)
-        val dokumentDAO = dokumentService.hentDokument(søknadId)
-        val resource = ByteArrayResource(dokumentDAO!!.innhold)
+    fun hentDokument(@PathVariable søknadId: UUID, @RequestParam organisasjonsnummer: String): ResponseEntity<Resource> {
+        val resource = ByteArrayResource(søknadService.hentArbeidsgiverMeldingFil(søknadId, organisasjonsnummer))
 
         return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "filename=søknad.pdf")
-                .contentLength(dokumentDAO.innhold.size.toLong())
+                .header(HttpHeaders.CONTENT_DISPOSITION, "filename=melding_til_arbeidsgiver.pdf")
+                .contentLength(resource.byteArray.size.toLong())
                 .body(resource)
-
     }
 }

@@ -7,24 +7,26 @@ import com.github.jknack.handlebars.context.MapValueResolver
 import com.github.jknack.handlebars.io.ClassPathTemplateLoader
 import com.openhtmltopdf.outputdevice.helper.BaseRendererBuilder
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder
+import no.nav.sifinnsynapi.soknad.PleiepengerArbeidsgiverMelding
+import org.springframework.core.io.ClassPathResource
 import org.springframework.stereotype.Service
-import org.springframework.util.ResourceUtils
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
-import java.time.LocalDate
 import java.time.ZoneId
+import java.time.ZoneOffset.UTC
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 
 @Service
-internal class PdfV1GeneratorService {
+class PdfV1GeneratorService {
     private companion object {
         private const val ROOT = "handlebars"
         private const val SOKNAD = "informasjonsbrev-til-arbeidsgiver"
 
-        private val REGULAR_FONT = ResourceUtils.getFile("classpath:$ROOT/fonts/SourceSansPro-Regular.ttf").readBytes()
-        private val BOLD_FONT = ResourceUtils.getFile("classpath:$ROOT/fonts/SourceSansPro-Bold.ttf").readBytes()
-        private val ITALIC_FONT = ResourceUtils.getFile("classpath:$ROOT/fonts/SourceSansPro-Italic.ttf").readBytes()
+        private val REGULAR_FONT = ClassPathResource("$ROOT/fonts/SourceSansPro-Regular.ttf").inputStream.readAllBytes()
+        private val BOLD_FONT = ClassPathResource("$ROOT/fonts/SourceSansPro-Bold.ttf").inputStream.readAllBytes()
+        private val ITALIC_FONT = ClassPathResource("$ROOT/fonts/SourceSansPro-Italic.ttf").inputStream.readAllBytes()
 
 
         private val images = loadImages()
@@ -60,7 +62,7 @@ internal class PdfV1GeneratorService {
         private val DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm").withZone(ZONE_ID)
 
         private fun loadPng(name: String): String {
-            val bytes = ResourceUtils.getFile("classpath:$ROOT/images/$name.png").readBytes()
+            val bytes = ClassPathResource("$ROOT/images/$name.png").inputStream.readAllBytes()
             val base64string = Base64.getEncoder().encodeToString(bytes)
             return "data:image/png;base64,$base64string"
         }
@@ -76,18 +78,19 @@ internal class PdfV1GeneratorService {
     }
 
     internal fun generateSoknadOppsummeringPdf(
-        melding: String
+        melding: PleiepengerArbeidsgiverMelding
     ): ByteArray {
         soknadTemplate.apply(
             Context
                 .newBuilder(
                     mapOf(
-                        "arbeidsgiver_navn" to "snill torpedo".capitalize(),
-                        "arbeidstaker_navn" to "Navn Navnesen".capitalize(),
+                        "arbeidsgiver_navn" to melding.arbeidsgivernavn?.capitalize(),
+                        "arbeidstaker_navn" to melding.arbeidstakernavn.capitalize(),
                         "periode" to mapOf(
-                            "fom" to DATE_FORMATTER.format(LocalDate.now().minusDays(7)),
-                            "tom" to DATE_FORMATTER.format(LocalDate.now())
-                        )
+                            "fom" to DATE_FORMATTER.format(melding.søknadsperiode.fraOgMed),
+                            "tom" to DATE_FORMATTER.format(melding.søknadsperiode.tilOgMed)
+                        ),
+                        "tidspunkt" to DATE_TIME_FORMATTER.format(ZonedDateTime.now(UTC))
                     )
                 )
                 .resolver(MapValueResolver.INSTANCE)
