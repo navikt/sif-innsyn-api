@@ -4,19 +4,24 @@
         size: A4 portrait;
         margin: 1cm 0.3cm 0.5cm;
         padding-bottom: 1cm;
+
         @bottom-left {
             content: element(footer);
         }
     }
-    @page:first {
+
+    @page: first {
         margin-top: 0;
+
         @top-left {
             content: element(header);
         }
     }
+
     #pagenumber:before {
         content: counter(page);
     }
+
     #pagecount:before {
         content: counter(pages)
     }
@@ -32,6 +37,7 @@
         height: 3cm;
         width: 100%;
     }
+
     #header .navlogo {
         text-align: center;
     }
@@ -43,11 +49,12 @@
         margin-top: -25px;
         padding-left: 0.6cm;
     }
+
     #footer .sidetall {
         float: right;
     }
 
-   .nokkelinfo {
+    .nokkelinfo {
         font-size: 14px;
         margin-bottom: 1cm;
         margin-left: .7cm;
@@ -61,36 +68,36 @@
 
     /* Global styling */
     body {
-        color: #000; /* #3E3832;*/
+        color: #000;
+        /* #3E3832;*/
         font-family: "Source Sans Pro";
     }
+
     img {
-        image-rendering: pixelated; /* Required for PDF/A-compliance */
+        image-rendering: pixelated;
+        /* Required for PDF/A-compliance */
     }
+
     h1 {
         font-weight: 700;
         font-style: normal;
         font-size: 20px;
         padding-bottom: .5cm;
     }
+
     h2 {
-       width: 100%;
-       border-bottom: 1px solid #59514B;
-       padding-bottom: .125cm;
-       font-size: 20px;
+        width: 100%;
+        padding-bottom: .125cm;
+        font-size: 18px;
     }
-    h3 {
-        font-weight: 700;
-        font-style: normal;
-        font-size: 14px;
-        margin-top: 5px;
-        margin-bottom: .5cm;
-    }
-    p, li {
-        margin-top: 10px;
-        margin-bottom: .5cm;
+
+    p,
+    li {
+        margin-top: .25cm;
+        margin-bottom: .25cm;
         font-size: 14px;
     }
+
     hr {
         display: block;
         height: 1px;
@@ -99,6 +106,7 @@
         margin: 1em 0;
         padding: 0;
     }
+
     section {
         margin: 1.25cm 0 .25cm 0;
     }
@@ -108,21 +116,27 @@
         margin-bottom: 1cm;
         background-size: 1cm;
         border: #5690a2 solid 1px;
-        padding: 1cm 1cm 1cm 1cm;
+        padding: .5cm .5cm .5cm .5cm;
     }
+
+    .alertstripe-content {
+        display: table-row;
+    }
+
     .alertstripe-info-ikon {
-        width: auto;
-        height: 200px;
-        display: block;
-        float: left;
+        width: 1.5cm;
+        display: table-cell;
         margin-right: 0.75cm;
     }
+
     .alertstripe-info-tekst {
-        margin-top: -15px;
+        display: table-cell;
         max-width: 37.5rem;
         font-size: 16px;
-        line-height: 1cm;
         font-weight: 400;
     }
 
+    .alertstripe-info-tekst p {
+        margin: .25cm 0;
+    }
 </style>
