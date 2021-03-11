@@ -12,7 +12,7 @@ class ArbeidsgiverMeldingPDFGeneratorTest {
 
     @Test
     fun `Test generering av pdf for informasjon til arbeidsgiver`() {
-        var id = "1-full-søknad"
+        var id = "1-informasjon-til-arbeidsgiver"
         var pdf = generator.genererPDF(
             melding = PleiepengerArbeidsgiverMelding(
                 arbeidstakernavn = "Navn Navnesen",
