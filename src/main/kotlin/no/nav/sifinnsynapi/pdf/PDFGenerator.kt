@@ -20,7 +20,7 @@ import java.util.*
  *
  * Bruk: Implementer denne klassen med type T som ønskes generert på pdf.
  *
- * @property templateNavn er navnet på på handlebars template-filen.
+ * @property templateNavn er navnet på handlebars template-filen.
  * Altså har du en handlebars template fil ved navn søknad.hbs, skal `templateNavn` være søknad.
  *
  * @property bilder laster inn bilder man ønsker skal kunne brukes i templaten.
