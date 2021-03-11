@@ -24,13 +24,7 @@ class ArbeidsgiverMeldingPDFGenerator : PDFGenerator<PleiepengerArbeidsgiverMeld
     )
 
     override val bilder: Map<String, String>
-        get() = mapOf(
-            "Checkbox_off.png" to loadPng("Checkbox_off"),
-            "Checkbox_on.png" to loadPng("Checkbox_on"),
-            "Hjelp.png" to loadPng("Hjelp"),
-            "Navlogo.png" to loadPng("Navlogo"),
-            "Fritekst.png" to loadPng("Fritekst")
-        )
+        get() = mapOf()
 }
 data class PleiepengerArbeidsgiverMelding(
     val arbeidstakernavn: String,
