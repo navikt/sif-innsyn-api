@@ -1,9 +1,7 @@
 package no.nav.sifinnsynapi.pleiepenger.syktbarn
 
 import no.nav.sifinnsynapi.http.PleiepengesøknadMedOrganisasjonsnummerIkkeFunnetException
-import no.nav.sifinnsynapi.soknad.PleiepengerArbeidsgiverMelding
 import no.nav.sifinnsynapi.soknad.SøknadDAO
-import no.nav.sifinnsynapi.soknad.SøknadsPeriode
 import org.json.JSONObject
 import java.time.LocalDate
 

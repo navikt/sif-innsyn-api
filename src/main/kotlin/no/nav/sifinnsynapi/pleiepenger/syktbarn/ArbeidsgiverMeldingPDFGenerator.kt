@@ -1,8 +1,8 @@
 package no.nav.sifinnsynapi.pleiepenger.syktbarn
 
 import no.nav.sifinnsynapi.pdf.PDFGenerator
-import no.nav.sifinnsynapi.soknad.PleiepengerArbeidsgiverMelding
 import org.springframework.stereotype.Service
+import java.time.LocalDate
 import java.time.ZoneOffset.UTC
 import java.time.ZonedDateTime
 
@@ -32,4 +32,14 @@ class ArbeidsgiverMeldingPDFGenerator : PDFGenerator<PleiepengerArbeidsgiverMeld
             "Fritekst.png" to loadPng("Fritekst")
         )
 }
+data class PleiepengerArbeidsgiverMelding(
+    val arbeidstakernavn: String,
+    val arbeidsgivernavn: String? = null,
+    val søknadsperiode: SøknadsPeriode
+)
+
+data class SøknadsPeriode(
+    val fraOgMed: LocalDate,
+    val tilOgMed: LocalDate
+)
 

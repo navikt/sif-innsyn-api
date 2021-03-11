@@ -12,7 +12,6 @@ import no.nav.sifinnsynapi.pleiepenger.syktbarn.PleiepengerJSONObjectUtils.finnO
 import no.nav.sifinnsynapi.pleiepenger.syktbarn.PleiepengerJSONObjectUtils.tilPleiepengerAreidsgivermelding
 import org.json.JSONObject
 import org.springframework.stereotype.Service
-import java.time.LocalDate
 import java.util.*
 
 @Service
@@ -68,7 +67,11 @@ class SøknadService(
                 val pleiepengesøknadJson = JSONObject(søknad.søknad)
                 val funnetOrg: JSONObject = pleiepengesøknadJson.finnOrganisasjon(søknad, organisasjonsnummer)
 
-                arbeidsgiverMeldingPDFGenerator.genererPDF(pleiepengesøknadJson.tilPleiepengerAreidsgivermelding(funnetOrg))
+                arbeidsgiverMeldingPDFGenerator.genererPDF(
+                    pleiepengesøknadJson.tilPleiepengerAreidsgivermelding(
+                        funnetOrg
+                    )
+                )
             }
 
             else -> throw NotSupportedArbeidsgiverMeldingException(søknad.id.toString(), søknad.søknadstype)
@@ -76,13 +79,3 @@ class SøknadService(
     }
 }
 
-data class PleiepengerArbeidsgiverMelding(
-    val arbeidstakernavn: String,
-    val arbeidsgivernavn: String? = null,
-    val søknadsperiode: SøknadsPeriode
-)
-
-data class SøknadsPeriode(
-    val fraOgMed: LocalDate,
-    val tilOgMed: LocalDate
-)

@@ -1,7 +1,5 @@
 package no.nav.sifinnsynapi.pleiepenger.syktbarn
 
-import no.nav.sifinnsynapi.soknad.PleiepengerArbeidsgiverMelding
-import no.nav.sifinnsynapi.soknad.SøknadsPeriode
 import org.junit.jupiter.api.Test
 import java.io.File
 import java.time.LocalDate
@@ -13,7 +11,7 @@ class ArbeidsgiverMeldingPDFGeneratorTest {
     }
 
     @Test
-    fun name() {
+    fun `Test generering av pdf for informasjon til arbeidsgiver`() {
         var id = "1-full-søknad"
         var pdf = generator.genererPDF(
             melding = PleiepengerArbeidsgiverMelding(
