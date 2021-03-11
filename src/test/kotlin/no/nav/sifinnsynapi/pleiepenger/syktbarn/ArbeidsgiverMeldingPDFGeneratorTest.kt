@@ -6,16 +6,16 @@ import org.junit.jupiter.api.Test
 import java.io.File
 import java.time.LocalDate
 
-class PdfV1GeneratorServiceTest {
+class ArbeidsgiverMeldingPDFGeneratorTest {
 
     private companion object {
-        private val generator = PdfV1GeneratorService()
+        private val generator = ArbeidsgiverMeldingPDFGenerator()
     }
 
     @Test
     fun name() {
         var id = "1-full-søknad"
-        var pdf = generator.generateSoknadOppsummeringPdf(
+        var pdf = generator.genererPDF(
             melding = PleiepengerArbeidsgiverMelding(
                 arbeidstakernavn = "Navn Navnesen",
                 arbeidsgivernavn = "Snill Torpedo",
