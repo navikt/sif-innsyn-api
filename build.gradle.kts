@@ -26,6 +26,8 @@ val tokenValidationVersion by extra("1.3.2")
 val springCloudVersion by extra("Hoxton.SR6")
 val retryVersion by extra("1.3.0")
 val zalandoVersion by extra("0.26.2")
+val openhtmltopdfVersion = "1.0.6"
+val handlebarsVersion = "4.1.2"
 
 ext["okhttp3.version"] = "4.9.0"
 
@@ -101,6 +103,11 @@ dependencies {
 
     // https://github.com/spring-projects/spring-kafka/issues/1604
     testImplementation("org.scala-lang:scala-library:2.12.11")
+
+    // PDF
+    implementation("com.openhtmltopdf:openhtmltopdf-pdfbox:$openhtmltopdfVersion")
+    implementation("com.openhtmltopdf:openhtmltopdf-slf4j:$openhtmltopdfVersion")
+    implementation("com.github.jknack:handlebars:$handlebarsVersion")
 
     // Diverse
     implementation("org.json:json:20201115")
