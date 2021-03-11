@@ -43,7 +43,7 @@ class SøknadController(
     @GetMapping("$SØKNAD/{søknadId}/arbeidsgivermelding", produces = [MediaType.APPLICATION_OCTET_STREAM_VALUE])
     @Protected
     @ResponseStatus(OK)
-    fun hentDokument(@PathVariable søknadId: UUID, @RequestParam organisasjonsnummer: String): ResponseEntity<Resource> {
+    fun lastNedArbeidsgivermelding(@PathVariable søknadId: UUID, @RequestParam organisasjonsnummer: String): ResponseEntity<Resource> {
         val resource = ByteArrayResource(søknadService.hentArbeidsgiverMeldingFil(søknadId, organisasjonsnummer))
 
         return ResponseEntity.ok()
