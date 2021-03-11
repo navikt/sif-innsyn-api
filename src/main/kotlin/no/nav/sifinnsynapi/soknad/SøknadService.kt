@@ -17,7 +17,7 @@ import java.util.*
 @Service
 class SøknadService(
     private val repo: SøknadRepository,
-    val oppslagsService: OppslagsService,
+    private val oppslagsService: OppslagsService,
     private val pdfV1GeneratorService: PdfV1GeneratorService
 ) {
 

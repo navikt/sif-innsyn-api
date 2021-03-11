@@ -72,8 +72,7 @@ class PdfV1GeneratorService {
             "Checkbox_on.png" to loadPng("Checkbox_on"),
             "Hjelp.png" to loadPng("Hjelp"),
             "Navlogo.png" to loadPng("Navlogo"),
-            "Fritekst.png" to loadPng("Fritekst"),
-            "InformasjonIkon.png" to loadPng("InformationFilled-24px")
+            "Fritekst.png" to loadPng("Fritekst")
         )
     }
 
