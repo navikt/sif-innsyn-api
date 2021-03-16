@@ -33,7 +33,7 @@ data class AktørId(@get:JsonValue var aktørId: String? = null) {
     }
 
     override fun toString(): String {
-        return javaClass.simpleName + " [aktørId=" + aktørId + "]"
+        return javaClass.simpleName + "[aktørId=******]"
     }
 
     companion object {
