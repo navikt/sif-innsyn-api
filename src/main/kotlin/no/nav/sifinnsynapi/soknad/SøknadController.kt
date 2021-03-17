@@ -43,11 +43,15 @@ class SøknadController(
     @GetMapping("$SØKNAD/{søknadId}/arbeidsgivermelding", produces = [MediaType.APPLICATION_OCTET_STREAM_VALUE])
     @Protected
     @ResponseStatus(OK)
-    fun lastNedArbeidsgivermelding(@PathVariable søknadId: UUID, @RequestParam organisasjonsnummer: String): ResponseEntity<Resource> {
+    fun lastNedArbeidsgivermelding(
+        @PathVariable søknadId: UUID,
+        @RequestParam organisasjonsnummer: String,
+        @RequestParam filnavn: String
+    ): ResponseEntity<Resource> {
         val resource = ByteArrayResource(søknadService.hentArbeidsgiverMeldingFil(søknadId, organisasjonsnummer))
 
         return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "filename=melding_til_arbeidsgiver.pdf")
+                .header(HttpHeaders.CONTENT_DISPOSITION, "filename=$filnavn.pdf")
                 .contentLength(resource.byteArray.size.toLong())
                 .body(resource)
     }
