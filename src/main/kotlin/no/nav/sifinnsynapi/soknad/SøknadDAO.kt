@@ -35,6 +35,6 @@ data class SøknadDAO(
         @Column(name = "behandlingsdato") val behandlingsdato: LocalDate? = null
 ) {
     override fun toString(): String {
-        return "SøknadDAO(id=$id, aktørId=$aktørId, fødselsnummer=$fødselsnummer, søknadstype=$søknadstype, status=$status, saksId=$saksId, journalpostId='$journalpostId', opprettet=$opprettet, endret=$endret, behandlingsdato=$behandlingsdato)"
+        return "SøknadDAO(id=$id, aktørId=*****, fødselsnummer=*****, søknadstype=$søknadstype, status=$status, saksId=$saksId, journalpostId='$journalpostId', opprettet=$opprettet, endret=$endret, behandlingsdato=$behandlingsdato)"
     }
 }

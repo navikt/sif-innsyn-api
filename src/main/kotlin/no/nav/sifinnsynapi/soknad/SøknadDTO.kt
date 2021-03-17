@@ -20,4 +20,8 @@ data class SøknadDTO @JsonCreator constructor(
         @JsonProperty("opprettet") @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX", timezone = "UTC") val opprettet: ZonedDateTime? = null,
         @JsonProperty("endret") @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss") val endret: LocalDateTime? = null,
         @JsonProperty("behandlingsdato") @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss") val behandlingsdato: LocalDate? = null
-)
+) {
+    override fun toString(): String {
+        return "SøknadDTO()"
+    }
+}
