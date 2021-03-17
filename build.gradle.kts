@@ -102,7 +102,7 @@ dependencies {
     testImplementation("org.springframework.kafka:spring-kafka-test")
 
     // https://github.com/spring-projects/spring-kafka/issues/1604
-    testImplementation("org.scala-lang:scala-library:2.12.11")
+    testImplementation("org.scala-lang:scala-library:2.13.5")
 
     // PDF
     implementation("com.openhtmltopdf:openhtmltopdf-pdfbox:$openhtmltopdfVersion")
