@@ -24,7 +24,7 @@ data class Søknad @JsonCreator constructor(
         @JsonProperty("søknad") val søknad: Map<String, Any>) {
 
     override fun toString(): String {
-        return "SøknadsHendelse(aktørId=$aktørId, fødselsnummer=$fødselsnummer, journalpostId='$journalpostId', saksnummer=$saksnummer, " +
+        return "SøknadsHendelse(aktørId=*****, fødselsnummer=*****, journalpostId='$journalpostId', saksnummer=$saksnummer, " +
                 "status=$status, søknadstype=$søknadstype, førsteBehandlingsdato=$førsteBehandlingsdato, mottattDato=$mottattDato)"
     }
 }
