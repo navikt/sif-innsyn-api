@@ -3,11 +3,11 @@ package no.nav.sifinnsynapi.pleiepenger.syktbarn
 import no.nav.sifinnsynapi.common.*
 import no.nav.sifinnsynapi.dittnav.DittnavService
 import no.nav.sifinnsynapi.dittnav.K9Beskjed
-import no.nav.sifinnsynapi.pleiepenger.syktbarn.PleiepengerSyktBarnHendelseKonsument.Companion.Keys.AKTØR_ID
-import no.nav.sifinnsynapi.pleiepenger.syktbarn.PleiepengerSyktBarnHendelseKonsument.Companion.Keys.FØDSELSNUMMER
-import no.nav.sifinnsynapi.pleiepenger.syktbarn.PleiepengerSyktBarnHendelseKonsument.Companion.Keys.MOTTATT
-import no.nav.sifinnsynapi.pleiepenger.syktbarn.PleiepengerSyktBarnHendelseKonsument.Companion.Keys.SØKER
-import no.nav.sifinnsynapi.pleiepenger.syktbarn.PleiepengerSyktBarnHendelseKonsument.Companion.Keys.SØKNAD_ID
+import no.nav.sifinnsynapi.pleiepenger.syktbarn.PleiepengersøknadKeysV1.AKTØR_ID
+import no.nav.sifinnsynapi.pleiepenger.syktbarn.PleiepengersøknadKeysV1.FØDSELSNUMMER
+import no.nav.sifinnsynapi.pleiepenger.syktbarn.PleiepengersøknadKeysV1.MOTTATT
+import no.nav.sifinnsynapi.pleiepenger.syktbarn.PleiepengersøknadKeysV1.SØKER
+import no.nav.sifinnsynapi.pleiepenger.syktbarn.PleiepengersøknadKeysV1.SØKNAD_ID
 import no.nav.sifinnsynapi.soknad.Søknad
 import no.nav.sifinnsynapi.soknad.SøknadDAO
 import no.nav.sifinnsynapi.soknad.SøknadRepository
@@ -32,14 +32,6 @@ class PleiepengerSyktBarnHendelseKonsument(
     companion object {
         private val logger = LoggerFactory.getLogger(PleiepengerSyktBarnHendelseKonsument::class.java)
         private val YTELSE = "'pleiepenger - sykt barn'"
-
-        internal object Keys {
-            const val SØKNAD_ID = "søknadId"
-            const val SØKER = "søker"
-            const val AKTØR_ID = "aktørId"
-            const val MOTTATT = "mottatt"
-            const val FØDSELSNUMMER = "fødselsnummer"
-        }
     }
 
     @Transactional

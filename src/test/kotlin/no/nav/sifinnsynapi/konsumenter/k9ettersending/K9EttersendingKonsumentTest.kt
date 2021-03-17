@@ -3,7 +3,7 @@ package no.nav.sifinnsynapi.konsumenter.k9ettersending
 import assertk.assertThat
 import assertk.assertions.isNotEmpty
 import com.fasterxml.jackson.databind.ObjectMapper
-import junit.framework.Assert.assertTrue
+import org.junit.Assert.assertTrue
 import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
 import no.nav.sifinnsynapi.config.Topics
 import no.nav.sifinnsynapi.dittnav.K9Beskjed

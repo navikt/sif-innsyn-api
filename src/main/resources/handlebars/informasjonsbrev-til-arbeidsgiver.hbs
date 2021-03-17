@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="NO">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Informasjonsbrev til Arbeidsgiver</title>
+    <meta name="subject" content="Informasjonsbrev til Arbeidsgiver" />
+    <meta name="author" content="nav.no" />
+    <meta name="description" content="Informasjonsbrev til Arbeidsgiver {{soknad_mottatt_dag}} {{ soknad_mottatt }}" />
+    <bookmarks>
+        <bookmark name="Informasjon" href="#informasjon" />
+        <bookmark name="Instruksjon" href="#instruksjon" />
+    </bookmarks>
+    {{#block 'style-common' }}
+    {{/block}}
+</head>
+
+<body>
+    <div class="innholdscontainer">
+        <span id="header"></span>
+
+        <section id="informasjon">
+            <h1>Til {{arbeidsgiver_navn}}</h1>
+            <p><strong>{{arbeidstaker_navn}}</strong> har søkt om pleiepenger for perioden</p>
+            <ul>
+                <li>
+                   <strong>{{periode.fom}} - {{periode.tom}}</strong>
+                </li>
+            </ul>
+
+            <p>I den forbindelse ber vi om at inntektsmeldingen blir sendt til oss så snart som mulig. Husk å krysse
+                av for at inntektsmeldingen gjelder pleiepenger. Hvis inntektsmeldingen allerede er sendt, kan du se
+                bort fra denne meldingen.</p>
+        </section>
+
+
+        <section id="instruksjon">
+            <h2>Slik sender du inntektsmeldingen</h2>
+            <p>
+                Inntektsmeldingen sendes fra arbeidsgivers eget lønns- og personalsystem, eller fra altinn.no. Meldingen
+                inneholder inntektsopplysninger og annen informasjon NAV må ha for å behandle søknaden.
+            </p>
+            <p>
+                Fyll inn periode som samsvarer med arbeidstakers søknad.
+                <strong>{{arbeidstaker_navn}}</strong> har søkt pleiepenger for perioden <strong>{{periode.fom}} til
+                    {{periode.tom}}</strong>.
+                Hvis datoene ikke stemmer med hva dere har avtalt, må dere avklare dette dere imellom før du sender
+                inntektsmeldingen.
+            </p>
+            <p>
+                Du får mer informasjon om inntektsmeldingen på <a
+                    href="https://www.nav.no/inntektsmelding">nav.no/inntektsmelding</a>
+            </p>
+        </section>
+    </div>
+
+    <!-- FOOTER -->
+    <p id="footer">
+        <span class="tidspunkt">{{ tidspunkt }}</span>
+        <span class="sidetall">side <span id="pagenumber"></span> av <span id="pagecount"></span></span>
+    </p>
+</body>
+
+</html>
