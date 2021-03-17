@@ -39,7 +39,7 @@ class OppslagsService(
 
     fun hentAktørId(): OppslagRespons? {
         val exchange = oppslagsKlient.getForEntity(søkerUrl.toUriString(), OppslagRespons::class.java)
-        logger.info("Fikk response {} fra oppslag: {}", exchange.statusCode, exchange.body)
+        logger.info("Fikk response {} fra oppslag", exchange.statusCode)
 
         return exchange.body
     }
@@ -63,4 +63,8 @@ class OppslagsService(
     }
 }
 
-data class OppslagRespons(@JsonProperty("aktør_id") val aktør_id: String)
+data class OppslagRespons(@JsonProperty("aktør_id") val aktør_id: String){
+    override fun toString(): String {
+        return "OppslagRespons(aktør_id='******')"
+    }
+}
