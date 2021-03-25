@@ -3,7 +3,6 @@ package no.nav.sifinnsynapi.konsumenter.k9ettersending
 import assertk.assertThat
 import assertk.assertions.isNotEmpty
 import com.fasterxml.jackson.databind.ObjectMapper
-import org.junit.Assert.assertTrue
 import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
 import no.nav.sifinnsynapi.config.Topics
 import no.nav.sifinnsynapi.dittnav.K9Beskjed
@@ -11,6 +10,7 @@ import no.nav.sifinnsynapi.utils.*
 import org.apache.kafka.clients.consumer.Consumer
 import org.apache.kafka.clients.producer.Producer
 import org.awaitility.kotlin.await
+import org.junit.Assert.assertTrue
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
@@ -77,6 +77,21 @@ class K9EttersendingKonsumentTest {
     }
 
     @Test
+    fun `Konsumer hendelse om ettersending av PLEIEPENGER_SYKT_BARN og forvent at dittNav beskjed blir sendt ut`(){
+        val søknadstype: String = "PLEIEPENGER_SYKT_BARN"
+        val hendelse = defaultHendelseK9Ettersending(søknadstype = søknadstype)
+        producer.leggPåTopic(hendelse, Topics.K9_ETTERSENDING, mapper)
+
+        // forvent at dittNav melding blir sendt
+        await.atMost(60, TimeUnit.SECONDS).untilAsserted {
+            val lesMelding = dittNavConsumer.lesMelding(hendelse.data.melding["soknadId"] as String)
+            log.info("----> dittnav melding: {}", lesMelding)
+            assertThat(lesMelding).isNotEmpty()
+            assertTrue(lesMelding.toString().contains("pleiepenger"))
+        }
+    }
+
+    @Test
     fun `Konsumer hendelse om ettersending av omsorgspenger og forvent at dittNav beskjed blir sendt ut`(){
         val søknadstype: String = "omsorgspenger"
         val hendelse = defaultHendelseK9Ettersending(søknadstype = søknadstype)
@@ -88,6 +103,21 @@ class K9EttersendingKonsumentTest {
             log.info("----> dittnav melding: {}", lesMelding)
             assertThat(lesMelding).isNotEmpty()
             assertTrue(lesMelding.toString().contains(søknadstype))
+        }
+    }
+
+    @Test
+    fun `Konsumer hendelse om ettersending av OMP_UTV_KS og forvent at dittNav beskjed blir sendt ut`(){
+        val søknadstype: String = "OMP_UTV_KS"
+        val hendelse = defaultHendelseK9Ettersending(søknadstype = søknadstype)
+        producer.leggPåTopic(hendelse, Topics.K9_ETTERSENDING, mapper)
+
+        // forvent at dittNav melding blir sendt
+        await.atMost(60, TimeUnit.SECONDS).untilAsserted {
+            val lesMelding = dittNavConsumer.lesMelding(hendelse.data.melding["soknadId"] as String)
+            log.info("----> dittnav melding: {}", lesMelding)
+            assertThat(lesMelding).isNotEmpty()
+            assertTrue(lesMelding.toString().contains("omsorgspenger"))
         }
     }
 
