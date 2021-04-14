@@ -36,8 +36,13 @@ class K9EttersendingKonsument(
         }
 
         enum class Søknadstype(val utskriftsvennlig: String) {
-            PLEIEPENGER("pleiepenger"),
-            OMSORGSPENGER("omsorgspenger")
+            PLEIEPENGER("pleiepenger"), //TODO 24.03.2021 - Kan fjernes når k9-ettersending-prosessering er prodsatt
+            OMSORGSPENGER("omsorgspenger"), //TODO 24.03.2021 - Kan fjernes når k9-ettersending-prosessering er prodsatt
+            PLEIEPENGER_SYKT_BARN("pleiepenger"),
+            OMP_UTV_KS("omsorgspenger"), // Omsorgspenger utvidet rett - kronisk syke eller funksjonshemming.
+            OMP_UT_SNF("omsorgspenger"), // Omsorgspenger utbetaling SNF ytelse.
+            OMP_UT_ARBEIDSTAKER("omsorgspenger"), // Omsorgspenger utbetaling arbeidstaker ytelse.
+            OMP_UTV_MA("omsorgspenger") // Omsorgspenger utvidet rett - midlertidig alene
         }
     }
 
@@ -59,8 +64,8 @@ class K9EttersendingKonsument(
         logger.info("Mottok hendelse om '$YTELSE - ${søknadstype.utskriftsvennlig}' med søknadId: $søknadId")
 
         val beskjedProperties = when(søknadstype){
-            Søknadstype.OMSORGSPENGER -> k9EttersendingOMSBeskjedProperties
-            Søknadstype.PLEIEPENGER -> k9EttersendingPPBeskjedProperties
+            Søknadstype.PLEIEPENGER, Søknadstype.PLEIEPENGER_SYKT_BARN -> k9EttersendingPPBeskjedProperties
+            else -> k9EttersendingOMSBeskjedProperties
         }
 
         logger.info("Sender DittNav beskjed for ytelse $YTELSE - ${søknadstype.utskriftsvennlig}")
