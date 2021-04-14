@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus.OK
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import java.net.URLDecoder
+import java.nio.charset.StandardCharsets
 import java.util.*
 
 @RestController
@@ -50,8 +52,10 @@ class SøknadController(
     ): ResponseEntity<Resource> {
         val resource = ByteArrayResource(søknadService.hentArbeidsgiverMeldingFil(søknadId, organisasjonsnummer))
 
+        val decodetFilnavn = URLDecoder.decode(filnavn, StandardCharsets.UTF_8.toString())
+
         return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "filename=$filnavn.pdf")
+                .header(HttpHeaders.CONTENT_DISPOSITION, "filename=$decodetFilnavn.pdf")
                 .contentLength(resource.byteArray.size.toLong())
                 .body(resource)
     }

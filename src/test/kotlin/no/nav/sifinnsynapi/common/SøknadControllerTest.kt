@@ -21,6 +21,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.context.annotation.Import
+import org.springframework.http.HttpHeaders.CONTENT_DISPOSITION
 import org.springframework.http.MediaType
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit.jupiter.SpringExtension
@@ -275,5 +276,47 @@ class SøknadControllerTest {
             .andExpect(jsonPath("$.status").value(401))
             .andExpect(jsonPath("$.detail").value("no.nav.security.token.support.core.exceptions.JwtTokenMissingException: no valid token found in validation context"))
             .andExpect(jsonPath("$.stackTrace").doesNotExist())
+    }
+
+    @Test
+    fun `gitt filnavn med mellomrom, forvent generert filnavn med mellomrom`() {
+        every {
+            søknadService.hentArbeidsgiverMeldingFil(any(), any())
+        } returns "some byteArray".toByteArray()
+
+        val forventetFilnavn = "filnavn med mellomrom"
+        mockMvc.perform(
+            MockMvcRequestBuilders
+                .get(URI(URLDecoder.decode("$SØKNAD/${UUID.randomUUID()}/arbeidsgivermelding", Charset.defaultCharset())))
+                .queryParam("organisasjonsnummer", "12345678")
+                .queryParam("filnavn", forventetFilnavn)
+                .accept(MediaType.APPLICATION_OCTET_STREAM_VALUE)
+                .cookie(Cookie("selvbetjening-idtoken", mockOAuth2Server.hentToken().serialize()))
+        )
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isOk)
+            .andExpect(header().exists(CONTENT_DISPOSITION))
+            .andExpect(header().string(CONTENT_DISPOSITION, "filename=$forventetFilnavn.pdf"))
+    }
+
+    @Test
+    fun `gitt filnavn med encodet mellomrom, forvent generert filnavn med mellomrom`() {
+        every {
+            søknadService.hentArbeidsgiverMeldingFil(any(), any())
+        } returns "some byteArray".toByteArray()
+
+        val forventetFilnavn = "filnavn med mellomrom"
+        mockMvc.perform(
+            MockMvcRequestBuilders
+                .get(URI(URLDecoder.decode("$SØKNAD/${UUID.randomUUID()}/arbeidsgivermelding", Charset.defaultCharset())))
+                .queryParam("organisasjonsnummer", "12345678")
+                .queryParam("filnavn", "filnavn%20med%20mellomrom")
+                .accept(MediaType.APPLICATION_OCTET_STREAM_VALUE)
+                .cookie(Cookie("selvbetjening-idtoken", mockOAuth2Server.hentToken().serialize()))
+        )
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isOk)
+            .andExpect(header().exists(CONTENT_DISPOSITION))
+            .andExpect(header().string(CONTENT_DISPOSITION, "filename=$forventetFilnavn.pdf"))
     }
 }
