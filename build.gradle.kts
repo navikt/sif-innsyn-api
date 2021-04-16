@@ -2,10 +2,10 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     id("org.springframework.boot") version "2.3.7.RELEASE"
-    id("io.spring.dependency-management") version "1.0.10.RELEASE"
-    kotlin("jvm") version "1.4.21"
-    kotlin("plugin.spring") version "1.4.21"
-    kotlin("plugin.jpa") version "1.4.21"
+    id("io.spring.dependency-management") version "1.0.11.RELEASE"
+    kotlin("jvm") version "1.4.32"
+    kotlin("plugin.spring") version "1.4.32"
+    kotlin("plugin.jpa") version "1.4.32"
 }
 
 group = "no.nav"
@@ -26,7 +26,7 @@ val tokenValidationVersion by extra("1.3.2")
 val springCloudVersion by extra("Hoxton.SR6")
 val retryVersion by extra("1.3.0")
 val zalandoVersion by extra("0.26.2")
-val openhtmltopdfVersion = "1.0.6"
+val openhtmltopdfVersion = "1.0.8"
 val handlebarsVersion = "4.1.2"
 
 ext["okhttp3.version"] = "4.9.0"
