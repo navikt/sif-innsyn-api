@@ -24,9 +24,6 @@ no.nav:
     interval: 5
 
 spring:
-  profiles:
-    active: test
-
   datasource:
     url: jdbc:tc:postgresql:9.6:///
     driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
