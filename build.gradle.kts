@@ -84,7 +84,7 @@ dependencies {
     runtimeOnly("org.postgresql:postgresql")
     implementation("org.flywaydb:flyway-core")
     runtimeOnly("org.hibernate:hibernate-jpamodelgen")
-    implementation("com.vladmihalcea:hibernate-types-52:2.10.3")
+    implementation("com.vladmihalcea:hibernate-types-52:2.10.4")
     testImplementation("org.testcontainers:postgresql:1.15.3")
 
     // Jackson
@@ -107,15 +107,15 @@ dependencies {
     implementation("com.github.jknack:handlebars:$handlebarsVersion")
 
     // Diverse
-    implementation("org.json:json:20201115")
+    implementation("org.json:json:20210307")
     implementation("com.github.ben-manes.caffeine:caffeine")
     implementation("org.zalando:problem-spring-web-starter:$zalandoVersion")
     implementation("com.google.guava:guava:23.0")
 
     testImplementation("org.awaitility:awaitility-kotlin:4.0.3")
     testImplementation("com.willowtreeapps.assertk:assertk-jvm:0.23.1")
-    testImplementation("com.ninja-squad:springmockk:2.0.3")
-    testImplementation("io.mockk:mockk:1.10.4")
+    testImplementation("com.ninja-squad:springmockk:3.0.1")
+    testImplementation("io.mockk:mockk:1.11.0")
 }
 
 dependencyManagement {
