@@ -121,5 +121,19 @@ class K9EttersendingKonsumentTest {
         }
     }
 
+    @Test
+    fun `Konsumer hendelse om ettersending av dele dager og forvent at dittNav beskjed blir sendt ut`(){
+        val søknadstype: String = "OMP_DELE_DAGER"
+        val hendelse = defaultHendelseK9Ettersending(søknadstype = søknadstype)
+        producer.leggPåTopic(hendelse, Topics.K9_ETTERSENDING, mapper)
+
+        // forvent at dittNav melding blir sendt
+        await.atMost(60, TimeUnit.SECONDS).untilAsserted {
+            val lesMelding = dittNavConsumer.lesMelding(hendelse.data.melding["soknadId"] as String)
+            log.info("----> dittnav melding: {}", lesMelding)
+            assertThat(lesMelding).isNotEmpty()
+            assertTrue(lesMelding.toString().contains("omsorgspenger"))
+        }
+    }
 
 }
