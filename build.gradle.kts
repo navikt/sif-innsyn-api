@@ -27,7 +27,7 @@ val springCloudVersion by extra("2020.0.2")
 val retryVersion by extra("1.3.0")
 val zalandoVersion by extra("0.26.2")
 val openhtmltopdfVersion = "1.0.8"
-val handlebarsVersion = "4.1.2"
+val handlebarsVersion = "4.2.0"
 
 ext["okhttp3.version"] = "4.9.1"
 
