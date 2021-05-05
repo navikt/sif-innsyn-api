@@ -8,7 +8,6 @@ import org.springframework.http.MediaType
 
 fun stubForAktørId(aktørId: String, status: Int) {
     WireMock.stubFor(WireMock.get(WireMock.urlPathMatching("/k9-selvbetjening-oppslag-mock/meg.*"))
-            .withHeader("x-nav-apiKey", WireMock.matching(".*"))
             .withHeader("Authorization", WireMock.matching(".*"))
             .withQueryParam("a", WireMock.equalTo("aktør_id"))
             .willReturn(WireMock.aResponse()

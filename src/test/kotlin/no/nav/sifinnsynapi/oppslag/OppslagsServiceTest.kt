@@ -4,7 +4,6 @@ import assertk.assertThat
 import assertk.assertions.isNotNull
 import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
 import no.nav.security.token.support.spring.validation.interceptor.BearerTokenClientHttpRequestInterceptor
-import no.nav.sifinnsynapi.config.ApiGwApiKeyConfig
 import no.nav.sifinnsynapi.http.MDCValuesPropagatingClienHttpRequesInterceptor
 import no.nav.sifinnsynapi.util.Constants
 import org.junit.jupiter.api.Test
@@ -16,7 +15,6 @@ import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.boot.web.client.RestTemplateBuilder
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock
 import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Import
 import org.springframework.context.annotation.Primary
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
@@ -33,8 +31,6 @@ internal class OppslagsServiceTest {
 
     @TestConfiguration
     class TestConfig {
-        @Autowired
-        lateinit var apiGwApiKeyConfig: ApiGwApiKeyConfig
 
         @Value("\${no.nav.gateways.k9-selvbetjening-oppslag}")
         lateinit var oppslagsUrl: String
@@ -45,7 +41,6 @@ internal class OppslagsServiceTest {
             return builder
                     .setConnectTimeout(Duration.ofSeconds(20))
                     .setReadTimeout(Duration.ofSeconds(20))
-                    .defaultHeader(Constants.X_NAV_APIKEY, apiGwApiKeyConfig.apiKey)
                     .defaultHeader(Constants.X_CORRELATION_ID, UUID.randomUUID().toString())
                     .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                     .defaultHeader(HttpHeaders.AUTHORIZATION, anyString())

@@ -3,9 +3,6 @@
     "urlPattern": "/k9-selvbetjening-oppslag-mock/meg.*",
     "method": "GET",
     "headers": {
-      "x-nav-apiKey": {
-        "matches": ".*"
-      },
       "Authorization": {
         "matches": ".*"
       }

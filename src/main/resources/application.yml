@@ -43,7 +43,6 @@ no.nav:
         dagerSynlig: 7
 
   apigw:
-    apikey: ${APIGW_API_KEY} # kubectl secret som miljøvariabel i pod
     sts-apikey: ${STS_APIKEY} # kubectl secret som miljøvariabel i pod
 
   gateways:
