@@ -2,7 +2,6 @@
 
 no.nav:
   apigw:
-    apikey: test-key
     sts-apikey: sts-apikey
   gateways:
     k9-selvbetjening-oppslag: http://localhost:${wiremock.server.port}/k9-selvbetjening-oppslag-mock

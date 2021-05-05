@@ -1,7 +1,6 @@
 package no.nav.sifinnsynapi.oppslag
 
 import no.nav.security.token.support.spring.validation.interceptor.BearerTokenClientHttpRequestInterceptor
-import no.nav.sifinnsynapi.config.ApiGwApiKeyConfig
 import no.nav.sifinnsynapi.http.MDCValuesPropagatingClienHttpRequesInterceptor
 import no.nav.sifinnsynapi.util.Constants.X_CORRELATION_ID
 import no.nav.sifinnsynapi.util.Constants.X_NAV_APIKEY
@@ -24,7 +23,6 @@ import java.util.*
 class OppslagsKlientKonfig(
         @Value("\${no.nav.gateways.k9-selvbetjening-oppslag}")
         private val oppslagsUrl: String,
-        private val apigwConfig: ApiGwApiKeyConfig,
         @Value("\${spring.rest.retry.maxAttempts}")
         private val maxAttempts: Int
 ) : RetryListener {
@@ -38,7 +36,6 @@ class OppslagsKlientKonfig(
         return builder
                 .setConnectTimeout(Duration.ofSeconds(20))
                 .setReadTimeout(Duration.ofSeconds(20))
-                .defaultHeader(X_NAV_APIKEY, apigwConfig.apiKey)
                 .defaultHeader(X_CORRELATION_ID, UUID.randomUUID().toString())
                 .defaultHeader(CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .rootUri(oppslagsUrl)
