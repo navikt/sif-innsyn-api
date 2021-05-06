@@ -113,7 +113,7 @@ dependencies {
     implementation("com.google.guava:guava:23.0")
 
     testImplementation("org.awaitility:awaitility-kotlin:4.0.3")
-    testImplementation("com.willowtreeapps.assertk:assertk-jvm:0.23.1")
+    testImplementation("com.willowtreeapps.assertk:assertk-jvm:0.24")
     testImplementation("com.ninja-squad:springmockk:3.0.1")
     testImplementation("io.mockk:mockk:1.11.0")
 }
