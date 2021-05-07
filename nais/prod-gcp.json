@@ -12,7 +12,8 @@
     "secretmanager.googleapis.com",
     "oauth2.googleapis.com",
     "www.googleapis.com",
-    "login.microsoftonline.com"
+    "login.microsoftonline.com",
+    "k9-selvbetjening-oppslag.prod-fss-pub.nais.io"
   ],
   "database": {
     "name": "sif-innsyn-db",
