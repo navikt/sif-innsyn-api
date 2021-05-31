@@ -50,10 +50,11 @@ class OnpremKafkaConfig(
 
     fun securityConfig() = mutableMapOf<String, Any>().apply {
         securityProtocol?.let { put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, it) }
-        saslMechanism?.let { put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, it) }
+        saslMechanism?.let { put(SaslConfigs.SASL_MECHANISM, it) }
         jaasConfig?.let { put(SaslConfigs.SASL_JAAS_CONFIG, it) }
         trustStoreLocation?.let { put(SslConfigs.SSL_TRUSTSTORE_LOCATION_CONFIG, it) }
         trustStorePassword?.let { put(SslConfigs.SSL_TRUSTSTORE_PASSWORD_CONFIG, it) }
+
     }
 
     @Bean
@@ -79,7 +80,7 @@ class OnpremKafkaConfig(
         ) + commonConfig()
 
         val factory = DefaultKafkaProducerFactory<String, String>(producerProperties)
-        factory.setTransactionIdPrefix("transactionIdPrefix")
+        factory.setTransactionIdPrefix(transactionIdPrefix)
         return factory
     }
 
