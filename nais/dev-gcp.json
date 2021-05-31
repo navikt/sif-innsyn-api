@@ -29,7 +29,6 @@
     "SPRING_APPLICATION_NAME": "sif-innsyn-api",
     "SPRING_PROFILES_ACTIVE": "dev-gcp",
     "ONPREM_KAFKA_BOOTSTRAP_SERVERS": "b27apvl00045.preprod.local:8443,b27apvl00046.preprod.local:8443,b27apvl00047.preprod.local:8443",
-    "SPRING_KAFKA_PROPERTIES_SECURITY_PROTOCOL": "SASL_SSL",
     "NO_NAV_SECURITY_JWT_ISSUER_LOGINSERVICE_COOKIE_NAME": "selvbetjening-idtoken",
     "NO_NAV_SECURITY_CORS_ALLOWED_ORIGINS": "https://sif-innsyn.dev.nav.no",
     "NO_NAV_GATEWAYS_K9_SELVBETJENING_OPPSLAG": "https://k9-selvbetjening-oppslag.dev-fss-pub.nais.io",
