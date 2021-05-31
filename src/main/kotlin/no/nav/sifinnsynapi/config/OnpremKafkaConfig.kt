@@ -22,11 +22,11 @@ class OnpremKafkaConfig(
     private val objectMapper: ObjectMapper,
     private val søknadRepository: SøknadRepository,
     @Value("\${kafka.onprem.servers}") private val bootstrapServers: String,
-    @Value("\${kafka.onprem.properties.security.protocol}") private val securityProtocol: String? = null,
-    @Value("\${kafka.onprem.properties.sasl.mechanism}") private val saslMechanism: String? = null,
-    @Value("\${kafka.onprem.properties.sasl.jaas-config}") private val jaasConfig: String? = null,
-    @Value("\${kafka.onprem.properties.ssl.trust-store-location}") private val trustStoreLocation: String? = null,
-    @Value("\${kafka.onprem.properties.ssl.trust-store-password}") private val trustStorePassword: String? = null,
+    @Value("\${kafka.onprem.properties.security.protocol:#{null}}") private val securityProtocol: String?,
+    @Value("\${kafka.onprem.properties.sasl.mechanism:#{null}}") private val saslMechanism: String?,
+    @Value("\${kafka.onprem.properties.sasl.jaas-config:#{null}}") private val jaasConfig: String?,
+    @Value("\${kafka.onprem.properties.ssl.trust-store-location:#{null}}") private val trustStoreLocation: String?,
+    @Value("\${kafka.onprem.properties.ssl.trust-store-password:#{null}}") private val trustStorePassword: String?,
     @Value("\${kafka.onprem.consumer.enable-auto-commit}") private val enableAutoCommit: Boolean,
     @Value("\${kafka.onprem.consumer.group-id}") private val groupId: String,
     @Value("\${kafka.onprem.consumer.auto-offset-reset}") private val autoOffsetReset: String,
@@ -44,7 +44,7 @@ class OnpremKafkaConfig(
         private val logger = LoggerFactory.getLogger(OnpremKafkaConfig::class.java)
     }
 
-    /*fun commonConfig() = mutableMapOf<String, Any>().apply {
+    fun commonConfig() = mutableMapOf<String, Any>().apply {
         put(CommonClientConfigs.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers)
     } + securityConfig()
 
@@ -58,7 +58,7 @@ class OnpremKafkaConfig(
 
     @Bean
     fun onpremConsumerFactory(): ConsumerFactory<String, String> {
-        private val consumerProperties = mutableMapOf<String, Any>(
+        val consumerProperties = mutableMapOf<String, Any>(
             ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG to enableAutoCommit,
             ConsumerConfig.GROUP_ID_CONFIG to groupId,
             ConsumerConfig.AUTO_OFFSET_RESET_CONFIG to autoOffsetReset,
@@ -72,13 +72,13 @@ class OnpremKafkaConfig(
 
     @Bean
     fun onpremProducerFactory(): ProducerFactory<String, String> {
-        private val producerProperties = mutableMapOf<String, Any>(
+        val producerProperties = mutableMapOf<String, Any>(
             ProducerConfig.CLIENT_ID_CONFIG to clientId,
             ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG to keySerializer,
             ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG to valueSerializer
         ) + commonConfig()
 
-        private val factory = DefaultKafkaProducerFactory<String, String>(producerProperties)
+        val factory = DefaultKafkaProducerFactory<String, String>(producerProperties)
         factory.setTransactionIdPrefix("transactionIdPrefix")
         return factory
     }
@@ -98,9 +98,9 @@ class OnpremKafkaConfig(
         consumerFactory = onpremConsumerFactory,
         chainedTransactionManager = chainedTransactionManager,
         kafkaTemplate = onpremKafkaTemplate,
-        retryInterprivate val = retryInterval,
+        retryInterval = retryInterval,
         objectMapper = objectMapper,
         søknadRepository = søknadRepository,
         logger = logger
-    )*/
+    )
 }

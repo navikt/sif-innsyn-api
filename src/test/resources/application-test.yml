@@ -34,6 +34,7 @@ spring:
 
 kafka:
   onprem:
+    servers: placeholder
     consumer:
       retry-interval: 5_000 # Egendefinert property
       group-id: sif-innsyn-api
