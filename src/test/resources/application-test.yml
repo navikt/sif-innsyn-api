@@ -34,7 +34,7 @@ spring:
 
 kafka:
   onprem:
-    servers: placeholder
+    servers: localhost:9092 # placeholder
     consumer:
       retry-interval: 5_000 # Egendefinert property
       group-id: sif-innsyn-api
@@ -49,4 +49,4 @@ kafka:
 wiremock:
   reset-mappings-after-each-test: true
   server:
-    port: 8888
+    port: 0 # random port

@@ -6,16 +6,6 @@ management:
 spring:
   mvc:
     log-request-details: true
-
-  kafka:
-    properties:
-      security:
-        protocol: # Settes i nais/<cluster>.json
-      sasl:
-        mechanism: PLAIN
-        jaas:
-          config: org.apache.kafka.common.security.plain.PlainLoginModule required username="${sts.username}" password="${sts.password}";
-
   jpa:
     show-sql: false
     hibernate:
