@@ -6,5 +6,5 @@ import com.fasterxml.jackson.annotation.JsonProperty
 data class Metadata @JsonCreator constructor(
         @JsonProperty("version") val version : Int,
         @JsonProperty("correlationId") val correlationId : String,
-        @JsonProperty("requestId") val requestId : String
+        @JsonProperty("requestId") val requestId : String? = null
 )
