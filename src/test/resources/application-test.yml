@@ -31,17 +31,20 @@ spring:
   jpa:
     show-sql: true
     database-platform: org.hibernate.dialect.PostgreSQL9Dialect
-  kafka:
+
+kafka:
+  onprem:
+    consumer:
+      retry-interval: 5_000 # Egendefinert property
+      group-id: sif-innsyn-api
+      #client-id: sif-innsyn-api
+      auto-offset-reset: earliest
     producer:
       client-id: sif-innsyn-api
       retries: 3
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
-    consumer:
-      retry-interval: 5_000 # Egendefinert property
-      group-id: group_id
-      #client-id: sif-innsyn-api
-      auto-offset-reset: earliest
+
 wiremock:
   reset-mappings-after-each-test: true
   server:

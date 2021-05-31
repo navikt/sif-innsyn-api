@@ -46,9 +46,6 @@ spec:
   prometheus:
     enabled: true
     path: /actuator/prometheus
-  vault:
-    enabled: false
-  webproxy: true
   envFrom:
     - secret: sif-innsyn-api.apigw-apikey
     - secret: sif-innsyn-api.sts-credentials
@@ -68,3 +65,5 @@ spec:
         highAvailability: {{ database.highAvailability }}
         databases:
           - name: {{ database.name }}
+  kafka:
+    pool: {{kafkaPool}}

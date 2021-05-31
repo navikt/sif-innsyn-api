@@ -47,8 +47,8 @@ class OmsorgsdagerMeldingKonsument(
     @KafkaListener(
             topics = ["#{'\${topic.listener.omd-melding.navn}'}"],
             id = "#{'\${topic.listener.omd-melding.id}'}",
-            groupId = "#{'\${spring.kafka.consumer.group-id}'}",
-            containerFactory = "kafkaJsonListenerContainerFactory",
+            groupId = "#{'\${kafka.onprem.consumer.group-id}'}",
+            containerFactory = "onpremKafkaJsonListenerContainerFactory",
             autoStartup = "#{'\${topic.listener.omd-melding.bryter}'}"
     )
     fun konsumer(

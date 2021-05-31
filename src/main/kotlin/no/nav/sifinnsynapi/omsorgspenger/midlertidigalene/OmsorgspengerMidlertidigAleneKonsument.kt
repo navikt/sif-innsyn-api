@@ -38,8 +38,8 @@ class OmsorgspengerMidlertidigAleneKonsument(
     @KafkaListener(
             topics = ["#{'\${topic.listener.omp-midlertidig-alene.navn}'}"],
             id = "#{'\${topic.listener.omp-midlertidig-alene.id}'}",
-            groupId = "#{'\${spring.kafka.consumer.group-id}'}",
-            containerFactory = "kafkaJsonListenerContainerFactory",
+            groupId = "#{'\${kafka.onprem.consumer.group-id}'}",
+            containerFactory = "onpremKafkaJsonListenerContainerFactory",
             autoStartup = "#{'\${topic.listener.omp-midlertidig-alene.bryter}'}"
     )
     fun konsumer(

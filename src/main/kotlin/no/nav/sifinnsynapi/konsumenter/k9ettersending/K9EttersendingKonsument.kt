@@ -51,8 +51,8 @@ class K9EttersendingKonsument(
     @KafkaListener(
             topics = ["#{'\${topic.listener.k9-ettersending.navn}'}"],
             id = "#{'\${topic.listener.k9-ettersending.id}'}",
-            groupId = "#{'\${spring.kafka.consumer.group-id}'}",
-            containerFactory = "kafkaJsonListenerContainerFactory",
+            groupId = "#{'\${kafka.onprem.consumer.group-id}'}",
+            containerFactory = "onpremKafkaJsonListenerContainerFactory",
             autoStartup = "#{'\${topic.listener.k9-ettersending.bryter}'}"
     )
     fun konsumer(

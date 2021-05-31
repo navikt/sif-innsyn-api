@@ -38,8 +38,8 @@ class OmsorgspengerUtvidetRettHendelseKonsument(
     @KafkaListener(
             topics = ["#{'\${topic.listener.omp-utvidet-rett.navn}'}"],
             id = "#{'\${topic.listener.omp-utvidet-rett.id}'}",
-            groupId = "#{'\${spring.kafka.consumer.group-id}'}",
-            containerFactory = "kafkaJsonListenerContainerFactory",
+            groupId = "#{'\${kafka.onprem.consumer.group-id}'}",
+            containerFactory = "onpremKafkaJsonListenerContainerFactory",
             autoStartup = "#{'\${topic.listener.omp-utvidet-rett.bryter}'}"
     )
     fun konsumer(

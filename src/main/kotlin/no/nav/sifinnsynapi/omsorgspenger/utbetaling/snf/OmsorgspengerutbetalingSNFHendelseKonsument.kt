@@ -38,8 +38,8 @@ class OmsorgspengerutbetalingSNFHendelseKonsument(
     @KafkaListener(
             topics = ["#{'\${topic.listener.omp-utbetaling-snf.navn}'}"],
             id = "#{'\${topic.listener.omp-utbetaling-snf.id}'}",
-            groupId = "#{'\${spring.kafka.consumer.group-id}'}",
-            containerFactory = "kafkaJsonListenerContainerFactory",
+            groupId = "#{'\${kafka.onprem.consumer.group-id}'}",
+            containerFactory = "onpremKafkaJsonListenerContainerFactory",
             autoStartup = "#{'\${topic.listener.omp-utbetaling-snf.bryter}'}"
     )
     fun konsumer(

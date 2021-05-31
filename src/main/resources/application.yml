@@ -153,13 +153,9 @@ spring:
     password: ${NAIS_DATABASE_SIF_INNSYN_API_SIF_INNSYN_DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
 
-  kafka:
-    #bootstrap-servers: # Settes i nais/<cluster>.json
-    producer:
-      client-id: ${spring.application.name}
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.apache.kafka.common.serialization.StringSerializer
-      transaction-id-prefix: ${spring.application.name}.tx.
+kafka:
+  onprem:
+    servers: ${ONPREM_KAFKA_BOOTSTRAP_SERVERS}
     consumer:
       enable-auto-commit: false
       group-id: ${spring.application.name}
@@ -168,6 +164,14 @@ spring:
       retry-interval: 60_000 # Egendefinert property
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      ssl:
-        trust-store-location: file:${javax.net.ssl.trustStore}
-        trust-store-password: ${javax.net.ssl.trustStorePassword}
+
+    producer:
+      client-id: ${spring.application.name}
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      transaction-id-prefix: ${spring.application.name}.tx.
+
+  aiven:
+    servers: ${KAFKA_BROKERS}
+    consumer:
+    producer:

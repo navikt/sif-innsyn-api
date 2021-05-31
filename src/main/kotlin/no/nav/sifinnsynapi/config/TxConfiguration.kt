@@ -26,12 +26,12 @@ class TxConfiguration(
     @Primary
     @Bean(name = ["transactionManager"])
     fun chainedTM(jpaTM: JpaTransactionManager,
-                  kafkaTM: KafkaTransactionManager<Any, Any>): ChainedTransactionManager {
+                  kafkaTM: KafkaTransactionManager<String, String>): ChainedTransactionManager {
         return ChainedTransactionManager(kafkaTM, jpaTM)
     }
 
     @Bean(name = [KAFKA_TM])
-    fun kafkaTM(pf: ProducerFactory<Any, Any>): KafkaTransactionManager<Any, Any> {
+    fun kafkaTM(pf: ProducerFactory<String, String>): KafkaTransactionManager<String, String> {
         val tm = KafkaTransactionManager(pf)
         tm.isNestedTransactionAllowed = true
         return tm
@@ -44,8 +44,8 @@ class TxConfiguration(
 
     @Bean
     fun kafkaListenerContainerFactory(
-            cf: ConsumerFactory<Any, Any>, tm: KafkaTransactionManager<Any, Any>, mapper: ObjectMapper): KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<Any, Any>> {
-        val factory = ConcurrentKafkaListenerContainerFactory<Any, Any>()
+            cf: ConsumerFactory<String, String>, tm: KafkaTransactionManager<String, String>, mapper: ObjectMapper): KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, String>> {
+        val factory = ConcurrentKafkaListenerContainerFactory<String, String>()
         factory.consumerFactory = cf
         factory.setMessageConverter(StringJsonMessageConverter(mapper))
         factory.containerProperties.transactionManager = tm
