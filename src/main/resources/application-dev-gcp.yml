@@ -4,6 +4,10 @@ management:
       show-details: always
 
 spring:
+  kafka:
+    admin:
+      ssl:
+        trust-store-location:
   mvc:
     log-request-details: true
   jpa:
