@@ -26,9 +26,25 @@ class TxConfiguration(
         onpremJpaTM
     )
 
+    @Bean(name = [AIVEN_TM])
+    fun aivenChainedTM(
+        aivenJpaTM: JpaTransactionManager,
+        aivenKafkaTM: KafkaTransactionManager<String, String>
+    ): ChainedTransactionManager = ChainedTransactionManager(
+        aivenKafkaTM,
+        aivenJpaTM
+    )
+
     @Bean(name = [ONPREM_KAFKA_TM])
     fun onpremKafkaTM(onpremProducerFactory: ProducerFactory<String, String>): KafkaTransactionManager<String, String> {
         val tm = KafkaTransactionManager(onpremProducerFactory)
+        tm.isNestedTransactionAllowed = true
+        return tm
+    }
+
+    @Bean(name = [AIVEN_KAFKA_TM])
+    fun aivenKafkaTM(aivenProducerFactory: ProducerFactory<String, String>): KafkaTransactionManager<String, String> {
+        val tm = KafkaTransactionManager(aivenProducerFactory)
         tm.isNestedTransactionAllowed = true
         return tm
     }
@@ -38,13 +54,21 @@ class TxConfiguration(
         return JpaTransactionManager()
     }
 
+    @Bean(name = [AIVEN_JPA_TM])
+    fun aivenJpaTM(): JpaTransactionManager {
+        return JpaTransactionManager()
+    }
+
     override fun configureKafkaListeners(registrar: KafkaListenerEndpointRegistrar) {
         registrar.validator = validator
     }
 
     companion object {
         const val TM = "transactionManager"
+        const val AIVEN_TM = "aivenTM"
         const val ONPREM_KAFKA_TM = "onpremKafkaTM"
         const val ONPREM_JPA_TM = "onpremJpaTM"
+        const val AIVEN_KAFKA_TM = "aivenKafkaTM"
+        const val AIVEN_JPA_TM = "aivenJpaTM"
     }
 }

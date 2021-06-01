@@ -175,4 +175,17 @@ kafka:
   aiven:
     servers: ${KAFKA_BROKERS}
     consumer:
+      enable-auto-commit: false
+      group-id: ${spring.application.name}
+      auto-offset-reset: earliest
+      isolation-level: read_committed
+      retry-interval: 60_000 # Egendefinert property
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+
     producer:
+      client-id: ${HOSTNAME}
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      transaction-id-prefix: ${spring.application.name}.tx.
+      retries: 3

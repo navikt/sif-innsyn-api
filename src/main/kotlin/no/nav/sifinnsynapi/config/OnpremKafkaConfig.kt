@@ -15,7 +15,11 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.core.io.Resource
 import org.springframework.data.transaction.ChainedTransactionManager
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory
+import org.springframework.kafka.config.KafkaListenerContainerFactory
 import org.springframework.kafka.core.*
+import org.springframework.kafka.listener.ConcurrentMessageListenerContainer
+import org.springframework.kafka.support.converter.StringJsonMessageConverter
+import org.springframework.kafka.transaction.KafkaTransactionManager
 
 
 @Configuration

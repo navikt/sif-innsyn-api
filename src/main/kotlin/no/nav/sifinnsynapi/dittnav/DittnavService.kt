@@ -11,8 +11,9 @@ import org.springframework.transaction.annotation.Transactional
 
 @Service
 class DittnavService(
-    private val onpremKafkaTemplate: KafkaTemplate<String, String>,
-    private val objectMapper: ObjectMapper
+        private val onpremKafkaTemplate: KafkaTemplate<String, String>,
+        private val aivenKafkaTemplate: KafkaTemplate<String, String>,
+        private val objectMapper: ObjectMapper
 ) {
 
     companion object {
@@ -23,8 +24,7 @@ class DittnavService(
     fun sendBeskjedOnprem(søknadId: String, k9Beskjed: K9Beskjed) {
         log.info("Sender ut dittnav beskjed med eventID: {}", søknadId)
         return onpremKafkaTemplate.executeInTransaction {
-            it.send(
-                ProducerRecord(
+            it.send(ProducerRecord(
                     K9_DITTNAV_VARSEL_BESKJED,
                     søknadId,
                     k9Beskjed.somJson(objectMapper)
