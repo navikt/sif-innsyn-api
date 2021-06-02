@@ -50,11 +50,11 @@ class OmsorgspengerAleneomsorgKonsument(
         val søknadId = melding.getString(SØKNAD_ID)
         logger.info("Mottok hendelse om ${YTELSE} med søknadId: $søknadId")
 
-        logger.info("Sender DittNav beskjed for ytelse $YTELSE")
+        /*logger.info("Sender DittNav beskjed for ytelse $YTELSE")
         dittNavService.sendBeskjedAiven(
             melding.getString(SØKNAD_ID),
             melding.somK9Beskjed(hendelse.data.metadata, omsorgspengerAleneomsorgBeskjedProperties)
-        )
+        )*/
     }
 }
 

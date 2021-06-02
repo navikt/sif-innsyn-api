@@ -86,7 +86,6 @@ class AivenKafkaConfig(
         ) + commonConfig()
 
         val factory = DefaultKafkaProducerFactory<String, String>(producerProperties)
-        factory.transactionCapable()
         factory.setTransactionIdPrefix(transactionIdPrefix)
         return factory
     }
