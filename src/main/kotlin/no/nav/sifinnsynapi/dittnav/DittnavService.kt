@@ -2,6 +2,7 @@ package no.nav.sifinnsynapi.dittnav
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import no.nav.sifinnsynapi.config.Topics.K9_DITTNAV_VARSEL_BESKJED
+import no.nav.sifinnsynapi.config.TxConfiguration.Companion.AIVEN_TM
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -49,7 +50,7 @@ class DittnavService(
         }
     }
 
-    @Transactional
+    @Transactional(AIVEN_TM)
     fun sendBeskjedAiven(søknadId: String, k9Beskjed: K9Beskjed) {
         log.info("Sender ut dittnav beskjed til aiven med eventID: {}", søknadId)
         return aivenKafkaTemplate.executeInTransaction {

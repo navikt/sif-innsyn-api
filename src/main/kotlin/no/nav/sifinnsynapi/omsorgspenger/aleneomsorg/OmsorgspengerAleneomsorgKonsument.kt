@@ -2,6 +2,7 @@ package no.nav.sifinnsynapi.omsorgspenger.aleneomsorg
 
 import no.nav.sifinnsynapi.common.Metadata
 import no.nav.sifinnsynapi.common.TopicEntry
+import no.nav.sifinnsynapi.config.TxConfiguration.Companion.AIVEN_TM
 import no.nav.sifinnsynapi.dittnav.DittnavService
 import no.nav.sifinnsynapi.dittnav.K9Beskjed
 import no.nav.sifinnsynapi.omsorgspenger.midlertidigalene.OmsorgspengerMidlertidigAleneKonsument.Companion.Keys.FØDSELSNUMMER
@@ -34,7 +35,7 @@ class OmsorgspengerAleneomsorgKonsument(
         }
     }
 
-    @Transactional
+    @Transactional(AIVEN_TM)
     @KafkaListener(
         topics = ["#{'\${topic.listener.omd-aleneomsorg.navn}'}"],
         id = "#{'\${topic.listener.omd-aleneomsorg.id}'}",
