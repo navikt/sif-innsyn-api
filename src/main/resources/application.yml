@@ -119,9 +119,9 @@ topic:
       bryter: true
       dry-run: false
 
-    # topic.listener.omp-aleneomsorg
-    omp-aleneomsorg:
-      id: omsorgspenger-aleneomsorg
+    # topic.listener.omd-aleneomsorg
+    omd-aleneomsorg:
+      id: omsorgsdager-aleneomsorg
       navn: dusseldorf.privat-omsorgsdager-aleneomsorg-cleanup
       bryter: true
       dry-run: false

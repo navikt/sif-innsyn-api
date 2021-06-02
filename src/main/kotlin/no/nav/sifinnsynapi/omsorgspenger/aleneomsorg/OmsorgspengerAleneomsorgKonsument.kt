@@ -36,9 +36,9 @@ class OmsorgspengerAleneomsorgKonsument(
 
     @Transactional
     @KafkaListener(
-        topics = ["#{'\${topic.listener.omp-aleneomsorg.navn}'}"],
-        id = "#{'\${topic.listener.omp-aleneomsorg.id}'}",
-        autoStartup = "#{'\${topic.listener.omp-aleneomsorg.bryter}'}",
+        topics = ["#{'\${topic.listener.omd-aleneomsorg.navn}'}"],
+        id = "#{'\${topic.listener.omd-aleneomsorg.id}'}",
+        autoStartup = "#{'\${topic.listener.omd-aleneomsorg.bryter}'}",
         groupId = "#{'\${kafka.aiven.consumer.group-id}'}",
         containerFactory = "aivenKafkaJsonListenerContainerFactory",
     )
