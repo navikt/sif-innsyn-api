@@ -41,6 +41,10 @@ no.nav:
       beskjed:
         tekst: 'Vi har mottatt din ettersendelse til omsorgspenger.'
         dagerSynlig: 7
+    omsorgspenger-aleneomsorg:
+      beskjed:
+        tekst: 'Vi har mottatt din melding om aleneomsorg.'
+        dagerSynlig: 7
 
   apigw:
     sts-apikey: ${STS_APIKEY} # kubectl secret som miljøvariabel i pod
@@ -112,6 +116,13 @@ topic:
     k9-ettersending:
       id: k9-ettersending-listener
       navn: privat-k9-ettersending-cleanup
+      bryter: true
+      dry-run: false
+
+    # topic.listener.omp-aleneomsorg
+    omp-aleneomsorg:
+      id: omsorgspenger-aleneomsorg
+      navn: privat-omsorgsdager-aleneomsorg-cleanup
       bryter: true
       dry-run: false
 
