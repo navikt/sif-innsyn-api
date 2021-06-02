@@ -198,5 +198,5 @@ kafka:
       client-id: ${HOSTNAME}
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
-      transaction-id-prefix: ${HOSTNAME}-tx-
+      transaction-id-prefix: ${HOSTNAME}.tx-
       retries: 3
