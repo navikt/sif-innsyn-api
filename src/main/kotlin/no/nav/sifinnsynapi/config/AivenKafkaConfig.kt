@@ -24,6 +24,7 @@ class AivenKafkaConfig(
     @Value("\${kafka.aiven.servers}") private val bootstrapServers: String,
     @Value("\${kafka.aiven.properties.security.protocol:#{null}}") private val securityProtocol: String?,
     @Value("\${kafka.aiven.properties.ssl.truststore-location:#{null}}") private val trustStoreLocation: Resource?,
+    @Value("\${kafka.aiven.properties.ssl.truststore-password:#{null}}") private val trustStorePassword: String?,
     @Value("\${kafka.aiven.properties.ssl.truststore-type:#{null}}") private val trustStoreType: String?,
     @Value("\${kafka.aiven.properties.ssl.keystore-location:#{null}}") private val keyStoreLocation: Resource?,
     @Value("\${kafka.aiven.properties.ssl.keystore-password:#{null}}") private val keystorePassword: String?,
@@ -53,6 +54,7 @@ class AivenKafkaConfig(
     fun securityConfig() = mutableMapOf<String, Any>().apply {
         securityProtocol?.let { put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, it) }
         trustStoreLocation?.let { put(SslConfigs.SSL_TRUSTSTORE_LOCATION_CONFIG, it.file.absolutePath) }
+        trustStorePassword?.let {  put(SslConfigs.SSL_TRUSTSTORE_PASSWORD_CONFIG, it)  }
         trustStoreType?.let { put(SslConfigs.SSL_TRUSTSTORE_TYPE_CONFIG, it) }
         keyStoreLocation?.let { put(SslConfigs.SSL_KEYSTORE_LOCATION_CONFIG, it.file.absolutePath) }
         keystorePassword?.let { put(SslConfigs.SSL_KEYSTORE_PASSWORD_CONFIG, it) }

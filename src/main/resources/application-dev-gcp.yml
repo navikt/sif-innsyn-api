@@ -33,6 +33,7 @@ kafka:
         protocol: SSL
       ssl:
         truststore-location: file:${javax.net.ssl.trustStore}
+        trust-store-password: ${javax.net.ssl.trustStorePassword}
         trust-store-type: JKS
         keystore-location: file:${KAFKA_KEYSTORE_PATH}
         keystore-password: ${KAFKA_CREDSTORE_PASSWORD}
