@@ -61,7 +61,7 @@ class OmsorgspengerAleneomsorgKonsumentTest {
         dittNavConsumer = embeddedKafkaBroker.opprettDittnavConsumer()
     }
 
-    @Test
+    /*@Test
     @Ignore
     fun `Konsumer hendelse om å bli regnet som alene om omsorgen og forvent at dittNav beskjed blir sendt ut`(){
         val hendelse = defaultHendelse()
@@ -73,5 +73,5 @@ class OmsorgspengerAleneomsorgKonsumentTest {
             log.info("----> dittnav melding: {}", lesMelding)
             assertThat(lesMelding).isNotEmpty()
         }
-    }
+    }*/
 }
