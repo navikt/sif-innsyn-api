@@ -58,7 +58,7 @@ class AivenKafkaConfig(
         trustStoreType?.let { put(SslConfigs.SSL_TRUSTSTORE_TYPE_CONFIG, it) }
         keyStoreLocation?.let { put(SslConfigs.SSL_KEYSTORE_LOCATION_CONFIG, it.file.absolutePath) }
         keystorePassword?.let { put(SslConfigs.SSL_KEYSTORE_PASSWORD_CONFIG, it) }
-        keystoreType?.let { put(SslConfigs.DEFAULT_SSL_KEYSTORE_TYPE, it) }
+        keystoreType?.let { put(SslConfigs.SSL_KEYSTORE_TYPE_CONFIG, it) }
     }
 
     @Bean
