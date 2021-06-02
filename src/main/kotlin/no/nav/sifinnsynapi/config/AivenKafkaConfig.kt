@@ -92,9 +92,7 @@ class AivenKafkaConfig(
     }
 
     @Bean
-    fun aivenKafkaTemplate(aivenProducerFactory: ProducerFactory<String, String>): KafkaTemplate<String, String> {
-        return KafkaTemplate(aivenProducerFactory)
-    }
+    fun aivenKafkaTemplate(aivenProducerFactory: ProducerFactory<String, String>) = KafkaTemplate(aivenProducerFactory)
 
     @Bean
     fun aivenKafkaJsonListenerContainerFactory(
