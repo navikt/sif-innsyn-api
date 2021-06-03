@@ -2,6 +2,7 @@ package no.nav.sifinnsynapi.dittnav
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import no.nav.sifinnsynapi.config.Topics.K9_DITTNAV_VARSEL_BESKJED
+import no.nav.sifinnsynapi.config.Topics.K9_DITTNAV_VARSEL_BESKJED_AIVEN
 import no.nav.sifinnsynapi.config.TxConfiguration.Companion.AIVEN_TM
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.slf4j.Logger
@@ -56,7 +57,7 @@ class DittnavService(
         return aivenKafkaTemplate.executeInTransaction {
             it.send(
                 ProducerRecord(
-                    K9_DITTNAV_VARSEL_BESKJED,
+                    K9_DITTNAV_VARSEL_BESKJED_AIVEN,
                     søknadId,
                     k9Beskjed.somJson(objectMapper)
             ))
