@@ -155,7 +155,7 @@ spring:
 
 kafka:
   onprem:
-    servers: ${ONPREM_KAFKA_BOOTSTRAP_SERVERS}
+    servers: # overstyres fra nais/<cluster>.json
     consumer:
       enable-auto-commit: false
       group-id: ${spring.application.name}
