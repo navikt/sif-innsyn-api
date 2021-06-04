@@ -1,11 +1,11 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("org.springframework.boot") version "2.4.4"
+    id("org.springframework.boot") version "2.4.5"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
-    kotlin("jvm") version "1.4.32"
-    kotlin("plugin.spring") version "1.4.32"
-    kotlin("plugin.jpa") version "1.4.32"
+    kotlin("jvm") version "1.5.10"
+    kotlin("plugin.spring") version "1.5.10"
+    kotlin("plugin.jpa") version "1.5.10"
 }
 
 group = "no.nav"
@@ -22,12 +22,12 @@ val springfoxVersion by extra("3.0.0")
 val confluentVersion by extra("5.5.0")
 
 val logstashLogbackEncoderVersion by extra("6.6")
-val tokenValidationVersion by extra("1.3.5")
+val tokenValidationVersion by extra("1.3.7")
 val springCloudVersion by extra("2020.0.2")
 val retryVersion by extra("1.3.0")
 val zalandoVersion by extra("0.26.2")
 val openhtmltopdfVersion = "1.0.8"
-val handlebarsVersion = "4.1.2"
+val handlebarsVersion = "4.2.0"
 
 ext["okhttp3.version"] = "4.9.1"
 
@@ -84,7 +84,7 @@ dependencies {
     runtimeOnly("org.postgresql:postgresql")
     implementation("org.flywaydb:flyway-core")
     runtimeOnly("org.hibernate:hibernate-jpamodelgen")
-    implementation("com.vladmihalcea:hibernate-types-52:2.10.4")
+    implementation("com.vladmihalcea:hibernate-types-52:2.11.1")
     testImplementation("org.testcontainers:postgresql:1.15.3")
 
     // Jackson
@@ -113,7 +113,7 @@ dependencies {
     implementation("com.google.guava:guava:23.0")
 
     testImplementation("org.awaitility:awaitility-kotlin:4.0.3")
-    testImplementation("com.willowtreeapps.assertk:assertk-jvm:0.23.1")
+    testImplementation("com.willowtreeapps.assertk:assertk-jvm:0.24")
     testImplementation("com.ninja-squad:springmockk:3.0.1")
     testImplementation("io.mockk:mockk:1.11.0")
 }
