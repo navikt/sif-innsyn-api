@@ -171,3 +171,8 @@ kafka:
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
       transaction-id-prefix: ${HOSTNAME}.tx-
       retries: 3
+
+  aiven:
+    servers: ${KAFKA_BROKERS}
+    consumer:
+    producer:
