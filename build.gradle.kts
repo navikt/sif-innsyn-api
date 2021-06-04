@@ -20,7 +20,6 @@ configurations {
 
 val springfoxVersion by extra("3.0.0")
 val confluentVersion by extra("5.5.0")
-
 val logstashLogbackEncoderVersion by extra("6.6")
 val tokenValidationVersion by extra("1.3.7")
 val springCloudVersion by extra("2020.0.2")
@@ -28,8 +27,17 @@ val retryVersion by extra("1.3.0")
 val zalandoVersion by extra("0.26.2")
 val openhtmltopdfVersion = "1.0.8"
 val handlebarsVersion = "4.2.0"
+val hibernateTypes52Version by extra("2.11.1")
+val awailitilityKotlinVersion by extra("4.1.0")
+val assertkJvmVersion by extra("0.24")
+val springMockkVersion by extra("3.0.1")
+val mockkVersion by extra("1.11.0")
+val guavaVersion by extra("23.0")
+val okHttp3Version by extra("4.9.1")
+val testContainersPostgresqlVersion by extra("1.15.3")
+val orgJsonVersion by extra("20210307")
 
-ext["okhttp3.version"] = "4.9.1"
+ext["okhttp3.version"] = okHttp3Version
 
 repositories {
     mavenCentral()
@@ -44,7 +52,7 @@ dependencies {
     // NAV
     implementation("no.nav.security:token-validation-spring:$tokenValidationVersion")
     testImplementation("no.nav.security:token-validation-spring-test:$tokenValidationVersion")
-    testImplementation("com.squareup.okhttp3:okhttp:4.9.1")
+    testImplementation("com.squareup.okhttp3:okhttp:$okHttp3Version")
 
     // Spring Boot
     implementation("org.springframework.boot:spring-boot-starter-actuator")
@@ -84,8 +92,8 @@ dependencies {
     runtimeOnly("org.postgresql:postgresql")
     implementation("org.flywaydb:flyway-core")
     runtimeOnly("org.hibernate:hibernate-jpamodelgen")
-    implementation("com.vladmihalcea:hibernate-types-52:2.10.4")
-    testImplementation("org.testcontainers:postgresql:1.15.3")
+    implementation("com.vladmihalcea:hibernate-types-52:$hibernateTypes52Version")
+    testImplementation("org.testcontainers:postgresql:$testContainersPostgresqlVersion")
 
     // Jackson
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
@@ -107,15 +115,14 @@ dependencies {
     implementation("com.github.jknack:handlebars:$handlebarsVersion")
 
     // Diverse
-    implementation("org.json:json:20210307")
+    implementation("org.json:json:$orgJsonVersion")
     implementation("com.github.ben-manes.caffeine:caffeine")
     implementation("org.zalando:problem-spring-web-starter:$zalandoVersion")
-    implementation("com.google.guava:guava:23.0")
-
-    testImplementation("org.awaitility:awaitility-kotlin:4.0.3")
-    testImplementation("com.willowtreeapps.assertk:assertk-jvm:0.24")
-    testImplementation("com.ninja-squad:springmockk:3.0.1")
-    testImplementation("io.mockk:mockk:1.11.0")
+    implementation("com.google.guava:guava:$guavaVersion")
+    testImplementation("org.awaitility:awaitility-kotlin:$awailitilityKotlinVersion")
+    testImplementation("com.willowtreeapps.assertk:assertk-jvm:$assertkJvmVersion")
+    testImplementation("com.ninja-squad:springmockk:$springMockkVersion")
+    testImplementation("io.mockk:mockk:$mockkVersion")
 }
 
 dependencyManagement {
