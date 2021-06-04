@@ -1,3 +1,4 @@
+/*
 package no.nav.sifinnsynapi.omsorgspenger.aleneomsorg
 
 import assertk.assertThat
@@ -78,3 +79,4 @@ class OmsorgspengerAleneomsorgKonsumentTest {
         }
     }
 }
+*/
