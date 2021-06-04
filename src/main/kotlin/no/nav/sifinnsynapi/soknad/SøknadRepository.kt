@@ -1,13 +1,12 @@
 package no.nav.sifinnsynapi.soknad
 
 import no.nav.sifinnsynapi.common.AktørId
-import no.nav.sifinnsynapi.common.Søknadstype
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
-@Transactional()
+@Transactional
 interface SøknadRepository : JpaRepository<SøknadDAO, UUID> {
     fun findAllByAktørId(aktørId: AktørId): List<SøknadDAO>
     fun findByJournalpostId(journalpostId: String): SøknadDAO?

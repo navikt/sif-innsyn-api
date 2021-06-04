@@ -38,8 +38,8 @@ class OmsorgspengerUtvidetRettHendelseKonsument(
     @KafkaListener(
             topics = ["#{'\${topic.listener.omp-utvidet-rett.navn}'}"],
             id = "#{'\${topic.listener.omp-utvidet-rett.id}'}",
-            groupId = "#{'\${spring.kafka.consumer.group-id}'}",
-            containerFactory = "kafkaJsonListenerContainerFactory",
+            groupId = "#{'\${kafka.onprem.consumer.group-id}'}",
+            containerFactory = "onpremKafkaJsonListenerContainerFactory",
             autoStartup = "#{'\${topic.listener.omp-utvidet-rett.bryter}'}"
     )
     fun konsumer(
@@ -50,7 +50,7 @@ class OmsorgspengerUtvidetRettHendelseKonsument(
         logger.info("Mottok hendelse om $YTELSE med søknadId: $søknadId")
 
         logger.info("Sender DittNav beskjed for ytelse $YTELSE")
-        dittNavService.sendBeskjed(
+        dittNavService.sendBeskjedOnprem(
                 melding.getString(SØKNAD_ID),
                 melding.somK9Beskjed(hendelse.data.metadata, omsorgspengerUtvidetRettBeskjedProperties)
         )

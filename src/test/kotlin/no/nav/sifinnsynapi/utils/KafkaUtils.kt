@@ -25,20 +25,20 @@ fun Producer<String, Any>.leggPåTopic(hendelse: TopicEntry, topic: String, mapp
     this.flush()
 }
 
-fun EmbeddedKafkaBroker.opprettDittnavConsumer(): Consumer<String, K9Beskjed> {
+fun EmbeddedKafkaBroker.opprettDittnavConsumer(topic: String = K9_DITTNAV_VARSEL_BESKJED): Consumer<String, K9Beskjed> {
     val consumerProps = KafkaTestUtils.consumerProps("dittnv-consumer", "true", this)
     consumerProps[ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG] = "org.apache.kafka.common.serialization.StringDeserializer"
     consumerProps[ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG] = "org.apache.kafka.common.serialization.StringDeserializer"
 
     val consumer = DefaultKafkaConsumerFactory<String, K9Beskjed>(HashMap(consumerProps)).createConsumer()
-    consumer.subscribe(listOf(K9_DITTNAV_VARSEL_BESKJED))
+    consumer.subscribe(listOf(topic))
     return consumer
 }
 
-fun Consumer<String, K9Beskjed>.lesMelding(søknadId: String): List<ConsumerRecord<String, K9Beskjed>> {
+fun Consumer<String, K9Beskjed>.lesMelding(søknadId: String, topic: String = K9_DITTNAV_VARSEL_BESKJED): List<ConsumerRecord<String, K9Beskjed>> {
     seekToBeginning(assignment())
     val consumerRecords = this.poll(Duration.ofSeconds(1))
     return consumerRecords
-            .records(K9_DITTNAV_VARSEL_BESKJED)
+            .records(topic)
             .filter { it.key() == søknadId }
 }

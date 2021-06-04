@@ -51,8 +51,8 @@ class K9EttersendingKonsument(
     @KafkaListener(
             topics = ["#{'\${topic.listener.k9-ettersending.navn}'}"],
             id = "#{'\${topic.listener.k9-ettersending.id}'}",
-            groupId = "#{'\${spring.kafka.consumer.group-id}'}",
-            containerFactory = "kafkaJsonListenerContainerFactory",
+            groupId = "#{'\${kafka.onprem.consumer.group-id}'}",
+            containerFactory = "onpremKafkaJsonListenerContainerFactory",
             autoStartup = "#{'\${topic.listener.k9-ettersending.bryter}'}"
     )
     fun konsumer(
@@ -70,7 +70,7 @@ class K9EttersendingKonsument(
         }
 
         logger.info("Sender DittNav beskjed for ytelse $YTELSE - ${søknadstype.utskriftsvennlig}")
-        dittNavService.sendBeskjed(
+        dittNavService.sendBeskjedOnprem(
                 søknadId = melding.getString(SØKNAD_ID),
                 k9Beskjed = melding.somK9Beskjed(
                         metadata = hendelse.data.metadata,

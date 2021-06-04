@@ -38,8 +38,8 @@ class OmsorgspengerutbetalingSNFHendelseKonsument(
     @KafkaListener(
             topics = ["#{'\${topic.listener.omp-utbetaling-snf.navn}'}"],
             id = "#{'\${topic.listener.omp-utbetaling-snf.id}'}",
-            groupId = "#{'\${spring.kafka.consumer.group-id}'}",
-            containerFactory = "kafkaJsonListenerContainerFactory",
+            groupId = "#{'\${kafka.onprem.consumer.group-id}'}",
+            containerFactory = "onpremKafkaJsonListenerContainerFactory",
             autoStartup = "#{'\${topic.listener.omp-utbetaling-snf.bryter}'}"
     )
     fun konsumer(
@@ -50,7 +50,7 @@ class OmsorgspengerutbetalingSNFHendelseKonsument(
         logger.info("Mottok hendelse om $YTELSE med søknadId: $søknadId")
 
         logger.info("Sender DittNav beskjed for ytelse $YTELSE")
-        dittNavService.sendBeskjed(
+        dittNavService.sendBeskjedOnprem(
                 melding.getString(SØKNAD_ID),
                 melding.somK9Beskjed(hendelse.data.metadata, omsorgspengerutbetalingSNFBeskjedProperties)
         )
