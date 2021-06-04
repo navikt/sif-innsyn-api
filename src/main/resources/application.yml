@@ -123,7 +123,7 @@ topic:
     omd-aleneomsorg:
       id: omsorgsdager-aleneomsorg-listener
       navn: dusseldorf.privat-omsorgsdager-aleneomsorg-cleanup
-      bryter: false
+      bryter: true
       dry-run: false
 
 management:
