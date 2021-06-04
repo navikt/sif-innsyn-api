@@ -52,6 +52,7 @@ class AivenKafkaConfig(
     } + securityConfig()
 
     fun securityConfig() = mutableMapOf<String, Any>().apply {
+        put(SslConfigs.SSL_ENDPOINT_IDENTIFICATION_ALGORITHM_CONFIG, "") // Disable server host name verification
         securityProtocol?.let { put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, it) }
         trustStoreLocation?.let { put(SslConfigs.SSL_TRUSTSTORE_LOCATION_CONFIG, it.file.absolutePath) }
         trustStorePassword?.let {  put(SslConfigs.SSL_TRUSTSTORE_PASSWORD_CONFIG, it)  }
@@ -61,7 +62,6 @@ class AivenKafkaConfig(
         keystoreType?.let { put(SslConfigs.SSL_KEYSTORE_TYPE_CONFIG, it) }
     }
 
-    @Bean
     fun aivenConsumerFactory(): ConsumerFactory<String, String> {
         val consumerProperties = mutableMapOf<String, Any>(
             ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG to enableAutoCommit,
@@ -82,11 +82,12 @@ class AivenKafkaConfig(
             ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG to keySerializer,
             ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG to valueSerializer,
             ProducerConfig.RETRIES_CONFIG to retries,
-            ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG to true
+            ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG to true, // Den sikrer rekkefølge
+            ProducerConfig.ACKS_CONFIG to "all" // Den sikrer at data ikke mistes
         ) + commonConfig()
 
         val factory = DefaultKafkaProducerFactory<String, String>(producerProperties)
-        factory.setTransactionIdPrefix(transactionIdPrefix)
+        //factory.setTransactionIdPrefix(transactionIdPrefix)
         return factory
     }
 
@@ -95,13 +96,11 @@ class AivenKafkaConfig(
 
     @Bean
     fun aivenKafkaJsonListenerContainerFactory(
-        aivenConsumerFactory: ConsumerFactory<String, String>,
-        aivenTM: ChainedTransactionManager,
         aivenKafkaTemplate: KafkaTemplate<String, String>
     ): ConcurrentKafkaListenerContainerFactory<String, String> = configureConcurrentKafkaListenerContainerFactory(
         clientId = groupId,
-        consumerFactory = aivenConsumerFactory,
-        chainedTransactionManager = aivenTM,
+        consumerFactory = aivenConsumerFactory(),
+        chainedTransactionManager = null,
         kafkaTemplate = aivenKafkaTemplate,
         retryInterval = retryInterval,
         objectMapper = objectMapper,

@@ -45,7 +45,7 @@ kafka:
     servers: localhost:9092 # placeholder
     consumer:
       retry-interval: 5_000 # Egendefinert property
-      group-id: sif-innsyn-api
+      group-id: sif-innsyn-api-aiven
       auto-offset-reset: earliest
     producer:
       client-id: sif-innsyn-api-aiven

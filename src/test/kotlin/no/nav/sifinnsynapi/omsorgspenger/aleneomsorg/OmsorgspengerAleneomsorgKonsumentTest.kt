@@ -5,6 +5,7 @@ import assertk.assertions.isNotEmpty
 import com.fasterxml.jackson.databind.ObjectMapper
 import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
 import no.nav.sifinnsynapi.config.Topics
+import no.nav.sifinnsynapi.config.Topics.K9_DITTNAV_VARSEL_BESKJED_AIVEN
 import no.nav.sifinnsynapi.dittnav.K9Beskjed
 import no.nav.sifinnsynapi.utils.*
 import org.apache.kafka.clients.consumer.Consumer
@@ -29,7 +30,7 @@ import java.util.concurrent.TimeUnit
 
 @EmbeddedKafka( // Setter opp og tilgjengligjør embeded kafka broker
     count = 3,
-    topics = [Topics.OMP_ALENEOMSORG, Topics.K9_DITTNAV_VARSEL_BESKJED],
+    topics = [Topics.OMP_ALENEOMSORG, K9_DITTNAV_VARSEL_BESKJED_AIVEN],
     bootstrapServersProperty = "kafka.aiven.servers" // Setter bootstrap-servers for consumer og producer.
 )
 @ExtendWith(SpringExtension::class)
@@ -58,20 +59,22 @@ class OmsorgspengerAleneomsorgKonsumentTest {
     @BeforeAll
     fun setUp() {
         producer = embeddedKafkaBroker.opprettKafkaProducer()
-        dittNavConsumer = embeddedKafkaBroker.opprettDittnavConsumer()
+        dittNavConsumer = embeddedKafkaBroker.opprettDittnavConsumer(K9_DITTNAV_VARSEL_BESKJED_AIVEN)
     }
 
-    /*@Test
+    @Test
     @Ignore
     fun `Konsumer hendelse om å bli regnet som alene om omsorgen og forvent at dittNav beskjed blir sendt ut`(){
         val hendelse = defaultHendelse()
         producer.leggPåTopic(hendelse, Topics.OMP_ALENEOMSORG, mapper)
 
         // forvent at dittNav melding blir sendt
-        await.atMost(60, TimeUnit.SECONDS).untilAsserted {
-            val lesMelding = dittNavConsumer.lesMelding(hendelse.data.melding["søknadId"] as String)
+        await.atMost(10, TimeUnit.SECONDS).untilAsserted {
+            val lesMelding = dittNavConsumer.lesMelding(hendelse.data.melding["søknadId"] as String,
+                K9_DITTNAV_VARSEL_BESKJED_AIVEN
+            )
             log.info("----> dittnav melding: {}", lesMelding)
             assertThat(lesMelding).isNotEmpty()
         }
-    }*/
+    }
 }

@@ -26,14 +26,14 @@ class TxConfiguration(
         onpremJpaTM
     )
 
-    @Bean(name = [AIVEN_TM])
+   /* @Bean(name = [AIVEN_TM])
     fun aivenChainedTM(
         aivenJpaTM: JpaTransactionManager,
         aivenKafkaTM: KafkaTransactionManager<String, String>
     ): ChainedTransactionManager = ChainedTransactionManager(
         aivenKafkaTM,
         aivenJpaTM
-    )
+    )*/
 
     @Bean(name = [ONPREM_KAFKA_TM])
     fun onpremKafkaTM(onpremProducerFactory: ProducerFactory<String, String>): KafkaTransactionManager<String, String> {
@@ -42,22 +42,22 @@ class TxConfiguration(
         return tm
     }
 
-    @Bean(name = [AIVEN_KAFKA_TM])
+    /*@Bean(name = [AIVEN_KAFKA_TM])
     fun aivenKafkaTM(aivenProducerFactory: ProducerFactory<String, String>): KafkaTransactionManager<String, String> {
         val tm = KafkaTransactionManager(aivenProducerFactory)
         tm.isNestedTransactionAllowed = true
         return tm
-    }
+    }*/
 
     @Bean(name = [ONPREM_JPA_TM])
     fun onpremJpaTM(): JpaTransactionManager {
         return JpaTransactionManager()
     }
 
-    @Bean(name = [AIVEN_JPA_TM])
+   /* @Bean(name = [AIVEN_JPA_TM])
     fun aivenJpaTM(): JpaTransactionManager {
         return JpaTransactionManager()
-    }
+    }*/
 
     override fun configureKafkaListeners(registrar: KafkaListenerEndpointRegistrar) {
         registrar.validator = validator
