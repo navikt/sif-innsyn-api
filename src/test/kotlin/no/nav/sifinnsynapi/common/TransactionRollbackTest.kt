@@ -23,7 +23,6 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock
-import org.springframework.context.annotation.Import
 import org.springframework.kafka.test.EmbeddedKafkaBroker
 import org.springframework.kafka.test.context.EmbeddedKafka
 import org.springframework.test.annotation.DirtiesContext
@@ -32,9 +31,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.util.concurrent.TimeUnit
 
 @EmbeddedKafka( // Setter opp og tilgjengligjør embeded kafka broker
-        count = 3,
-        topics = [PP_SYKT_BARN, K9_DITTNAV_VARSEL_BESKJED],
-        bootstrapServersProperty = "kafka.onprem.servers" // Setter bootstrap-servers for consumer og producer.
+    count = 3,
+    topics = [PP_SYKT_BARN, K9_DITTNAV_VARSEL_BESKJED],
+    bootstrapServersProperty = "kafka.onprem.servers" // Setter bootstrap-servers for consumer og producer.
 )
 @ExtendWith(SpringExtension::class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -79,7 +78,7 @@ class TransactionRollbackTest {
         repository.deleteAll() //Tømmer databasen mellom hver test
 
         every {
-            dittnavService.sendBeskjed(any(), any())
+            dittnavService.sendBeskjedOnprem(any(), any())
         } throws Exception("Ooops, noe gikk galt...")
 
         // legg på 1 hendelse om mottatt søknad om pleiepenger sykt barn...
@@ -93,4 +92,3 @@ class TransactionRollbackTest {
         }
     }
 }
-

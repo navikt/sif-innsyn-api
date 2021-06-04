@@ -166,12 +166,8 @@ kafka:
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
 
     producer:
-      client-id: ${spring.application.name}
+      client-id: ${HOSTNAME}
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
-      transaction-id-prefix: ${spring.application.name}.tx.
-
-  aiven:
-    servers: ${KAFKA_BROKERS}
-    consumer:
-    producer:
+      transaction-id-prefix: ${HOSTNAME}.tx-
+      retries: 3

@@ -28,7 +28,7 @@ class CommonKafkaConfig {
             clientId: String,
             consumerFactory: ConsumerFactory<String, String>,
             retryInterval: Long,
-            chainedTransactionManager: ChainedTransactionManager,
+            chainedTransactionManager: ChainedTransactionManager? = null,
             kafkaTemplate: KafkaTemplate<String, String>,
             objectMapper: ObjectMapper,
             søknadRepository: SøknadRepository,

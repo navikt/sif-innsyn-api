@@ -67,7 +67,7 @@ class OmsorgsdagerMeldingKonsument(
         }
 
         logger.info("Sender DittNav beskjed for ytelse $YTELSE - $meldingstype")
-        dittNavService.sendBeskjed(
+        dittNavService.sendBeskjedOnprem(
                 søknadId = melding.getString(SØKNAD_ID),
                 k9Beskjed = melding.somK9Beskjed(
                         metadata = hendelse.data.metadata,

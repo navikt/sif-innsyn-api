@@ -70,7 +70,7 @@ class K9EttersendingKonsument(
         }
 
         logger.info("Sender DittNav beskjed for ytelse $YTELSE - ${søknadstype.utskriftsvennlig}")
-        dittNavService.sendBeskjed(
+        dittNavService.sendBeskjedOnprem(
                 søknadId = melding.getString(SØKNAD_ID),
                 k9Beskjed = melding.somK9Beskjed(
                         metadata = hendelse.data.metadata,

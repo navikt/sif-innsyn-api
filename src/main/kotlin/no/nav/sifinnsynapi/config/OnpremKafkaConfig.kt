@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.core.io.Resource
 import org.springframework.data.transaction.ChainedTransactionManager
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory
 import org.springframework.kafka.core.*
@@ -25,8 +26,9 @@ class OnpremKafkaConfig(
     @Value("\${kafka.onprem.properties.security.protocol:#{null}}") private val securityProtocol: String?,
     @Value("\${kafka.onprem.properties.sasl.mechanism:#{null}}") private val saslMechanism: String?,
     @Value("\${kafka.onprem.properties.sasl.jaas-config:#{null}}") private val jaasConfig: String?,
-    @Value("\${kafka.onprem.properties.ssl.trust-store-location:#{null}}") private val trustStoreLocation: String?,
-    @Value("\${kafka.onprem.properties.ssl.trust-store-password:#{null}}") private val trustStorePassword: String?,
+    @Value("\${kafka.onprem.properties.ssl.truststore-location:#{null}}") private val trustStoreLocation: Resource?,
+    @Value("\${kafka.onprem.properties.ssl.truststore-password:#{null}}") private val trustStorePassword: String?,
+    @Value("\${kafka.onprem.properties.ssl.truststore-type:#{null}}") private val trustStoreType: String?,
     @Value("\${kafka.onprem.consumer.enable-auto-commit}") private val enableAutoCommit: Boolean,
     @Value("\${kafka.onprem.consumer.group-id}") private val groupId: String,
     @Value("\${kafka.onprem.consumer.auto-offset-reset}") private val autoOffsetReset: String,
@@ -37,7 +39,8 @@ class OnpremKafkaConfig(
     @Value("\${kafka.onprem.producer.client-id}") private val clientId: String,
     @Value("\${kafka.onprem.producer.key-serializer}") private val keySerializer: String,
     @Value("\${kafka.onprem.producer.value-serializer}") private val valueSerializer: String,
-    @Value("\${kafka.onprem.producer.transaction-id-prefix}") private val transactionIdPrefix: String
+    @Value("\${kafka.onprem.producer.transaction-id-prefix}") private val transactionIdPrefix: String,
+    @Value("\${kafka.onprem.producer.retries}") private val retries: Int
 ) {
 
     companion object {
@@ -52,9 +55,9 @@ class OnpremKafkaConfig(
         securityProtocol?.let { put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, it) }
         saslMechanism?.let { put(SaslConfigs.SASL_MECHANISM, it) }
         jaasConfig?.let { put(SaslConfigs.SASL_JAAS_CONFIG, it) }
-        trustStoreLocation?.let { put(SslConfigs.SSL_TRUSTSTORE_LOCATION_CONFIG, it) }
+        trustStoreLocation?.let { put(SslConfigs.SSL_TRUSTSTORE_LOCATION_CONFIG, it.file.absolutePath) }
         trustStorePassword?.let { put(SslConfigs.SSL_TRUSTSTORE_PASSWORD_CONFIG, it) }
-
+        trustStoreType?.let { put(SslConfigs.SSL_TRUSTSTORE_TYPE_CONFIG, it) }
     }
 
     @Bean
@@ -76,7 +79,8 @@ class OnpremKafkaConfig(
         val producerProperties = mutableMapOf<String, Any>(
             ProducerConfig.CLIENT_ID_CONFIG to clientId,
             ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG to keySerializer,
-            ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG to valueSerializer
+            ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG to valueSerializer,
+            ProducerConfig.RETRIES_CONFIG to retries
         ) + commonConfig()
 
         val factory = DefaultKafkaProducerFactory<String, String>(producerProperties)
@@ -92,12 +96,12 @@ class OnpremKafkaConfig(
     @Bean
     fun onpremKafkaJsonListenerContainerFactory(
         onpremConsumerFactory: ConsumerFactory<String, String>,
-        chainedTransactionManager: ChainedTransactionManager,
+        transactionManager: ChainedTransactionManager,
         onpremKafkaTemplate: KafkaTemplate<String, String>
     ): ConcurrentKafkaListenerContainerFactory<String, String> = configureConcurrentKafkaListenerContainerFactory(
-        clientId = "groupId",
+        clientId = groupId,
         consumerFactory = onpremConsumerFactory,
-        chainedTransactionManager = chainedTransactionManager,
+        chainedTransactionManager = transactionManager,
         kafkaTemplate = onpremKafkaTemplate,
         retryInterval = retryInterval,
         objectMapper = objectMapper,

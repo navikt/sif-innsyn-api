@@ -50,7 +50,7 @@ class OmsorgspengerUtvidetRettHendelseKonsument(
         logger.info("Mottok hendelse om $YTELSE med søknadId: $søknadId")
 
         logger.info("Sender DittNav beskjed for ytelse $YTELSE")
-        dittNavService.sendBeskjed(
+        dittNavService.sendBeskjedOnprem(
                 melding.getString(SØKNAD_ID),
                 melding.somK9Beskjed(hendelse.data.metadata, omsorgspengerUtvidetRettBeskjedProperties)
         )
