@@ -296,7 +296,7 @@ class SøknadControllerTest {
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk)
             .andExpect(header().exists(CONTENT_DISPOSITION))
-            .andExpect(header().string(CONTENT_DISPOSITION, "attachment; filename=$forventetFilnavn.pdf"))
+            .andExpect(header().string(CONTENT_DISPOSITION, "inline; filename=$forventetFilnavn.pdf"))
     }
 
     @Test
@@ -317,6 +317,6 @@ class SøknadControllerTest {
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk)
             .andExpect(header().exists(CONTENT_DISPOSITION))
-            .andExpect(header().string(CONTENT_DISPOSITION, "attachment; filename=$forventetFilnavn.pdf"))
+            .andExpect(header().string(CONTENT_DISPOSITION, "inline; filename=$forventetFilnavn.pdf"))
     }
 }

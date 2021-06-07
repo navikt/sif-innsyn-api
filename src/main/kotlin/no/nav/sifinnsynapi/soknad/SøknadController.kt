@@ -55,7 +55,7 @@ class SøknadController(
         val decodetFilnavn = URLDecoder.decode(filnavn, StandardCharsets.UTF_8.toString())
 
         return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=$decodetFilnavn.pdf")
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=$decodetFilnavn.pdf")
                 .contentLength(resource.byteArray.size.toLong())
                 .body(resource)
     }
