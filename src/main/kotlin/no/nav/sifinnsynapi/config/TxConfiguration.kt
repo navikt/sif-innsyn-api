@@ -2,8 +2,9 @@ package no.nav.sifinnsynapi.config
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.jdbc.datasource.DataSourceTransactionManager
-import javax.sql.DataSource
+import org.springframework.context.annotation.Primary
+import org.springframework.orm.jpa.JpaTransactionManager
+import javax.persistence.EntityManagerFactory
 
 @Configuration
 class TxConfiguration {
@@ -11,8 +12,9 @@ class TxConfiguration {
         const val TRANSACTION_MANAGER = "transactionManager"
     }
 
-    @Bean
-    fun transactionManager(dataSource: DataSource): DataSourceTransactionManager {
-        return DataSourceTransactionManager(dataSource)
+    @Bean(TRANSACTION_MANAGER)
+    @Primary
+    fun transactionManager(entityManagerFactory: EntityManagerFactory): JpaTransactionManager {
+        return JpaTransactionManager(entityManagerFactory)
     }
 }
