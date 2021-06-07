@@ -69,7 +69,8 @@ class CommonKafkaConfig {
                     }
                     false -> {
                         logger.info("Fant IKKE duplikat, deserialiserer")
-                        false
+                        if (chainedTransactionManager == null) true
+                        else false
                     }
                 }
             }
@@ -91,7 +92,10 @@ class CommonKafkaConfig {
 
             //https://docs.spring.io/spring-kafka/docs/2.5.2.RELEASE/reference/html/#after-rollback
             val defaultAfterRollbackProcessor =
-                DefaultAfterRollbackProcessor<String, String>(recoverer(logger), FixedBackOff(retryInterval, Long.MAX_VALUE))
+                DefaultAfterRollbackProcessor<String, String>(
+                    recoverer(logger),
+                    FixedBackOff(retryInterval, Long.MAX_VALUE)
+                )
             defaultAfterRollbackProcessor.setClassifications(mapOf(), true)
             factory.setAfterRollbackProcessor(defaultAfterRollbackProcessor)
             return factory
