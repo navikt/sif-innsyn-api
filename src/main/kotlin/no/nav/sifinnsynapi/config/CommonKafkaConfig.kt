@@ -69,8 +69,7 @@ class CommonKafkaConfig {
                     }
                     false -> {
                         logger.info("Fant IKKE duplikat, deserialiserer")
-                        if (chainedTransactionManager == null) true
-                        else false
+                        false
                     }
                 }
             }
