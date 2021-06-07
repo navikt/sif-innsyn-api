@@ -43,6 +43,7 @@ internal class SøknadServiceTest {
     @Autowired
     private lateinit var søknadService: SøknadService
 
+
     @Test
     fun hentArbeidsgiverMeldingFil() {
         val søknadId = UUID.randomUUID()
