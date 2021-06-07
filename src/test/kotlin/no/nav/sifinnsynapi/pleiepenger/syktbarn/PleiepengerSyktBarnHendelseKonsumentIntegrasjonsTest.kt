@@ -189,6 +189,8 @@ class PleiepengerSyktBarnHendelseKonsumentIntegrasjonsTest {
 
     @Test
     fun `Gitt lagrede meldinger i database, forvent kun at brukers data vises ved restkall`() {
+        repository.deleteAll()
+
         // Gitt at ingen hendelser med samme aktørId eksisterer...
         repository.findAllByAktørId(aktørId).ikkeEksisterer()
 
