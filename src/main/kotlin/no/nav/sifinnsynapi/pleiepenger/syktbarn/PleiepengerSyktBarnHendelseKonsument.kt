@@ -1,6 +1,7 @@
 package no.nav.sifinnsynapi.pleiepenger.syktbarn
 
 import no.nav.sifinnsynapi.common.*
+import no.nav.sifinnsynapi.config.TxConfiguration.Companion.TRANSACTION_MANAGER
 import no.nav.sifinnsynapi.dittnav.DittnavService
 import no.nav.sifinnsynapi.dittnav.K9Beskjed
 import no.nav.sifinnsynapi.pleiepenger.syktbarn.PleiepengersøknadKeysV1.AKTØR_ID
@@ -34,7 +35,7 @@ class PleiepengerSyktBarnHendelseKonsument(
         private val YTELSE = "'pleiepenger - sykt barn'"
     }
 
-    @Transactional
+    @Transactional(TRANSACTION_MANAGER)
     @KafkaListener(
             topics = ["#{'\${topic.listener.pp-sykt-barn.navn}'}"],
             id = "#{'\${topic.listener.pp-sykt-barn.id}'}",

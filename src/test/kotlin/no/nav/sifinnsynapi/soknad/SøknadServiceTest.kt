@@ -24,11 +24,11 @@ import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.util.*
 
-@EmbeddedKafka( // Setter opp og tilgjengligjør embeded kafka broker
+/*@EmbeddedKafka( // Setter opp og tilgjengligjør embeded kafka broker
     count = 3,
     topics = [Topics.K9_ETTERSENDING, Topics.K9_DITTNAV_VARSEL_BESKJED],
     bootstrapServersProperty = "kafka.onprem.servers" // Setter bootstrap-servers for consumer og producer.
-)
+)*/
 @ExtendWith(SpringExtension::class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @DirtiesContext

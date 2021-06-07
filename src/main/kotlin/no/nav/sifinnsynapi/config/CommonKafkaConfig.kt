@@ -9,7 +9,6 @@ import no.nav.sifinnsynapi.util.MDCUtil
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.json.JSONObject
 import org.slf4j.Logger
-import org.springframework.data.transaction.ChainedTransactionManager
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory
 import org.springframework.kafka.core.ConsumerFactory
 import org.springframework.kafka.core.KafkaTemplate
@@ -17,6 +16,7 @@ import org.springframework.kafka.listener.ContainerProperties
 import org.springframework.kafka.listener.DefaultAfterRollbackProcessor
 import org.springframework.kafka.support.KafkaHeaders
 import org.springframework.kafka.support.converter.JsonMessageConverter
+import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.util.backoff.FixedBackOff
 import java.nio.ByteBuffer
 import java.time.Duration
@@ -28,7 +28,7 @@ class CommonKafkaConfig {
             clientId: String,
             consumerFactory: ConsumerFactory<String, String>,
             retryInterval: Long,
-            chainedTransactionManager: ChainedTransactionManager? = null,
+            transactionManager: PlatformTransactionManager,
             kafkaTemplate: KafkaTemplate<String, String>,
             objectMapper: ObjectMapper,
             søknadRepository: SøknadRepository,
@@ -75,10 +75,7 @@ class CommonKafkaConfig {
             }
 
             // https://docs.spring.io/spring-kafka/docs/2.5.2.RELEASE/reference/html/#chained-transaction-manager
-            factory.containerProperties.transactionManager = chainedTransactionManager
-
-            // https://docs.spring.io/spring-kafka/docs/2.5.2.RELEASE/reference/html/#exactly-once
-            factory.containerProperties.eosMode = ContainerProperties.EOSMode.BETA
+            factory.containerProperties.transactionManager = transactionManager
 
             // https://docs.spring.io/spring-kafka/docs/2.5.2.RELEASE/reference/html/#committing-offsets
             factory.containerProperties.ackMode = ContainerProperties.AckMode.RECORD;

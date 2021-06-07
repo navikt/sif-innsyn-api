@@ -34,7 +34,6 @@ class OmsorgspengerUtvidetRettHendelseKonsument(
         }
     }
 
-    @Transactional
     @KafkaListener(
             topics = ["#{'\${topic.listener.omp-utvidet-rett.navn}'}"],
             id = "#{'\${topic.listener.omp-utvidet-rett.id}'}",

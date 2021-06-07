@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("org.springframework.boot") version "2.4.5"
+    id("org.springframework.boot") version "2.5.0"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
     kotlin("jvm") version "1.5.10"
     kotlin("plugin.spring") version "1.5.10"
@@ -38,6 +38,8 @@ val testContainersPostgresqlVersion by extra("1.15.3")
 val orgJsonVersion by extra("20210307")
 
 ext["okhttp3.version"] = okHttp3Version
+ext["mock-oauth2-server.version"] = "0.3.3"
+ext["nimbus.jose.jwt.version"] = "9.10"
 
 repositories {
     mavenCentral()
@@ -52,6 +54,8 @@ dependencies {
     // NAV
     implementation("no.nav.security:token-validation-spring:$tokenValidationVersion")
     testImplementation("no.nav.security:token-validation-spring-test:$tokenValidationVersion")
+    testImplementation("no.nav.security:mock-oauth2-server:0.3.3")
+    implementation("com.nimbusds:nimbus-jose-jwt:9.10")
     testImplementation("com.squareup.okhttp3:okhttp:$okHttp3Version")
 
     // Spring Boot

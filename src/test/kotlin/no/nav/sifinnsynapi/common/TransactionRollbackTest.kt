@@ -2,6 +2,7 @@ package no.nav.sifinnsynapi.common
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
+import assertk.assertions.isNull
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
@@ -28,6 +29,7 @@ import org.springframework.kafka.test.context.EmbeddedKafka
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit.jupiter.SpringExtension
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 @EmbeddedKafka( // Setter opp og tilgjengligjør embeded kafka broker
@@ -85,10 +87,10 @@ class TransactionRollbackTest {
         val hendelse = defaultHendelse(journalpostId = "0000000")
         producer.leggPåTopic(hendelse, PP_SYKT_BARN, mapper)
 
-
         // forvent at det som ble persistert blir rullet tilbake.
         await.atMost(60, TimeUnit.SECONDS).untilAsserted {
-            assertThat(repository.count()).isEqualTo(0)
+            assertThat(repository.findById(UUID.fromString(hendelse.data.melding["søknadId"] as String)))
+                .isEqualTo(Optional.empty())
         }
     }
 }

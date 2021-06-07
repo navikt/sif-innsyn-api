@@ -47,7 +47,6 @@ class K9EttersendingKonsument(
         }
     }
 
-    @Transactional
     @KafkaListener(
             topics = ["#{'\${topic.listener.k9-ettersending.navn}'}"],
             id = "#{'\${topic.listener.k9-ettersending.id}'}",

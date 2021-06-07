@@ -34,7 +34,6 @@ class OmsorgspengerutbetalingSNFHendelseKonsument(
         }
     }
 
-    @Transactional
     @KafkaListener(
             topics = ["#{'\${topic.listener.omp-utbetaling-snf.navn}'}"],
             id = "#{'\${topic.listener.omp-utbetaling-snf.id}'}",

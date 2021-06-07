@@ -13,9 +13,11 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.io.Resource
-import org.springframework.data.transaction.ChainedTransactionManager
+import org.springframework.jdbc.datasource.DataSourceTransactionManager
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory
 import org.springframework.kafka.core.*
+import org.springframework.kafka.transaction.KafkaTransactionManager
+import javax.sql.DataSource
 
 
 @Configuration
@@ -89,19 +91,26 @@ class OnpremKafkaConfig(
     }
 
     @Bean
-    fun onpremKafkaTemplate(onpremProducerFactory: ProducerFactory<String, String>): KafkaTemplate<String, String> {
-        return KafkaTemplate(onpremProducerFactory)
-    }
+    fun onpremKafkaTemplate(onpremProducerFactory: ProducerFactory<String, String>) =
+        KafkaTemplate(onpremProducerFactory).apply {
+            transactionIdPrefix = transactionIdPrefix
+        }
+
+    @Bean
+    fun onpremKafkaTransactionManager(onpremProducerFactory: ProducerFactory<String, String>) =
+        KafkaTransactionManager(onpremProducerFactory).apply {
+            setTransactionIdPrefix(transactionIdPrefix)
+        }
 
     @Bean
     fun onpremKafkaJsonListenerContainerFactory(
         onpremConsumerFactory: ConsumerFactory<String, String>,
-        transactionManager: ChainedTransactionManager,
-        onpremKafkaTemplate: KafkaTemplate<String, String>
+        onpremKafkaTemplate: KafkaTemplate<String, String>,
+        kafkaTransactionManager: KafkaTransactionManager<String, String>,
     ): ConcurrentKafkaListenerContainerFactory<String, String> = configureConcurrentKafkaListenerContainerFactory(
         clientId = groupId,
         consumerFactory = onpremConsumerFactory,
-        chainedTransactionManager = transactionManager,
+        transactionManager = kafkaTransactionManager,
         kafkaTemplate = onpremKafkaTemplate,
         retryInterval = retryInterval,
         objectMapper = objectMapper,

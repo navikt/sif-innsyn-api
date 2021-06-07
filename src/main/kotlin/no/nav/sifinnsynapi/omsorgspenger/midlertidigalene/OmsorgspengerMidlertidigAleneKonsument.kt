@@ -34,7 +34,6 @@ class OmsorgspengerMidlertidigAleneKonsument(
         }
     }
 
-    @Transactional
     @KafkaListener(
             topics = ["#{'\${topic.listener.omp-midlertidig-alene.navn}'}"],
             id = "#{'\${topic.listener.omp-midlertidig-alene.id}'}",

@@ -19,33 +19,31 @@ class DittnavService(
         private val log: Logger = LoggerFactory.getLogger(DittnavService::class.java)
     }
 
-    @Transactional
+
     fun sendBeskjedOnprem(søknadId: String, k9Beskjed: K9Beskjed) {
         log.info("Sender ut dittnav beskjed med eventID: {}", søknadId)
-        return onpremKafkaTemplate.executeInTransaction {
-            it.send(
-                ProducerRecord(
-                    K9_DITTNAV_VARSEL_BESKJED,
-                    søknadId,
-                    k9Beskjed.somJson(objectMapper)
-                )
+        return onpremKafkaTemplate.send(
+            ProducerRecord(
+                K9_DITTNAV_VARSEL_BESKJED,
+                søknadId,
+                k9Beskjed.somJson(objectMapper)
             )
-                .addCallback(
-                    { result ->
-                        result?.let {
-                            log.info(
-                                "Sendte melding med offset {} på {}",
-                                result.recordMetadata.offset(),
-                                result.producerRecord.topic()
-                            )
-                        }
-                    },
-                    { ex ->
-                        log.warn("Kunne ikke sende melding {} på {}", k9Beskjed, K9_DITTNAV_VARSEL_BESKJED, ex);
-                        throw ex
+        )
+            .addCallback(
+                { result ->
+                    result?.let {
+                        log.info(
+                            "Sendte melding med offset {} på {}",
+                            result.recordMetadata.offset(),
+                            result.producerRecord.topic()
+                        )
                     }
-                )
-        }
+                },
+                { ex ->
+                    log.warn("Kunne ikke sende melding {} på {}", k9Beskjed, K9_DITTNAV_VARSEL_BESKJED, ex);
+                    throw ex
+                }
+            )
     }
 }
 

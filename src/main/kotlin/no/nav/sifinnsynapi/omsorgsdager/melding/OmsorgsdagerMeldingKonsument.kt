@@ -43,7 +43,6 @@ class OmsorgsdagerMeldingKonsument(
         }
     }
 
-    @Transactional
     @KafkaListener(
             topics = ["#{'\${topic.listener.omd-melding.navn}'}"],
             id = "#{'\${topic.listener.omd-melding.id}'}",
