@@ -290,13 +290,13 @@ class SøknadControllerTest {
                 .get(URI(URLDecoder.decode("$SØKNAD/${UUID.randomUUID()}/arbeidsgivermelding", Charset.defaultCharset())))
                 .queryParam("organisasjonsnummer", "12345678")
                 .queryParam("filnavn", forventetFilnavn)
-                .accept(MediaType.APPLICATION_OCTET_STREAM_VALUE)
+                .accept(MediaType.APPLICATION_PDF_VALUE)
                 .cookie(Cookie("selvbetjening-idtoken", mockOAuth2Server.hentToken().serialize()))
         )
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk)
             .andExpect(header().exists(CONTENT_DISPOSITION))
-            .andExpect(header().string(CONTENT_DISPOSITION, "filename=$forventetFilnavn.pdf"))
+            .andExpect(header().string(CONTENT_DISPOSITION, "inline; filename=$forventetFilnavn.pdf"))
     }
 
     @Test
@@ -311,12 +311,12 @@ class SøknadControllerTest {
                 .get(URI(URLDecoder.decode("$SØKNAD/${UUID.randomUUID()}/arbeidsgivermelding", Charset.defaultCharset())))
                 .queryParam("organisasjonsnummer", "12345678")
                 .queryParam("filnavn", "filnavn%20med%20mellomrom")
-                .accept(MediaType.APPLICATION_OCTET_STREAM_VALUE)
+                .accept(MediaType.APPLICATION_PDF_VALUE)
                 .cookie(Cookie("selvbetjening-idtoken", mockOAuth2Server.hentToken().serialize()))
         )
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk)
             .andExpect(header().exists(CONTENT_DISPOSITION))
-            .andExpect(header().string(CONTENT_DISPOSITION, "filename=$forventetFilnavn.pdf"))
+            .andExpect(header().string(CONTENT_DISPOSITION, "inline; filename=$forventetFilnavn.pdf"))
     }
 }
