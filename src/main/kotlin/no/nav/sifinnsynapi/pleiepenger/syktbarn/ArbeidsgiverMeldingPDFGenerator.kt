@@ -1,6 +1,7 @@
 package no.nav.sifinnsynapi.pleiepenger.syktbarn
 
 import no.nav.sifinnsynapi.pdf.PDFGenerator
+import no.nav.sifinnsynapi.util.storForbokstav
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 import java.time.ZoneOffset.UTC
@@ -14,8 +15,7 @@ class ArbeidsgiverMeldingPDFGenerator : PDFGenerator<PleiepengerArbeidsgiverMeld
 
 
     override fun PleiepengerArbeidsgiverMelding.tilMap(): Map<String, Any?> = mapOf(
-        "arbeidsgiver_navn" to arbeidsgivernavn?.capitalize(),
-        "arbeidstaker_navn" to arbeidstakernavn.capitalize(),
+        "arbeidsgiver_navn" to arbeidsgivernavn?.storForbokstav(),
         "periode" to mapOf(
             "fom" to DATE_FORMATTER.format(søknadsperiode.fraOgMed),
             "tom" to DATE_FORMATTER.format(søknadsperiode.tilOgMed)
