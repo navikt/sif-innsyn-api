@@ -42,7 +42,7 @@ class SøknadController(
         return søknadService.hentSøknad(søknadId)
     }
 
-    @GetMapping("$SØKNAD/{søknadId}/arbeidsgivermelding", produces = [MediaType.APPLICATION_OCTET_STREAM_VALUE])
+    @GetMapping("$SØKNAD/{søknadId}/arbeidsgivermelding", produces = [MediaType.APPLICATION_PDF_VALUE])
     @Protected
     @ResponseStatus(OK)
     fun lastNedArbeidsgivermelding(
@@ -55,7 +55,7 @@ class SøknadController(
         val decodetFilnavn = URLDecoder.decode(filnavn, StandardCharsets.UTF_8.toString())
 
         return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "filename=$decodetFilnavn.pdf")
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=$decodetFilnavn.pdf")
                 .contentLength(resource.byteArray.size.toLong())
                 .body(resource)
     }
