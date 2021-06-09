@@ -77,6 +77,9 @@ class CommonKafkaConfig {
             // https://docs.spring.io/spring-kafka/docs/2.5.2.RELEASE/reference/html/#chained-transaction-manager
             factory.containerProperties.transactionManager = transactionManager
 
+            // https://docs.spring.io/spring-kafka/docs/2.5.2.RELEASE/reference/html/#exactly-once
+            factory.containerProperties.eosMode = ContainerProperties.EOSMode.BETA
+
             // https://docs.spring.io/spring-kafka/docs/2.5.2.RELEASE/reference/html/#committing-offsets
             factory.containerProperties.ackMode = ContainerProperties.AckMode.RECORD;
 

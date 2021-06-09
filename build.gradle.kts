@@ -22,7 +22,7 @@ val springfoxVersion by extra("3.0.0")
 val confluentVersion by extra("5.5.0")
 val logstashLogbackEncoderVersion by extra("6.6")
 val tokenValidationVersion by extra("1.3.7")
-val springCloudVersion by extra("2020.0.2")
+val springCloudVersion by extra("2020.0.3")
 val retryVersion by extra("1.3.0")
 val zalandoVersion by extra("0.26.2")
 val openhtmltopdfVersion = "1.0.8"
@@ -34,10 +34,10 @@ val springMockkVersion by extra("3.0.1")
 val mockkVersion by extra("1.11.0")
 val guavaVersion by extra("23.0")
 val okHttp3Version by extra("4.9.1")
-val testContainersPostgresqlVersion by extra("1.15.3")
 val orgJsonVersion by extra("20210307")
 
 ext["okhttp3.version"] = okHttp3Version
+ext["testcontainersVersion"] = "1.15.3"
 ext["mock-oauth2-server.version"] = "0.3.3"
 ext["nimbus.jose.jwt.version"] = "9.10"
 
@@ -97,7 +97,8 @@ dependencies {
     implementation("org.flywaydb:flyway-core")
     runtimeOnly("org.hibernate:hibernate-jpamodelgen")
     implementation("com.vladmihalcea:hibernate-types-52:$hibernateTypes52Version")
-    testImplementation("org.testcontainers:postgresql:$testContainersPostgresqlVersion")
+    testImplementation("org.testcontainers:junit-jupiter")
+    testImplementation("org.testcontainers:postgresql")
 
     // Jackson
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
@@ -131,6 +132,7 @@ dependencies {
 
 dependencyManagement {
     imports {
+        mavenBom("org.testcontainers:testcontainers-bom:${property("testcontainersVersion")}")
         mavenBom("org.springframework.cloud:spring-cloud-dependencies:${property("springCloudVersion")}")
     }
 }
@@ -144,4 +146,8 @@ tasks.withType<KotlinCompile> {
         freeCompilerArgs = listOf("-Xjsr305=strict")
         jvmTarget = "11"
     }
+}
+
+tasks.getByName<Jar>("jar") {
+    enabled = false
 }
