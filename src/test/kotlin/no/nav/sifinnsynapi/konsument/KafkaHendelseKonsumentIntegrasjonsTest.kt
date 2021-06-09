@@ -20,6 +20,7 @@ import no.nav.sifinnsynapi.config.Topics.OMP_UTBETALING_SNF
 import no.nav.sifinnsynapi.config.Topics.OMP_UTVIDET_RETT
 import no.nav.sifinnsynapi.config.Topics.PP_SYKT_BARN
 import no.nav.sifinnsynapi.dittnav.K9Beskjed
+import no.nav.sifinnsynapi.konsument.ettersending.K9EttersendingKonsument
 import no.nav.sifinnsynapi.konsument.omsorgspenger.utbetaling.arbeidstaker.OmsorgspengerutbetalingArbeidstakerHendelseKonsument
 import no.nav.sifinnsynapi.konsument.omsorgspenger.utvidetrett.OmsorgspengerUtvidetRettHendelseKonsument
 import no.nav.sifinnsynapi.soknad.SøknadDTO
@@ -233,8 +234,7 @@ class KafkaHendelseKonsumentIntegrasjonsTest {
         val hendelse = defaultHendelse(journalpostId = "4")
         producer.leggPåTopic(hendelse, PP_SYKT_BARN, mapper)
 
-        val dittnavBeskjed =
-            dittNavConsumer.lesMelding(hendelse.data.melding["søknadId"] as String, maxWaitInSeconds = 20)
+        val dittnavBeskjed = dittNavConsumer.lesMelding(hendelse.data.melding["søknadId"] as String)
         log.info("----> dittnav melding: {}", dittnavBeskjed)
         assertThat(dittnavBeskjed).isNotNull()
     }
@@ -255,24 +255,22 @@ class KafkaHendelseKonsumentIntegrasjonsTest {
 
     @Test
     fun `Konsumer hendelse om ettersending av pleiepenger og forvent at dittNav beskjed blir sendt ut`() {
-        val søknadstype = "pleiepenger"
+        val søknadstype = K9EttersendingKonsument.Companion.Søknadstype.PLEIEPENGER_SYKT_BARN
         val hendelse = defaultHendelseK9Ettersending(søknadstype = søknadstype)
         producer.leggPåTopic(hendelse, K9_ETTERSENDING, mapper)
 
         // forvent at dittNav melding blir sendt
-        await.atMost(10, TimeUnit.SECONDS).untilAsserted {
-            val dittnavBeskjed = dittNavConsumer.lesMelding(hendelse.data.melding["soknadId"] as String)
-            log.info("----> dittnav melding: {}", dittnavBeskjed)
-            assertThat(dittnavBeskjed).isNotNull()
-            Assert.assertTrue(dittnavBeskjed.toString().contains(søknadstype))
-        }
+        val dittnavBeskjed = dittNavConsumer.lesMelding(hendelse.data.melding["soknadId"] as String)
+        log.info("----> dittnav melding: {}", dittnavBeskjed)
+        assertThat(dittnavBeskjed).isNotNull()
+        Assert.assertTrue(dittnavBeskjed.toString().contains(søknadstype.utskriftsvennlig))
     }
 
     @Test
     fun `Konsumer hendelse om ettersending av PLEIEPENGER_SYKT_BARN og forvent at dittNav beskjed blir sendt ut`() {
-        val søknadstype = "PLEIEPENGER_SYKT_BARN"
+        val søknadstype = K9EttersendingKonsument.Companion.Søknadstype.PLEIEPENGER_SYKT_BARN
         val hendelse = defaultHendelseK9Ettersending(søknadstype = søknadstype)
-        producer.leggPåTopic(hendelse, Topics.K9_ETTERSENDING, mapper)
+        producer.leggPåTopic(hendelse, K9_ETTERSENDING, mapper)
 
         // forvent at dittNav melding blir sendt
         val dittnavBeskjed = dittNavConsumer.lesMelding(hendelse.data.melding["soknadId"] as String)
@@ -283,20 +281,20 @@ class KafkaHendelseKonsumentIntegrasjonsTest {
 
     @Test
     fun `Konsumer hendelse om ettersending av omsorgspenger og forvent at dittNav beskjed blir sendt ut`() {
-        val søknadstype = "omsorgspenger"
+        val søknadstype = K9EttersendingKonsument.Companion.Søknadstype.OMSORGSPENGER
         val hendelse = defaultHendelseK9Ettersending(søknadstype = søknadstype)
-        producer.leggPåTopic(hendelse, Topics.K9_ETTERSENDING, mapper)
+        producer.leggPåTopic(hendelse, K9_ETTERSENDING, mapper)
 
         // forvent at dittNav melding blir sendt
         val dittnavBeskjed = dittNavConsumer.lesMelding(hendelse.data.melding["soknadId"] as String)
         log.info("----> dittnav melding: {}", dittnavBeskjed)
         assertThat(dittnavBeskjed).isNotNull()
-        Assert.assertTrue(dittnavBeskjed.toString().contains(søknadstype))
+        Assert.assertTrue(dittnavBeskjed.toString().contains(søknadstype.utskriftsvennlig))
     }
 
     @Test
     fun `Konsumer hendelse om ettersending av OMP_UTV_KS og forvent at dittNav beskjed blir sendt ut`() {
-        val søknadstype = "OMP_UTV_KS"
+        val søknadstype = K9EttersendingKonsument.Companion.Søknadstype.OMP_UTV_KS
         val hendelse = defaultHendelseK9Ettersending(søknadstype = søknadstype)
         producer.leggPåTopic(hendelse, Topics.K9_ETTERSENDING, mapper)
 
@@ -309,17 +307,15 @@ class KafkaHendelseKonsumentIntegrasjonsTest {
 
     @Test
     fun `Konsumer hendelse om ettersending av dele dager og forvent at dittNav beskjed blir sendt ut`() {
-        val søknadstype = "OMP_DELE_DAGER"
+        val søknadstype = K9EttersendingKonsument.Companion.Søknadstype.OMP_DELE_DAGER
         val hendelse = defaultHendelseK9Ettersending(søknadstype = søknadstype)
         producer.leggPåTopic(hendelse, K9_ETTERSENDING, mapper)
 
         // forvent at dittNav melding blir sendt
-        await.atMost(10, TimeUnit.SECONDS).untilAsserted {
-            val dittnavBeskjed = dittNavConsumer.lesMelding(hendelse.data.melding["soknadId"] as String)
-            log.info("----> dittnav melding: {}", dittnavBeskjed)
-            assertThat(dittnavBeskjed).isNotNull()
-            Assert.assertTrue(dittnavBeskjed.toString().contains("omsorgspenger"))
-        }
+        val dittnavBeskjed = dittNavConsumer.lesMelding(hendelse.data.melding["soknadId"] as String)
+        log.info("----> dittnav melding: {}", dittnavBeskjed)
+        assertThat(dittnavBeskjed).isNotNull()
+        Assert.assertTrue(dittnavBeskjed.toString().contains("omsorgspenger"))
     }
 
     @Test

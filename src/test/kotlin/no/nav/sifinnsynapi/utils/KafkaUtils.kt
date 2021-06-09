@@ -54,7 +54,7 @@ fun Consumer<String, K9Beskjed>.lesMelding(
     seekToBeginning(assignment())
     while (System.currentTimeMillis() < end) {
 
-        val entries: List<ConsumerRecord<String, K9Beskjed>> = poll(Duration.ofSeconds(60))
+        val entries: List<ConsumerRecord<String, K9Beskjed>> = poll(Duration.ofSeconds(10))
             .records(topic)
             .filter { it.key() == søknadId }
 
