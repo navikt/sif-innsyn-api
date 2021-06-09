@@ -11,6 +11,7 @@ import no.nav.sifinnsynapi.konsument.ettersending.K9EttersendingKonsument.Compan
 import no.nav.sifinnsynapi.konsument.ettersending.K9EttersendingKonsument.Companion.Keys.SØKER
 import no.nav.sifinnsynapi.konsument.ettersending.K9EttersendingKonsument.Companion.Keys.SØKNAD_ID
 import no.nav.sifinnsynapi.konsument.ettersending.K9EttersendingKonsument.Companion.Keys.SØKNAD_TYPE
+import no.nav.sifinnsynapi.util.storForbokstav
 import org.json.JSONObject
 import org.slf4j.LoggerFactory
 import org.springframework.kafka.annotation.KafkaListener
@@ -60,7 +61,7 @@ class K9EttersendingKonsument(
     ){
         val melding = JSONObject(hendelse.data.melding)
         val søknadId = melding.getString(SØKNAD_ID)
-        val søknadstype = Søknadstype.valueOf(melding.getString(SØKNAD_TYPE).toUpperCase())
+        val søknadstype = Søknadstype.valueOf(melding.getString(SØKNAD_TYPE).storForbokstav())
 
         logger.info("Mottok hendelse om '$YTELSE - ${søknadstype.utskriftsvennlig}' med søknadId: $søknadId")
 

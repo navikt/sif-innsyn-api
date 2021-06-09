@@ -53,7 +53,7 @@ class PleiepengerSyktBarnHendelseKonsument(
             logger.info("DRY_RUN --> Mottok hendelse om $YTELSE med søknadId: $søknadId")
             logger.info("DRY_RUN --> Mapper fra TopicEntry til Søknad for $YTELSE")
             try {
-                val søknadsHendelse = Søknad(
+                Søknad(
                         aktørId = AktørId(melding.getJSONObject(SØKER).getString(AKTØR_ID)),
                         mottattDato = ZonedDateTime.parse(melding.getString(MOTTATT)),
                         fødselsnummer = Fødselsnummer(melding.getJSONObject(SØKER).getString(FØDSELSNUMMER)),
