@@ -56,8 +56,8 @@ dependencies {
     // NAV
     implementation("no.nav.security:token-validation-spring:$tokenValidationVersion")
     testImplementation("no.nav.security:token-validation-spring-test:$tokenValidationVersion")
-    testImplementation("no.nav.security:mock-oauth2-server:0.3.3")
-    implementation("com.nimbusds:nimbus-jose-jwt:9.10")
+    testImplementation("no.nav.security:mock-oauth2-server:0.3.3") // TODO: 09/06/2021 fjern når tokenValidationVersion oppdateres til 1.3.8
+    implementation("com.nimbusds:nimbus-jose-jwt:9.10") // TODO: 09/06/2021 fjern når tokenValidationVersion oppdateres til 1.3.8
     testImplementation("com.squareup.okhttp3:okhttp:$okHttp3Version")
 
     // Spring Boot
