@@ -38,6 +38,8 @@ val orgJsonVersion by extra("20210307")
 
 ext["okhttp3.version"] = okHttp3Version
 ext["testcontainersVersion"] = "1.15.3"
+
+// TODO: 09/06/2021 fjern disse når tokenValidationVersion oppdateres til 1.3.8
 ext["mock-oauth2-server.version"] = "0.3.3"
 ext["nimbus.jose.jwt.version"] = "9.10"
 
