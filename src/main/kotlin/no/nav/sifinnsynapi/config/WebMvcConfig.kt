@@ -78,7 +78,6 @@ class WebMvcConfig(
                 DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,
                 SerializationFeature.WRITE_DURATIONS_AS_TIMESTAMPS
             )
-            builder.featuresToEnable(SerializationFeature.WRITE_ENUMS_USING_TO_STRING, DeserializationFeature.READ_ENUMS_USING_TO_STRING)
             builder.propertyNamingStrategy(PropertyNamingStrategies.LOWER_CAMEL_CASE)
         }
     }
