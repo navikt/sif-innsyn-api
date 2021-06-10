@@ -3,9 +3,6 @@ package no.nav.sifinnsynapi.config.kafka
 import com.fasterxml.jackson.databind.ObjectMapper
 import no.nav.sifinnsynapi.common.AktørId
 import no.nav.sifinnsynapi.common.TopicEntry
-import no.nav.sifinnsynapi.config.KafkaConfigProperties
-import no.nav.sifinnsynapi.config.KafkaProperties
-import no.nav.sifinnsynapi.config.KafkaSaslProperties
 import no.nav.sifinnsynapi.soknad.SøknadRepository
 import no.nav.sifinnsynapi.util.Constants
 import no.nav.sifinnsynapi.util.MDCUtil

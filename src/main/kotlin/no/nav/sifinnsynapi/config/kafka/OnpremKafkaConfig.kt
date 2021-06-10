@@ -1,7 +1,6 @@
 package no.nav.sifinnsynapi.config.kafka
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import no.nav.sifinnsynapi.config.KafkaClusterProperties
 import no.nav.sifinnsynapi.config.kafka.CommonKafkaConfig.Companion.configureConcurrentKafkaListenerContainerFactory
 import no.nav.sifinnsynapi.soknad.SøknadRepository
 import org.slf4j.LoggerFactory
