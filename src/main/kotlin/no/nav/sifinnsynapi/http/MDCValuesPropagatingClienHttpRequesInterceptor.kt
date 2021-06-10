@@ -1,7 +1,7 @@
 package no.nav.sifinnsynapi.http
 
 import no.nav.sifinnsynapi.util.Constants.CALL_ID
-import no.nav.sifinnsynapi.util.Constants.NAV_CALL_ID
+import no.nav.sifinnsynapi.util.Constants.CORRELATION_ID
 import no.nav.sifinnsynapi.util.Constants.NAV_CONSUMER_ID
 import no.nav.sifinnsynapi.util.MDCUtil.callId
 import org.slf4j.MDC
@@ -19,7 +19,7 @@ import java.io.IOException
 class MDCValuesPropagatingClienHttpRequesInterceptor : ClientHttpRequestInterceptor {
     @Throws(IOException::class)
     override fun intercept(request: HttpRequest, body: ByteArray, execution: ClientHttpRequestExecution): ClientHttpResponse {
-        propagerFraMDC(request, NAV_CALL_ID, NAV_CONSUMER_ID)
+        propagerFraMDC(request, CORRELATION_ID, NAV_CONSUMER_ID)
         return execution.execute(request, body)
     }
 

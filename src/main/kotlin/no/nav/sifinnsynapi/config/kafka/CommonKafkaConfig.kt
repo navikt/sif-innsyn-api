@@ -127,7 +127,7 @@ class CommonKafkaConfig {
 
                 val topicEntry = objectMapper.readValue(it.value(), TopicEntry::class.java).data
                 val correlationId = topicEntry.metadata.correlationId
-                MDCUtil.toMDC(Constants.NAV_CALL_ID, correlationId)
+                MDCUtil.toMDC(Constants.CORRELATION_ID, correlationId)
                 MDCUtil.toMDC(Constants.NAV_CONSUMER_ID, clientId)
 
                 val søker = JSONObject(topicEntry.melding).getJSONObject("søker")
