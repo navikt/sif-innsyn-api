@@ -13,12 +13,8 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.io.Resource
-import org.springframework.data.transaction.ChainedTransactionManager
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory
-import org.springframework.kafka.config.KafkaListenerContainerFactory
 import org.springframework.kafka.core.*
-import org.springframework.kafka.listener.ConcurrentMessageListenerContainer
-import org.springframework.kafka.support.converter.StringJsonMessageConverter
 import org.springframework.kafka.transaction.KafkaTransactionManager
 
 
@@ -93,19 +89,26 @@ class OnpremKafkaConfig(
     }
 
     @Bean
-    fun onpremKafkaTemplate(onpremProducerFactory: ProducerFactory<String, String>): KafkaTemplate<String, String> {
-        return KafkaTemplate(onpremProducerFactory)
-    }
+    fun onpremKafkaTemplate(onpremProducerFactory: ProducerFactory<String, String>) =
+        KafkaTemplate(onpremProducerFactory).apply {
+            transactionIdPrefix = transactionIdPrefix
+        }
+
+    @Bean
+    fun onpremKafkaTransactionManager(onpremProducerFactory: ProducerFactory<String, String>) =
+        KafkaTransactionManager(onpremProducerFactory).apply {
+            setTransactionIdPrefix(transactionIdPrefix)
+        }
 
     @Bean
     fun onpremKafkaJsonListenerContainerFactory(
         onpremConsumerFactory: ConsumerFactory<String, String>,
-        transactionManager: ChainedTransactionManager,
-        onpremKafkaTemplate: KafkaTemplate<String, String>
+        onpremKafkaTemplate: KafkaTemplate<String, String>,
+        onpremKafkaTransactionManager: KafkaTransactionManager<String, String>,
     ): ConcurrentKafkaListenerContainerFactory<String, String> = configureConcurrentKafkaListenerContainerFactory(
         clientId = groupId,
         consumerFactory = onpremConsumerFactory,
-        chainedTransactionManager = transactionManager,
+        transactionManager = onpremKafkaTransactionManager,
         kafkaTemplate = onpremKafkaTemplate,
         retryInterval = retryInterval,
         objectMapper = objectMapper,

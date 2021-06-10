@@ -12,9 +12,9 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.io.Resource
-import org.springframework.data.transaction.ChainedTransactionManager
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory
 import org.springframework.kafka.core.*
+import org.springframework.kafka.transaction.KafkaTransactionManager
 
 
 @Configuration
@@ -62,6 +62,7 @@ class AivenKafkaConfig(
         keystoreType?.let { put(SslConfigs.SSL_KEYSTORE_TYPE_CONFIG, it) }
     }
 
+    @Bean
     fun aivenConsumerFactory(): ConsumerFactory<String, String> {
         val consumerProperties = mutableMapOf<String, Any>(
             ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG to enableAutoCommit,
@@ -87,7 +88,7 @@ class AivenKafkaConfig(
         ) + commonConfig()
 
         val factory = DefaultKafkaProducerFactory<String, String>(producerProperties)
-        //factory.setTransactionIdPrefix(transactionIdPrefix)
+        factory.setTransactionIdPrefix(transactionIdPrefix)
         return factory
     }
 
@@ -95,13 +96,21 @@ class AivenKafkaConfig(
     fun aivenKafkaTemplate(aivenProducerFactory: ProducerFactory<String, String>) = KafkaTemplate(aivenProducerFactory)
 
     @Bean
+    fun aivenKafkaTransactionManager(aivenProducerFactory: ProducerFactory<String, String>) =
+        KafkaTransactionManager(aivenProducerFactory).apply {
+            setTransactionIdPrefix(transactionIdPrefix)
+        }
+
+    @Bean
     fun aivenKafkaJsonListenerContainerFactory(
-        aivenKafkaTemplate: KafkaTemplate<String, String>
+        aivenConsumerFactory: ConsumerFactory<String, String>,
+        aivenKafkaTemplate: KafkaTemplate<String, String>,
+        aivenKafkaTransactionManager: KafkaTransactionManager<String, String>
     ): ConcurrentKafkaListenerContainerFactory<String, String> = configureConcurrentKafkaListenerContainerFactory(
         clientId = groupId,
-        consumerFactory = aivenConsumerFactory(),
-        chainedTransactionManager = null,
+        consumerFactory = aivenConsumerFactory,
         kafkaTemplate = aivenKafkaTemplate,
+        transactionManager = aivenKafkaTransactionManager,
         retryInterval = retryInterval,
         objectMapper = objectMapper,
         søknadRepository = søknadRepository,

@@ -7,9 +7,9 @@ import no.nav.sifinnsynapi.common.Søknadstype
 import no.nav.sifinnsynapi.http.NotSupportedArbeidsgiverMeldingException
 import no.nav.sifinnsynapi.http.SøknadNotFoundException
 import no.nav.sifinnsynapi.oppslag.OppslagsService
-import no.nav.sifinnsynapi.pleiepenger.syktbarn.ArbeidsgiverMeldingPDFGenerator
-import no.nav.sifinnsynapi.pleiepenger.syktbarn.PleiepengerJSONObjectUtils.finnOrganisasjon
-import no.nav.sifinnsynapi.pleiepenger.syktbarn.PleiepengerJSONObjectUtils.tilPleiepengerAreidsgivermelding
+import no.nav.sifinnsynapi.konsument.pleiepenger.syktbarn.ArbeidsgiverMeldingPDFGenerator
+import no.nav.sifinnsynapi.konsument.pleiepenger.syktbarn.PleiepengerJSONObjectUtils.finnOrganisasjon
+import no.nav.sifinnsynapi.konsument.pleiepenger.syktbarn.PleiepengerJSONObjectUtils.tilPleiepengerAreidsgivermelding
 import org.json.JSONObject
 import org.springframework.stereotype.Service
 import java.util.*

@@ -41,7 +41,7 @@ no.nav:
       beskjed:
         tekst: 'Vi har mottatt din ettersendelse til omsorgspenger.'
         dagerSynlig: 7
-    omsorgspenger-aleneomsorg:
+    omsorgsdager-aleneomsorg:
       beskjed:
         tekst: 'Vi har mottatt din melding om aleneomsorg.'
         dagerSynlig: 7
@@ -180,7 +180,7 @@ kafka:
       client-id: ${HOSTNAME}
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
-      transaction-id-prefix: ${HOSTNAME}.tx-
+      transaction-id-prefix: .tx-
       retries: 3
 
   aiven:
@@ -198,5 +198,5 @@ kafka:
       client-id: ${HOSTNAME}
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
-      transaction-id-prefix: ${HOSTNAME}.tx-
+      transaction-id-prefix: .tx-
       retries: 3

@@ -30,6 +30,20 @@ spring:
     show-sql: true
     database-platform: org.hibernate.dialect.PostgreSQL9Dialect
 
+logging:
+  level:
+    root: INFO
+    state:
+      change:
+        logger: ERROR
+    kafka: ERROR
+    org:
+      apache:
+        zookeeper: ERROR
+        kafka:
+         common:
+           metrics: ERROR
+
 kafka:
   onprem:
     servers: localhost:9092 # placeholder
@@ -39,7 +53,7 @@ kafka:
       auto-offset-reset: earliest
     producer:
       client-id: sif-innsyn-api-onprem
-      transaction-id-prefix: sif-innsyn-api-onprem.tx.
+      transaction-id-prefix: .tx-
 
   aiven:
     servers: localhost:9092 # placeholder

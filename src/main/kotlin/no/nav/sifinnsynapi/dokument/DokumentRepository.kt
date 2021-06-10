@@ -4,7 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
-@Transactional()
 interface DokumentRepository: JpaRepository<DokumentDAO, UUID> {
     fun findBySøknadId(søknadId: UUID): DokumentDAO?
 }
