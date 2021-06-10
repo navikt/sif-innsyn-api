@@ -33,7 +33,6 @@ class OmsorgspengerAleneomsorgKonsument(
         }
     }
 
-    //@Transactional(AIVEN_TM)
     @KafkaListener(
         topics = ["#{'\${topic.listener.omd-aleneomsorg.navn}'}"],
         id = "#{'\${topic.listener.omd-aleneomsorg.id}'}",
