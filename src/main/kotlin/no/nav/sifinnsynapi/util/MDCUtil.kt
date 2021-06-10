@@ -22,7 +22,7 @@ object MDCUtil {
     }
 
     @JvmOverloads
-    fun toMDC(key: String?, value: String?, defaultValue: String? = null) {
+    fun toMDC(key: String?, value: String?, defaultValue: String? = "null") {
         MDC.put(key, Optional.ofNullable(value)
                 .orElse(defaultValue))
     }

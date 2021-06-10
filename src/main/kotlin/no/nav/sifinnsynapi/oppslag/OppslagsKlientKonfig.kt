@@ -3,7 +3,6 @@ package no.nav.sifinnsynapi.oppslag
 import no.nav.security.token.support.spring.validation.interceptor.BearerTokenClientHttpRequestInterceptor
 import no.nav.sifinnsynapi.http.MDCValuesPropagatingClienHttpRequesInterceptor
 import no.nav.sifinnsynapi.util.Constants.X_CORRELATION_ID
-import no.nav.sifinnsynapi.util.Constants.X_NAV_APIKEY
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
