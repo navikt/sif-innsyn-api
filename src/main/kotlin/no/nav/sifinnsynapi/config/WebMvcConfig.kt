@@ -1,6 +1,8 @@
 package no.nav.sifinnsynapi.config
 
+import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.databind.PropertyNamingStrategies
 import com.fasterxml.jackson.databind.PropertyNamingStrategy
 import com.fasterxml.jackson.databind.SerializationFeature
 import org.slf4j.Logger
@@ -17,7 +19,7 @@ import org.zalando.problem.violations.ConstraintViolationProblemModule
 
 @Configuration
 class WebMvcConfig(
-        @Value("\${no.nav.security.cors.allowed-origins}") val allowedOrigins: String
+    @Value("\${no.nav.security.cors.allowed-origins}") val allowedOrigins: String
 ) : WebMvcConfigurer {
 
     companion object {
@@ -35,8 +37,8 @@ class WebMvcConfig(
      */
     override fun addCorsMappings(registry: CorsRegistry) {
         registry.addMapping("/**")
-                .allowedOrigins(*allowedOrigins.split(",").toTypedArray())
-                .allowCredentials(true)
+            .allowedOrigins(*allowedOrigins.split(",").toTypedArray())
+            .allowCredentials(true)
 
         super.addCorsMappings(registry)
     }
@@ -49,10 +51,10 @@ class WebMvcConfig(
     override fun addResourceHandlers(registry: ResourceHandlerRegistry) {
 
         registry.addResourceHandler("swagger-ui.html")
-                .addResourceLocations("classpath:/META-INF/resources/");
+            .addResourceLocations("classpath:/META-INF/resources/");
 
         registry.addResourceHandler("/webjars/**")
-                .addResourceLocations("classpath:/META-INF/resources/webjars/");
+            .addResourceLocations("classpath:/META-INF/resources/webjars/");
 
         super.addResourceHandlers(registry)
     }
@@ -71,8 +73,12 @@ class WebMvcConfig(
     fun jacksonBuilderCustomizer(): Jackson2ObjectMapperBuilderCustomizer {
         log.info("-------> Customizing builder")
         return Jackson2ObjectMapperBuilderCustomizer { builder ->
-            builder.featuresToDisable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, SerializationFeature.WRITE_DURATIONS_AS_TIMESTAMPS)
-            builder.propertyNamingStrategy(PropertyNamingStrategy.LOWER_CAMEL_CASE)
+            builder.featuresToDisable(
+                SerializationFeature.WRITE_DATES_AS_TIMESTAMPS,
+                DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,
+                SerializationFeature.WRITE_DURATIONS_AS_TIMESTAMPS
+            )
+            builder.propertyNamingStrategy(PropertyNamingStrategies.LOWER_CAMEL_CASE)
         }
     }
 }

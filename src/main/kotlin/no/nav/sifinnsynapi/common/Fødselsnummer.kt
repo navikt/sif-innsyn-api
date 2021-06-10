@@ -9,22 +9,22 @@ import javax.persistence.Embeddable
 data class Fødselsnummer(
         @get:JsonValue var fødselsnummer: String? = null) {
 
-    override fun equals(obj: Any?): Boolean {
-        if (this === obj) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) {
             return true
         }
-        if (obj == null) {
+        if (other == null) {
             return false
         }
-        if (javaClass != obj.javaClass) {
+        if (javaClass != other.javaClass) {
             return false
         }
-        val other = obj as Fødselsnummer
+        val obj = other as Fødselsnummer
         if (fødselsnummer == null) {
-            if (other.fødselsnummer != null) {
+            if (obj.fødselsnummer != null) {
                 return false
             }
-        } else if (fødselsnummer != other.fødselsnummer) {
+        } else if (fødselsnummer != obj.fødselsnummer) {
             return false
         }
         return true
