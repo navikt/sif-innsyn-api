@@ -1,11 +1,12 @@
-package no.nav.sifinnsynapi.config
+package no.nav.sifinnsynapi.config.kafka
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import no.nav.sifinnsynapi.config.CommonKafkaConfig.Companion.configureConcurrentKafkaListenerContainerFactory
-import no.nav.sifinnsynapi.config.CommonKafkaConfig.Companion.consumerFactory
-import no.nav.sifinnsynapi.config.CommonKafkaConfig.Companion.kafkaTemplate
-import no.nav.sifinnsynapi.config.CommonKafkaConfig.Companion.kafkaTransactionManager
-import no.nav.sifinnsynapi.config.CommonKafkaConfig.Companion.producerFactory
+import no.nav.sifinnsynapi.config.KafkaClusterProperties
+import no.nav.sifinnsynapi.config.kafka.CommonKafkaConfig.Companion.configureConcurrentKafkaListenerContainerFactory
+import no.nav.sifinnsynapi.config.kafka.CommonKafkaConfig.Companion.consumerFactory
+import no.nav.sifinnsynapi.config.kafka.CommonKafkaConfig.Companion.kafkaTemplate
+import no.nav.sifinnsynapi.config.kafka.CommonKafkaConfig.Companion.kafkaTransactionManager
+import no.nav.sifinnsynapi.config.kafka.CommonKafkaConfig.Companion.producerFactory
 import no.nav.sifinnsynapi.soknad.SøknadRepository
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Bean

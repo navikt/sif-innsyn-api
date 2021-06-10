@@ -116,7 +116,6 @@ class OnpremKafkaHendelseKonsumentIntegrasjonsTest {
     @BeforeEach
     internal fun beforeEach() {
         repository.deleteAll()
-        producer = embeddedKafkaBroker.opprettKafkaProducer()
     }
 
     @AfterEach

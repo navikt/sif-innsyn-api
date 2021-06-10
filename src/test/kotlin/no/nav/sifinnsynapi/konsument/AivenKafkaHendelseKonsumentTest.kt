@@ -63,18 +63,15 @@ class AivenKafkaHendelseKonsumentTest {
     }
 
     @Test
-    @Ignore
     fun `Konsumer hendelse om å bli regnet som alene om omsorgen og forvent at dittNav beskjed blir sendt ut`(){
         val hendelse = defaultHendelse()
         producer.leggPåTopic(hendelse, Topics.OMP_ALENEOMSORG, mapper)
 
         // forvent at dittNav melding blir sendt
-        await.atMost(10, TimeUnit.SECONDS).untilAsserted {
-            val dittnavMelding = dittNavConsumer.lesMelding(hendelse.data.melding["søknadId"] as String,
-                K9_DITTNAV_VARSEL_BESKJED_AIVEN
-            )
-            log.info("----> dittnav melding: {}", dittnavMelding)
-            assertThat(dittnavMelding).isNotNull()
-        }
+        val dittnavMelding = dittNavConsumer.lesMelding(hendelse.data.melding["søknadId"] as String,
+            K9_DITTNAV_VARSEL_BESKJED_AIVEN
+        )
+        log.info("----> dittnav melding: {}", dittnavMelding)
+        assertThat(dittnavMelding).isNotNull()
     }
 }

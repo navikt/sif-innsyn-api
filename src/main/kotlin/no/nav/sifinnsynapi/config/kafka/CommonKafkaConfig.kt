@@ -1,8 +1,11 @@
-package no.nav.sifinnsynapi.config
+package no.nav.sifinnsynapi.config.kafka
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import no.nav.sifinnsynapi.common.AktørId
 import no.nav.sifinnsynapi.common.TopicEntry
+import no.nav.sifinnsynapi.config.KafkaConfigProperties
+import no.nav.sifinnsynapi.config.KafkaProperties
+import no.nav.sifinnsynapi.config.KafkaSaslProperties
 import no.nav.sifinnsynapi.soknad.SøknadRepository
 import no.nav.sifinnsynapi.util.Constants
 import no.nav.sifinnsynapi.util.MDCUtil
@@ -10,6 +13,7 @@ import org.apache.kafka.clients.CommonClientConfigs
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.apache.kafka.clients.producer.ProducerConfig
+import org.apache.kafka.common.config.SaslConfigs
 import org.apache.kafka.common.config.SslConfigs
 import org.json.JSONObject
 import org.slf4j.Logger
@@ -41,6 +45,11 @@ class CommonKafkaConfig {
                 put(SslConfigs.SSL_TRUSTSTORE_LOCATION_CONFIG, sslProps.trustStoreLocation.file.absolutePath)
                 put(SslConfigs.SSL_TRUSTSTORE_PASSWORD_CONFIG, sslProps.trustStorePassword)
                 put(SslConfigs.SSL_TRUSTSTORE_TYPE_CONFIG, sslProps.trustStoreType)
+
+                props.sasl?.let { saslProps: KafkaSaslProperties ->
+                    put(SaslConfigs.SASL_MECHANISM, saslProps.mechanism)
+                    put(SaslConfigs.SASL_JAAS_CONFIG, saslProps.jaasConfig)
+                }
 
                 sslProps.keyStoreLocation?.let { put(SslConfigs.SSL_KEYSTORE_LOCATION_CONFIG, it.file.absolutePath) }
                 sslProps.keyStorePassword?.let { put(SslConfigs.SSL_KEYSTORE_PASSWORD_CONFIG, it) }

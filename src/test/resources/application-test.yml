@@ -53,7 +53,6 @@ kafka:
       auto-offset-reset: earliest
     producer:
       client-id: sif-innsyn-api-onprem
-      transaction-id-prefix: .tx-
 
   aiven:
     servers: localhost:9092 # placeholder
@@ -63,10 +62,6 @@ kafka:
       auto-offset-reset: earliest
     producer:
       client-id: sif-innsyn-api-aiven
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.apache.kafka.common.serialization.StringSerializer
-      transaction-id-prefix: sif-innsyn-api-aiven.tx.
-      retries: 3
 
 wiremock:
   reset-mappings-after-each-test: true
