@@ -31,7 +31,6 @@ import org.apache.kafka.clients.producer.Producer
 import org.awaitility.kotlin.await
 import org.junit.Assert
 import org.junit.Assert.assertNotNull
-import org.junit.Ignore
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.extension.ExtendWith
 import org.skyscreamer.jsonassert.JSONAssert
@@ -52,11 +51,10 @@ import org.springframework.kafka.test.context.EmbeddedKafka
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit.jupiter.SpringExtension
-import java.time.Duration
 import java.util.concurrent.TimeUnit
 
 @EmbeddedKafka( // Setter opp og tilgjengligjør embeded kafka broker
-    count = 1,
+    count = 3,
     bootstrapServersProperty = "kafka.onprem.servers", // Setter bootstrap-servers for consumer og producer.
     topics = [
         PP_SYKT_BARN,
@@ -67,13 +65,7 @@ import java.util.concurrent.TimeUnit
         OMP_UTBETALING_SNF,
         OMP_UTVIDET_RETT,
         K9_DITTNAV_VARSEL_BESKJED
-    ],
-    brokerProperties = [
-        "offsets.topic.replication.factor=1",
-        "transaction.state.log.replication.factor=1",
-        "transaction.state.log.min.isr=1",
-    ],
-    controlledShutdown = true
+    ]
 )
 @ExtendWith(SpringExtension::class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -86,7 +78,7 @@ import java.util.concurrent.TimeUnit
     classes = [SifInnsynApiApplication::class],
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
 ) // Integrasjonstest - Kjører opp hele Spring Context med alle konfigurerte beans.
-class KafkaHendelseKonsumentIntegrasjonsTest {
+class OnpremKafkaHendelseKonsumentIntegrasjonsTest {
 
     @Autowired
     lateinit var mapper: ObjectMapper
@@ -110,7 +102,7 @@ class KafkaHendelseKonsumentIntegrasjonsTest {
 
     companion object {
         private val log: Logger =
-            LoggerFactory.getLogger(KafkaHendelseKonsumentIntegrasjonsTest::class.java)
+            LoggerFactory.getLogger(OnpremKafkaHendelseKonsumentIntegrasjonsTest::class.java)
         private val aktørId = AktørId.valueOf("123456")
     }
 
@@ -124,7 +116,6 @@ class KafkaHendelseKonsumentIntegrasjonsTest {
     @BeforeEach
     internal fun beforeEach() {
         repository.deleteAll()
-        producer = embeddedKafkaBroker.opprettKafkaProducer()
     }
 
     @AfterEach

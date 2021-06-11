@@ -1,4 +1,4 @@
-package no.nav.sifinnsynapi.konsument.omsorgsdager.melding
+package no.nav.sifinnsynapi.konsument.omsorgsdager
 
 import no.nav.sifinnsynapi.dittnav.K9BeskjedProperties
 import org.springframework.boot.context.properties.ConfigurationProperties

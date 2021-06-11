@@ -169,5 +169,23 @@ kafka:
       client-id: ${HOSTNAME}
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
-      transaction-id-prefix: ${HOSTNAME}.tx-
+      transaction-id-prefix: .tx-
+      retries: 3
+
+  aiven:
+    servers: ${KAFKA_BROKERS}
+    consumer:
+      enable-auto-commit: false
+      group-id: ${spring.application.name}
+      auto-offset-reset: # overstyres fra nais/<cluster>.json
+      isolation-level: read_committed
+      retry-interval: 60_000 # Egendefinert property
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+
+    producer:
+      client-id: ${HOSTNAME}
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      transaction-id-prefix: .tx-
       retries: 3

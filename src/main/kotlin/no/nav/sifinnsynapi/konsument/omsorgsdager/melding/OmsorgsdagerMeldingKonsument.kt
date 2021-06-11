@@ -5,6 +5,9 @@ import no.nav.sifinnsynapi.common.TopicEntry
 import no.nav.sifinnsynapi.dittnav.DittnavService
 import no.nav.sifinnsynapi.dittnav.K9Beskjed
 import no.nav.sifinnsynapi.dittnav.K9BeskjedProperties
+import no.nav.sifinnsynapi.konsument.omsorgsdager.OmsorgsdagerMeldingFordeleBeskjedProperties
+import no.nav.sifinnsynapi.konsument.omsorgsdager.OmsorgsdagerMeldingKoronaBeskjedProperties
+import no.nav.sifinnsynapi.konsument.omsorgsdager.OmsorgsdagerMeldingOverforeBeskjedProperties
 import no.nav.sifinnsynapi.konsument.omsorgsdager.melding.OmsorgsdagerMeldingKonsument.Companion.Keys.FØDSELSNUMMER
 import no.nav.sifinnsynapi.konsument.omsorgsdager.melding.OmsorgsdagerMeldingKonsument.Companion.Keys.MELDING_TYPE
 import no.nav.sifinnsynapi.konsument.omsorgsdager.melding.OmsorgsdagerMeldingKonsument.Companion.Keys.SØKER
@@ -18,11 +21,11 @@ import java.util.*
 
 @Service
 class OmsorgsdagerMeldingKonsument(
-        private val dittNavService: DittnavService,
-        private val omsorgsdagerMeldingKoronaBeskjedProperties: OmsorgsdagerMeldingKoronaBeskjedProperties,
-        private val omsorgsdagerMeldingOverforeBeskjedProperties: OmsorgsdagerMeldingOverforeBeskjedProperties,
-        private val omsorgsdagerMeldingFordeleBeskjedProperties: OmsorgsdagerMeldingFordeleBeskjedProperties
-    ){
+    private val dittNavService: DittnavService,
+    private val omsorgsdagerMeldingKoronaBeskjedProperties: OmsorgsdagerMeldingKoronaBeskjedProperties,
+    private val omsorgsdagerMeldingOverforeBeskjedProperties: OmsorgsdagerMeldingOverforeBeskjedProperties,
+    private val omsorgsdagerMeldingFordeleBeskjedProperties: OmsorgsdagerMeldingFordeleBeskjedProperties
+){
 
     companion object {
         private val logger = LoggerFactory.getLogger(OmsorgsdagerMeldingKonsument::class.java)
