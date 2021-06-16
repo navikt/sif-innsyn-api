@@ -2,6 +2,7 @@ package no.nav.sifinnsynapi.config.kafka
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import no.nav.sifinnsynapi.config.kafka.CommonKafkaConfig.Companion.configureConcurrentKafkaListenerContainerFactory
+import no.nav.sifinnsynapi.config.kafka.CommonKafkaConfig.Companion.defaultConcurrentKafkaListenerContainerFactory
 import no.nav.sifinnsynapi.soknad.SøknadRepository
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Bean
@@ -53,4 +54,8 @@ class OnpremKafkaConfig(
         søknadRepository = søknadRepository,
         logger = logger
     )
+
+    @Bean
+    fun defaultKafkaJsonListenerContainerFactor(onpremConsumerFactory: ConsumerFactory<String, String>) =
+        defaultConcurrentKafkaListenerContainerFactory(onpremConsumerFactory)
 }
