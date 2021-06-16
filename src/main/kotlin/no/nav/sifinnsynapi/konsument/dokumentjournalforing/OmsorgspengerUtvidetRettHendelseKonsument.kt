@@ -14,7 +14,7 @@ class DokumentJournalføringHendelseKonsument {
     }
 
     @KafkaListener(
-            topics = ["aapen-dok-journalfoering-v1"],
+            topics = ["aapen-dok-journalfoering-v1-q1"],
             id = "dokument-journalføring-listener",
             groupId = "#{'\${kafka.onprem.consumer.group-id}'}",
             containerFactory = "defaultKafkaJsonListenerContainerFactor"
