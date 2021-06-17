@@ -16,6 +16,7 @@ class ArbeidsgiverMeldingPDFGenerator : PDFGenerator<PleiepengerArbeidsgiverMeld
 
     override fun PleiepengerArbeidsgiverMelding.tilMap(): Map<String, Any?> = mapOf(
         "arbeidsgiver_navn" to arbeidsgivernavn?.storForbokstav(),
+        "arbeidstaker_navn" to arbeidstakernavn.storForbokstav(),
         "periode" to mapOf(
             "fom" to DATE_FORMATTER.format(søknadsperiode.fraOgMed),
             "tom" to DATE_FORMATTER.format(søknadsperiode.tilOgMed)
