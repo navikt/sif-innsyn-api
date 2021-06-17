@@ -1,6 +1,7 @@
 package no.nav.sifinnsynapi.konsument.dokumentjournalforing
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
 import org.slf4j.LoggerFactory
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.messaging.handler.annotation.Payload
@@ -23,7 +24,7 @@ class DokumentJournalføringHendelseKonsument(
         autoStartup = "#{'\${topic.listener.dok-journalfoering-v1.bryter}'}"
     )
     fun konsumer(
-        @Payload melding: String
+        @Payload melding: JournalfoeringHendelseRecord
     ) {
         val jsonMelding = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(melding)
         logger.info("Mottok hendelse om dokumentjournalføring: {}", jsonMelding)

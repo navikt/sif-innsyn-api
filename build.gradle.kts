@@ -47,7 +47,11 @@ repositories {
     mavenCentral()
     maven {
         name = "github-package-registry-navikt"
-        url = uri("https://maven.pkg.github.com/navikt/maven-releas")
+        url = uri("https://maven.pkg.github.com/navikt/maven-releases")
+        credentials {
+            username = project.findProperty("gpr.user") as String? ?: System.getenv("GITHUB_USERNAME")
+            password = project.findProperty("gpr.key") as String? ?: System.getenv("GITHUB_TOKEN")
+        }
     }
 
     maven {
