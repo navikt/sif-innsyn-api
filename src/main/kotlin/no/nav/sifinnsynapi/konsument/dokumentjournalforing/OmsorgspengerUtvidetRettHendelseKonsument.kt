@@ -18,7 +18,7 @@ class DokumentJournalføringHendelseKonsument {
         id = "dokument-journalføring-listener",
         groupId = "#{'\${kafka.onprem.consumer.group-id}'}",
         containerFactory = "defaultKafkaJsonListenerContainerFactor",
-        autoStartup = "false"
+        autoStartup = "true"
     )
     fun konsumer(
         @Payload melding: String
