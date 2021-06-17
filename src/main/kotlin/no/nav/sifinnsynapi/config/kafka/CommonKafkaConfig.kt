@@ -175,22 +175,5 @@ class CommonKafkaConfig {
         private fun recoverer(logger: Logger) = BiConsumer { cr: ConsumerRecord<*, *>, ex: Exception ->
             logger.error("Retry attempts exhausted for ${cr.topic()}-${cr.partition()}@${cr.offset()}", ex)
         }
-
-        fun defaultConcurrentKafkaListenerContainerFactory(consumerFactory: ConsumerFactory<String, String>) =
-            ConcurrentKafkaListenerContainerFactory<String, String>().apply {
-                this.consumerFactory = consumerFactory
-
-                // https://docs.spring.io/spring-kafka/reference/html/#listener-container
-                containerProperties.authorizationExceptionRetryInterval = Duration.ofSeconds(10L)
-
-                // https://docs.spring.io/spring-kafka/docs/2.5.2.RELEASE/reference/html/#delivery-header
-                containerProperties.isDeliveryAttemptHeader = true
-
-                // https://docs.spring.io/spring-kafka/docs/2.5.2.RELEASE/reference/html/#committing-offsets
-                containerProperties.ackMode = ContainerProperties.AckMode.RECORD;
-
-                // https://docs.spring.io/spring-kafka/docs/2.5.2.RELEASE/reference/html/#exactly-once
-                containerProperties.eosMode = ContainerProperties.EOSMode.BETA
-            }
     }
 }

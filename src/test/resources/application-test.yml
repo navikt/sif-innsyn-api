@@ -51,6 +51,7 @@ kafka:
       retry-interval: 5_000 # Egendefinert property
       group-id: sif-innsyn-api-onprem
       auto-offset-reset: earliest
+      schema-registry-url: mock://localhost
     producer:
       client-id: sif-innsyn-api-onprem
 
@@ -60,6 +61,7 @@ kafka:
       retry-interval: 5_000 # Egendefinert property
       group-id: sif-innsyn-api-aiven
       auto-offset-reset: earliest
+      schema-registry-url: mock://localhost
     producer:
       client-id: sif-innsyn-api-aiven
 

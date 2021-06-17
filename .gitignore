@@ -33,3 +33,4 @@ out/
 .vscode/
 
 generated-pdf-*.pdf
+*.hprof

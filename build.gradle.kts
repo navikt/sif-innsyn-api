@@ -49,6 +49,11 @@ repositories {
         name = "github-package-registry-navikt"
         url = uri("https://maven.pkg.github.com/navikt/maven-releas")
     }
+
+    maven {
+        name = "confluent"
+        url = uri("https://packages.confluent.io/maven/")
+    }
 }
 
 dependencies {
@@ -114,6 +119,8 @@ dependencies {
 
     //Kafka
     implementation("org.springframework.kafka:spring-kafka")
+    implementation("io.confluent:kafka-connect-avro-converter:$confluentVersion")
+    implementation("io.confluent:kafka-avro-serializer:$confluentVersion")
     testImplementation("org.springframework.kafka:spring-kafka-test")
 
     // PDF

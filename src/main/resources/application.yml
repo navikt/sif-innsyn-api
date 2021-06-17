@@ -171,6 +171,7 @@ kafka:
       retry-interval: 60_000 # Egendefinert property
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      schemaRegistryUrl: # overstyres fra nais/<cluster>.json
 
     producer:
       client-id: ${HOSTNAME}
@@ -189,6 +190,7 @@ kafka:
       retry-interval: 60_000 # Egendefinert property
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      schemaRegistryUrl: ${KAFKA_SCHEMA_REGISTRY}
 
     producer:
       client-id: ${HOSTNAME}

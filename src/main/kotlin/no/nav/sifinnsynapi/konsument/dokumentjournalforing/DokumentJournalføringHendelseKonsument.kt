@@ -19,7 +19,7 @@ class DokumentJournalføringHendelseKonsument(
         topics = ["#{'\${topic.listener.dok-journalfoering-v1.navn}'}"],
         id = "#{'\${topic.listener.dok-journalfoering-v1.id}'}",
         groupId = "#{'\${kafka.onprem.consumer.group-id}'}",
-        containerFactory = "defaultKafkaJsonListenerContainerFactor",
+        containerFactory = "dokJournalføringKafkaJsonListenerContainerFactor",
         autoStartup = "#{'\${topic.listener.dok-journalfoering-v1.bryter}'}"
     )
     fun konsumer(
