@@ -115,6 +115,13 @@ topic:
       bryter: true
       dry-run: false
 
+    # topic.listener.dok-journalfoering-v1
+    dok-journalfoering-v1:
+      id: dok-journalfoering-v1-listener
+      navn: aapen-dok-journalfoering-v1-p
+      bryter: true
+      dry-run: false
+
 management:
   endpoints:
     web:

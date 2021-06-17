@@ -14,11 +14,11 @@ class DokumentJournalføringHendelseKonsument {
     }
 
     @KafkaListener(
-        topics = ["aapen-dok-journalfoering-v1-q1"],
-        id = "dokument-journalføring-listener",
+        topics = ["#{'\${topic.listener.dok-journalfoering-v1.navn}'}"],
+        id = "#{'\${topic.listener.dok-journalfoering-v1.id}'}",
         groupId = "#{'\${kafka.onprem.consumer.group-id}'}",
         containerFactory = "defaultKafkaJsonListenerContainerFactor",
-        autoStartup = "true"
+        autoStartup = "#{'\${topic.listener.dok-journalfoering-v1.bryter}'}"
     )
     fun konsumer(
         @Payload melding: String
