@@ -44,7 +44,6 @@ ext["mock-oauth2-server.version"] = "0.3.3"
 ext["nimbus.jose.jwt.version"] = "9.10"
 
 repositories {
-    mavenCentral()
     maven {
         name = "github-package-registry-navikt"
         url = uri("https://maven.pkg.github.com/navikt/legacy-avhengigheter")
@@ -53,6 +52,7 @@ repositories {
             password = project.findProperty("gpr.key") as String? ?: System.getenv("GITHUB_TOKEN")
         }
     }
+    mavenCentral()
 
     maven {
         name = "confluent"
