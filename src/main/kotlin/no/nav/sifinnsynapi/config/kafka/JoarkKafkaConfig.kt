@@ -22,7 +22,7 @@ internal class JoarkKafkaConfig(
                 ConsumerConfig.GROUP_ID_CONFIG to consumerProps.groupId,
                 ConsumerConfig.AUTO_OFFSET_RESET_CONFIG to consumerProps.autoOffsetReset,
                 ConsumerConfig.ISOLATION_LEVEL_CONFIG to consumerProps.isolationLevel,
-                ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG to "io.confluent.kafka.serializers.KafkaAvroDeserializer",
+                ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG to consumerProps.keyDeserializer,
                 ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG to "io.confluent.kafka.serializers.KafkaAvroDeserializer",
                 "schema.registry.url" to consumerProps.schemaRegistryUrl
             ) + CommonKafkaConfig.commonConfig(kafkaClusterProperties.onprem)
