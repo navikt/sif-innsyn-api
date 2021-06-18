@@ -48,7 +48,7 @@ internal class JoarkKafkaConfig(
     }
 
     @Bean
-    fun dokJournalføringKafkaJsonListenerContainerFactor(joarkConsumerFactory: ConsumerFactory<Long, JournalfoeringHendelseRecord>) =
+    fun joarkKafkaJsonListenerContainerFactor(joarkConsumerFactory: ConsumerFactory<Long, JournalfoeringHendelseRecord>) =
         ConcurrentKafkaListenerContainerFactory<Long, JournalfoeringHendelseRecord>().apply {
             this.consumerFactory = joarkConsumerFactory
 

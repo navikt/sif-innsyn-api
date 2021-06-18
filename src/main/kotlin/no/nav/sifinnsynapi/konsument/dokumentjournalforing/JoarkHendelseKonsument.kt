@@ -9,24 +9,22 @@ import org.springframework.messaging.handler.annotation.Payload
 import org.springframework.stereotype.Service
 
 @Service
-class DokumentJournalføringHendelseKonsument(
-    private val objectMapper: ObjectMapper
-) {
+class JoarkHendelseKonsument {
 
     companion object {
-        private val logger = LoggerFactory.getLogger(DokumentJournalføringHendelseKonsument::class.java)
+        private val logger = LoggerFactory.getLogger(JoarkHendelseKonsument::class.java)
     }
 
     @KafkaListener(
         topics = ["#{'\${topic.listener.dok-journalfoering-v1.navn}'}"],
         id = "#{'\${topic.listener.dok-journalfoering-v1.id}'}",
         groupId = "#{'\${kafka.onprem.consumer.group-id}'}",
-        containerFactory = "dokJournalføringKafkaJsonListenerContainerFactor",
+        containerFactory = "joarkKafkaJsonListenerContainerFactor",
         autoStartup = "#{'\${topic.listener.dok-journalfoering-v1.bryter}'}"
     )
     fun konsumer(
         @Payload cr: ConsumerRecord<Long, JournalfoeringHendelseRecord>
     ) {
-        logger.info("Mottok hendelse om dokumentjournalføring (CR): {}", cr)
+        logger.info("Mottatt journalføringshendelse med status: {}", cr.value().hendelsesType)
     }
 }
