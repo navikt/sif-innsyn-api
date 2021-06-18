@@ -3,6 +3,8 @@ package no.nav.sifinnsynapi.config.kafka
 import io.confluent.kafka.serializers.KafkaAvroDeserializerConfig
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
 import no.nav.sifinnsynapi.config.kafka.CommonKafkaConfig.Companion.defaultRecoverer
+import no.nav.sifinnsynapi.util.Constants
+import no.nav.sifinnsynapi.util.MDCUtil
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -65,7 +67,10 @@ internal class JoarkKafkaConfig(
             setRecordFilterStrategy {
                 val hendelse = it.value()
                 when {
-                    hendelse.temaNytt == TEMA_NYTT_OMS && hendelse.mottaksKanal == MOTTAKS_KANAL_NAV_NO && hendelse.hendelsesType == ENDELIG_JOURNALFØRT -> false
+                    hendelse.temaNytt == TEMA_NYTT_OMS && hendelse.mottaksKanal == MOTTAKS_KANAL_NAV_NO && hendelse.hendelsesType == ENDELIG_JOURNALFØRT -> {
+                        MDCUtil.toMDC(Constants.JOURNALPOST_ID, hendelse.journalpostId)
+                        false
+                    }
                     else -> true
                 }
             }

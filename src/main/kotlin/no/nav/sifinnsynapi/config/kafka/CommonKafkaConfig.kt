@@ -129,6 +129,7 @@ class CommonKafkaConfig {
                 val correlationId = topicEntry.metadata.correlationId
                 MDCUtil.toMDC(Constants.CORRELATION_ID, correlationId)
                 MDCUtil.toMDC(Constants.NAV_CONSUMER_ID, clientId)
+                MDCUtil.toMDC(Constants.JOURNALPOST_ID, topicEntry.journalførtMelding.journalpostId)
 
                 val søker = JSONObject(topicEntry.melding).getJSONObject("søker")
                 when (søknadRepository.existsSøknadDAOByAktørIdAndJournalpostId(
