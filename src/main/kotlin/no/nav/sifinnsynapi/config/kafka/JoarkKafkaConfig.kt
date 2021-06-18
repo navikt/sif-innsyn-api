@@ -1,5 +1,6 @@
 package no.nav.sifinnsynapi.config.kafka
 
+import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -14,7 +15,7 @@ internal class JoarkKafkaConfig(
     private val kafkaClusterProperties: KafkaClusterProperties
 ) {
     @Bean
-    fun joarkConsumerFactory(): ConsumerFactory<String, String> {
+    fun joarkConsumerFactory(): ConsumerFactory<String, JournalfoeringHendelseRecord> {
         val consumerProps = kafkaClusterProperties.onprem.consumer
         return DefaultKafkaConsumerFactory(
             mutableMapOf<String, Any>(
@@ -30,8 +31,8 @@ internal class JoarkKafkaConfig(
     }
 
     @Bean
-    fun dokJournalføringKafkaJsonListenerContainerFactor(joarkConsumerFactory: ConsumerFactory<String, String>) =
-        ConcurrentKafkaListenerContainerFactory<String, String>().apply {
+    fun dokJournalføringKafkaJsonListenerContainerFactor(joarkConsumerFactory: ConsumerFactory<String, JournalfoeringHendelseRecord>) =
+        ConcurrentKafkaListenerContainerFactory<String, JournalfoeringHendelseRecord>().apply {
             this.consumerFactory = joarkConsumerFactory
 
             // https://docs.spring.io/spring-kafka/reference/html/#listener-container
