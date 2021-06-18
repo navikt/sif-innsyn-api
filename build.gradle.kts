@@ -64,7 +64,8 @@ dependencies {
 
     // NAV
     implementation("no.nav.security:token-validation-spring:$tokenValidationVersion")
-    implementation("no.nav.dok:dok-journalfoering-hendelse-v1:0.0.3")
+    //implementation("no.nav.dok:dok-journalfoering-hendelse-v1:0.0.3")
+    implementation("no.nav.syfo.schemas:dok-journalfoering-hendelse-v1:67a9be4476b63b7247cfacfaf821ab656bd2a952")
     testImplementation("no.nav.security:token-validation-spring-test:$tokenValidationVersion")
     testImplementation("no.nav.security:mock-oauth2-server:0.3.3") // TODO: 09/06/2021 fjern når tokenValidationVersion oppdateres til 1.3.8
     implementation("com.nimbusds:nimbus-jose-jwt:9.10") // TODO: 09/06/2021 fjern når tokenValidationVersion oppdateres til 1.3.8
