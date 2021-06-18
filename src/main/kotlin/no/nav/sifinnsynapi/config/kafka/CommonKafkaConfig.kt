@@ -84,11 +84,14 @@ class CommonKafkaConfig {
         }
 
         fun kafkaTemplate(producerFactory: ProducerFactory<String, String>, kafkaConfigProps: KafkaConfigProperties) =
-        KafkaTemplate(producerFactory).apply {
-            setTransactionIdPrefix(kafkaConfigProps.producer.transactionIdPrefix)
-        }
+            KafkaTemplate(producerFactory).apply {
+                setTransactionIdPrefix(kafkaConfigProps.producer.transactionIdPrefix)
+            }
 
-        fun kafkaTransactionManager(producerFactory: ProducerFactory<String, String>, kafkaConfigProps: KafkaConfigProperties) =
+        fun kafkaTransactionManager(
+            producerFactory: ProducerFactory<String, String>,
+            kafkaConfigProps: KafkaConfigProperties
+        ) =
             KafkaTransactionManager(producerFactory).apply {
                 setTransactionIdPrefix(kafkaConfigProps.producer.transactionIdPrefix)
             }
@@ -126,6 +129,7 @@ class CommonKafkaConfig {
                 val correlationId = topicEntry.metadata.correlationId
                 MDCUtil.toMDC(Constants.CORRELATION_ID, correlationId)
                 MDCUtil.toMDC(Constants.NAV_CONSUMER_ID, clientId)
+                MDCUtil.toMDC(Constants.JOURNALPOST_ID, topicEntry.journalførtMelding.journalpostId)
 
                 val søker = JSONObject(topicEntry.melding).getJSONObject("søker")
                 when (søknadRepository.existsSøknadDAOByAktørIdAndJournalpostId(
@@ -159,17 +163,20 @@ class CommonKafkaConfig {
             factory.containerProperties.authorizationExceptionRetryInterval = Duration.ofSeconds(10L)
 
             //https://docs.spring.io/spring-kafka/docs/2.5.2.RELEASE/reference/html/#after-rollback
-            val defaultAfterRollbackProcessor =
-                DefaultAfterRollbackProcessor<String, String>(
-                    recoverer(logger),
-                    FixedBackOff(retryInterval, Long.MAX_VALUE)
-                )
-            defaultAfterRollbackProcessor.setClassifications(mapOf(), true)
-            factory.setAfterRollbackProcessor(defaultAfterRollbackProcessor)
+
+            factory.setAfterRollbackProcessor(defaultAfterRollbackProsessor(logger, retryInterval))
             return factory
         }
 
-        private fun recoverer(logger: Logger) = BiConsumer { cr: ConsumerRecord<*, *>, ex: Exception ->
+        private fun defaultAfterRollbackProsessor(logger: Logger, retryInterval: Long) =
+            DefaultAfterRollbackProcessor<String, String>(
+                defaultRecoverer(logger), FixedBackOff(retryInterval, Long.MAX_VALUE)
+            ).apply {
+                setClassifications(mapOf(), true)
+            }
+
+
+        fun defaultRecoverer(logger: Logger) = BiConsumer { cr: ConsumerRecord<*, *>, ex: Exception ->
             logger.error("Retry attempts exhausted for ${cr.topic()}-${cr.partition()}@${cr.offset()}", ex)
         }
     }

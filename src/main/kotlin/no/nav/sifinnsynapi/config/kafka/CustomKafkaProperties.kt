@@ -27,7 +27,8 @@ data class KafkaConsumerProperties(
     val isolationLevel: String,
     val retryInterval: Long,
     val keyDeserializer: String,
-    val valueDeserializer: String
+    val valueDeserializer: String,
+    val schemaRegistryUrl: String
 )
 
 data class KafkaProducerProperties(

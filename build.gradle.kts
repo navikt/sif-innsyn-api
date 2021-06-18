@@ -44,10 +44,19 @@ ext["mock-oauth2-server.version"] = "0.3.3"
 ext["nimbus.jose.jwt.version"] = "9.10"
 
 repositories {
-    mavenCentral()
     maven {
         name = "github-package-registry-navikt"
-        url = uri("https://maven.pkg.github.com/navikt/maven-releas")
+        url = uri("https://maven.pkg.github.com/navikt/legacy-avhengigheter")
+        credentials {
+            username = project.findProperty("gpr.user") as String? ?: System.getenv("GITHUB_USERNAME")
+            password = project.findProperty("gpr.key") as String? ?: System.getenv("GITHUB_TOKEN")
+        }
+    }
+    mavenCentral()
+
+    maven {
+        name = "confluent"
+        url = uri("https://packages.confluent.io/maven/")
     }
 }
 
@@ -55,6 +64,8 @@ dependencies {
 
     // NAV
     implementation("no.nav.security:token-validation-spring:$tokenValidationVersion")
+    //implementation("no.nav.dok:dok-journalfoering-hendelse-v1:0.0.3")
+    implementation("no.nav.syfo.schemas:dok-journalfoering-hendelse-v1:67a9be4476b63b7247cfacfaf821ab656bd2a952")
     testImplementation("no.nav.security:token-validation-spring-test:$tokenValidationVersion")
     testImplementation("no.nav.security:mock-oauth2-server:0.3.3") // TODO: 09/06/2021 fjern når tokenValidationVersion oppdateres til 1.3.8
     implementation("com.nimbusds:nimbus-jose-jwt:9.10") // TODO: 09/06/2021 fjern når tokenValidationVersion oppdateres til 1.3.8
@@ -114,6 +125,8 @@ dependencies {
 
     //Kafka
     implementation("org.springframework.kafka:spring-kafka")
+    implementation("io.confluent:kafka-connect-avro-converter:$confluentVersion")
+    implementation("io.confluent:kafka-avro-serializer:$confluentVersion")
     testImplementation("org.springframework.kafka:spring-kafka-test")
 
     // PDF
