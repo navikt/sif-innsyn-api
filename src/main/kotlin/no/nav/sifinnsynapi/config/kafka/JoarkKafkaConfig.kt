@@ -18,7 +18,7 @@ internal class JoarkKafkaConfig(
     private val kafkaClusterProperties: KafkaClusterProperties
 ) {
     @Bean
-    fun joarkConsumerFactory(): DefaultKafkaConsumerFactory<String, Any> {
+    fun joarkConsumerFactory(): DefaultKafkaConsumerFactory<String, JournalfoeringHendelseRecord> {
         val consumerProps = kafkaClusterProperties.onprem.consumer
         return DefaultKafkaConsumerFactory(
             mutableMapOf<String, Any>(
@@ -30,13 +30,12 @@ internal class JoarkKafkaConfig(
                 ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG to "io.confluent.kafka.serializers.KafkaAvroDeserializer",
                 KafkaAvroDeserializerConfig.SCHEMA_REGISTRY_URL_CONFIG to consumerProps.schemaRegistryUrl,
                 KafkaAvroDeserializerConfig.SPECIFIC_AVRO_READER_CONFIG to "true"
-            ) + CommonKafkaConfig.commonConfig(kafkaClusterProperties.onprem),
-            StringDeserializer(), KafkaAvroDeserializer()
+            ) + CommonKafkaConfig.commonConfig(kafkaClusterProperties.onprem)
         )
     }
 
     @Bean
-    fun dokJournalføringKafkaJsonListenerContainerFactor(joarkConsumerFactory: ConsumerFactory<String, Any>) =
+    fun dokJournalføringKafkaJsonListenerContainerFactor(joarkConsumerFactory: ConsumerFactory<String, JournalfoeringHendelseRecord>) =
         ConcurrentKafkaListenerContainerFactory<String, JournalfoeringHendelseRecord>().apply {
             this.consumerFactory = joarkConsumerFactory
 
