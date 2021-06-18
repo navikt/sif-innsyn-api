@@ -44,15 +44,16 @@ ext["mock-oauth2-server.version"] = "0.3.3"
 ext["nimbus.jose.jwt.version"] = "9.10"
 
 repositories {
+    mavenCentral()
+
     maven {
-        name = "github-package-registry-navikt"
-        url = uri("https://maven.pkg.github.com/navikt/legacy-avhengigheter")
+        name = "fp-felles-pakker"
+        url = uri("https://maven.pkg.github.com/navikt/fp-felles")
         credentials {
             username = project.findProperty("gpr.user") as String? ?: System.getenv("GITHUB_USERNAME")
             password = project.findProperty("gpr.key") as String? ?: System.getenv("GITHUB_TOKEN")
         }
     }
-    mavenCentral()
 
     maven {
         name = "confluent"
@@ -70,6 +71,9 @@ dependencies {
     testImplementation("no.nav.security:mock-oauth2-server:0.3.3") // TODO: 09/06/2021 fjern når tokenValidationVersion oppdateres til 1.3.8
     implementation("com.nimbusds:nimbus-jose-jwt:9.10") // TODO: 09/06/2021 fjern når tokenValidationVersion oppdateres til 1.3.8
     testImplementation("com.squareup.okhttp3:okhttp:$okHttp3Version")
+
+    // FP-felles
+    implementation("no.nav.foreldrepenger.felles.integrasjon:saf-klient:3.2.107")
 
     // Spring Boot
     implementation("org.springframework.boot:spring-boot-starter-actuator")
