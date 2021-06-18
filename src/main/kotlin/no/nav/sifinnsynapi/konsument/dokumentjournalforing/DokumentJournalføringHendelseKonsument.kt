@@ -25,7 +25,7 @@ class DokumentJournalføringHendelseKonsument(
         autoStartup = "#{'\${topic.listener.dok-journalfoering-v1.bryter}'}"
     )
     fun konsumer(
-        @Payload cr: ConsumerRecord<String, JournalfoeringHendelseRecord>
+        @Payload cr: ConsumerRecord<String, Any>
     ) {
         val jsonMelding = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(cr.value())
         logger.info("Mottok hendelse om dokumentjournalføring: {}", jsonMelding)
