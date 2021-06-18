@@ -27,7 +27,8 @@ class DokumentJournalføringHendelseKonsument(
     fun konsumer(
         @Payload cr: ConsumerRecord<String, Any>
     ) {
-        val jsonMelding = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(cr.value())
-        logger.info("Mottok hendelse om dokumentjournalføring: {}", jsonMelding)
+        logger.info("Mottok hendelse om dokumentjournalføring (CR): {}", cr)
+        val jsonMelding = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(cr)
+        logger.info("Mottok hendelse om dokumentjournalføring(CR value): {}", jsonMelding)
     }
 }
