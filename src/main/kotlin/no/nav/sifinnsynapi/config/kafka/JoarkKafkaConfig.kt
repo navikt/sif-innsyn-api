@@ -1,7 +1,10 @@
 package no.nav.sifinnsynapi.config.kafka
 
+import io.confluent.kafka.serializers.KafkaAvroDeserializer
+import io.confluent.kafka.serializers.KafkaAvroDeserializerConfig
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
 import org.apache.kafka.clients.consumer.ConsumerConfig
+import org.apache.kafka.common.serialization.StringDeserializer
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory
@@ -15,7 +18,7 @@ internal class JoarkKafkaConfig(
     private val kafkaClusterProperties: KafkaClusterProperties
 ) {
     @Bean
-    fun joarkConsumerFactory(): ConsumerFactory<String, JournalfoeringHendelseRecord> {
+    fun joarkConsumerFactory(): DefaultKafkaConsumerFactory<String, Any> {
         val consumerProps = kafkaClusterProperties.onprem.consumer
         return DefaultKafkaConsumerFactory(
             mutableMapOf<String, Any>(
@@ -25,14 +28,15 @@ internal class JoarkKafkaConfig(
                 ConsumerConfig.ISOLATION_LEVEL_CONFIG to consumerProps.isolationLevel,
                 ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG to consumerProps.keyDeserializer,
                 ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG to "io.confluent.kafka.serializers.KafkaAvroDeserializer",
-                "schema.registry.url" to consumerProps.schemaRegistryUrl,
-                "specific.avro.reader" to "true"
-            ) + CommonKafkaConfig.commonConfig(kafkaClusterProperties.onprem)
+                KafkaAvroDeserializerConfig.SCHEMA_REGISTRY_URL_CONFIG to consumerProps.schemaRegistryUrl,
+                KafkaAvroDeserializerConfig.SPECIFIC_AVRO_READER_CONFIG to "true"
+            ) + CommonKafkaConfig.commonConfig(kafkaClusterProperties.onprem),
+            StringDeserializer(), KafkaAvroDeserializer()
         )
     }
 
     @Bean
-    fun dokJournalføringKafkaJsonListenerContainerFactor(joarkConsumerFactory: ConsumerFactory<String, JournalfoeringHendelseRecord>) =
+    fun dokJournalføringKafkaJsonListenerContainerFactor(joarkConsumerFactory: ConsumerFactory<String, Any>) =
         ConcurrentKafkaListenerContainerFactory<String, JournalfoeringHendelseRecord>().apply {
             this.consumerFactory = joarkConsumerFactory
 
