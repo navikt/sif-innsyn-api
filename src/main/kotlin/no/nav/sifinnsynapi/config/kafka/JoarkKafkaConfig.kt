@@ -25,7 +25,8 @@ internal class JoarkKafkaConfig(
                 ConsumerConfig.ISOLATION_LEVEL_CONFIG to consumerProps.isolationLevel,
                 ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG to consumerProps.keyDeserializer,
                 ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG to "io.confluent.kafka.serializers.KafkaAvroDeserializer",
-                "schema.registry.url" to consumerProps.schemaRegistryUrl
+                "schema.registry.url" to consumerProps.schemaRegistryUrl,
+                "specific.avro.reader" to "true"
             ) + CommonKafkaConfig.commonConfig(kafkaClusterProperties.onprem)
         )
     }
