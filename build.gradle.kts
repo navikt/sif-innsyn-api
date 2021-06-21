@@ -3,6 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     id("org.springframework.boot") version "2.5.1"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
+    id("com.expediagroup.graphql") version "4.1.1"
     kotlin("jvm") version "1.5.10"
     kotlin("plugin.spring") version "1.5.10"
     kotlin("plugin.jpa") version "1.5.10"
@@ -35,6 +36,7 @@ val mockkVersion by extra("1.11.0")
 val guavaVersion by extra("23.0")
 val okHttp3Version by extra("4.9.1")
 val orgJsonVersion by extra("20210307")
+val graphQLKotlinVersion by extra("4.1.1")
 
 ext["okhttp3.version"] = okHttp3Version
 ext["testcontainersVersion"] = "1.15.3"
@@ -45,15 +47,6 @@ ext["nimbus.jose.jwt.version"] = "9.10"
 
 repositories {
     mavenCentral()
-
-    maven {
-        name = "fp-felles-pakker"
-        url = uri("https://maven.pkg.github.com/navikt/fp-felles")
-        credentials {
-            username = project.findProperty("gpr.user") as String? ?: System.getenv("GITHUB_USERNAME")
-            password = project.findProperty("gpr.key") as String? ?: System.getenv("GITHUB_TOKEN")
-        }
-    }
 
     maven {
         name = "confluent"
@@ -71,9 +64,6 @@ dependencies {
     testImplementation("no.nav.security:mock-oauth2-server:0.3.3") // TODO: 09/06/2021 fjern når tokenValidationVersion oppdateres til 1.3.8
     implementation("com.nimbusds:nimbus-jose-jwt:9.10") // TODO: 09/06/2021 fjern når tokenValidationVersion oppdateres til 1.3.8
     testImplementation("com.squareup.okhttp3:okhttp:$okHttp3Version")
-
-    // FP-felles
-    implementation("no.nav.foreldrepenger.felles.integrasjon:saf-klient:3.2.107")
 
     // Spring Boot
     implementation("org.springframework.boot:spring-boot-starter-actuator")
@@ -119,6 +109,9 @@ dependencies {
 
     // Jackson
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+
+    //graphql
+    implementation("com.expediagroup:graphql-kotlin-spring-client:$graphQLKotlinVersion")
 
     // Kotlin
     implementation("org.jetbrains.kotlin:kotlin-reflect")
@@ -169,4 +162,11 @@ tasks.withType<KotlinCompile> {
 
 tasks.getByName<Jar>("jar") {
     enabled = false
+}
+
+tasks.withType<com.expediagroup.graphql.plugin.gradle.tasks.GraphQLGenerateClientTask> {
+    queryFileDirectory.set("${project.projectDir}/src/main/resources/saf")
+    schemaFile.set(file("${project.projectDir}/src/main/resources/saf/saf-api-sdl.graphqls"))
+    packageName.set("no.nav.sifinnsynapi.saf.generated")
+
 }
