@@ -17,7 +17,7 @@ class SafClientConfig(
 
     @Bean("safClient")
     fun client() = GraphQLWebClient(
-        url = safBaseUrl,
+        url = "$safBaseUrl/graphql",
         builder = WebClient.builder()
             .defaultRequest {
                 it.header(AUTHORIZATION, stsClient.oicdToken().asAuthoriationHeader())
