@@ -1,5 +1,6 @@
 package no.nav.sifinnsynapi.konsument.dokumentjournalforing
 
+import kotlinx.coroutines.runBlocking
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
 import no.nav.sifinnsynapi.saf.SafService
 import org.apache.kafka.clients.consumer.ConsumerRecord
@@ -25,12 +26,14 @@ class JoarkHendelseKonsument(
         containerFactory = "joarkKafkaJsonListenerContainerFactor",
         autoStartup = "#{'\${topic.listener.dok-journalfoering-v1.bryter}'}"
     )
-    suspend fun konsumer(
+    fun konsumer(
         @Payload cr: ConsumerRecord<Long, JournalfoeringHendelseRecord>
     ) {
         logger.info("Mottatt journalføringshendelse med status: {}", cr.value().hendelsesType)
 
-        val journalpostinfo = safService.hentJournalpostinfo("${cr.value().journalpostId}")
-        logger.info("Hentet journalpostInfo: {}", )
+        runBlocking {
+            val journalpostinfo = safService.hentJournalpostinfo("${cr.value().journalpostId}")
+            logger.info("Hentet journalpostInfo: {}", journalpostinfo)
+        }
     }
 }
