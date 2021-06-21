@@ -3,6 +3,8 @@ package no.nav.sifinnsynapi.konsument.dokumentjournalforing
 import kotlinx.coroutines.runBlocking
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
 import no.nav.sifinnsynapi.saf.SafService
+import no.nav.sifinnsynapi.util.Constants
+import no.nav.sifinnsynapi.util.MDCUtil
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.slf4j.LoggerFactory
 import org.springframework.kafka.annotation.KafkaListener
@@ -33,6 +35,7 @@ class JoarkHendelseKonsument(
 
         runBlocking {
             val journalpostinfo = safService.hentJournalpostinfo("${cr.value().journalpostId}")
+            MDCUtil.toMDC(Constants.K9_SAK_ID, journalpostinfo.sak!!.fagsakId)
             logger.info("Hentet journalpostInfo: {}", journalpostinfo)
         }
     }
