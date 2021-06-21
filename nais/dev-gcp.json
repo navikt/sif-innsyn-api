@@ -21,6 +21,7 @@
     "diskAutoresize": "false",
     "highAvailability": "false"
   },
+  "azureTenant": "trygdeetaten.no",
   "kafkaPool": "nav-dev",
   "env": {
     "SERVER_PORT": "8080",
