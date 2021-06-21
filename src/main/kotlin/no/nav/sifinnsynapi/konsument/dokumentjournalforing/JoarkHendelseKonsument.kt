@@ -25,7 +25,7 @@ class JoarkHendelseKonsument(
         private val logger = LoggerFactory.getLogger(JoarkHendelseKonsument::class.java)
     }
 
-    @Transactional(TRANSACTION_MANAGER)
+    @Transactional(TRANSACTION_MANAGER, rollbackFor = [Throwable::class])
     @KafkaListener(
         topics = ["#{'\${topic.listener.dok-journalfoering-v1.navn}'}"],
         id = "#{'\${topic.listener.dok-journalfoering-v1.id}'}",
@@ -55,7 +55,7 @@ class JoarkHendelseKonsument(
             val oppdatertSøknad = søknadRepository.save(søknad.copy(saksId = fagsakId))
             logger.info("Søknad oppdatert med saksId: {}", oppdatertSøknad)
 
-            throw IllegalStateException("Tester transaction rollback og retrymekanisme")
+            //throw IllegalStateException("Tester transaction rollback og retrymekanisme")
         }
     }
 }
