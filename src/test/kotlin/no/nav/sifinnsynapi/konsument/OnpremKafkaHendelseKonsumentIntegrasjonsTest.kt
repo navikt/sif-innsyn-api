@@ -14,7 +14,6 @@ import no.nav.sifinnsynapi.config.Topics
 import no.nav.sifinnsynapi.config.Topics.K9_DITTNAV_VARSEL_BESKJED
 import no.nav.sifinnsynapi.config.Topics.K9_ETTERSENDING
 import no.nav.sifinnsynapi.config.Topics.OMD_MELDING
-import no.nav.sifinnsynapi.config.Topics.OMP_MIDLERTIDIG_ALENE
 import no.nav.sifinnsynapi.config.Topics.OMP_UTBETALING_ARBEIDSTAKER
 import no.nav.sifinnsynapi.config.Topics.OMP_UTBETALING_SNF
 import no.nav.sifinnsynapi.config.Topics.OMP_UTVIDET_RETT
@@ -60,7 +59,6 @@ import java.util.concurrent.TimeUnit
         PP_SYKT_BARN,
         K9_ETTERSENDING,
         OMD_MELDING,
-        OMP_MIDLERTIDIG_ALENE,
         OMP_UTBETALING_ARBEIDSTAKER,
         OMP_UTBETALING_SNF,
         OMP_UTVIDET_RETT,
@@ -335,17 +333,6 @@ class OnpremKafkaHendelseKonsumentIntegrasjonsTest {
     fun `Konsumer hendelse om å fordele omsorgsdager og forvent at dittNav beskjed blir sendt ut`() {
         val hendelse = defaultHendelseOmsorgsdagerMelding(type = "FORDELING")
         producer.leggPåTopic(hendelse, Topics.OMD_MELDING, mapper)
-
-        // forvent at dittNav melding blir sendt
-        val dittnavBeskjed = dittNavConsumer.lesMelding(hendelse.data.melding["søknadId"] as String)
-        log.info("----> dittnav melding: {}", dittnavBeskjed)
-        assertThat(dittnavBeskjed).isNotNull()
-    }
-
-    @Test
-    fun `Konsumer hendelse om å bli regnet som midlertidig alene og forvent at dittNav beskjed blir sendt ut`() {
-        val hendelse = defaultHendelse()
-        producer.leggPåTopic(hendelse, Topics.OMP_MIDLERTIDIG_ALENE, mapper)
 
         // forvent at dittNav melding blir sendt
         val dittnavBeskjed = dittNavConsumer.lesMelding(hendelse.data.melding["søknadId"] as String)
