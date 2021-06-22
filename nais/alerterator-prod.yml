@@ -55,13 +55,6 @@ spec:
       description: "Konsumering av melding i \{{ $labels.name }} feiler. Sjekk loggene for å finne ut hvorfor dette feiler."
       action: "`kubectl logs \{{ $labels.pod_name }} -n \{{ $labels.namespace }} -c \{{ $labels.app }}`"
 
-    - alert: Ingen konsumerte meldinger observert siste 48 timer.
-      severity: warning
-      expr: sum by (name) (ceil(increase(spring_kafka_listener_seconds_count{result="success", app="{{app}}"}[48h]))) < 1
-      for: 1s
-      description: "Ingen konsumerte meldinger i \{{ $labels.name }} observert de siste 48 timer."
-      action: "Sjekk loggene for å finne ut hvorfor."
-
     - alert: Helsesjekk feiler
       expr: floor(increase(http_server_requests_seconds_count{status!~"200", uri="/actuator/health", app="{{app}}"}[3m])) > 0
       severity: warning
