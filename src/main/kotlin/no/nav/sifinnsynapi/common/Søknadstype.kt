@@ -7,9 +7,7 @@ enum class Søknadstype {
     OMP_ETTERSENDING,
     PP_ETTERSENDING,
     PP_SYKT_BARN,
-    OMD_OVERFØRING,
-    OMP_MIDLERTIDIG_ALENE;
-
+    OMD_OVERFØRING;
 
     fun erEttersending(): Boolean = when(this){
             OMP_ETTERSENDING -> true
