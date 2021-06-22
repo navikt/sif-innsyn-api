@@ -10,4 +10,5 @@ object Topics {
     const val OMP_MIDLERTIDIG_ALENE = "privat-omsorgspenger-midlertidig-alene-cleanup"
     const val OMD_MELDING = "privat-omsorgsdager-melding-cleanup"
     const val K9_ETTERSENDING = "privat-k9-ettersending-cleanup"
+    const val AAPEN_DOK_JOURNALFØRING_V1 = "aapen-dok-journalfoering-v1-p"
 }

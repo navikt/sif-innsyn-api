@@ -1,8 +1,11 @@
 package no.nav.sifinnsynapi.utils
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import io.confluent.kafka.serializers.KafkaAvroDeserializerConfig
 import junit.framework.Assert.assertEquals
+import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
 import no.nav.sifinnsynapi.common.TopicEntry
+import no.nav.sifinnsynapi.config.Topics.AAPEN_DOK_JOURNALFØRING_V1
 import no.nav.sifinnsynapi.config.Topics.K9_DITTNAV_VARSEL_BESKJED
 import no.nav.sifinnsynapi.dittnav.K9Beskjed
 import org.apache.kafka.clients.consumer.Consumer
@@ -30,6 +33,20 @@ fun EmbeddedKafkaBroker.opprettKafkaProducer(): Producer<String, Any> {
 
 fun Producer<String, Any>.leggPåTopic(hendelse: TopicEntry, topic: String, mapper: ObjectMapper): RecordMetadata {
     return send(ProducerRecord(topic,  hendelse.somJson(mapper))).get()
+}
+
+fun EmbeddedKafkaBroker.opprettJoarkKafkaProducer(): Producer<Long, JournalfoeringHendelseRecord> {
+    val producerProps = KafkaTestUtils.producerProps(this)
+    producerProps[ProducerConfig.CLIENT_ID_CONFIG] = "joark-producer-${UUID.randomUUID()}"
+    producerProps[ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG] = "org.apache.kafka.common.serialization.StringSerializer"
+    producerProps[ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG] = "io.confluent.kafka.serializers.KafkaAvroSerializer"
+    producerProps[KafkaAvroDeserializerConfig.SCHEMA_REGISTRY_URL_CONFIG] = "mock://localhost"
+    return DefaultKafkaProducerFactory<Long, JournalfoeringHendelseRecord>(producerProps)
+        .createProducer()
+}
+
+fun Producer<Long, JournalfoeringHendelseRecord>.leggPåTopic(hendelse: JournalfoeringHendelseRecord): RecordMetadata {
+    return send(ProducerRecord(AAPEN_DOK_JOURNALFØRING_V1,  hendelse)).get()
 }
 
 fun EmbeddedKafkaBroker.opprettDittnavConsumer(topic: String = K9_DITTNAV_VARSEL_BESKJED): Consumer<String, K9Beskjed> {
