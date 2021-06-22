@@ -2,7 +2,7 @@ package no.nav.sifinnsynapi.konsument.dokumentjournalforing
 
 import kotlinx.coroutines.runBlocking
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
-import no.nav.sifinnsynapi.config.TxConfiguration.Companion.TRANSACTION_MANAGER
+import no.nav.sifinnsynapi.http.SøknadWithJournalpostIdNotFoundException
 import no.nav.sifinnsynapi.saf.SafService
 import no.nav.sifinnsynapi.soknad.SøknadService
 import no.nav.sifinnsynapi.util.Constants
@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.messaging.handler.annotation.Payload
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Transactional
 
 
 @Service
@@ -48,8 +47,17 @@ class JoarkHendelseKonsument(
             logger.info("JournalpostInfo hentet.")
 
             logger.info("Oppdaterer søknad med saksId...")
-            val oppdatertSøknad = søknadService.oppdaterSøknadSaksIdGittJournalpostId(fagsakId, journalpostId)
-            logger.info("Søknad oppdatert med saksId: {}", oppdatertSøknad)
+            try {
+                val oppdatertSøknad = søknadService.oppdaterSøknadSaksIdGittJournalpostId(fagsakId, journalpostId)
+                logger.info("Søknad oppdatert med saksId: {}", oppdatertSøknad)
+            } catch (ex: Throwable) {
+                when(ex) {
+                    is SøknadWithJournalpostIdNotFoundException -> {
+                        logger.info("${ex.message} Ignorerer.")
+                    }
+                    else -> throw ex
+                }
+            }
         }
     }
 }

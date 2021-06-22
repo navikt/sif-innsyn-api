@@ -6,6 +6,7 @@ import no.nav.sifinnsynapi.common.AktørId
 import no.nav.sifinnsynapi.common.Søknadstype
 import no.nav.sifinnsynapi.http.NotSupportedArbeidsgiverMeldingException
 import no.nav.sifinnsynapi.http.SøknadNotFoundException
+import no.nav.sifinnsynapi.http.SøknadWithJournalpostIdNotFoundException
 import no.nav.sifinnsynapi.konsument.pleiepenger.syktbarn.ArbeidsgiverMeldingPDFGenerator
 import no.nav.sifinnsynapi.konsument.pleiepenger.syktbarn.PleiepengerJSONObjectUtils.finnOrganisasjon
 import no.nav.sifinnsynapi.konsument.pleiepenger.syktbarn.PleiepengerJSONObjectUtils.tilPleiepengerAreidsgivermelding
@@ -42,7 +43,7 @@ class SøknadService(
 
     fun oppdaterSøknadSaksIdGittJournalpostId(saksId: String, journalpostId: String): SøknadDAO {
         val søknad = repo.findByJournalpostId(journalpostId)
-            ?: throw IllegalStateException("Søknad med journalpostId ble ikke funnet i db: $journalpostId")
+            ?: throw SøknadWithJournalpostIdNotFoundException(journalpostId)
 
         return repo.save(søknad.copy(saksId = saksId))
     }
