@@ -4,7 +4,7 @@ import kotlinx.coroutines.runBlocking
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
 import no.nav.sifinnsynapi.config.TxConfiguration.Companion.TRANSACTION_MANAGER
 import no.nav.sifinnsynapi.saf.SafService
-import no.nav.sifinnsynapi.soknad.SøknadRepository
+import no.nav.sifinnsynapi.soknad.SøknadService
 import no.nav.sifinnsynapi.util.Constants
 import no.nav.sifinnsynapi.util.MDCUtil
 import org.apache.kafka.clients.consumer.ConsumerRecord
@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class JoarkHendelseKonsument(
     private val safService: SafService,
-    private val søknadRepository: SøknadRepository
+    private val søknadService: SøknadService
 ) {
 
     companion object {
@@ -44,15 +44,12 @@ class JoarkHendelseKonsument(
         runBlocking {
             logger.info("Slår opp journalpostinfo...")
             val journalpostinfo = safService.hentJournalpostinfo(journalpostId)
-            val fagsakId = journalpostinfo.sak!!.fagsakId
+            val fagsakId = journalpostinfo.sak!!.fagsakId!!
             MDCUtil.toMDC(Constants.K9_SAK_ID, fagsakId)
             logger.info("JournalpostInfo hentet.")
 
             logger.info("Oppdaterer søknad med saksId...")
-            val søknad = søknadRepository.findByJournalpostId(journalpostId)
-                ?: throw IllegalStateException("Søknad med journalpostId ble ikke funnet i db: $journalpostId")
-
-            val oppdatertSøknad = søknadRepository.save(søknad.copy(saksId = fagsakId))
+            val oppdatertSøknad = søknadService.oppdaterSøknadSaksIdGittJournalpostId(fagsakId, journalpostId)
             logger.info("Søknad oppdatert med saksId: {}", oppdatertSøknad)
 
             //throw IllegalStateException("Tester transaction rollback og retrymekanisme")
