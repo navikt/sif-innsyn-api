@@ -25,7 +25,6 @@ class JoarkHendelseKonsument(
         private val logger = LoggerFactory.getLogger(JoarkHendelseKonsument::class.java)
     }
 
-    @Transactional(TRANSACTION_MANAGER, rollbackFor = [Throwable::class])
     @KafkaListener(
         topics = ["#{'\${topic.listener.dok-journalfoering-v1.navn}'}"],
         id = "#{'\${topic.listener.dok-journalfoering-v1.id}'}",
