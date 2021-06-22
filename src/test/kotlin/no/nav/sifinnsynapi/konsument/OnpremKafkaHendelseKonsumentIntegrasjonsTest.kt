@@ -137,6 +137,13 @@ class OnpremKafkaHendelseKonsumentIntegrasjonsTest {
         repository.deleteAll()
     }
 
+    @AfterAll
+    fun tearDown() {
+        producer.close()
+        joarkProducer.close()
+        dittNavConsumer.close()
+    }
+
     @Test
     fun `Gitt lagrede pleiepengesøknader i database, forvent kun at brukers data vises ved restkall`() {
 
