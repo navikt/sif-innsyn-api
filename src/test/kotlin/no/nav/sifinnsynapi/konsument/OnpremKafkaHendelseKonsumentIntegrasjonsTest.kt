@@ -412,7 +412,7 @@ class OnpremKafkaHendelseKonsumentIntegrasjonsTest {
     }
 
     @Test
-    fun `gitt eksisterende søknad, konsumer fra joark og oppdater søknad med saksId`() {
+    fun `gitt eksisterende søknad, konsumer fra joark, slå opp journalpostinfo og oppdater søknad med saksId`() {
         val journalpostId: Long = 987654321
 
         repository.save(
