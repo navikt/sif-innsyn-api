@@ -52,7 +52,7 @@ class JoarkHendelseKonsument(
             val oppdatertSøknad = søknadService.oppdaterSøknadSaksIdGittJournalpostId(fagsakId, journalpostId)
             logger.info("Søknad oppdatert med saksId: {}", oppdatertSøknad)
 
-            //throw IllegalStateException("Tester transaction rollback og retrymekanisme")
+            throw IllegalStateException("Tester transaction rollback og retrymekanisme")
         }
     }
 }
