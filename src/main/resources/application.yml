@@ -5,10 +5,6 @@ no.nav:
         tekst: 'Vi har mottatt søknaden din om pleiepenger.'
         link: https://sif-innsyn.dev.nav.no/familie/sykdom-i-familien/soknad/innsyn/dine-pleiepenger
         dagerSynlig: 7
-    omsorgspenger-midlertidig-alene:
-      beskjed:
-        tekst: 'Vi har mottatt omsorgspengesøknad fra deg om å bli regnet som alene om omsorgen for barn.'
-        dagerSynlig: 7
     omsorgsdager-melding-korona:
       beskjed:
         tekst: 'Vi har mottatt melding fra deg om å dele omsorgsdager'
@@ -71,13 +67,6 @@ topic:
     pp-sykt-barn:
       id: pp-sykt-barn-listener
       navn: privat-pleiepengesoknad-cleanup
-      bryter: true
-      dry-run: false
-
-    # topic.listener.omp-midlertidig-alene
-    omp-midlertidig-alene:
-      id: omp-midlertidig-alene-listener
-      navn: privat-omsorgspenger-midlertidig-alene-cleanup
       bryter: true
       dry-run: false
 
