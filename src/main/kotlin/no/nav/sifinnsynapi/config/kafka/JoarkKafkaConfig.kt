@@ -14,7 +14,9 @@ import org.springframework.kafka.core.ConsumerFactory
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory
 import org.springframework.kafka.listener.ContainerProperties
 import org.springframework.kafka.listener.SeekToCurrentErrorHandler
+import org.springframework.kafka.support.KafkaHeaders
 import org.springframework.util.backoff.FixedBackOff
+import java.nio.ByteBuffer
 import java.time.Duration
 
 @Configuration
@@ -63,6 +65,14 @@ internal class JoarkKafkaConfig(
             containerProperties.eosMode = ContainerProperties.EOSMode.BETA
 
             setRecordFilterStrategy {
+                val antallForsøk = ByteBuffer.wrap(
+                    it.headers()
+                        .lastHeader(KafkaHeaders.DELIVERY_ATTEMPT).value()
+                )
+                    .int
+
+                if (antallForsøk > 1) logger.warn("Konsumering av ${it.topic()}-${it.partition()} med offset ${it.offset()} feilet første gang. Prøver for $antallForsøk gang.")
+
                 val hendelse = it.value()
                 when {
                     hendelse.temaNytt.lowercase() == TEMA_NYTT_OMS && hendelse.hendelsesType.lowercase() == ENDELIG_JOURNALFØRT -> {
