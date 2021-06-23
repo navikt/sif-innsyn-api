@@ -44,7 +44,8 @@ class K9EttersendingKonsument(
             OMP_UTV_KS("omsorgspenger"), // Omsorgspenger utvidet rett - kronisk syke eller funksjonshemming.
             OMP_UT_SNF("omsorgspenger"), // Omsorgspenger utbetaling SNF ytelse.
             OMP_UT_ARBEIDSTAKER("omsorgspenger"), // Omsorgspenger utbetaling arbeidstaker ytelse.
-            OMP_DELE_DAGER("omsorgspenger")
+            OMP_DELE_DAGER("omsorgspenger"),
+            OMP_UTV_MA("omsorgspenger"), // Omsorgspenger utvidet rett - midlertidig alene
         }
     }
 
