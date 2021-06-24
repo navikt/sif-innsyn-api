@@ -65,6 +65,8 @@ internal class JoarkKafkaConfig(
             containerProperties.eosMode = ContainerProperties.EOSMode.BETA
 
             setRecordFilterStrategy {
+                MDCUtil.clearFomMDC(Constants.JOURNALPOST_ID)
+                MDCUtil.clearFomMDC(Constants.K9_SAK_ID)
                 val antallForsøk = ByteBuffer.wrap(
                     it.headers()
                         .lastHeader(KafkaHeaders.DELIVERY_ATTEMPT).value()
