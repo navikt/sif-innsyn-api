@@ -43,7 +43,9 @@ class JoarkHendelseKonsument(
             logger.info("Slår opp journalpostinfo...")
             val journalpostinfo = safService.hentJournalpostinfo(journalpostId)
             when (val fagsakId = journalpostinfo.sak?.fagsakId) {
-                null -> {} // ikke gjør noe
+                null -> {
+                    logger.info("Sak eller fagsakId var null. Ignorerer melding.")
+                } // ikke gjør noe
 
                 else -> {
                     MDCUtil.toMDC(Constants.K9_SAK_ID, fagsakId)
