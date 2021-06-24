@@ -3,6 +3,7 @@ no.nav:
     sts-apikey: sts-apikey
   gateways:
     k9-selvbetjening-oppslag: http://localhost:${wiremock.server.port}/k9-selvbetjening-oppslag-mock
+    saf-base-url: http://localhost:${wiremock.server.port}/saf-api-mock
     sts:
       url: http://localhost:${wiremock.server.port}/security-token-service
       username: sts-username

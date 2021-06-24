@@ -3,14 +3,20 @@ package no.nav.sifinnsynapi.konsument
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isNotNull
+import assertk.assertions.isNullOrEmpty
 import com.fasterxml.jackson.databind.ObjectMapper
+import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
 import no.nav.security.mock.oauth2.MockOAuth2Server
 import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
 import no.nav.sifinnsynapi.Routes.SØKNAD
 import no.nav.sifinnsynapi.SifInnsynApiApplication
 import no.nav.sifinnsynapi.common.AktørId
+import no.nav.sifinnsynapi.common.Fødselsnummer
+import no.nav.sifinnsynapi.common.SøknadsStatus
+import no.nav.sifinnsynapi.common.Søknadstype
 import no.nav.sifinnsynapi.config.SecurityConfiguration
 import no.nav.sifinnsynapi.config.Topics
+import no.nav.sifinnsynapi.config.Topics.AAPEN_DOK_JOURNALFØRING_V1
 import no.nav.sifinnsynapi.config.Topics.K9_DITTNAV_VARSEL_BESKJED
 import no.nav.sifinnsynapi.config.Topics.K9_ETTERSENDING
 import no.nav.sifinnsynapi.config.Topics.OMD_MELDING
@@ -22,6 +28,7 @@ import no.nav.sifinnsynapi.dittnav.K9Beskjed
 import no.nav.sifinnsynapi.konsument.ettersending.K9EttersendingKonsument
 import no.nav.sifinnsynapi.konsument.omsorgspenger.utbetaling.arbeidstaker.OmsorgspengerutbetalingArbeidstakerHendelseKonsument
 import no.nav.sifinnsynapi.konsument.omsorgspenger.utvidetrett.OmsorgspengerUtvidetRettHendelseKonsument
+import no.nav.sifinnsynapi.soknad.SøknadDAO
 import no.nav.sifinnsynapi.soknad.SøknadDTO
 import no.nav.sifinnsynapi.soknad.SøknadRepository
 import no.nav.sifinnsynapi.utils.*
@@ -50,6 +57,9 @@ import org.springframework.kafka.test.context.EmbeddedKafka
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit.jupiter.SpringExtension
+import java.time.Duration
+import java.time.ZonedDateTime
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 @EmbeddedKafka( // Setter opp og tilgjengligjør embeded kafka broker
@@ -62,7 +72,8 @@ import java.util.concurrent.TimeUnit
         OMP_UTBETALING_ARBEIDSTAKER,
         OMP_UTBETALING_SNF,
         OMP_UTVIDET_RETT,
-        K9_DITTNAV_VARSEL_BESKJED
+        K9_DITTNAV_VARSEL_BESKJED,
+        AAPEN_DOK_JOURNALFØRING_V1
     ]
 )
 @ExtendWith(SpringExtension::class)
@@ -96,6 +107,7 @@ class OnpremKafkaHendelseKonsumentIntegrasjonsTest {
     lateinit var mockOAuth2Server: MockOAuth2Server
 
     lateinit var producer: Producer<String, Any> // Kafka producer som brukes til å legge på kafka meldinger. Mer spesifikk, Hendelser om pp-sykt-barn
+    lateinit var joarkProducer: Producer<Long, JournalfoeringHendelseRecord> // Kafka producer som brukes til å legge på kafka meldinger for joark hendelser.
     lateinit var dittNavConsumer: Consumer<String, K9Beskjed> // Kafka consumer som brukes til å lese kafka meldinger.
 
     companion object {
@@ -108,6 +120,7 @@ class OnpremKafkaHendelseKonsumentIntegrasjonsTest {
     fun setUp() {
         assertNotNull(mockOAuth2Server)
         producer = embeddedKafkaBroker.opprettKafkaProducer()
+        joarkProducer = embeddedKafkaBroker.opprettJoarkKafkaProducer()
         dittNavConsumer = embeddedKafkaBroker.opprettDittnavConsumer()
     }
 
@@ -120,6 +133,13 @@ class OnpremKafkaHendelseKonsumentIntegrasjonsTest {
     fun afterEach() {
         log.info("Tømmer databasen...")
         repository.deleteAll()
+    }
+
+    @AfterAll
+    fun tearDown() {
+        producer.close()
+        joarkProducer.close()
+        dittNavConsumer.close()
     }
 
     @Test
@@ -376,6 +396,33 @@ class OnpremKafkaHendelseKonsumentIntegrasjonsTest {
             dittNavConsumer.lesMelding(hendelse.data.melding[OmsorgspengerUtvidetRettHendelseKonsument.Companion.Keys.SØKNAD_ID] as String)
         log.info("----> dittnav melding: {}", dittnavBeskjed)
         assertThat(dittnavBeskjed).isNotNull()
+    }
+
+    @Test
+    fun `gitt eksisterende søknad, konsumer fra joark, slå opp journalpostinfo og oppdater søknad med saksId`() {
+        val journalpostId: Long = 987654321
+
+        repository.save(
+            SøknadDAO(
+                id = UUID.randomUUID(),
+                opprettet = ZonedDateTime.now(),
+                aktørId = AktørId(aktørId = "123456"),
+                fødselsnummer = Fødselsnummer(fødselsnummer = "1234567"),
+                søknadstype = Søknadstype.PP_SYKT_BARN,
+                status = SøknadsStatus.MOTTATT,
+                søknad = "{}",
+                saksId = null,
+                journalpostId = "$journalpostId"
+            )
+        )
+
+        joarkProducer.leggPåTopic(defaultJournalfoeringHendelseRecord(journalpostId))
+
+        await.atMost(Duration.ofSeconds(10)).untilAsserted {
+            assertThat { repository.findByJournalpostId("$journalpostId") }.transform { it.getOrNull() }
+                .isNotNull()
+                .transform { it.saksId }.isNullOrEmpty()
+        }
     }
 
     private fun ResponseEntity<List<SøknadDTO>>.listAssert(forventetResponse: String, forventetStatus: Int) {

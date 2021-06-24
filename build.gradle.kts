@@ -3,6 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     id("org.springframework.boot") version "2.5.1"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
+    id("com.expediagroup.graphql") version "4.1.1"
     kotlin("jvm") version "1.5.10"
     kotlin("plugin.spring") version "1.5.10"
     kotlin("plugin.jpa") version "1.5.10"
@@ -35,6 +36,7 @@ val mockkVersion by extra("1.11.0")
 val guavaVersion by extra("23.0")
 val okHttp3Version by extra("4.9.1")
 val orgJsonVersion by extra("20210307")
+val graphQLKotlinVersion by extra("4.1.1")
 
 ext["okhttp3.version"] = okHttp3Version
 ext["testcontainersVersion"] = "1.15.3"
@@ -44,14 +46,6 @@ ext["mock-oauth2-server.version"] = "0.3.3"
 ext["nimbus.jose.jwt.version"] = "9.10"
 
 repositories {
-    maven {
-        name = "github-package-registry-navikt"
-        url = uri("https://maven.pkg.github.com/navikt/legacy-avhengigheter")
-        credentials {
-            username = project.findProperty("gpr.user") as String? ?: System.getenv("GITHUB_USERNAME")
-            password = project.findProperty("gpr.key") as String? ?: System.getenv("GITHUB_TOKEN")
-        }
-    }
     mavenCentral()
 
     maven {
@@ -116,6 +110,9 @@ dependencies {
     // Jackson
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
+    //graphql
+    implementation("com.expediagroup:graphql-kotlin-spring-client:$graphQLKotlinVersion")
+
     // Kotlin
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
@@ -165,4 +162,11 @@ tasks.withType<KotlinCompile> {
 
 tasks.getByName<Jar>("jar") {
     enabled = false
+}
+
+tasks.withType<com.expediagroup.graphql.plugin.gradle.tasks.GraphQLGenerateClientTask> {
+    queryFileDirectory.set("${project.projectDir}/src/main/resources/saf")
+    schemaFile.set(file("${project.projectDir}/src/main/resources/saf/saf-api-sdl.graphqls"))
+    packageName.set("no.nav.sifinnsynapi.saf.generated")
+
 }

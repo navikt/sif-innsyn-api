@@ -1,6 +1,7 @@
 package no.nav.sifinnsynapi.utils
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
 import no.nav.sifinnsynapi.common.JournalfortMelding
 import no.nav.sifinnsynapi.common.Metadata
 import no.nav.sifinnsynapi.common.SøknadsHendelse
@@ -16,71 +17,80 @@ fun SøknadDTO.somJson(mapper: ObjectMapper) = mapper.writerWithDefaultPrettyPri
 fun TopicEntry.somJson(mapper: ObjectMapper) = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(this)
 
 val defaultMetadata = Metadata(
-        version = 1,
-        correlationId = UUID.randomUUID().toString(),
-        requestId = UUID.randomUUID().toString()
+    version = 1,
+    correlationId = UUID.randomUUID().toString(),
+    requestId = UUID.randomUUID().toString()
 )
 
-fun defaultHendelse(søknadIdKey: String = "søknadId", søknadId: UUID = UUID.randomUUID(), journalpostId: String = "123456789") = TopicEntry(
-        data = SøknadsHendelse(
-                metadata = defaultMetadata,
-                melding = mapOf(
-                        "$søknadIdKey" to "$søknadId",
-                        "mottatt" to ZonedDateTime.now(),
-                        "søker" to mapOf(
-                                "fødselsnummer" to "1234567",
-                                "aktørId" to "123456"
-                        )
-                ),
-                journalførtMelding = JournalfortMelding(
-                        journalpostId = "$journalpostId"
-                )
+fun defaultHendelse(
+    søknadIdKey: String = "søknadId",
+    søknadId: UUID = UUID.randomUUID(),
+    journalpostId: String = "123456789"
+) = TopicEntry(
+    data = SøknadsHendelse(
+        metadata = defaultMetadata,
+        melding = mapOf(
+            "$søknadIdKey" to "$søknadId",
+            "mottatt" to ZonedDateTime.now(),
+            "søker" to mapOf(
+                "fødselsnummer" to "1234567",
+                "aktørId" to "123456"
+            )
+        ),
+        journalførtMelding = JournalfortMelding(
+            journalpostId = "$journalpostId"
         )
+    )
 )
 
 fun defaultHendelseOmsorgsdagerMelding(
-        søknadIdKey: String = "søknadId",
-        søknadId: UUID = UUID.randomUUID(),
-        journalpostId: String = "123456789",
-        type: String
+    søknadIdKey: String = "søknadId",
+    søknadId: UUID = UUID.randomUUID(),
+    journalpostId: String = "123456789",
+    type: String
 ) = TopicEntry(
-        data = SøknadsHendelse(
-                metadata = defaultMetadata,
-                melding = mapOf(
-                        "$søknadIdKey" to "$søknadId",
-                        "mottatt" to ZonedDateTime.now(),
-                        "søker" to mapOf(
-                                "fødselsnummer" to "1234567",
-                                "aktørId" to "123456"
-                        ),
-                        "type" to "$type"
-                ),
-                journalførtMelding = JournalfortMelding(
-                        journalpostId = "$journalpostId"
-                )
+    data = SøknadsHendelse(
+        metadata = defaultMetadata,
+        melding = mapOf(
+            "$søknadIdKey" to "$søknadId",
+            "mottatt" to ZonedDateTime.now(),
+            "søker" to mapOf(
+                "fødselsnummer" to "1234567",
+                "aktørId" to "123456"
+            ),
+            "type" to "$type"
+        ),
+        journalførtMelding = JournalfortMelding(
+            journalpostId = "$journalpostId"
         )
+    )
 )
 
 
 fun defaultHendelseK9Ettersending(
-        søknadIdKey: String = "soknadId",
-        søknadId: UUID = UUID.randomUUID(),
-        journalpostId: String = "123456789",
-        søknadstype: K9EttersendingKonsument.Companion.Søknadstype
+    søknadIdKey: String = "soknadId",
+    søknadId: UUID = UUID.randomUUID(),
+    journalpostId: String = "123456789",
+    søknadstype: K9EttersendingKonsument.Companion.Søknadstype
 ) = TopicEntry(
-        data = SøknadsHendelse(
-                metadata = defaultMetadata,
-                melding = mapOf(
-                        "$søknadIdKey" to "$søknadId",
-                        "mottatt" to ZonedDateTime.now(),
-                        "søker" to mapOf(
-                                "fødselsnummer" to "1234567",
-                                "aktørId" to "123456"
-                        ),
-                        "søknadstype" to "${søknadstype.name}"
-                ),
-                journalførtMelding = JournalfortMelding(
-                        journalpostId = "$journalpostId"
-                )
+    data = SøknadsHendelse(
+        metadata = defaultMetadata,
+        melding = mapOf(
+            "$søknadIdKey" to "$søknadId",
+            "mottatt" to ZonedDateTime.now(),
+            "søker" to mapOf(
+                "fødselsnummer" to "1234567",
+                "aktørId" to "123456"
+            ),
+            "søknadstype" to "${søknadstype.name}"
+        ),
+        journalførtMelding = JournalfortMelding(
+            journalpostId = "$journalpostId"
         )
+    )
+)
+
+fun defaultJournalfoeringHendelseRecord(journalpostId: Long) = JournalfoeringHendelseRecord(
+    UUID.randomUUID().toString(), 1, "EndeligJournalført", journalpostId,
+    "J", "OMS", "OMS", "NAV_NO", "", ""
 )

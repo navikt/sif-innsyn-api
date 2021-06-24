@@ -176,6 +176,10 @@ class DocumentNotFoundException(søknadId: String) :
     RuntimeException("Dokument med søknadId = $søknadId ble ikke funnet.")
 
 class SøknadNotFoundException(søknadId: String) : RuntimeException("Søknad med søknadId = $søknadId ble ikke funnet.")
+
+class SøknadWithJournalpostIdNotFoundException(journalpostId: String) :
+    RuntimeException("Søknad med journalpostId = $journalpostId ble ikke funnet.")
+
 class NotSupportedArbeidsgiverMeldingException(søknadId: String, søknadstype: Søknadstype) :
     RuntimeException("Søknad med søknadId = $søknadId  og søknadstype = $søknadstype støtter ikke arbeidsgivermelding.")
 

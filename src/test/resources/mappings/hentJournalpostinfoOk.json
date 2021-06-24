@@ -1,0 +1,42 @@
+{
+  "request": {
+    "urlPattern": "/saf-api-mock/graphql",
+    "method": "POST",
+    "headers": {
+      "Authorization": {
+        "matches": ".*"
+      }
+    },
+    "bodyPatterns": [
+      {
+        "equalToJson": {
+          "variables": {
+            "journalpostId": "${json-unit.any-string}"
+          },
+          "query": "query($journalpostId: String!) {\n    journalpost(journalpostId: $journalpostId) {\n        sak {\n            fagsakId\n            sakstype\n            fagsaksystem\n            datoOpprettet\n        }\n    }\n}"
+        },
+        "ignoreExtraElements" : true,
+        "ignoreArrayOrder" : true
+      }
+    ]
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "data": {
+        "journalpost": {
+          "sak": {
+            "fagsakId": "1DM8RSQ",
+            "sakstype": "FAGSAK",
+            "fagsaksystem": "K9",
+            "datoOpprettet": "2021-04-16T11:02:30"
+          }
+        }
+      }
+    }
+  }
+}
+

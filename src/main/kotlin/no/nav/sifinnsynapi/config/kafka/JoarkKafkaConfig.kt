@@ -6,7 +6,6 @@ import no.nav.sifinnsynapi.config.kafka.CommonKafkaConfig.Companion.defaultRecov
 import no.nav.sifinnsynapi.util.Constants
 import no.nav.sifinnsynapi.util.MDCUtil
 import org.apache.kafka.clients.consumer.ConsumerConfig
-import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -14,8 +13,10 @@ import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory
 import org.springframework.kafka.core.ConsumerFactory
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory
 import org.springframework.kafka.listener.ContainerProperties
-import org.springframework.kafka.listener.DefaultAfterRollbackProcessor
+import org.springframework.kafka.listener.SeekToCurrentErrorHandler
+import org.springframework.kafka.support.KafkaHeaders
 import org.springframework.util.backoff.FixedBackOff
+import java.nio.ByteBuffer
 import java.time.Duration
 
 @Configuration
@@ -25,8 +26,8 @@ internal class JoarkKafkaConfig(
     companion object {
         private val logger = LoggerFactory.getLogger(JoarkKafkaConfig::class.java)
 
-        const val TEMA_NYTT_OMS = "OMS"
-        const val ENDELIG_JOURNALFØRT = "EndeligJournalført"
+        const val TEMA_NYTT_OMS = "oms"
+        const val ENDELIG_JOURNALFØRT = "endeligjournalført"
     }
 
     @Bean
@@ -49,7 +50,7 @@ internal class JoarkKafkaConfig(
     @Bean
     fun joarkKafkaJsonListenerContainerFactor(joarkConsumerFactory: ConsumerFactory<Long, JournalfoeringHendelseRecord>) =
         ConcurrentKafkaListenerContainerFactory<Long, JournalfoeringHendelseRecord>().apply {
-            this.consumerFactory = joarkConsumerFactory
+            consumerFactory = joarkConsumerFactory
 
             // https://docs.spring.io/spring-kafka/reference/html/#listener-container
             containerProperties.authorizationExceptionRetryInterval = Duration.ofSeconds(10L)
@@ -64,9 +65,17 @@ internal class JoarkKafkaConfig(
             containerProperties.eosMode = ContainerProperties.EOSMode.BETA
 
             setRecordFilterStrategy {
+                val antallForsøk = ByteBuffer.wrap(
+                    it.headers()
+                        .lastHeader(KafkaHeaders.DELIVERY_ATTEMPT).value()
+                )
+                    .int
+
+                if (antallForsøk > 1) logger.warn("Konsumering av ${it.topic()}-${it.partition()} med offset ${it.offset()} feilet første gang. Prøver for $antallForsøk gang.")
+
                 val hendelse = it.value()
                 when {
-                    hendelse.temaNytt == TEMA_NYTT_OMS && hendelse.hendelsesType == ENDELIG_JOURNALFØRT -> {
+                    hendelse.temaNytt.lowercase() == TEMA_NYTT_OMS && hendelse.hendelsesType.lowercase() == ENDELIG_JOURNALFØRT -> {
                         MDCUtil.toMDC(Constants.JOURNALPOST_ID, hendelse.journalpostId)
                         false
                     }
@@ -74,18 +83,12 @@ internal class JoarkKafkaConfig(
                 }
             }
 
-            setAfterRollbackProcessor(
-                defaultAfterRollbackProsessor(
-                    logger,
-                    kafkaClusterProperties.onprem.consumer.retryInterval
+            // https://docs.spring.io/spring-kafka/reference/html/#seek-to-current
+            setErrorHandler(
+                SeekToCurrentErrorHandler(
+                    defaultRecoverer(logger),
+                    FixedBackOff(kafkaClusterProperties.onprem.consumer.retryInterval, Long.MAX_VALUE)
                 )
             )
-        }
-
-    private fun defaultAfterRollbackProsessor(logger: Logger, retryInterval: Long) =
-        DefaultAfterRollbackProcessor<Long, JournalfoeringHendelseRecord>(
-            defaultRecoverer(logger), FixedBackOff(retryInterval, Long.MAX_VALUE)
-        ).apply {
-            setClassifications(mapOf(), true)
         }
 }

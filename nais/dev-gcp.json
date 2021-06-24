@@ -11,7 +11,8 @@
   "externalHosts": [
     "login.microsoftonline.com",
     "k9-selvbetjening-oppslag.dev-fss-pub.nais.io",
-    "kafka-schema-registry.nais-q.adeo.no"
+    "kafka-schema-registry.nais-q.adeo.no",
+    "saf.dev-fss-pub.nais.io"
   ],
   "database": {
     "name": "sif-innsyn-db",
@@ -34,6 +35,7 @@
     "NO_NAV_SECURITY_JWT_ISSUER_LOGINSERVICE_COOKIE_NAME": "selvbetjening-idtoken",
     "NO_NAV_SECURITY_CORS_ALLOWED_ORIGINS": "https://sif-innsyn.dev.nav.no",
     "NO_NAV_GATEWAYS_K9_SELVBETJENING_OPPSLAG": "https://k9-selvbetjening-oppslag.dev-fss-pub.nais.io",
+    "NO_NAV_GATEWAYS_SAF_BASE_URL": "https://saf.dev-fss-pub.nais.io",
     "NO_NAV_GATEWAYS_STS_URL": "https://api-gw-q1.oera.no/security-token-service"
   },
   "slack-channel": "sif-alerts-dev",

@@ -6,10 +6,11 @@ import no.nav.sifinnsynapi.common.AktørId
 import no.nav.sifinnsynapi.common.Søknadstype
 import no.nav.sifinnsynapi.http.NotSupportedArbeidsgiverMeldingException
 import no.nav.sifinnsynapi.http.SøknadNotFoundException
-import no.nav.sifinnsynapi.oppslag.OppslagsService
+import no.nav.sifinnsynapi.http.SøknadWithJournalpostIdNotFoundException
 import no.nav.sifinnsynapi.konsument.pleiepenger.syktbarn.ArbeidsgiverMeldingPDFGenerator
 import no.nav.sifinnsynapi.konsument.pleiepenger.syktbarn.PleiepengerJSONObjectUtils.finnOrganisasjon
 import no.nav.sifinnsynapi.konsument.pleiepenger.syktbarn.PleiepengerJSONObjectUtils.tilPleiepengerAreidsgivermelding
+import no.nav.sifinnsynapi.oppslag.OppslagsService
 import org.json.JSONObject
 import org.springframework.stereotype.Service
 import java.util.*
@@ -38,6 +39,13 @@ class SøknadService(
         return repo.findById(søknadId).orElseThrow {
             SøknadNotFoundException(søknadId.toString())
         }.tilSøknadDTO()
+    }
+
+    fun oppdaterSøknadSaksIdGittJournalpostId(saksId: String, journalpostId: String): SøknadDAO {
+        val søknad = repo.findByJournalpostId(journalpostId)
+            ?: throw SøknadWithJournalpostIdNotFoundException(journalpostId)
+
+        return repo.save(søknad.copy(saksId = saksId))
     }
 
     fun SøknadDAO.tilSøknadDTO() = SøknadDTO(
