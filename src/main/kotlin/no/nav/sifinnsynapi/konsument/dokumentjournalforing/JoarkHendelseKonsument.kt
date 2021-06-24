@@ -42,20 +42,25 @@ class JoarkHendelseKonsument(
         runBlocking {
             logger.info("Slår opp journalpostinfo...")
             val journalpostinfo = safService.hentJournalpostinfo(journalpostId)
-            val fagsakId = journalpostinfo.sak!!.fagsakId!!
-            MDCUtil.toMDC(Constants.K9_SAK_ID, fagsakId)
-            logger.info("JournalpostInfo hentet.")
+            when (val fagsakId = journalpostinfo.sak?.fagsakId) {
+                null -> {} // ikke gjør noe
 
-            logger.info("Oppdaterer søknad med saksId...")
-            try {
-                val oppdatertSøknad = søknadService.oppdaterSøknadSaksIdGittJournalpostId(fagsakId, journalpostId)
-                logger.info("Søknad oppdatert med saksId: {}", oppdatertSøknad)
-            } catch (ex: Throwable) {
-                when(ex) {
-                    is SøknadWithJournalpostIdNotFoundException -> {
-                        logger.info("${ex.message} Ignorerer.")
+                else -> {
+                    MDCUtil.toMDC(Constants.K9_SAK_ID, fagsakId)
+                    logger.info("JournalpostInfo hentet.")
+
+                    logger.info("Oppdaterer søknad med saksId...")
+                    try {
+                        val oppdatertSøknad = søknadService.oppdaterSøknadSaksIdGittJournalpostId(fagsakId, journalpostId)
+                        logger.info("Søknad oppdatert med saksId: {}", oppdatertSøknad)
+                    } catch (ex: Throwable) {
+                        when(ex) {
+                            is SøknadWithJournalpostIdNotFoundException -> {
+                                logger.info("${ex.message} Ignorerer.")
+                            }
+                            else -> throw ex
+                        }
                     }
-                    else -> throw ex
                 }
             }
         }
