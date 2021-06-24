@@ -20,7 +20,8 @@ class JoarkHendelseKonsument {
         id = "#{'\${topic.listener.dok-journalfoering-v1.id}'}",
         groupId = "#{'\${kafka.onprem.consumer.group-id}'}",
         containerFactory = "joarkKafkaJsonListenerContainerFactor",
-        autoStartup = "#{'\${topic.listener.dok-journalfoering-v1.bryter}'}"
+        autoStartup = "#{'\${topic.listener.dok-journalfoering-v1.bryter}'}",
+        properties = ["auto.offset.reset=latest"]
     )
     fun konsumer(
         @Payload cr: ConsumerRecord<Long, JournalfoeringHendelseRecord>
