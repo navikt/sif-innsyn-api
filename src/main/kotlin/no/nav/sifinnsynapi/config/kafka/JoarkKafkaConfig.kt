@@ -26,7 +26,6 @@ internal class JoarkKafkaConfig(
         private val logger = LoggerFactory.getLogger(JoarkKafkaConfig::class.java)
 
         const val TEMA_NYTT_OMS = "OMS"
-        const val MOTTAKS_KANAL_NAV_NO = "NAV_NO"
         const val ENDELIG_JOURNALFØRT = "EndeligJournalført"
     }
 
@@ -67,7 +66,7 @@ internal class JoarkKafkaConfig(
             setRecordFilterStrategy {
                 val hendelse = it.value()
                 when {
-                    hendelse.temaNytt == TEMA_NYTT_OMS && hendelse.mottaksKanal == MOTTAKS_KANAL_NAV_NO && hendelse.hendelsesType == ENDELIG_JOURNALFØRT -> {
+                    hendelse.temaNytt == TEMA_NYTT_OMS && hendelse.hendelsesType == ENDELIG_JOURNALFØRT -> {
                         MDCUtil.toMDC(Constants.JOURNALPOST_ID, hendelse.journalpostId)
                         false
                     }
