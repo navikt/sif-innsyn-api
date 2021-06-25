@@ -85,5 +85,9 @@ class SøknadService(
             else -> throw NotSupportedArbeidsgiverMeldingException(søknad.id.toString(), søknad.søknadstype)
         }
     }
+
+    fun søknadGittJournalpostIdEksisterer(journalpostId: String): Boolean {
+        return repo.findByJournalpostId(journalpostId) != null
+    }
 }
 

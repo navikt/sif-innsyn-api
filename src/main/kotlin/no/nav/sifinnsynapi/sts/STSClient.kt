@@ -27,8 +27,6 @@ class STSClient(
 
     fun oicdToken(): String {
         if (cachedOidcToken.shouldBeRenewed()) {
-            log.info("Getting token from STS.")
-
             cachedOidcToken = stsClient.getForEntity(stsUrl.toUriString(), Token::class.java).body
         }
         return cachedOidcToken!!.token
