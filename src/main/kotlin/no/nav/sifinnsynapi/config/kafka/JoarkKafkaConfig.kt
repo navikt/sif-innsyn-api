@@ -87,10 +87,6 @@ internal class JoarkKafkaConfig(
                         MDCUtil.toMDC(Constants.JOURNALPOST_ID, journalføringsHendelse.journalpostId)
                         false
                     }
-                    !søknadEksisterer -> {
-                        logger.info("Søknad med journalpostId = ${journalføringsHendelse.journalpostId} ble ikke funnet. Ignorer journalføringshendelse.")
-                        true
-                    }
                     else -> true
                 }
             }
