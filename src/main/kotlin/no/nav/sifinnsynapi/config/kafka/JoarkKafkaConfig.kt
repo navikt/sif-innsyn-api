@@ -3,9 +3,11 @@ package no.nav.sifinnsynapi.config.kafka
 import io.confluent.kafka.serializers.KafkaAvroDeserializerConfig
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
 import no.nav.sifinnsynapi.config.kafka.CommonKafkaConfig.Companion.defaultRecoverer
+import no.nav.sifinnsynapi.soknad.SøknadService
 import no.nav.sifinnsynapi.util.Constants
 import no.nav.sifinnsynapi.util.MDCUtil
 import org.apache.kafka.clients.consumer.ConsumerConfig
+import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -21,7 +23,8 @@ import java.time.Duration
 
 @Configuration
 internal class JoarkKafkaConfig(
-    private val kafkaClusterProperties: KafkaClusterProperties
+    private val kafkaClusterProperties: KafkaClusterProperties,
+    private val søknadService: SøknadService
 ) {
     companion object {
         private val logger = LoggerFactory.getLogger(JoarkKafkaConfig::class.java)
@@ -64,27 +67,6 @@ internal class JoarkKafkaConfig(
             // https://docs.spring.io/spring-kafka/docs/2.5.2.RELEASE/reference/html/#exactly-once
             containerProperties.eosMode = ContainerProperties.EOSMode.BETA
 
-            setRecordFilterStrategy {
-                MDCUtil.clearFomMDC(Constants.JOURNALPOST_ID)
-                MDCUtil.clearFomMDC(Constants.K9_SAK_ID)
-                val antallForsøk = ByteBuffer.wrap(
-                    it.headers()
-                        .lastHeader(KafkaHeaders.DELIVERY_ATTEMPT).value()
-                )
-                    .int
-
-                if (antallForsøk > 1) logger.warn("Konsumering av ${it.topic()}-${it.partition()} med offset ${it.offset()} feilet første gang. Prøver for $antallForsøk gang.")
-
-                val hendelse = it.value()
-                when {
-                    hendelse.temaNytt.lowercase() == TEMA_NYTT_OMS && hendelse.hendelsesType.lowercase() == ENDELIG_JOURNALFØRT -> {
-                        MDCUtil.toMDC(Constants.JOURNALPOST_ID, hendelse.journalpostId)
-                        false
-                    }
-                    else -> true
-                }
-            }
-
             // https://docs.spring.io/spring-kafka/reference/html/#seek-to-current
             setErrorHandler(
                 SeekToCurrentErrorHandler(
@@ -92,5 +74,38 @@ internal class JoarkKafkaConfig(
                     FixedBackOff(kafkaClusterProperties.onprem.consumer.retryInterval, Long.MAX_VALUE)
                 )
             )
+
+            setRecordFilterStrategy {
+                MDCUtil.clearFomMDC(Constants.JOURNALPOST_ID)
+                MDCUtil.clearFomMDC(Constants.K9_SAK_ID)
+                loggAntallForsøk(it)
+
+                val journalføringsHendelse = it.value()
+                val søknadEksisterer = søknadService.søknadGittJournalpostIdEksisterer("${journalføringsHendelse.journalpostId}")
+                when {
+                    journalføringsHendelse.erRelevant() && søknadEksisterer -> {
+                        MDCUtil.toMDC(Constants.JOURNALPOST_ID, journalføringsHendelse.journalpostId)
+                        false
+                    }
+                    !søknadEksisterer -> {
+                        logger.info("Søknad med journalpostId = ${journalføringsHendelse.journalpostId} ble ikke funnet. Ignorer journalføringshendelse.")
+                        true
+                    }
+                    else -> true
+                }
+            }
         }
+
+    private fun loggAntallForsøk(it: ConsumerRecord<Long, JournalfoeringHendelseRecord>) {
+        val antallForsøk = ByteBuffer.wrap(
+            it.headers()
+                .lastHeader(KafkaHeaders.DELIVERY_ATTEMPT).value()
+        )
+            .int
+
+        if (antallForsøk > 1) logger.warn("Konsumering av ${it.topic()}-${it.partition()} med offset ${it.offset()} feilet første gang. Prøver for $antallForsøk gang.")
+    }
+
+    private fun JournalfoeringHendelseRecord.erRelevant(): Boolean =
+        temaNytt.lowercase() == TEMA_NYTT_OMS && hendelsesType.lowercase() == ENDELIG_JOURNALFØRT
 }
