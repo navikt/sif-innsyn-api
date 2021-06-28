@@ -421,7 +421,7 @@ class OnpremKafkaHendelseKonsumentIntegrasjonsTest {
         await.atMost(Duration.ofSeconds(10)).untilAsserted {
             assertThat { repository.findByJournalpostId("$journalpostId") }.transform { it.getOrNull() }
                 .isNotNull()
-                .transform { it.saksId }.isNullOrEmpty()
+                .transform { it.saksId }.isNotNull()
         }
     }
 
