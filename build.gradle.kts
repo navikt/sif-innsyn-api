@@ -1,12 +1,12 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("org.springframework.boot") version "2.5.1"
+    id("org.springframework.boot") version "2.5.2"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
     id("com.expediagroup.graphql") version "4.1.1"
-    kotlin("jvm") version "1.5.10"
-    kotlin("plugin.spring") version "1.5.10"
-    kotlin("plugin.jpa") version "1.5.10"
+    kotlin("jvm") version "1.5.20"
+    kotlin("plugin.spring") version "1.5.20"
+    kotlin("plugin.jpa") version "1.5.20"
 }
 
 group = "no.nav"
@@ -22,11 +22,11 @@ configurations {
 val springfoxVersion by extra("3.0.0")
 val confluentVersion by extra("5.5.0")
 val logstashLogbackEncoderVersion by extra("6.6")
-val tokenValidationVersion by extra("1.3.7")
+val tokenValidationVersion by extra("1.3.8")
 val springCloudVersion by extra("2020.0.3")
 val retryVersion by extra("1.3.0")
 val zalandoVersion by extra("0.26.2")
-val openhtmltopdfVersion = "1.0.8"
+val openhtmltopdfVersion = "1.0.9"
 val handlebarsVersion = "4.2.0"
 val hibernateTypes52Version by extra("2.11.1")
 val awailitilityKotlinVersion by extra("4.1.0")
@@ -40,10 +40,6 @@ val graphQLKotlinVersion by extra("4.1.1")
 
 ext["okhttp3.version"] = okHttp3Version
 ext["testcontainersVersion"] = "1.15.3"
-
-// TODO: 09/06/2021 fjern disse når tokenValidationVersion oppdateres til 1.3.8
-ext["mock-oauth2-server.version"] = "0.3.3"
-ext["nimbus.jose.jwt.version"] = "9.10"
 
 repositories {
     mavenCentral()
@@ -61,8 +57,6 @@ dependencies {
     //implementation("no.nav.dok:dok-journalfoering-hendelse-v1:0.0.3")
     implementation("no.nav.syfo.schemas:dok-journalfoering-hendelse-v1:67a9be4476b63b7247cfacfaf821ab656bd2a952")
     testImplementation("no.nav.security:token-validation-spring-test:$tokenValidationVersion")
-    testImplementation("no.nav.security:mock-oauth2-server:0.3.3") // TODO: 09/06/2021 fjern når tokenValidationVersion oppdateres til 1.3.8
-    implementation("com.nimbusds:nimbus-jose-jwt:9.10") // TODO: 09/06/2021 fjern når tokenValidationVersion oppdateres til 1.3.8
     testImplementation("com.squareup.okhttp3:okhttp:$okHttp3Version")
 
     // Spring Boot
