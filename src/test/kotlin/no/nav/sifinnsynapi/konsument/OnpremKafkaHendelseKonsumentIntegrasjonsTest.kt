@@ -3,7 +3,6 @@ package no.nav.sifinnsynapi.konsument
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isNotNull
-import assertk.assertions.isNullOrEmpty
 import com.fasterxml.jackson.databind.ObjectMapper
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
 import no.nav.security.mock.oauth2.MockOAuth2Server
@@ -19,7 +18,6 @@ import no.nav.sifinnsynapi.config.Topics
 import no.nav.sifinnsynapi.config.Topics.AAPEN_DOK_JOURNALFØRING_V1
 import no.nav.sifinnsynapi.config.Topics.K9_DITTNAV_VARSEL_BESKJED
 import no.nav.sifinnsynapi.config.Topics.K9_ETTERSENDING
-import no.nav.sifinnsynapi.config.Topics.OMD_MELDING
 import no.nav.sifinnsynapi.config.Topics.OMP_UTBETALING_ARBEIDSTAKER
 import no.nav.sifinnsynapi.config.Topics.OMP_UTBETALING_SNF
 import no.nav.sifinnsynapi.config.Topics.OMP_UTVIDET_RETT
@@ -68,7 +66,6 @@ import java.util.concurrent.TimeUnit
     topics = [
         PP_SYKT_BARN,
         K9_ETTERSENDING,
-        OMD_MELDING,
         OMP_UTBETALING_ARBEIDSTAKER,
         OMP_UTBETALING_SNF,
         OMP_UTVIDET_RETT,
@@ -325,39 +322,6 @@ class OnpremKafkaHendelseKonsumentIntegrasjonsTest {
         log.info("----> dittnav melding: {}", dittnavBeskjed)
         assertThat(dittnavBeskjed).isNotNull()
         Assert.assertTrue(dittnavBeskjed.toString().contains("omsorgspenger"))
-    }
-
-    @Test
-    fun `Konsumer hendelse om å koronaoverføre omsorgsdager og forvent at dittNav beskjed blir sendt ut`() {
-        val hendelse = defaultHendelseOmsorgsdagerMelding(type = "KORONA")
-        producer.leggPåTopic(hendelse, Topics.OMD_MELDING, mapper)
-
-        // forvent at dittNav melding blir sendt
-        val dittnavBeskjed = dittNavConsumer.lesMelding(hendelse.data.melding["søknadId"] as String)
-        log.info("----> dittnav melding: {}", dittnavBeskjed)
-        assertThat(dittnavBeskjed).isNotNull()
-    }
-
-    @Test
-    fun `Konsumer hendelse om å overføre omsorgsdager og forvent at dittNav beskjed blir sendt ut`() {
-        val hendelse = defaultHendelseOmsorgsdagerMelding(type = "OVERFORING")
-        producer.leggPåTopic(hendelse, Topics.OMD_MELDING, mapper)
-
-        // forvent at dittNav melding blir sendt
-        val dittnavBeskjed = dittNavConsumer.lesMelding(hendelse.data.melding["søknadId"] as String)
-        log.info("----> dittnav melding: {}", dittnavBeskjed)
-        assertThat(dittnavBeskjed).isNotNull()
-    }
-
-    @Test
-    fun `Konsumer hendelse om å fordele omsorgsdager og forvent at dittNav beskjed blir sendt ut`() {
-        val hendelse = defaultHendelseOmsorgsdagerMelding(type = "FORDELING")
-        producer.leggPåTopic(hendelse, Topics.OMD_MELDING, mapper)
-
-        // forvent at dittNav melding blir sendt
-        val dittnavBeskjed = dittNavConsumer.lesMelding(hendelse.data.melding["søknadId"] as String)
-        log.info("----> dittnav melding: {}", dittnavBeskjed)
-        assertThat(dittnavBeskjed).isNotNull()
     }
 
     @Test

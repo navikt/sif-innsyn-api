@@ -5,18 +5,6 @@ no.nav:
         tekst: 'Vi har mottatt søknaden din om pleiepenger.'
         link: https://sif-innsyn.dev.nav.no/familie/sykdom-i-familien/soknad/innsyn/dine-pleiepenger
         dagerSynlig: 7
-    omsorgsdager-melding-korona:
-      beskjed:
-        tekst: 'Vi har mottatt melding fra deg om å dele omsorgsdager'
-        dagerSynlig: 7
-    omsorgsdager-melding-overfore:
-      beskjed:
-        tekst: 'Vi har mottatt melding fra deg om å dele omsorgsdager'
-        dagerSynlig: 7
-    omsorgsdager-melding-fordele:
-      beskjed:
-        tekst: 'Vi har mottatt melding fra deg om å dele omsorgsdager'
-        dagerSynlig: 7
     omsorgspenger-utvidet-rett:
       beskjed:
         tekst: 'Søknad om ekstra omsorgsdager er mottatt'
@@ -88,13 +76,6 @@ topic:
     omp-utbetaling-snf:
       id: omp-utbetaling-snf-listener
       navn: privat-omsorgspengerutbetalingsoknad-cleanup
-      bryter: true
-      dry-run: false
-
-    # topic.listener.omd-melding
-    omd-melding:
-      id: omd-melding-listener
-      navn: privat-omsorgsdager-melding-cleanup
       bryter: true
       dry-run: false
 
