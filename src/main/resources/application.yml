@@ -7,7 +7,7 @@ no.nav:
         dagerSynlig: 7
     omsorgspenger-utvidet-rett:
       beskjed:
-        tekst: 'Søknad om ekstra omsorgsdager er mottatt'
+        tekst: 'Vi har mottatt søknad fra deg om ekstra omsorgsdager ved kronisk sykt eller funksjonshemmet barn.'
         dagerSynlig: 7
     omsorgspengerutbetaling-arbeidstaker:
       beskjed:
