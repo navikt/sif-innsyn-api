@@ -41,7 +41,7 @@ class OmsorgspengerutbetalingSNFHendelseKonsument(
         containerFactory = "onpremKafkaJsonListenerContainerFactory",
         autoStartup = "#{'\${topic.listener.omp-utbetaling-snf.bryter}'}",
         properties = [
-            "auto.offset.rest=latest"
+            "auto.offset.reset=latest"
         ]
     )
     fun konsumer(
