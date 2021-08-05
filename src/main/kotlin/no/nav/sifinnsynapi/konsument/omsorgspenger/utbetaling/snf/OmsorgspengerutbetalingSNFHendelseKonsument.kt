@@ -7,18 +7,24 @@ import no.nav.sifinnsynapi.dittnav.K9Beskjed
 import no.nav.sifinnsynapi.konsument.omsorgspenger.utbetaling.snf.OmsorgspengerutbetalingSNFHendelseKonsument.Companion.Keys.FØDSELSNUMMER
 import no.nav.sifinnsynapi.konsument.omsorgspenger.utbetaling.snf.OmsorgspengerutbetalingSNFHendelseKonsument.Companion.Keys.SØKER
 import no.nav.sifinnsynapi.konsument.omsorgspenger.utbetaling.snf.OmsorgspengerutbetalingSNFHendelseKonsument.Companion.Keys.SØKNAD_ID
+import org.apache.kafka.common.TopicPartition
 import org.json.JSONObject
 import org.slf4j.LoggerFactory
 import org.springframework.kafka.annotation.KafkaListener
+import org.springframework.kafka.listener.AbstractConsumerSeekAware
+import org.springframework.kafka.listener.ConsumerSeekAware
 import org.springframework.messaging.handler.annotation.Payload
 import org.springframework.stereotype.Service
 import java.util.*
 
+
+
+
 @Service
 class OmsorgspengerutbetalingSNFHendelseKonsument(
-        private val dittNavService: DittnavService,
-        private val omsorgspengerutbetalingSNFBeskjedProperties: OmsorgspengerutbetalingSNFBeskjedProperties
-    ){
+    private val dittNavService: DittnavService,
+    private val omsorgspengerutbetalingSNFBeskjedProperties: OmsorgspengerutbetalingSNFBeskjedProperties
+) : AbstractConsumerSeekAware() {
 
     companion object {
         private val logger = LoggerFactory.getLogger(OmsorgspengerutbetalingSNFHendelseKonsument::class.java)
@@ -34,36 +40,54 @@ class OmsorgspengerutbetalingSNFHendelseKonsument(
     }
 
     @KafkaListener(
-            topics = ["#{'\${topic.listener.omp-utbetaling-snf.navn}'}"],
-            id = "#{'\${topic.listener.omp-utbetaling-snf.id}'}",
-            groupId = "#{'\${kafka.onprem.consumer.group-id}'}",
-            containerFactory = "onpremKafkaJsonListenerContainerFactory",
-            autoStartup = "#{'\${topic.listener.omp-utbetaling-snf.bryter}'}"
+        topics = ["#{'\${topic.listener.omp-utbetaling-snf.navn}'}"],
+        id = "#{'\${topic.listener.omp-utbetaling-snf.id}'}",
+        groupId = "#{'\${kafka.onprem.consumer.group-id}'}",
+        containerFactory = "onpremKafkaJsonListenerContainerFactory",
+        autoStartup = "#{'\${topic.listener.omp-utbetaling-snf.bryter}'}"
     )
     fun konsumer(
-            @Payload hendelse: TopicEntry
-    ){
+        @Payload hendelse: TopicEntry
+    ) {
         val melding = JSONObject(hendelse.data.melding)
         val søknadId = melding.getString(SØKNAD_ID)
         logger.info("Mottok hendelse om $YTELSE med søknadId: $søknadId")
 
         logger.info("Sender DittNav beskjed for ytelse $YTELSE")
         dittNavService.sendBeskjedOnprem(
-                melding.getString(SØKNAD_ID),
-                melding.somK9Beskjed(hendelse.data.metadata, omsorgspengerutbetalingSNFBeskjedProperties)
+            melding.getString(SØKNAD_ID),
+            melding.somK9Beskjed(hendelse.data.metadata, omsorgspengerutbetalingSNFBeskjedProperties)
         )
+    }
+
+    override fun onPartitionsAssigned(
+        assignments: MutableMap<TopicPartition, Long>,
+        callback: ConsumerSeekAware.ConsumerSeekCallback
+    ) {
+        super.getCallbacksAndTopics().filter {
+            it.value.any { topicPartition ->
+                topicPartition.topic() == "privat-omsorgspengerutbetalingsoknad-cleanup" && topicPartition.partition() == 2
+            }
+        }.keys.map {
+            it.seekToEnd("privat-omsorgspengerutbetalingsoknad-cleanup", 2)
+        }
+
+        super.onPartitionsAssigned(assignments, callback)
     }
 }
 
-private fun JSONObject.somK9Beskjed(metadata: Metadata, beskjedProperties: OmsorgspengerutbetalingSNFBeskjedProperties): K9Beskjed {
+private fun JSONObject.somK9Beskjed(
+    metadata: Metadata,
+    beskjedProperties: OmsorgspengerutbetalingSNFBeskjedProperties
+): K9Beskjed {
     val søknadId = getString(SØKNAD_ID)
     return K9Beskjed(
-            metadata = metadata,
-            søkerFødselsnummer = getJSONObject(SØKER).getString(FØDSELSNUMMER),
-            tekst = beskjedProperties.tekst,
-            link = beskjedProperties.link,
-            grupperingsId = søknadId,
-            eventId = UUID.randomUUID().toString(),
-            dagerSynlig = beskjedProperties.dagerSynlig
+        metadata = metadata,
+        søkerFødselsnummer = getJSONObject(SØKER).getString(FØDSELSNUMMER),
+        tekst = beskjedProperties.tekst,
+        link = beskjedProperties.link,
+        grupperingsId = søknadId,
+        eventId = UUID.randomUUID().toString(),
+        dagerSynlig = beskjedProperties.dagerSynlig
     )
 }
