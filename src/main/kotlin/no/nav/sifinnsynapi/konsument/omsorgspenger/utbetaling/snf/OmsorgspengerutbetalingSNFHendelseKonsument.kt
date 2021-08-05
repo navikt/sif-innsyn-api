@@ -7,24 +7,19 @@ import no.nav.sifinnsynapi.dittnav.K9Beskjed
 import no.nav.sifinnsynapi.konsument.omsorgspenger.utbetaling.snf.OmsorgspengerutbetalingSNFHendelseKonsument.Companion.Keys.FØDSELSNUMMER
 import no.nav.sifinnsynapi.konsument.omsorgspenger.utbetaling.snf.OmsorgspengerutbetalingSNFHendelseKonsument.Companion.Keys.SØKER
 import no.nav.sifinnsynapi.konsument.omsorgspenger.utbetaling.snf.OmsorgspengerutbetalingSNFHendelseKonsument.Companion.Keys.SØKNAD_ID
-import org.apache.kafka.common.TopicPartition
 import org.json.JSONObject
 import org.slf4j.LoggerFactory
 import org.springframework.kafka.annotation.KafkaListener
-import org.springframework.kafka.listener.AbstractConsumerSeekAware
-import org.springframework.kafka.listener.ConsumerSeekAware
 import org.springframework.messaging.handler.annotation.Payload
 import org.springframework.stereotype.Service
 import java.util.*
-
-
 
 
 @Service
 class OmsorgspengerutbetalingSNFHendelseKonsument(
     private val dittNavService: DittnavService,
     private val omsorgspengerutbetalingSNFBeskjedProperties: OmsorgspengerutbetalingSNFBeskjedProperties
-) : AbstractConsumerSeekAware() {
+) {
 
     companion object {
         private val logger = LoggerFactory.getLogger(OmsorgspengerutbetalingSNFHendelseKonsument::class.java)
@@ -44,7 +39,10 @@ class OmsorgspengerutbetalingSNFHendelseKonsument(
         id = "#{'\${topic.listener.omp-utbetaling-snf.id}'}",
         groupId = "#{'\${kafka.onprem.consumer.group-id}'}",
         containerFactory = "onpremKafkaJsonListenerContainerFactory",
-        autoStartup = "#{'\${topic.listener.omp-utbetaling-snf.bryter}'}"
+        autoStartup = "#{'\${topic.listener.omp-utbetaling-snf.bryter}'}",
+        properties = [
+            "auto.offset.rest=latest"
+        ]
     )
     fun konsumer(
         @Payload hendelse: TopicEntry
@@ -58,21 +56,6 @@ class OmsorgspengerutbetalingSNFHendelseKonsument(
             melding.getString(SØKNAD_ID),
             melding.somK9Beskjed(hendelse.data.metadata, omsorgspengerutbetalingSNFBeskjedProperties)
         )
-    }
-
-    override fun onPartitionsAssigned(
-        assignments: MutableMap<TopicPartition, Long>,
-        callback: ConsumerSeekAware.ConsumerSeekCallback
-    ) {
-        super.getCallbacksAndTopics().filter {
-            it.value.any { topicPartition ->
-                topicPartition.topic() == "privat-omsorgspengerutbetalingsoknad-cleanup" && topicPartition.partition() == 2
-            }
-        }.keys.map {
-            it.seekToEnd("privat-omsorgspengerutbetalingsoknad-cleanup", 2)
-        }
-
-        super.onPartitionsAssigned(assignments, callback)
     }
 }
 
