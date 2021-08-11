@@ -17,14 +17,6 @@ no.nav:
       beskjed:
         tekst: 'Søknad om utbetaling av omsorgspenger er mottatt.'
         dagerSynlig: 7
-    k9-ettersending-pp:
-      beskjed:
-        tekst: 'Vi har mottatt din ettersendelse til pleiepenger.'
-        dagerSynlig: 7
-    k9-ettersending-oms:
-      beskjed:
-        tekst: 'Vi har mottatt din ettersendelse til omsorgspenger.'
-        dagerSynlig: 7
 
   apigw:
     sts-apikey: ${STS_APIKEY} # kubectl secret som miljøvariabel i pod
@@ -76,13 +68,6 @@ topic:
     omp-utbetaling-snf:
       id: omp-utbetaling-snf-listener
       navn: privat-omsorgspengerutbetalingsoknad-cleanup
-      bryter: true
-      dry-run: false
-
-    # topic.listener.k9-ettersending
-    k9-ettersending:
-      id: k9-ettersending-listener
-      navn: privat-k9-ettersending-cleanup
       bryter: true
       dry-run: false
 
