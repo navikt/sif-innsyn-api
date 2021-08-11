@@ -7,6 +7,5 @@ object Topics {
     const val OMP_UTBETALING_ARBEIDSTAKER = "privat-omp-utbetalingsoknad-arbeidstaker-cleanup"
     const val OMP_UTVIDET_RETT = "privat-omsorgspengesoknad-cleanup"
     const val PP_SYKT_BARN = "privat-pleiepengesoknad-cleanup"
-    const val K9_ETTERSENDING = "privat-k9-ettersending-cleanup"
     const val AAPEN_DOK_JOURNALFØRING_V1 = "aapen-dok-journalfoering-v1-p"
 }

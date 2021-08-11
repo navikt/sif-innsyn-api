@@ -17,13 +17,11 @@ import no.nav.sifinnsynapi.config.SecurityConfiguration
 import no.nav.sifinnsynapi.config.Topics
 import no.nav.sifinnsynapi.config.Topics.AAPEN_DOK_JOURNALFØRING_V1
 import no.nav.sifinnsynapi.config.Topics.K9_DITTNAV_VARSEL_BESKJED
-import no.nav.sifinnsynapi.config.Topics.K9_ETTERSENDING
 import no.nav.sifinnsynapi.config.Topics.OMP_UTBETALING_ARBEIDSTAKER
 import no.nav.sifinnsynapi.config.Topics.OMP_UTBETALING_SNF
 import no.nav.sifinnsynapi.config.Topics.OMP_UTVIDET_RETT
 import no.nav.sifinnsynapi.config.Topics.PP_SYKT_BARN
 import no.nav.sifinnsynapi.dittnav.K9Beskjed
-import no.nav.sifinnsynapi.konsument.ettersending.K9EttersendingKonsument
 import no.nav.sifinnsynapi.konsument.omsorgspenger.utbetaling.arbeidstaker.OmsorgspengerutbetalingArbeidstakerHendelseKonsument
 import no.nav.sifinnsynapi.konsument.omsorgspenger.utvidetrett.OmsorgspengerUtvidetRettHendelseKonsument
 import no.nav.sifinnsynapi.soknad.SøknadDAO
@@ -33,7 +31,6 @@ import no.nav.sifinnsynapi.utils.*
 import org.apache.kafka.clients.consumer.Consumer
 import org.apache.kafka.clients.producer.Producer
 import org.awaitility.kotlin.await
-import org.junit.Assert
 import org.junit.Assert.assertNotNull
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.extension.ExtendWith
@@ -65,7 +62,6 @@ import java.util.concurrent.TimeUnit
     bootstrapServersProperty = "kafka.onprem.servers", // Setter bootstrap-servers for consumer og producer.
     topics = [
         PP_SYKT_BARN,
-        K9_ETTERSENDING,
         OMP_UTBETALING_ARBEIDSTAKER,
         OMP_UTBETALING_SNF,
         OMP_UTVIDET_RETT,
@@ -257,71 +253,6 @@ class OnpremKafkaHendelseKonsumentIntegrasjonsTest {
         await.atMost(10, TimeUnit.SECONDS).until {
             repository.findAllByAktørId(aktørId).size == 1
         }
-    }
-
-    @Test
-    fun `Konsumer hendelse om ettersending av pleiepenger og forvent at dittNav beskjed blir sendt ut`() {
-        val søknadstype = K9EttersendingKonsument.Companion.Søknadstype.PLEIEPENGER_SYKT_BARN
-        val hendelse = defaultHendelseK9Ettersending(søknadstype = søknadstype)
-        producer.leggPåTopic(hendelse, K9_ETTERSENDING, mapper)
-
-        // forvent at dittNav melding blir sendt
-        val dittnavBeskjed = dittNavConsumer.lesMelding(hendelse.data.melding["soknadId"] as String)
-        log.info("----> dittnav melding: {}", dittnavBeskjed)
-        assertThat(dittnavBeskjed).isNotNull()
-        Assert.assertTrue(dittnavBeskjed.toString().contains(søknadstype.utskriftsvennlig))
-    }
-
-    @Test
-    fun `Konsumer hendelse om ettersending av PLEIEPENGER_SYKT_BARN og forvent at dittNav beskjed blir sendt ut`() {
-        val søknadstype = K9EttersendingKonsument.Companion.Søknadstype.PLEIEPENGER_SYKT_BARN
-        val hendelse = defaultHendelseK9Ettersending(søknadstype = søknadstype)
-        producer.leggPåTopic(hendelse, K9_ETTERSENDING, mapper)
-
-        // forvent at dittNav melding blir sendt
-        val dittnavBeskjed = dittNavConsumer.lesMelding(hendelse.data.melding["soknadId"] as String)
-        log.info("----> dittnav melding: {}", dittnavBeskjed)
-        assertThat(dittnavBeskjed).isNotNull()
-        Assert.assertTrue(dittnavBeskjed.toString().contains("pleiepenger"))
-    }
-
-    @Test
-    fun `Konsumer hendelse om ettersending av omsorgspenger og forvent at dittNav beskjed blir sendt ut`() {
-        val søknadstype = K9EttersendingKonsument.Companion.Søknadstype.OMSORGSPENGER
-        val hendelse = defaultHendelseK9Ettersending(søknadstype = søknadstype)
-        producer.leggPåTopic(hendelse, K9_ETTERSENDING, mapper)
-
-        // forvent at dittNav melding blir sendt
-        val dittnavBeskjed = dittNavConsumer.lesMelding(hendelse.data.melding["soknadId"] as String)
-        log.info("----> dittnav melding: {}", dittnavBeskjed)
-        assertThat(dittnavBeskjed).isNotNull()
-        Assert.assertTrue(dittnavBeskjed.toString().contains(søknadstype.utskriftsvennlig))
-    }
-
-    @Test
-    fun `Konsumer hendelse om ettersending av OMP_UTV_KS og forvent at dittNav beskjed blir sendt ut`() {
-        val søknadstype = K9EttersendingKonsument.Companion.Søknadstype.OMP_UTV_KS
-        val hendelse = defaultHendelseK9Ettersending(søknadstype = søknadstype)
-        producer.leggPåTopic(hendelse, Topics.K9_ETTERSENDING, mapper)
-
-        // forvent at dittNav melding blir sendt
-        val dittnavBeskjed = dittNavConsumer.lesMelding(hendelse.data.melding["soknadId"] as String)
-        log.info("----> dittnav melding: {}", dittnavBeskjed)
-        assertThat(dittnavBeskjed).isNotNull()
-        Assert.assertTrue(dittnavBeskjed.toString().contains("omsorgspenger"))
-    }
-
-    @Test
-    fun `Konsumer hendelse om ettersending av dele dager og forvent at dittNav beskjed blir sendt ut`() {
-        val søknadstype = K9EttersendingKonsument.Companion.Søknadstype.OMP_DELE_DAGER
-        val hendelse = defaultHendelseK9Ettersending(søknadstype = søknadstype)
-        producer.leggPåTopic(hendelse, K9_ETTERSENDING, mapper)
-
-        // forvent at dittNav melding blir sendt
-        val dittnavBeskjed = dittNavConsumer.lesMelding(hendelse.data.melding["soknadId"] as String)
-        log.info("----> dittnav melding: {}", dittnavBeskjed)
-        assertThat(dittnavBeskjed).isNotNull()
-        Assert.assertTrue(dittnavBeskjed.toString().contains("omsorgspenger"))
     }
 
     @Test
