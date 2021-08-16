@@ -23,7 +23,6 @@ import no.nav.sifinnsynapi.config.Topics.OMP_UTVIDET_RETT
 import no.nav.sifinnsynapi.config.Topics.PP_SYKT_BARN
 import no.nav.sifinnsynapi.dittnav.K9Beskjed
 import no.nav.sifinnsynapi.konsument.omsorgspenger.utbetaling.arbeidstaker.OmsorgspengerutbetalingArbeidstakerHendelseKonsument
-import no.nav.sifinnsynapi.konsument.omsorgspenger.utvidetrett.OmsorgspengerUtvidetRettHendelseKonsument
 import no.nav.sifinnsynapi.soknad.SøknadDAO
 import no.nav.sifinnsynapi.soknad.SøknadDTO
 import no.nav.sifinnsynapi.soknad.SøknadRepository
@@ -277,18 +276,6 @@ class OnpremKafkaHendelseKonsumentIntegrasjonsTest {
         // forvent at dittNav melding blir sendt
         val dittnavBeskjed =
             dittNavConsumer.lesMelding(hendelse.data.melding[OmsorgspengerutbetalingArbeidstakerHendelseKonsument.Companion.Keys.SØKNAD_ID] as String)
-        log.info("----> dittnav melding: {}", dittnavBeskjed)
-        assertThat(dittnavBeskjed).isNotNull()
-    }
-
-    @Test
-    fun `Konsumer hendelse om omsorgspenger - utvidet rett og forvent at dittNav beskjed blir sendt ut`() {
-        val hendelse = defaultHendelse(søknadIdKey = OmsorgspengerUtvidetRettHendelseKonsument.Companion.Keys.SØKNAD_ID)
-        producer.leggPåTopic(hendelse, Topics.OMP_UTVIDET_RETT, mapper)
-
-        // forvent at dittNav melding blir sendt
-        val dittnavBeskjed =
-            dittNavConsumer.lesMelding(hendelse.data.melding[OmsorgspengerUtvidetRettHendelseKonsument.Companion.Keys.SØKNAD_ID] as String)
         log.info("----> dittnav melding: {}", dittnavBeskjed)
         assertThat(dittnavBeskjed).isNotNull()
     }
