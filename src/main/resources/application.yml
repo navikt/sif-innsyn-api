@@ -5,10 +5,6 @@ no.nav:
         tekst: 'Vi har mottatt søknaden din om pleiepenger.'
         link: https://sif-innsyn.dev.nav.no/familie/sykdom-i-familien/soknad/innsyn/dine-pleiepenger
         dagerSynlig: 7
-    omsorgspenger-utvidet-rett:
-      beskjed:
-        tekst: 'Vi har mottatt søknad fra deg om ekstra omsorgsdager ved kronisk sykt eller funksjonshemmet barn.'
-        dagerSynlig: 7
     omsorgspengerutbetaling-arbeidstaker:
       beskjed:
         tekst: 'Søknad om utbetaling av omsorgspenger er mottatt.'
@@ -47,13 +43,6 @@ topic:
     pp-sykt-barn:
       id: pp-sykt-barn-listener
       navn: privat-pleiepengesoknad-cleanup
-      bryter: true
-      dry-run: false
-
-    # topic.listener.omp-utvidet-rett
-    omp-utvidet-rett:
-      id: omp-utvidet-rett-listener
-      navn: privat-omsorgspengesoknad-cleanup
       bryter: true
       dry-run: false
 
