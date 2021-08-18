@@ -6,8 +6,6 @@ topic:
       dry-run: false
     omp-utbetaling-arbeidstaker:
       bryter: true
-    omp-utbetaling-snf:
-      bryter: true
     omd-melding:
       bryter: true
     dok-journalfoering-v1:
