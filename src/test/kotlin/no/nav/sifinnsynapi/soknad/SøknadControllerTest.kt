@@ -114,7 +114,7 @@ class SøknadControllerTest {
             SøknadDTO(
                 søknadId = UUID.randomUUID(),
                 saksId = "abc123",
-                søknadstype = Søknadstype.OMP_UTBETALING_SNF,
+                søknadstype = Søknadstype.PP_SYKT_BARN,
                 status = SøknadsStatus.MOTTATT,
                 journalpostId = "123456789",
                 opprettet = ZonedDateTime.parse("2020-08-04T10:30:00Z").withZoneSameInstant(ZoneId.of("UTC")),
@@ -140,7 +140,7 @@ class SøknadControllerTest {
             .andExpect(jsonPath("[0].saksId").isString)
             .andExpect(jsonPath("[0].saksId").value("abc123"))
             .andExpect(jsonPath("[0].søknadstype").isString)
-            .andExpect(jsonPath("[0].søknadstype").value("OMP_UTBETALING_SNF"))
+            .andExpect(jsonPath("[0].søknadstype").value("PP_SYKT_BARN"))
             .andExpect(jsonPath("[0].status").isString)
             .andExpect(jsonPath("[0].status").value("MOTTATT"))
             .andExpect(jsonPath("[0].journalpostId").isString)
@@ -161,7 +161,7 @@ class SøknadControllerTest {
                 SøknadDTO(
                     søknadId = søknadId,
                     saksId = "abc123",
-                    søknadstype = Søknadstype.OMP_UTBETALING_SNF,
+                    søknadstype = Søknadstype.PP_SYKT_BARN,
                     status = SøknadsStatus.MOTTATT,
                     journalpostId = "123456789",
                     opprettet = ZonedDateTime.parse("2020-08-04T10:30:00Z").withZoneSameInstant(ZoneId.of("UTC")),
@@ -186,7 +186,7 @@ class SøknadControllerTest {
             .andExpect(jsonPath("$.saksId").isString)
             .andExpect(jsonPath("$.saksId").value("abc123"))
             .andExpect(jsonPath("$.søknadstype").isString)
-            .andExpect(jsonPath("$.søknadstype").value("OMP_UTBETALING_SNF"))
+            .andExpect(jsonPath("$.søknadstype").value("PP_SYKT_BARN"))
             .andExpect(jsonPath("$.status").isString)
             .andExpect(jsonPath("$.status").value("MOTTATT"))
             .andExpect(jsonPath("$.journalpostId").isString)

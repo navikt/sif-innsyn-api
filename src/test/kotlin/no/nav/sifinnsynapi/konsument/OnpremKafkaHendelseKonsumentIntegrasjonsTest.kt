@@ -18,8 +18,6 @@ import no.nav.sifinnsynapi.config.Topics
 import no.nav.sifinnsynapi.config.Topics.AAPEN_DOK_JOURNALFØRING_V1
 import no.nav.sifinnsynapi.config.Topics.K9_DITTNAV_VARSEL_BESKJED
 import no.nav.sifinnsynapi.config.Topics.OMP_UTBETALING_ARBEIDSTAKER
-import no.nav.sifinnsynapi.config.Topics.OMP_UTBETALING_SNF
-import no.nav.sifinnsynapi.config.Topics.OMP_UTVIDET_RETT
 import no.nav.sifinnsynapi.config.Topics.PP_SYKT_BARN
 import no.nav.sifinnsynapi.dittnav.K9Beskjed
 import no.nav.sifinnsynapi.konsument.omsorgspenger.utbetaling.arbeidstaker.OmsorgspengerutbetalingArbeidstakerHendelseKonsument
@@ -62,8 +60,6 @@ import java.util.concurrent.TimeUnit
     topics = [
         PP_SYKT_BARN,
         OMP_UTBETALING_ARBEIDSTAKER,
-        OMP_UTBETALING_SNF,
-        OMP_UTVIDET_RETT,
         K9_DITTNAV_VARSEL_BESKJED,
         AAPEN_DOK_JOURNALFØRING_V1
     ]
@@ -259,19 +255,6 @@ class OnpremKafkaHendelseKonsumentIntegrasjonsTest {
         val hendelse =
             defaultHendelse(søknadIdKey = OmsorgspengerutbetalingArbeidstakerHendelseKonsument.Companion.Keys.SØKNAD_ID)
         producer.leggPåTopic(hendelse, Topics.OMP_UTBETALING_ARBEIDSTAKER, mapper)
-
-        // forvent at dittNav melding blir sendt
-        val dittnavBeskjed =
-            dittNavConsumer.lesMelding(hendelse.data.melding[OmsorgspengerutbetalingArbeidstakerHendelseKonsument.Companion.Keys.SØKNAD_ID] as String)
-        log.info("----> dittnav melding: {}", dittnavBeskjed)
-        assertThat(dittnavBeskjed).isNotNull()
-    }
-
-    @Test
-    fun `Konsumer hendelse om omsorgspengerutbetaling - snf og forvent at dittNav beskjed blir sendt ut`() {
-        val hendelse =
-            defaultHendelse(søknadIdKey = OmsorgspengerutbetalingArbeidstakerHendelseKonsument.Companion.Keys.SØKNAD_ID)
-        producer.leggPåTopic(hendelse, Topics.OMP_UTBETALING_SNF, mapper)
 
         // forvent at dittNav melding blir sendt
         val dittnavBeskjed =

@@ -15,7 +15,6 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
-import org.springframework.context.annotation.Import
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.time.ZonedDateTime
@@ -155,11 +154,7 @@ class SøknadRepositoryTest {
     fun `gitt lagrede søknader, forvent 1 av hver søknadstype`() {
         repository.saveAll(listOf(
                 lagSøknadDAO(søknadstype = Søknadstype.PP_SYKT_BARN),
-                lagSøknadDAO(søknadstype = Søknadstype.PP_ETTERSENDING),
-                lagSøknadDAO(søknadstype = Søknadstype.OMP_UTVIDET_RETT),
                 lagSøknadDAO(søknadstype = Søknadstype.OMP_UTBETALING_ARBEIDSTAKER),
-                lagSøknadDAO(søknadstype = Søknadstype.OMP_UTBETALING_SNF),
-                lagSøknadDAO(søknadstype = Søknadstype.OMP_ETTERSENDING),
                 lagSøknadDAO(søknadstype = Søknadstype.OMD_OVERFØRING)
         )).forEach {
             assertk.assertThat(repository.finnAntallSøknaderGittSøknadstype(it.søknadstype.name)).isEqualTo(1)
@@ -170,7 +165,7 @@ class SøknadRepositoryTest {
     private fun lagSøknadDAO(
             customAktørId: AktørId = aktørId,
             customJournalpostId: String = journalpostId,
-            søknadstype: Søknadstype = Søknadstype.OMP_UTBETALING_SNF
+            søknadstype: Søknadstype = Søknadstype.PP_SYKT_BARN
     ): SøknadDAO = SøknadDAO(
             id = UUID.randomUUID(),
             aktørId = customAktørId,
