@@ -50,10 +50,22 @@ kafka:
         key-store-type: PKCS12
 
 no.nav:
-  security.jwt.issuer:
-    loginservice:
-      discoveryUrl: ${LOGINSERVICE_IDPORTEN_DISCOVERY_URL} # settes av configmap: loginservice-idporten i naiserator.yml
-      accepted_audience: ${LOGINSERVICE_IDPORTEN_AUDIENCE} # settes av configmap: loginservice-idporten i naiserator.yml
+  security.jwt:
+    issuer:
+      loginservice:
+        discoveryUrl: ${LOGINSERVICE_IDPORTEN_DISCOVERY_URL} # settes av configmap: loginservice-idporten i naiserator.yml
+        accepted_audience: ${LOGINSERVICE_IDPORTEN_AUDIENCE} # settes av configmap: loginservice-idporten i naiserator.yml
+    client:
+      registration:
+        tokenx-safselvbetjening:
+          token-endpoint-url: https://tokendings.prod-gcp.nais.io/token
+          grant-type: urn:ietf:params:oauth:grant-type:token-exchange
+          authentication:
+            client-auth-method: private_key_jwt
+            client-id: ${TOKEN_X_CLIENT_ID}
+            client-jwk: ${TOKEN_X_PRIVATE_JWK}
+          token-exchange:
+              audience: ${SAFSELVBETJENING_TOKEN_X_AUDIENCE}
 
   dittnav:
     pleiepenger-sykt-barn:
