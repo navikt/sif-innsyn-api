@@ -22,7 +22,7 @@ configurations {
 val springfoxVersion by extra("3.0.0")
 val confluentVersion by extra("5.5.0")
 val logstashLogbackEncoderVersion by extra("6.6")
-val tokenValidationVersion by extra("1.3.8")
+val tokenSupportVersion by extra("1.3.8")
 val springCloudVersion by extra("2020.0.3")
 val retryVersion by extra("1.3.0")
 val zalandoVersion by extra("0.26.2")
@@ -53,10 +53,11 @@ repositories {
 dependencies {
 
     // NAV
-    implementation("no.nav.security:token-validation-spring:$tokenValidationVersion")
+    implementation("no.nav.security:token-validation-spring:$tokenSupportVersion")
+    implementation("no.nav.security:token-client-spring:$tokenSupportVersion")
     //implementation("no.nav.dok:dok-journalfoering-hendelse-v1:0.0.3")
     implementation("no.nav.syfo.schemas:dok-journalfoering-hendelse-v1:67a9be4476b63b7247cfacfaf821ab656bd2a952")
-    testImplementation("no.nav.security:token-validation-spring-test:$tokenValidationVersion")
+    testImplementation("no.nav.security:token-validation-spring-test:$tokenSupportVersion")
     testImplementation("com.squareup.okhttp3:okhttp:$okHttp3Version")
 
     // Spring Boot
