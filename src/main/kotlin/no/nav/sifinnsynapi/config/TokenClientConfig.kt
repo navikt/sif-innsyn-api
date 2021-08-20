@@ -4,7 +4,9 @@ import no.nav.security.token.support.client.core.ClientProperties
 import no.nav.security.token.support.client.core.oauth2.OAuth2AccessTokenService
 import no.nav.security.token.support.client.spring.ClientConfigurationProperties
 import no.nav.security.token.support.client.spring.oauth2.EnableOAuth2Client
+import no.nav.sifinnsynapi.util.Constants.NAV_CALL_ID
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.web.client.RestTemplateBuilder
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -16,24 +18,29 @@ import org.springframework.web.client.RestTemplate
 
 @EnableOAuth2Client(cacheEnabled = true)
 @Configuration
-class TokenClientConfig {
+class TokenClientConfig(
+    @Value("no.nav.gateways.saf-selvbetjening-base-url") private val safSelvbetjeningBaseUrl: String,
+    @Value("\${spring.application.name:sif-innsyn-api}") private val applicationName: String
+) {
 
     private companion object {
         private val logger = LoggerFactory.getLogger(TokenClientConfig::class.java)
     }
 
     @Bean
-    fun tokenXSafSelvbetjeningClient(
+    fun tokenxSafSelvbetjeningClient(
         restTemplateBuilder: RestTemplateBuilder,
         clientConfigurationProperties: ClientConfigurationProperties,
         oAuth2AccessTokenService: OAuth2AccessTokenService
-    ): RestTemplate? {
+    ): RestTemplate {
         val clientProperties: ClientProperties =
             clientConfigurationProperties.registration["tokenx-safselvbetjening"]
                 ?: throw RuntimeException("could not find oauth2 client config for tokenx-safselvbetjening")
 
         logger.info("Konfigurerer opp tokenx klient for safselvbetjening.")
         return restTemplateBuilder
+            .rootUri(safSelvbetjeningBaseUrl)
+            .defaultHeader(NAV_CALL_ID, applicationName)
             .additionalInterceptors(bearerTokenInterceptor(clientProperties, oAuth2AccessTokenService))
             .build()
     }

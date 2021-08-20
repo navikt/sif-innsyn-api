@@ -1,3 +1,4 @@
+import com.expediagroup.graphql.plugin.gradle.tasks.GraphQLGenerateClientTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -159,9 +160,23 @@ tasks.getByName<Jar>("jar") {
     enabled = false
 }
 
-tasks.withType<com.expediagroup.graphql.plugin.gradle.tasks.GraphQLGenerateClientTask> {
+/**
+ * Generering av flere graphql klienter:
+ *
+ * GraphQL Kotlin Gradle Plugin registerer "tasks" for generering av en klients queries mot en singel endepunkt.
+ * For å generere flere, må først den default "task"en hentes og konfigureres, og deretter opprette en ny "task" for en ny endepunkt.
+ *
+ * For mer info, se lenke under
+ * https://opensource.expediagroup.com/graphql-kotlin/docs/4.x.x/plugins/gradle-plugin-usage#generating-multiple-clients
+ */
+val graphqlGenerateClient by tasks.getting(GraphQLGenerateClientTask::class) {
     queryFileDirectory.set("${project.projectDir}/src/main/resources/saf")
     schemaFile.set(file("${project.projectDir}/src/main/resources/saf/saf-api-sdl.graphqls"))
     packageName.set("no.nav.sifinnsynapi.saf.generated")
+}
 
+val graphqlGenerateOtherClient by tasks.creating(GraphQLGenerateClientTask::class) {
+    queryFileDirectory.set("${project.projectDir}/src/main/resources/safselvbetjening")
+    schemaFile.set(file("${project.projectDir}/src/main/resources/safselvbetjening/saf-selvbetjening-sdl.graphqls"))
+    packageName.set("no.nav.sifinnsynapi.safselvbetjening.generated")
 }

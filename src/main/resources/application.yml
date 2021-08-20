@@ -16,6 +16,7 @@ no.nav:
   gateways:
     k9-selvbetjening-oppslag: # Settes i nais/<cluster>.json
     saf-base-url: # Settes i nais/<cluster>.json
+    saf-selvbetjening-base-url: # Settes i nais/<cluster>.json
     sts:
       url: # Settes i nais/dev-gcp.json
       username: ${STS_USERNAME} # kubectl secret som miljøvariabel i pod

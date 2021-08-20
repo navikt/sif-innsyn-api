@@ -36,6 +36,7 @@
     "NO_NAV_SECURITY_CORS_ALLOWED_ORIGINS": "https://sif-innsyn.dev.nav.no",
     "NO_NAV_GATEWAYS_K9_SELVBETJENING_OPPSLAG": "https://k9-selvbetjening-oppslag.dev-fss-pub.nais.io",
     "NO_NAV_GATEWAYS_SAF_BASE_URL": "https://saf.dev-fss-pub.nais.io",
+    "NO_NAV_GATEWAYS_SAF_SELVBETJENING_BASE_URL": "https://safselvbetjening.dev-fss-pub.nais.io",
     "NO_NAV_GATEWAYS_STS_URL": "https://api-gw-q1.oera.no/security-token-service",
     "SAFSELVBETJENING_TOKEN_X_AUDIENCE": "dev-fss:teamdokumenthandtering:safselvbetjening",
     "TOKENDINGS_BASE_URL": "https://tokendings.dev-gcp.nais.io"
