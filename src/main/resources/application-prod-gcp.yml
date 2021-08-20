@@ -58,7 +58,7 @@ no.nav:
     client:
       registration:
         tokenx-safselvbetjening:
-          token-endpoint-url: https://tokendings.prod-gcp.nais.io/token
+          token-endpoint-url: ${TOKENDINGS_BASE_URL}/token
           grant-type: urn:ietf:params:oauth:grant-type:token-exchange
           authentication:
             client-auth-method: private_key_jwt

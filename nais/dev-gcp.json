@@ -37,7 +37,8 @@
     "NO_NAV_GATEWAYS_K9_SELVBETJENING_OPPSLAG": "https://k9-selvbetjening-oppslag.dev-fss-pub.nais.io",
     "NO_NAV_GATEWAYS_SAF_BASE_URL": "https://saf.dev-fss-pub.nais.io",
     "NO_NAV_GATEWAYS_STS_URL": "https://api-gw-q1.oera.no/security-token-service",
-    "SAFSELVBETJENING_TOKEN_X_AUDIENCE": "dev-fss:teamdokumenthandtering:safselvbetjening"
+    "SAFSELVBETJENING_TOKEN_X_AUDIENCE": "dev-fss:teamdokumenthandtering:safselvbetjening",
+    "TOKENDINGS_BASE_URL": "https://tokendings.dev-gcp.nais.io"
   },
   "slack-channel": "sif-alerts-dev",
   "slack-notify-type": "<!here> | sif-innsyn-api | "
