@@ -12,7 +12,8 @@
     "login.microsoftonline.com",
     "k9-selvbetjening-oppslag.prod-fss-pub.nais.io",
     "kafka-schema-registry.nais.adeo.no",
-    "saf.prod-fss-pub.nais.io"
+    "saf.prod-fss-pub.nais.io",
+    "safselvbetjening.prod-fss-pub.nais.io"
   ],
   "database": {
     "name": "sif-innsyn-db",
