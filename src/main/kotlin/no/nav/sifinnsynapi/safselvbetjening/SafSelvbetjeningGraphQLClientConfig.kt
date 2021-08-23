@@ -37,7 +37,7 @@ class SafSelvbetjeningGraphQLClientConfig(
                     oAuth2AccessTokenService.getAccessToken(tokenxSafSelvbetjeningClientProperties)
 
                 val jwtToken = JwtToken(accessToken.accessToken)
-                jwtToken.jwtTokenClaims.allClaims["pid"] = jwtToken.subject
+                jwtToken.jwtTokenClaims.allClaims["pid"] = jwtToken.jwtTokenClaims.allClaims["sub"]
 
                 logger.info("Exchanger sluttbrukertoken mot tokenx accesstoken: {}", accessToken)
 
