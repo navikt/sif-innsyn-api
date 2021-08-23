@@ -13,7 +13,7 @@ import org.springframework.web.reactive.function.client.WebClient
 class SafSelvbetjeningGraphQLClientConfig(
     private val oAuth2AccessTokenService: OAuth2AccessTokenService,
     oauth2Config: ClientConfigurationProperties,
-    @Value("no.nav.gateways.saf-selvbetjening-base-url") val safSelvbetjeningBaseUrl: String
+    @Value("\${no.nav.gateways.saf-selvbetjening-base-url}") private val safSelvbetjeningBaseUrl: String
 ) {
 
     private val tokenxSafSelvbetjeningClientProperties = oauth2Config.registration["tokenx-safselvbetjening"]

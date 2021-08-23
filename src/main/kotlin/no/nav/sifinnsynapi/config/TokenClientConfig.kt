@@ -19,8 +19,8 @@ import org.springframework.web.client.RestTemplate
 @EnableOAuth2Client(cacheEnabled = true)
 @Configuration
 class TokenClientConfig(
-    @Value("no.nav.gateways.saf-selvbetjening-base-url") val safSelvbetjeningBaseUrl: String,
-    @Value("\${spring.application.name:sif-innsyn-api}") val applicationName: String
+    @Value("\${no.nav.gateways.saf-selvbetjening-base-url}") private val safSelvbetjeningBaseUrl: String,
+    @Value("\${spring.application.name:sif-innsyn-api}") private val applicationName: String
 ) {
 
     private companion object {
