@@ -34,16 +34,13 @@ class SafSelvbetjeningGraphQLClientConfig(
         builder = WebClient.builder()
             .defaultRequest {
                 val accessToken =
-                    oAuth2AccessTokenService.getAccessToken(tokenxSafSelvbetjeningClientProperties)
-
-                val jwtToken = JwtToken(accessToken.accessToken)
-                jwtToken.jwtTokenClaims.allClaims["pid"] = jwtToken.jwtTokenClaims.allClaims["sub"]
+                    oAuth2AccessTokenService.getAccessToken(tokenxSafSelvbetjeningClientProperties).accessToken
 
                 logger.info("Exchanger sluttbrukertoken mot tokenx accesstoken: {}", accessToken)
 
                 it.header(
                     AUTHORIZATION,
-                    jwtToken.tokenAsString
+                    accessToken
                 )
                 it.header(NAV_CALL_ID, UUID.randomUUID().toString())
             }
