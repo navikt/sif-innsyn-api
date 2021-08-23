@@ -14,13 +14,13 @@ import org.springframework.http.HttpRequest
 import org.springframework.http.client.ClientHttpRequestExecution
 import org.springframework.http.client.ClientHttpRequestInterceptor
 import org.springframework.web.client.RestTemplate
+import java.util.*
 
 
 @EnableOAuth2Client(cacheEnabled = true)
 @Configuration
 class TokenClientConfig(
-    @Value("\${no.nav.gateways.saf-selvbetjening-base-url}") private val safSelvbetjeningBaseUrl: String,
-    @Value("\${spring.application.name:sif-innsyn-api}") private val applicationName: String
+    @Value("\${no.nav.gateways.saf-selvbetjening-base-url}") private val safSelvbetjeningBaseUrl: String
 ) {
 
     private companion object {
@@ -40,7 +40,7 @@ class TokenClientConfig(
         logger.info("Konfigurerer opp tokenx klient for safselvbetjening.")
         return restTemplateBuilder
             .rootUri(safSelvbetjeningBaseUrl)
-            .defaultHeader(NAV_CALL_ID, applicationName)
+            .defaultHeader(NAV_CALL_ID, UUID.randomUUID().toString())
             .additionalInterceptors(bearerTokenInterceptor(clientProperties, oAuth2AccessTokenService))
             .build()
     }
