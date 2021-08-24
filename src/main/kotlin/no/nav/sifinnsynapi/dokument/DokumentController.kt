@@ -65,4 +65,4 @@ class DokumentController(
  *
  */
 fun ArkivertDokument.filnavn(dokumentTittel: String): String =
-    dokumentTittel.replaceAfterLast(".", contentType.substringAfterLast("/"))
+    dokumentTittel.replaceAfterLast(".", "pdf")
