@@ -12,8 +12,6 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import java.net.URLDecoder
-import java.nio.charset.StandardCharsets
 
 @RestController
 @ProtectedWithClaims(issuer = "selvbetjening", claimMap = ["acr=Level4"])
@@ -28,9 +26,11 @@ class DokumentController(
     @GetMapping("$DOKUMENT/oversikt", produces = [MediaType.APPLICATION_JSON_VALUE])
     @Protected
     @ResponseStatus(HttpStatus.OK)
-    fun hentDokumentOversikt(): Dokumentoversikt {
+    fun hentDokumentOversikt(
+        @RequestParam vararg brevkoder: String
+    ): Dokumentoversikt {
         logger.info("Henter dokumentoversikt...")
-        return dokumentService.hentDokumentOversikt()
+        return dokumentService.hentDokumentOversikt(brevkoder)
     }
 
     @GetMapping("$DOKUMENT/{journalpostId}/{dokumentInfoId}/{variantFormat}", produces = [MediaType.APPLICATION_PDF_VALUE])
