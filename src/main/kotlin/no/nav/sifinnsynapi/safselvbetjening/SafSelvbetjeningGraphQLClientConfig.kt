@@ -4,6 +4,7 @@ import com.expediagroup.graphql.client.spring.GraphQLWebClient
 import no.nav.security.token.support.client.core.oauth2.OAuth2AccessTokenService
 import no.nav.security.token.support.client.spring.ClientConfigurationProperties
 import no.nav.sifinnsynapi.util.Constants.NAV_CALL_ID
+import no.nav.sifinnsynapi.util.MDCUtil
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
@@ -41,12 +42,12 @@ class SafSelvbetjeningGraphQLClientConfig(
                             logger.info("{} {} {}", request.version(), request.method(), request.resourceUrl())
                         }
                         .doOnResponse { response: HttpClientResponse, _ ->
-                            logger.info("{} {} {} {}", response.status().toString(), response.version(), response.method(), response.resourceUrl())
+                            logger.info("{} - {} {} {}", response.status().toString(), response.version(), response.method(), response.resourceUrl())
                         }
                 )
             )
             .defaultRequest {
-                it.header(NAV_CALL_ID, UUID.randomUUID().toString())
+                it.header(NAV_CALL_ID, MDCUtil.callId())
                 it.header(
                     AUTHORIZATION,
                     "Bearer ${oAuth2AccessTokenService.getAccessToken(tokenxSafSelvbetjeningClientProperties).accessToken}"

@@ -41,7 +41,7 @@ class TokenClientConfig(
         return restTemplateBuilder
             .rootUri(safSelvbetjeningBaseUrl)
             .defaultHeader(NAV_CALL_ID, UUID.randomUUID().toString())
-            .additionalInterceptors(bearerTokenInterceptor(clientProperties, oAuth2AccessTokenService))
+            .additionalInterceptors(bearerTokenInterceptor(clientProperties, oAuth2AccessTokenService), requestLoggerInterceptor())
             .build()
     }
 
@@ -55,4 +55,10 @@ class TokenClientConfig(
             execution.execute(request, body)
         }
     }
+
+    private fun requestLoggerInterceptor() =
+        ClientHttpRequestInterceptor { request: HttpRequest, body: ByteArray, execution: ClientHttpRequestExecution ->
+            logger.info("{} {}", request.method, request.uri)
+            execution.execute(request, body)
+        }
 }
