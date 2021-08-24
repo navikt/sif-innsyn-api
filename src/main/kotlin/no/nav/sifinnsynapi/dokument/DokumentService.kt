@@ -19,14 +19,14 @@ class DokumentService(
         private val logger = LoggerFactory.getLogger(DokumentService::class.java)
     }
 
-    fun hentDokumentOversikt(brevkoder: Array<out String>): Dokumentoversikt = runBlocking {
+    fun hentDokumentOversikt(brevkoder: List<String>): Dokumentoversikt = runBlocking {
         val token = tokenValidationContextHolder.tokenValidationContext.firstValidToken.get()
         val dokumentoversikt = safSelvbetjeningService.hentDokumentoversikt(token.subject)
-        logger.info("Filtererer på brevkoder: {}", brevkoder.asList())
+        logger.info("Filtererer på brevkoder: {}", brevkoder)
 
         val filtererteJournalposter: List<Journalpost> =
             dokumentoversikt.journalposter.filter { journalpost: Journalpost ->
-                journalpost.dokumenter!!.any { dokumentInfo: DokumentInfo? -> brevkoder.contains(dokumentInfo!!.brevkode!!.lowercase()) }
+                journalpost.dokumenter!!.any { dokumentInfo: DokumentInfo? -> brevkoder.contains(dokumentInfo!!.brevkode!!.lowercase().trim()) }
             }
         dokumentoversikt.copy(journalposter = filtererteJournalposter)
     }

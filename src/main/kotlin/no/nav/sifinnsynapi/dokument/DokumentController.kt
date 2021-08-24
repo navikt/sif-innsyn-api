@@ -30,7 +30,7 @@ class DokumentController(
         @RequestParam vararg brevkoder: String
     ): Dokumentoversikt {
         logger.info("Henter dokumentoversikt...")
-        return dokumentService.hentDokumentOversikt(brevkoder)
+        return dokumentService.hentDokumentOversikt(brevkoder.map { it.lowercase().trim() })
     }
 
     @GetMapping("$DOKUMENT/{journalpostId}/{dokumentInfoId}/{variantFormat}", produces = [MediaType.APPLICATION_PDF_VALUE])
