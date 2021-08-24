@@ -21,18 +21,23 @@ class DokumentService(
 
     fun hentDokumentOversikt(brevkoder: List<String>): Dokumentoversikt = runBlocking {
         val token = tokenValidationContextHolder.tokenValidationContext.firstValidToken.get()
-        val dokumentoversikt = safSelvbetjeningService.hentDokumentoversikt(token.subject)
-        logger.info("Filtererer på brevkoder: {}", brevkoder)
-
-        val filtererteJournalposter: List<Journalpost> =
-            dokumentoversikt.journalposter.filter { journalpost: Journalpost ->
-                journalpost.dokumenter!!.any { dokumentInfo: DokumentInfo? -> brevkoder.contains(dokumentInfo!!.brevkode!!.lowercase().trim()) }
-            }
-        dokumentoversikt.copy(journalposter = filtererteJournalposter)
+        safSelvbetjeningService.hentDokumentoversikt(token.subject)
+            .medRelevanteBrevkoder(brevkoder)
     }
 
     fun hentDokument(journalpostId: String, dokumentInfoId: String, varianFormat: String): ArkivertDokument {
         return safSelvbetjeningService.hentDokument(journalpostId, dokumentInfoId, varianFormat)
     }
 
+    fun Dokumentoversikt.medRelevanteBrevkoder(brevkoder: List<String>): Dokumentoversikt {
+        logger.info("Filtrerer dokumentoversikt på følgende brevkoder: {} ...", brevkoder)
+        return Dokumentoversikt(
+            journalposter = journalposter.filter { journalpost: Journalpost ->
+                journalpost.dokumenter!!.harRelevantBrevkode(brevkoder)
+            }
+        )
+    }
+
+    fun List<DokumentInfo?>.harRelevantBrevkode(brevkoder: List<String>): Boolean =
+        any { dokumentInfo: DokumentInfo? -> brevkoder.contains(dokumentInfo!!.brevkode!!.lowercase().trim()) }
 }
