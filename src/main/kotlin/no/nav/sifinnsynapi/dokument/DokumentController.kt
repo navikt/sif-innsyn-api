@@ -47,7 +47,7 @@ class DokumentController(
         val resource = ByteArrayResource(dokument.body)
 
         return ResponseEntity.ok()
-            .header(HttpHeaders.CONTENT_DISPOSITION, dokument.contentDisposition.type)
+            .header(HttpHeaders.CONTENT_DISPOSITION, dokument.contentDisposition.toString())
             .contentLength(resource.byteArray.size.toLong())
             .body(resource)
     }

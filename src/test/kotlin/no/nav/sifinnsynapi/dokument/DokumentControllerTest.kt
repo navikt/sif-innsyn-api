@@ -6,6 +6,7 @@ import no.nav.security.mock.oauth2.MockOAuth2Server
 import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
 import no.nav.sifinnsynapi.Routes
 import no.nav.sifinnsynapi.config.SecurityConfiguration
+import no.nav.sifinnsynapi.safselvbetjening.ArkivertDokument
 import no.nav.sifinnsynapi.safselvbetjening.generated.enums.Journalstatus
 import no.nav.sifinnsynapi.safselvbetjening.generated.enums.Variantformat
 import no.nav.sifinnsynapi.safselvbetjening.generated.hentdokumentoversikt.*
@@ -19,15 +20,21 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.context.annotation.Import
+import org.springframework.http.ContentDisposition
+import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.net.URI
+import java.net.URLDecoder
+import java.nio.charset.Charset
+import java.util.*
 import javax.servlet.http.Cookie
 
 @ExtendWith(SpringExtension::class)
@@ -118,6 +125,57 @@ internal class DokumentControllerTest {
                                 ]
                             }
                         ]
+                    }
+                """.trimIndent(), true
+                )
+            )
+    }
+
+    @Test
+    fun `hent dokument`() {
+        val forventetFilnavn = "Søknad om pleiepenger.pdf"
+        every {
+            dokumentService.hentDokument(any(), any(), any())
+        } returns ArkivertDokument(
+            body = "some byteArray".toByteArray(),
+            contentType = "application/pdf",
+            contentDisposition = ContentDisposition.parse("inline; filename=${forventetFilnavn}")
+        )
+
+        mockMvc.perform(
+            MockMvcRequestBuilders
+                .get("${Routes.DOKUMENT}/{journalpostId}/{dokumentinfoId}/{variant}", "123", "321", "ARKIV")
+                .accept(MediaType.APPLICATION_PDF_VALUE)
+                .cookie(Cookie("selvbetjening-idtoken", mockOAuth2Server.hentToken().serialize()))
+        )
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isOk)
+            .andExpect(MockMvcResultMatchers.header().exists(HttpHeaders.CONTENT_DISPOSITION))
+            .andExpect(
+                MockMvcResultMatchers.header()
+                    .string(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"$forventetFilnavn\"")
+            )
+    }
+
+    @Test
+    fun `gitt request uten token, forevnt 401`() {
+        mockMvc.perform(
+            MockMvcRequestBuilders
+                .get(URI("${Routes.DOKUMENT}/oversikt"))
+                .queryParam("brevkoder", "NAV 09-11.05")
+        )
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isUnauthorized)
+            .andExpect(
+                content().json(
+                    //language=json
+                    """
+                    {
+                      "type": "/problem-details/uautentisert-forespørsel",
+                      "instance": "http://localhost/dokument/oversikt",
+                      "title": "Ikke autentisert",
+                      "status": 401,
+                      "detail": "no.nav.security.token.support.core.exceptions.JwtTokenMissingException: no valid token found in validation context"
                     }
                 """.trimIndent(), true
                 )
