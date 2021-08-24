@@ -3,6 +3,7 @@ package no.nav.sifinnsynapi.dokument
 import no.nav.security.token.support.core.api.Protected
 import no.nav.security.token.support.core.api.ProtectedWithClaims
 import no.nav.sifinnsynapi.Routes.DOKUMENT
+import no.nav.sifinnsynapi.safselvbetjening.ArkivertDokument
 import no.nav.sifinnsynapi.safselvbetjening.generated.hentdokumentoversikt.Dokumentoversikt
 import org.slf4j.LoggerFactory
 import org.springframework.core.io.ByteArrayResource
@@ -33,22 +34,35 @@ class DokumentController(
         return dokumentService.hentDokumentOversikt(brevkoder.map { it.lowercase().trim() })
     }
 
-    @GetMapping("$DOKUMENT/{journalpostId}/{dokumentInfoId}/{variantFormat}", produces = [MediaType.APPLICATION_PDF_VALUE])
+    @GetMapping(
+        "$DOKUMENT/{journalpostId}/{dokumentInfoId}/{variantFormat}",
+        produces = [MediaType.APPLICATION_PDF_VALUE]
+    )
     @Protected
     @ResponseStatus(HttpStatus.OK)
     fun hentDokument(
         @PathVariable journalpostId: String,
         @PathVariable dokumentInfoId: String,
-        @PathVariable variantFormat: String
+        @PathVariable variantFormat: String,
+        @RequestParam dokumentTittel: String
     ): ResponseEntity<Resource> {
         logger.info("Henter dokument for journalpostId: {}", journalpostId)
 
         val dokument = dokumentService.hentDokument(journalpostId, dokumentInfoId, variantFormat)
         val resource = ByteArrayResource(dokument.body)
 
+        val formatertFilnavn = dokument.filnavn(dokumentTittel)
+
         return ResponseEntity.ok()
-            .header(HttpHeaders.CONTENT_DISPOSITION, dokument.contentDisposition.toString())
+            .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=$formatertFilnavn")
             .contentLength(resource.byteArray.size.toLong())
             .body(resource)
     }
 }
+
+/**
+ * Erstatter filtype på dokumentTittel med contentType fra hentet dokument.
+ *
+ */
+fun ArkivertDokument.filnavn(dokumentTittel: String): String =
+    dokumentTittel.replaceAfterLast(".", contentType.substringAfterLast("/"))

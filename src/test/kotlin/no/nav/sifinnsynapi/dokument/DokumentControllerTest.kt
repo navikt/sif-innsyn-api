@@ -32,9 +32,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.net.URI
-import java.net.URLDecoder
-import java.nio.charset.Charset
-import java.util.*
 import javax.servlet.http.Cookie
 
 @ExtendWith(SpringExtension::class)
@@ -133,18 +130,19 @@ internal class DokumentControllerTest {
 
     @Test
     fun `hent dokument`() {
-        val forventetFilnavn = "Søknad om pleiepenger.pdf"
+        val forventetFilnavn = "Screenshot 2021-04-23 at 12.59.57.pdf"
         every {
             dokumentService.hentDokument(any(), any(), any())
         } returns ArkivertDokument(
             body = "some byteArray".toByteArray(),
             contentType = "application/pdf",
-            contentDisposition = ContentDisposition.parse("inline; filename=${forventetFilnavn}")
+            contentDisposition = ContentDisposition.parse("inline; filename=533439502_ARKIV.pdf")
         )
 
         mockMvc.perform(
             MockMvcRequestBuilders
                 .get("${Routes.DOKUMENT}/{journalpostId}/{dokumentinfoId}/{variant}", "123", "321", "ARKIV")
+                .queryParam("dokumentTittel", "Screenshot 2021-04-23 at 12.59.57.png")
                 .accept(MediaType.APPLICATION_PDF_VALUE)
                 .cookie(Cookie("selvbetjening-idtoken", mockOAuth2Server.hentToken().serialize()))
         )
@@ -153,7 +151,7 @@ internal class DokumentControllerTest {
             .andExpect(MockMvcResultMatchers.header().exists(HttpHeaders.CONTENT_DISPOSITION))
             .andExpect(
                 MockMvcResultMatchers.header()
-                    .string(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"$forventetFilnavn\"")
+                    .string(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=$forventetFilnavn")
             )
     }
 
