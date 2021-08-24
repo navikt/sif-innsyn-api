@@ -22,6 +22,8 @@ class DokumentService(
     fun hentDokumentOversikt(brevkoder: Array<out String>): Dokumentoversikt = runBlocking {
         val token = tokenValidationContextHolder.tokenValidationContext.firstValidToken.get()
         val dokumentoversikt = safSelvbetjeningService.hentDokumentoversikt(token.subject)
+        logger.info("Filtererer på brevkoder: {}", brevkoder.asList())
+
         val filtererteJournalposter: List<Journalpost> =
             dokumentoversikt.journalposter.filter { journalpost: Journalpost ->
                 journalpost.dokumenter!!.any { dokumentInfo: DokumentInfo? -> brevkoder.contains(dokumentInfo!!.brevkode!!.lowercase()) }
