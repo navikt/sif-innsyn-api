@@ -27,6 +27,7 @@ class DokumentService(
 
     fun hentDokument(journalpostId: String, dokumentInfoId: String, varianFormat: String): ByteArrayResource {
         val dokumentSomBase64 = safSelvbetjeningService.hentDokument(journalpostId, dokumentInfoId, varianFormat)
+        logger.info("dokumentSomBase64: {}", dokumentSomBase64)
         return ByteArrayResource(Base64.getDecoder().decode(dokumentSomBase64))
     }
 }
