@@ -9,7 +9,11 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpHeaders.AUTHORIZATION
+import org.springframework.http.client.reactive.ReactorClientHttpConnector
 import org.springframework.web.reactive.function.client.WebClient
+import reactor.netty.http.client.HttpClient
+import reactor.netty.http.client.HttpClientRequest
+import reactor.netty.http.client.HttpClientResponse
 import java.util.*
 
 @Configuration
@@ -30,17 +34,23 @@ class SafSelvbetjeningGraphQLClientConfig(
     fun client() = GraphQLWebClient(
         url = "${safSelvbetjeningBaseUrl}/graphql",
         builder = WebClient.builder()
+            .clientConnector(
+                ReactorClientHttpConnector(
+                    HttpClient.create()
+                        .doOnRequest { request: HttpClientRequest, _ ->
+                            logger.info("{} {} {}", request.version(), request.method(), request.resourceUrl())
+                        }
+                        .doOnResponse { response: HttpClientResponse, _ ->
+                            logger.info("{} {} {} {}", response.status().toString(), response.version(), response.method(), response.resourceUrl())
+                        }
+                )
+            )
             .defaultRequest {
-                val accessToken =
-                    oAuth2AccessTokenService.getAccessToken(tokenxSafSelvbetjeningClientProperties).accessToken
-
-                logger.info("Exchanger sluttbrukertoken mot tokenx accesstoken: {}", accessToken)
-
+                it.header(NAV_CALL_ID, UUID.randomUUID().toString())
                 it.header(
                     AUTHORIZATION,
-                    "Bearer $accessToken"
+                    "Bearer ${oAuth2AccessTokenService.getAccessToken(tokenxSafSelvbetjeningClientProperties).accessToken}"
                 )
-                it.header(NAV_CALL_ID, UUID.randomUUID().toString())
             }
     )
 }

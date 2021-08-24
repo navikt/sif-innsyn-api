@@ -4,6 +4,7 @@ import no.nav.security.token.support.core.api.Protected
 import no.nav.security.token.support.core.api.ProtectedWithClaims
 import no.nav.sifinnsynapi.Routes.DOKUMENT
 import no.nav.sifinnsynapi.safselvbetjening.generated.hentdokumentoversikt.Dokumentoversikt
+import org.slf4j.LoggerFactory
 import org.springframework.core.io.ByteArrayResource
 import org.springframework.core.io.Resource
 import org.springframework.http.HttpHeaders
@@ -20,10 +21,15 @@ class DokumentController(
     private val dokumentService: DokumentService
 ) {
 
+    private companion object {
+        private val logger = LoggerFactory.getLogger(DokumentController::class.java)
+    }
+
     @GetMapping("$DOKUMENT/oversikt", produces = [MediaType.APPLICATION_JSON_VALUE])
     @Protected
     @ResponseStatus(HttpStatus.OK)
     fun hentDokumentOversikt(): Dokumentoversikt {
+        logger.info("Henter dokumentoversikt...")
         return dokumentService.hentDokumentOversikt()
     }
 
@@ -35,6 +41,8 @@ class DokumentController(
         @PathVariable dokumentInfoId: String,
         @PathVariable variantFormat: String
     ): ResponseEntity<Resource> {
+        logger.info("Henter dokument for journalpostId: {}", journalpostId)
+
         val dokument = dokumentService.hentDokument(journalpostId, dokumentInfoId, variantFormat)
         val resource = ByteArrayResource(dokument.body)
 
@@ -43,5 +51,4 @@ class DokumentController(
             .contentLength(resource.byteArray.size.toLong())
             .body(resource)
     }
-
 }

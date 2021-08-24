@@ -12,8 +12,8 @@ import java.util.*
 
 @Service
 class DokumentService(
-        private val safSelvbetjeningService: SafSelvbetjeningService,
-        private val tokenValidationContextHolder: SpringTokenValidationContextHolder
+    private val safSelvbetjeningService: SafSelvbetjeningService,
+    private val tokenValidationContextHolder: SpringTokenValidationContextHolder
 ) {
     private companion object {
         private val logger = LoggerFactory.getLogger(DokumentService::class.java)
@@ -21,14 +21,10 @@ class DokumentService(
 
     fun hentDokumentOversikt(): Dokumentoversikt = runBlocking {
         val token = tokenValidationContextHolder.tokenValidationContext.firstValidToken.get()
-        logger.info("Hentet sluttbrukertoken fra context: {}", token.tokenAsString)
-        val dokumentoversikt = safSelvbetjeningService.hentDokumentoversikt(token.subject)
-        dokumentoversikt
+        safSelvbetjeningService.hentDokumentoversikt(token.subject)
     }
 
     fun hentDokument(journalpostId: String, dokumentInfoId: String, varianFormat: String): ArkivertDokument {
-        val dokument = safSelvbetjeningService.hentDokument(journalpostId, dokumentInfoId, varianFormat)
-        logger.info("dokument: {}", dokument)
-        return dokument
+        return safSelvbetjeningService.hentDokument(journalpostId, dokumentInfoId, varianFormat)
     }
 }
