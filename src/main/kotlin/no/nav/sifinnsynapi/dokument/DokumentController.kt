@@ -4,6 +4,7 @@ import no.nav.security.token.support.core.api.Protected
 import no.nav.security.token.support.core.api.ProtectedWithClaims
 import no.nav.sifinnsynapi.Routes.DOKUMENT
 import no.nav.sifinnsynapi.safselvbetjening.generated.hentdokumentoversikt.Dokumentoversikt
+import org.springframework.core.io.ByteArrayResource
 import org.springframework.core.io.Resource
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
@@ -32,15 +33,13 @@ class DokumentController(
     fun hentDokument(
         @PathVariable journalpostId: String,
         @PathVariable dokumentInfoId: String,
-        @PathVariable variantFormat: String,
-        @RequestParam filnavn: String
+        @PathVariable variantFormat: String
     ): ResponseEntity<Resource> {
-        val resource = dokumentService.hentDokument(journalpostId, dokumentInfoId, variantFormat)
-
-        val decodetFilnavn = URLDecoder.decode(filnavn, StandardCharsets.UTF_8.toString())
+        val dokument = dokumentService.hentDokument(journalpostId, dokumentInfoId, variantFormat)
+        val resource = ByteArrayResource(dokument.body)
 
         return ResponseEntity.ok()
-            .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=$decodetFilnavn.pdf")
+            .header(HttpHeaders.CONTENT_DISPOSITION, dokument.contentDisposition.type)
             .contentLength(resource.byteArray.size.toLong())
             .body(resource)
     }

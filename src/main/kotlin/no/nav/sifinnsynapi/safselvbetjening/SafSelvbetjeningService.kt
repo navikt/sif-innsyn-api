@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import no.nav.sifinnsynapi.safselvbetjening.generated.HentDokumentOversikt
 import no.nav.sifinnsynapi.safselvbetjening.generated.hentdokumentoversikt.Dokumentoversikt
 import org.slf4j.LoggerFactory
+import org.springframework.http.ContentDisposition
 import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
@@ -39,21 +40,49 @@ class SafSelvbetjeningService(
         }
     }
 
-    fun hentDokument(journalpostId: String, dokumentInfoId: String, varianFormat: String): String {
+    fun hentDokument(journalpostId: String, dokumentInfoId: String, varianFormat: String): ArkivertDokument {
         val response = tokenxSafSelvbetjeningClient.exchange(
             "/rest/hentdokument/${journalpostId}/${dokumentInfoId}/${varianFormat}",
             HttpMethod.GET,
             null,
-            String::class.java
+            ByteArray::class.java
         )
 
         return when {
-            response.statusCode.is2xxSuccessful -> response.body!!
+            response.statusCode.is2xxSuccessful -> ArkivertDokument(
+                body = response.body!!,
+                contentType = response.headers.contentType!!.type,
+                contentDisposition = response.headers.contentDisposition
+            )
             else -> {
                 logger.error("Feilet med å hente dokument. Response: {}", response)
                 throw IllegalStateException("Feilet med å hente dokument.")
             }
         }
+    }
+}
+
+data class ArkivertDokument(
+    val body: ByteArray,
+    val contentType: String,
+    val contentDisposition: ContentDisposition
+) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as ArkivertDokument
+
+        if (!body.contentEquals(other.body)) return false
+        if (contentType != other.contentType) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = body.contentHashCode()
+        result = 31 * result + contentType.hashCode()
+        return result
     }
 }
 

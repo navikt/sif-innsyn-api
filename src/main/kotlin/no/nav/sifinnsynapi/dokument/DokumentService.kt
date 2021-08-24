@@ -2,6 +2,7 @@ package no.nav.sifinnsynapi.dokument
 
 import kotlinx.coroutines.runBlocking
 import no.nav.security.token.support.spring.SpringTokenValidationContextHolder
+import no.nav.sifinnsynapi.safselvbetjening.ArkivertDokument
 import no.nav.sifinnsynapi.safselvbetjening.SafSelvbetjeningService
 import no.nav.sifinnsynapi.safselvbetjening.generated.hentdokumentoversikt.Dokumentoversikt
 import org.slf4j.LoggerFactory
@@ -25,9 +26,9 @@ class DokumentService(
         dokumentoversikt
     }
 
-    fun hentDokument(journalpostId: String, dokumentInfoId: String, varianFormat: String): ByteArrayResource {
-        val dokumentSomBase64 = safSelvbetjeningService.hentDokument(journalpostId, dokumentInfoId, varianFormat)
-        logger.info("dokumentSomBase64: {}", dokumentSomBase64)
-        return ByteArrayResource(Base64.getDecoder().decode(dokumentSomBase64))
+    fun hentDokument(journalpostId: String, dokumentInfoId: String, varianFormat: String): ArkivertDokument {
+        val dokument = safSelvbetjeningService.hentDokument(journalpostId, dokumentInfoId, varianFormat)
+        logger.info("dokument: {}", dokument)
+        return dokument
     }
 }
