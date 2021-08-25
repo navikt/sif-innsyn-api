@@ -2,6 +2,7 @@ package no.nav.sifinnsynapi.safselvbetjening
 
 import com.expediagroup.graphql.client.spring.GraphQLWebClient
 import com.fasterxml.jackson.databind.ObjectMapper
+import no.nav.security.token.support.spring.SpringTokenValidationContextHolder
 import no.nav.sifinnsynapi.safselvbetjening.generated.HentDokumentOversikt
 import no.nav.sifinnsynapi.safselvbetjening.generated.hentdokumentoversikt.Dokumentoversikt
 import org.slf4j.LoggerFactory
@@ -14,17 +15,19 @@ import org.springframework.web.client.RestTemplate
 class SafSelvbetjeningService(
     private val objectMapper: ObjectMapper,
     private val tokenxSafSelvbetjeningClient: RestTemplate,
-    private val safSelvbetjeningGraphQLClient: GraphQLWebClient
+    private val safSelvbetjeningGraphQLClient: GraphQLWebClient,
+    private val tokenValidationContextHolder: SpringTokenValidationContextHolder
 ) {
 
     private companion object {
         private val logger = LoggerFactory.getLogger(SafSelvbetjeningService::class.java)
     }
 
-    suspend fun hentDokumentoversikt(norskIdentifikasjon: String): Dokumentoversikt {
+    suspend fun hentDokumentoversikt(): Dokumentoversikt {
+        val token = tokenValidationContextHolder.tokenValidationContext.firstValidToken.get()
         val response = safSelvbetjeningGraphQLClient.execute(
             HentDokumentOversikt(
-                HentDokumentOversikt.Variables(norskIdentifikasjon)
+                HentDokumentOversikt.Variables(token.subject)
             )
         )
 

@@ -31,7 +31,7 @@ class DokumentController(
         @RequestParam vararg brevkoder: String
     ): Dokumentoversikt {
         logger.info("Henter dokumentoversikt...")
-        return dokumentService.hentDokumentOversikt(brevkoder.map { it.lowercase().trim() })
+        return dokumentService.hentDokumentOversikt(brevkoder.asList())
     }
 
     @GetMapping(

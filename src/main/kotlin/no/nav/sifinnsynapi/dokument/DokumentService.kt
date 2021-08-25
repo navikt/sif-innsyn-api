@@ -1,7 +1,6 @@
 package no.nav.sifinnsynapi.dokument
 
 import kotlinx.coroutines.runBlocking
-import no.nav.security.token.support.spring.SpringTokenValidationContextHolder
 import no.nav.sifinnsynapi.safselvbetjening.ArkivertDokument
 import no.nav.sifinnsynapi.safselvbetjening.SafSelvbetjeningService
 import no.nav.sifinnsynapi.safselvbetjening.generated.hentdokumentoversikt.DokumentInfo
@@ -13,15 +12,14 @@ import org.springframework.stereotype.Service
 @Service
 class DokumentService(
     private val safSelvbetjeningService: SafSelvbetjeningService,
-    private val tokenValidationContextHolder: SpringTokenValidationContextHolder
-) {
+
+    ) {
     private companion object {
         private val logger = LoggerFactory.getLogger(DokumentService::class.java)
     }
 
     fun hentDokumentOversikt(brevkoder: List<String>): Dokumentoversikt = runBlocking {
-        val token = tokenValidationContextHolder.tokenValidationContext.firstValidToken.get()
-        safSelvbetjeningService.hentDokumentoversikt(token.subject)
+        safSelvbetjeningService.hentDokumentoversikt()
             .medRelevanteBrevkoder(brevkoder)
     }
 
@@ -39,5 +37,8 @@ class DokumentService(
     }
 
     fun List<DokumentInfo?>.harRelevantBrevkode(brevkoder: List<String>): Boolean =
-        any { dokumentInfo: DokumentInfo? -> brevkoder.contains(dokumentInfo!!.brevkode!!.lowercase().trim()) }
+        any { dokumentInfo: DokumentInfo? ->
+            brevkoder.map { it.lowercase().trim() }
+                .contains(dokumentInfo!!.brevkode!!.lowercase().trim())
+        }
 }
