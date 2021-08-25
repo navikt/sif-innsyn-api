@@ -51,7 +51,7 @@ class DokumentController(
         val dokument = dokumentService.hentDokument(journalpostId, dokumentInfoId, variantFormat)
         val resource = ByteArrayResource(dokument.body)
 
-        val formatertFilnavn = dokument.filnavn(dokumentTittel)
+        val formatertFilnavn = filnavn(dokumentTittel)
 
         return ResponseEntity.ok()
             .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=$formatertFilnavn")
@@ -64,5 +64,5 @@ class DokumentController(
  * Erstatter filtype på dokumentTittel med contentType fra hentet dokument.
  *
  */
-fun ArkivertDokument.filnavn(dokumentTittel: String): String =
+fun filnavn(dokumentTittel: String): String =
     dokumentTittel.replaceAfterLast(".", "pdf")
