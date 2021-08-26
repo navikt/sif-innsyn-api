@@ -14,7 +14,7 @@ import org.springframework.web.client.RestTemplate
 @Service
 class SafSelvbetjeningService(
     private val objectMapper: ObjectMapper,
-    private val tokenxSafSelvbetjeningClient: RestTemplate,
+    private val safSelvbetjeningRestTemplate: RestTemplate,
     private val safSelvbetjeningGraphQLClient: GraphQLWebClient,
     private val tokenValidationContextHolder: SpringTokenValidationContextHolder
 ) {
@@ -44,23 +44,28 @@ class SafSelvbetjeningService(
     }
 
     fun hentDokument(journalpostId: String, dokumentInfoId: String, varianFormat: String): ArkivertDokument {
-        val response = tokenxSafSelvbetjeningClient.exchange(
-            "/rest/hentdokument/${journalpostId}/${dokumentInfoId}/${varianFormat}",
-            HttpMethod.GET,
-            null,
-            ByteArray::class.java
-        )
-
-        return when {
-            response.statusCode.is2xxSuccessful -> ArkivertDokument(
-                body = response.body!!,
-                contentType = response.headers.contentType!!.type,
-                contentDisposition = response.headers.contentDisposition
+        return try {
+            val response = safSelvbetjeningRestTemplate.exchange(
+                "/rest/hentdokument/${journalpostId}/${dokumentInfoId}/${varianFormat}",
+                HttpMethod.GET,
+                null,
+                ByteArray::class.java
             )
-            else -> {
-                logger.error("Feilet med å hente dokument. Response: {}", response)
-                throw IllegalStateException("Feilet med å hente dokument.")
+
+            when {
+                response.statusCode.is2xxSuccessful -> ArkivertDokument(
+                    body = response.body!!,
+                    contentType = response.headers.contentType!!.type,
+                    contentDisposition = response.headers.contentDisposition
+                )
+                else -> {
+                    logger.error("Feilet med å hente dokument. Response: {}", response)
+                    throw IllegalStateException("Feilet med å hente dokument.")
+                }
             }
+        } catch (e: Exception) {
+            logger.error("Feilet med å hente dokument: {}", e)
+            throw IllegalStateException("Feilet med å hente dokument.")
         }
     }
 }
