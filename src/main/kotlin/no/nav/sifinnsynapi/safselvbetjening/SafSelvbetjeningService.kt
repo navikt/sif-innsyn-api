@@ -44,53 +44,47 @@ class SafSelvbetjeningService(
     }
 
     fun hentDokument(journalpostId: String, dokumentInfoId: String, varianFormat: String): ArkivertDokument {
-        return try {
-            val response = safSelvbetjeningRestTemplate.exchange(
-                "/rest/hentdokument/${journalpostId}/${dokumentInfoId}/${varianFormat}",
-                HttpMethod.GET,
-                null,
-                ByteArray::class.java
-            )
+        val response = safSelvbetjeningRestTemplate.exchange(
+            "/rest/hentdokument/${journalpostId}/${dokumentInfoId}/${varianFormat}",
+            HttpMethod.GET,
+            null,
+            ByteArray::class.java
+        )
 
-            when {
-                response.statusCode.is2xxSuccessful -> ArkivertDokument(
-                    body = response.body!!,
-                    contentType = response.headers.contentType!!.type,
-                    contentDisposition = response.headers.contentDisposition
-                )
-                else -> {
-                    logger.error("Feilet med å hente dokument. Response: {}", response)
-                    throw IllegalStateException("Feilet med å hente dokument.")
-                }
+        return when {
+            response.statusCode.is2xxSuccessful -> ArkivertDokument(
+                body = response.body!!,
+                contentType = response.headers.contentType!!.type,
+                contentDisposition = response.headers.contentDisposition
+            )
+            else -> {
+                logger.error("Feilet med å hente dokument. Response: {}", response)
+                throw IllegalStateException("Feilet med å hente dokument.")
             }
-        } catch (e: Exception) {
-            logger.error("Feilet med å hente dokument: {}", e)
-            throw IllegalStateException("Feilet med å hente dokument.")
         }
     }
-}
 
-data class ArkivertDokument(
-    val body: ByteArray,
-    val contentType: String,
-    val contentDisposition: ContentDisposition
-) {
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
+    data class ArkivertDokument(
+        val body: ByteArray,
+        val contentType: String,
+        val contentDisposition: ContentDisposition
+    ) {
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (javaClass != other?.javaClass) return false
 
-        other as ArkivertDokument
+            other as ArkivertDokument
 
-        if (!body.contentEquals(other.body)) return false
-        if (contentType != other.contentType) return false
+            if (!body.contentEquals(other.body)) return false
+            if (contentType != other.contentType) return false
 
-        return true
+            return true
+        }
+
+        override fun hashCode(): Int {
+            var result = body.contentHashCode()
+            result = 31 * result + contentType.hashCode()
+            return result
+        }
     }
-
-    override fun hashCode(): Int {
-        var result = body.contentHashCode()
-        result = 31 * result + contentType.hashCode()
-        return result
-    }
-}
 
