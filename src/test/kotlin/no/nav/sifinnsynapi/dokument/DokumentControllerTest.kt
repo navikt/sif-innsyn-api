@@ -76,7 +76,8 @@ internal class DokumentControllerTest {
                             dokumentInfoId = "533440578",
                             tittel = "Søknad om pleiepenger",
                             brevkode = "NAV 09-11.05",
-                            dokumentvarianter = listOf(Dokumentvariant(Variantformat.ARKIV, "PDF", true))
+                            dokumentvarianter = listOf(
+                                Dokumentvariant(Variantformat.ARKIV, "PDF", true, listOf()))
                         )
                     )
                 )
@@ -115,7 +116,8 @@ internal class DokumentControllerTest {
                                             {
                                                 "variantformat": "ARKIV",
                                                 "filtype": "PDF",
-                                                "brukerHarTilgang": true
+                                                "brukerHarTilgang": true,
+                                                "code": []
                                             }
                                         ]
                                     }

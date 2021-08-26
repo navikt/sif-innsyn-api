@@ -16,6 +16,7 @@ query($ident: String!) {
                     variantformat
                     filtype
                     brukerHarTilgang
+                    code
                 }
             }
         }
