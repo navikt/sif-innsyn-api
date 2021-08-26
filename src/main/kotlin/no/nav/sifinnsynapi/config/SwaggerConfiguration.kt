@@ -18,7 +18,7 @@ class SwaggerConfiguration : EnvironmentAware {
     @Bean
     fun api(): Docket {
         return Docket(DocumentationType.SWAGGER_2)
-                .protocols(setOf(Scheme.HTTP.toValue(), Scheme.HTTPS.toValue()))
+                .protocols(setOf(Scheme.HTTPS.toValue(), Scheme.HTTP.toValue()))
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("no.nav.sifinnsynapi"))
                 .build()
