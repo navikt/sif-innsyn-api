@@ -63,28 +63,29 @@ class SafSelvbetjeningService(
             }
         }
     }
+}
 
-    data class ArkivertDokument(
-        val body: ByteArray,
-        val contentType: String,
-        val contentDisposition: ContentDisposition
-    ) {
-        override fun equals(other: Any?): Boolean {
-            if (this === other) return true
-            if (javaClass != other?.javaClass) return false
+data class ArkivertDokument(
+    val body: ByteArray,
+    val contentType: String,
+    val contentDisposition: ContentDisposition
+) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
 
-            other as ArkivertDokument
+        other as ArkivertDokument
 
-            if (!body.contentEquals(other.body)) return false
-            if (contentType != other.contentType) return false
+        if (!body.contentEquals(other.body)) return false
+        if (contentType != other.contentType) return false
 
-            return true
-        }
-
-        override fun hashCode(): Int {
-            var result = body.contentHashCode()
-            result = 31 * result + contentType.hashCode()
-            return result
-        }
+        return true
     }
+
+    override fun hashCode(): Int {
+        var result = body.contentHashCode()
+        result = 31 * result + contentType.hashCode()
+        return result
+    }
+}
 
