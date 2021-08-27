@@ -4,6 +4,10 @@ query($ident: String!) {
             journalpostId
             tittel
             journalstatus
+            relevanteDatoer {
+                dato
+                datotype
+            }
             sak {
                 fagsakId
                 fagsaksystem

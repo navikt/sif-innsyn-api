@@ -7,6 +7,7 @@ import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
 import no.nav.sifinnsynapi.Routes
 import no.nav.sifinnsynapi.config.SecurityConfiguration
 import no.nav.sifinnsynapi.safselvbetjening.ArkivertDokument
+import no.nav.sifinnsynapi.safselvbetjening.generated.enums.Datotype
 import no.nav.sifinnsynapi.safselvbetjening.generated.enums.Journalstatus
 import no.nav.sifinnsynapi.safselvbetjening.generated.enums.Variantformat
 import no.nav.sifinnsynapi.safselvbetjening.generated.hentdokumentoversikt.*
@@ -67,6 +68,12 @@ internal class DokumentControllerTest {
                     journalpostId = "510536545",
                     tittel = "Søknad om pleiepenger – sykt barn - NAV 09-11.05",
                     journalstatus = Journalstatus.JOURNALFOERT,
+                    relevanteDatoer = listOf(
+                        RelevantDato(
+                            dato = "",
+                            datotype = Datotype.DATO_JOURNALFOERT
+                        )
+                    ),
                     sak = Sak(
                         fagsakId = "1DMELD6",
                         fagsaksystem = "K9"
@@ -103,6 +110,12 @@ internal class DokumentControllerTest {
                                 "journalpostId": "510536545",
                                 "tittel": "Søknad om pleiepenger – sykt barn - NAV 09-11.05",
                                 "journalstatus": "JOURNALFOERT",
+                                "relevanteDatoer": [
+                                  {
+                                    "dato": "",
+                                    "datotype": "DATO_JOURNALFOERT"
+                                  }
+                                ],
                                 "sak": {
                                     "fagsakId": "1DMELD6",
                                     "fagsaksystem": "K9"

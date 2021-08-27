@@ -8,6 +8,7 @@ import com.ninjasquad.springmockk.MockkBean
 import io.mockk.coEvery
 import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
 import no.nav.sifinnsynapi.safselvbetjening.SafSelvbetjeningService
+import no.nav.sifinnsynapi.safselvbetjening.generated.enums.Datotype
 import no.nav.sifinnsynapi.safselvbetjening.generated.enums.Journalstatus
 import no.nav.sifinnsynapi.safselvbetjening.generated.enums.Variantformat
 import no.nav.sifinnsynapi.safselvbetjening.generated.hentdokumentoversikt.*
@@ -77,6 +78,12 @@ class DokumentServiceTest {
                     journalpostId = "510536545",
                     tittel = "Søknad om pleiepenger – sykt barn - NAV 09-11.05",
                     journalstatus = Journalstatus.JOURNALFOERT,
+                    relevanteDatoer = listOf(
+                        RelevantDato(
+                            dato = "",
+                            datotype = Datotype.DATO_JOURNALFOERT
+                        )
+                    ),
                     sak = Sak(
                         fagsakId = "1DMELD6",
                         fagsaksystem = "K9"
@@ -96,6 +103,12 @@ class DokumentServiceTest {
                     journalpostId = "545635015",
                     tittel = "Søknad om pleiepenger – sykt barn - NAVe 09-11.05",
                     journalstatus = Journalstatus.MOTTATT,
+                    relevanteDatoer = listOf(
+                        RelevantDato(
+                            dato = "",
+                            datotype = Datotype.DATO_OPPRETTET
+                        )
+                    ),
                     sak = null,
                     dokumenter = listOf(
                         DokumentInfo(
