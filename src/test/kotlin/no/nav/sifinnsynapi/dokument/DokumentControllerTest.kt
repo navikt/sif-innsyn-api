@@ -70,7 +70,7 @@ internal class DokumentControllerTest {
                     journalstatus = Journalstatus.JOURNALFOERT,
                     relevanteDatoer = listOf(
                         RelevantDato(
-                            dato = "",
+                            dato = "2021-08-25T09:58:55",
                             datotype = Datotype.DATO_JOURNALFOERT
                         )
                     ),
@@ -112,7 +112,7 @@ internal class DokumentControllerTest {
                                 "journalstatus": "JOURNALFOERT",
                                 "relevanteDatoer": [
                                   {
-                                    "dato": "",
+                                    "dato": "2021-08-25T09:58:55",
                                     "datotype": "DATO_JOURNALFOERT"
                                   }
                                 ],
