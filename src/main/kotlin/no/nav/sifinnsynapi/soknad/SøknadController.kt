@@ -11,8 +11,6 @@ import org.springframework.http.HttpStatus.OK
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import java.net.URLDecoder
-import java.nio.charset.StandardCharsets
 import java.util.*
 
 @RestController
@@ -47,15 +45,14 @@ class SøknadController(
     @ResponseStatus(OK)
     fun lastNedArbeidsgivermelding(
         @PathVariable søknadId: UUID,
-        @RequestParam organisasjonsnummer: String,
-        @RequestParam filnavn: String
+        @RequestParam organisasjonsnummer: String
     ): ResponseEntity<Resource> {
         val resource = ByteArrayResource(søknadService.hentArbeidsgiverMeldingFil(søknadId, organisasjonsnummer))
 
-        val decodetFilnavn = URLDecoder.decode(filnavn, StandardCharsets.UTF_8.toString())
+        val filnavn = "Bekreftelse_til_arbeidsgiver_$organisasjonsnummer"
 
         return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=$decodetFilnavn.pdf")
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=$filnavn.pdf")
                 .contentLength(resource.byteArray.size.toLong())
                 .body(resource)
     }
