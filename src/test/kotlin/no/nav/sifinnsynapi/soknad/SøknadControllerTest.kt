@@ -279,44 +279,22 @@ class SøknadControllerTest {
     }
 
     @Test
-    fun `gitt filnavn med mellomrom, forvent generert filnavn med mellomrom`() {
+    fun `forvent generert filnavn med mellomrom`() {
         every {
             søknadService.hentArbeidsgiverMeldingFil(any(), any())
         } returns "some byteArray".toByteArray()
 
-        val forventetFilnavn = "filnavn med mellomrom"
+        val forventetFilnavn = "Bekreftelse_til_arbeidsgiver_12345678.pdf"
         mockMvc.perform(
             MockMvcRequestBuilders
                 .get(URI(URLDecoder.decode("$SØKNAD/${UUID.randomUUID()}/arbeidsgivermelding", Charset.defaultCharset())))
                 .queryParam("organisasjonsnummer", "12345678")
-                .queryParam("filnavn", forventetFilnavn)
                 .accept(MediaType.APPLICATION_PDF_VALUE)
                 .cookie(Cookie("selvbetjening-idtoken", mockOAuth2Server.hentToken().serialize()))
         )
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk)
             .andExpect(header().exists(CONTENT_DISPOSITION))
-            .andExpect(header().string(CONTENT_DISPOSITION, "inline; filename=$forventetFilnavn.pdf"))
-    }
-
-    @Test
-    fun `gitt filnavn med encodet mellomrom, forvent generert filnavn med mellomrom`() {
-        every {
-            søknadService.hentArbeidsgiverMeldingFil(any(), any())
-        } returns "some byteArray".toByteArray()
-
-        val forventetFilnavn = "filnavn med mellomrom"
-        mockMvc.perform(
-            MockMvcRequestBuilders
-                .get(URI(URLDecoder.decode("$SØKNAD/${UUID.randomUUID()}/arbeidsgivermelding", Charset.defaultCharset())))
-                .queryParam("organisasjonsnummer", "12345678")
-                .queryParam("filnavn", "filnavn%20med%20mellomrom")
-                .accept(MediaType.APPLICATION_PDF_VALUE)
-                .cookie(Cookie("selvbetjening-idtoken", mockOAuth2Server.hentToken().serialize()))
-        )
-            .andDo(MockMvcResultHandlers.print())
-            .andExpect(status().isOk)
-            .andExpect(header().exists(CONTENT_DISPOSITION))
-            .andExpect(header().string(CONTENT_DISPOSITION, "inline; filename=$forventetFilnavn.pdf"))
+            .andExpect(header().string(CONTENT_DISPOSITION, "inline; filename=$forventetFilnavn"))
     }
 }
