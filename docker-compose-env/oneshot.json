@@ -15,7 +15,7 @@
         }
       ],
       "numPartitions": 3,
-      "topicName": "privat-pleiepengesoknad-cleanup"
+      "topicName": "dusseldorf.privat-pleiepengesoknad-cleanup"
     },
     {
       "configEntries": {

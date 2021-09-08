@@ -39,8 +39,8 @@ class PleiepengerSyktBarnHendelseKonsument(
     @KafkaListener(
             topics = ["#{'\${topic.listener.pp-sykt-barn.navn}'}"],
             id = "#{'\${topic.listener.pp-sykt-barn.id}'}",
-            groupId = "#{'\${kafka.onprem.consumer.group-id}'}",
-            containerFactory = "onpremKafkaJsonListenerContainerFactory",
+            groupId = "#{'\${kafka.aiven.consumer.group-id}'}",
+            containerFactory = "aivenKafkaJsonListenerContainerFactory",
             autoStartup = "#{'\${topic.listener.pp-sykt-barn.bryter}'}"
     )
     fun konsumer(

@@ -56,7 +56,7 @@ import java.util.concurrent.TimeUnit
 
 @EmbeddedKafka( // Setter opp og tilgjengligjør embeded kafka broker
     count = 3,
-    bootstrapServersProperty = "kafka.onprem.servers", // Setter bootstrap-servers for consumer og producer.
+    bootstrapServersProperty = "kafka-servers", // Setter bootstrap-servers for consumer og producer.
     topics = [
         PP_SYKT_BARN,
         OMP_UTBETALING_ARBEIDSTAKER,
