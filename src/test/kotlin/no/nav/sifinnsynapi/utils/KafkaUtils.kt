@@ -7,6 +7,7 @@ import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
 import no.nav.sifinnsynapi.common.TopicEntry
 import no.nav.sifinnsynapi.config.Topics.AAPEN_DOK_JOURNALFØRING_V1
 import no.nav.sifinnsynapi.config.Topics.K9_DITTNAV_VARSEL_BESKJED
+import no.nav.sifinnsynapi.config.Topics.K9_DITTNAV_VARSEL_BESKJED_AIVEN
 import no.nav.sifinnsynapi.dittnav.K9Beskjed
 import org.apache.kafka.clients.consumer.Consumer
 import org.apache.kafka.clients.consumer.ConsumerConfig
@@ -26,13 +27,14 @@ fun EmbeddedKafkaBroker.opprettKafkaProducer(): Producer<String, Any> {
     val producerProps = KafkaTestUtils.producerProps(this)
     producerProps[ProducerConfig.CLIENT_ID_CONFIG] = "sif-innsyn-api-producer-${UUID.randomUUID()}"
     producerProps[ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG] = "org.apache.kafka.common.serialization.StringSerializer"
-    producerProps[ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG] = "org.apache.kafka.common.serialization.StringSerializer"
+    producerProps[ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG] =
+        "org.apache.kafka.common.serialization.StringSerializer"
     return DefaultKafkaProducerFactory<String, Any>(producerProps)
         .createProducer()
 }
 
 fun Producer<String, Any>.leggPåTopic(hendelse: TopicEntry, topic: String, mapper: ObjectMapper): RecordMetadata {
-    return send(ProducerRecord(topic,  hendelse.somJson(mapper))).get()
+    return send(ProducerRecord(topic, hendelse.somJson(mapper))).get()
 }
 
 fun EmbeddedKafkaBroker.opprettJoarkKafkaProducer(): Producer<Long, JournalfoeringHendelseRecord> {
@@ -46,10 +48,15 @@ fun EmbeddedKafkaBroker.opprettJoarkKafkaProducer(): Producer<Long, Journalfoeri
 }
 
 fun Producer<Long, JournalfoeringHendelseRecord>.leggPåTopic(hendelse: JournalfoeringHendelseRecord): RecordMetadata {
-    return send(ProducerRecord(AAPEN_DOK_JOURNALFØRING_V1,  hendelse)).get()
+    return send(ProducerRecord(AAPEN_DOK_JOURNALFØRING_V1, hendelse)).get()
 }
 
-fun EmbeddedKafkaBroker.opprettDittnavConsumer(topic: String = K9_DITTNAV_VARSEL_BESKJED): Consumer<String, K9Beskjed> {
+fun EmbeddedKafkaBroker.opprettDittnavConsumer(
+    topics: List<String> = listOf(
+        K9_DITTNAV_VARSEL_BESKJED,
+        K9_DITTNAV_VARSEL_BESKJED_AIVEN
+    )
+): Consumer<String, K9Beskjed> {
     val consumerProps = KafkaTestUtils.consumerProps("dittnav-consumer-${UUID.randomUUID()}", "true", this)
     consumerProps[ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG] =
         "org.apache.kafka.common.serialization.StringDeserializer"
@@ -57,7 +64,7 @@ fun EmbeddedKafkaBroker.opprettDittnavConsumer(topic: String = K9_DITTNAV_VARSEL
         "org.apache.kafka.common.serialization.StringDeserializer"
 
     val consumer = DefaultKafkaConsumerFactory<String, K9Beskjed>(consumerProps).createConsumer()
-    consumer.subscribe(listOf(topic))
+    consumer.subscribe(topics)
     return consumer
 }
 
