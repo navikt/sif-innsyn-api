@@ -85,7 +85,7 @@ class PleiepengerSyktBarnHendelseKonsument(
             val save = repository.save(søknadDAO)
             logger.info("Søknad for $YTELSE lagret: {}", save)
 
-            dittnavService.sendBeskjedOnprem(
+            dittnavService.sendBeskjedAiven(
                     melding.getString(SØKNAD_ID),
                     melding.somK9Beskjed(hendelse.data.metadata, pleiepengerDittnavBeskjedProperties)
             )
