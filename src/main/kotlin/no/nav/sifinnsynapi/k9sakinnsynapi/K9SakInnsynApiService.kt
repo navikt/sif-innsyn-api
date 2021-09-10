@@ -34,15 +34,15 @@ class K9SakInnsynApiService(
     private companion object {
         private val logger: Logger = LoggerFactory.getLogger(K9SakInnsynApiService::class.java)
 
-        val søknadTestDataUrl = UriComponentsBuilder
+        val søknaddataUrl = UriComponentsBuilder
             .fromUriString("/soknad")
             .build()
             .toUriString()
     }
 
-    fun hentTestSøknader(): List<K9SakInnsynSøknad> {
+    fun hentSøknader(): List<K9SakInnsynSøknad> {
         val exchange = k9SakInnsynClient.exchange(
-            søknadTestDataUrl,
+            søknaddataUrl,
             HttpMethod.GET,
             null,
             object : ParameterizedTypeReference<List<K9SakInnsynSøknad>>() {})
@@ -58,13 +58,13 @@ class K9SakInnsynApiService(
 
     @Recover
     private fun recover(error: HttpServerErrorException): K9SakInnsynSøknad? {
-        logger.error("Error response = '${error.responseBodyAsString}' fra '${søknadTestDataUrl}'")
+        logger.error("Error response = '${error.responseBodyAsString}' fra '${søknaddataUrl}'")
         throw IllegalStateException("Feilet med henting av k9 søknadsdata.")
     }
 
     @Recover
     private fun recover(error: HttpClientErrorException): K9SakInnsynSøknad? {
-        logger.error("Error response = '${error.responseBodyAsString}' fra '${søknadTestDataUrl}'")
+        logger.error("Error response = '${error.responseBodyAsString}' fra '${søknaddataUrl}'")
         throw IllegalStateException("Feilet med henting av k9 søknadsdata.")
     }
 
@@ -76,6 +76,5 @@ class K9SakInnsynApiService(
 }
 
 data class K9SakInnsynSøknad(
-    val søknadId: UUID,
     val søknad: Søknad
 )

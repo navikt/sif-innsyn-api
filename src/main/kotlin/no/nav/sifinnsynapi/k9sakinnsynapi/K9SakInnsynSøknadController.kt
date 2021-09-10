@@ -22,7 +22,7 @@ class K9SakInnsynSøknadController(
     @ResponseStatus(OK)
     fun hentSøknader(): List<K9SakInnsynSøknad>? {
         logger.info("Forsøker å hente søknader...")
-        val søknader = k9SakInnsynApiService.hentTestSøknader()
+        val søknader = k9SakInnsynApiService.hentSøknader()
         logger.info("Fant {} søknader", søknader.size)
         return søknader
     }
