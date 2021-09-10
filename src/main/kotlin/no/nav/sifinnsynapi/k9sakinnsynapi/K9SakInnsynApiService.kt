@@ -46,7 +46,7 @@ class K9SakInnsynApiService(
             HttpMethod.GET,
             null,
             object : ParameterizedTypeReference<List<K9SakInnsynSøknad>>() {})
-        logger.info("Fikk response {} fra oppslag", exchange.statusCode)
+        logger.info("Fikk response {} for oppslag av søknadsdata fra k9-sak-innsyn-api", exchange.statusCode)
 
         return if (exchange.statusCode.is2xxSuccessful) {
             exchange.body!!
