@@ -35,7 +35,7 @@ class K9SakInnsynApiService(
         private val logger: Logger = LoggerFactory.getLogger(K9SakInnsynApiService::class.java)
 
         val søknadTestDataUrl = UriComponentsBuilder
-            .fromUriString("/soknad/testdata")
+            .fromUriString("/soknad")
             .build()
             .toUriString()
     }
@@ -59,19 +59,19 @@ class K9SakInnsynApiService(
     @Recover
     private fun recover(error: HttpServerErrorException): K9SakInnsynSøknad? {
         logger.error("Error response = '${error.responseBodyAsString}' fra '${søknadTestDataUrl}'")
-        throw IllegalStateException("Feil ved henting av søkers personinformasjon")
+        throw IllegalStateException("Feilet med henting av k9 søknadsdata.")
     }
 
     @Recover
     private fun recover(error: HttpClientErrorException): K9SakInnsynSøknad? {
         logger.error("Error response = '${error.responseBodyAsString}' fra '${søknadTestDataUrl}'")
-        throw IllegalStateException("Feil ved henting av søkers personinformasjon")
+        throw IllegalStateException("Feilet med henting av k9 søknadsdata.")
     }
 
     @Recover
     private fun recover(error: ResourceAccessException): K9SakInnsynSøknad? {
         logger.error("{}", error.message)
-        throw IllegalStateException("Timout ved henting av søkers personinformasjon")
+        throw IllegalStateException("Timout ved henting av k9 søknadsdata.")
     }
 }
 
