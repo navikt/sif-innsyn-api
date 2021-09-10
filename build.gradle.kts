@@ -37,6 +37,7 @@ val guavaVersion by extra("23.0")
 val okHttp3Version by extra("4.9.1")
 val orgJsonVersion by extra("20210307")
 val graphQLKotlinVersion by extra("4.2.0")
+val k9FormatVersion by extra("5.4.14")
 
 ext["okhttp3.version"] = okHttp3Version
 ext["testcontainersVersion"] = "1.15.3"
@@ -48,11 +49,22 @@ repositories {
         name = "confluent"
         url = uri("https://packages.confluent.io/maven/")
     }
+
+    maven {
+        name = "GitHubPackages"
+        url = uri("https://maven.pkg.github.com/navikt/k9-format")
+        credentials {
+            username = project.findProperty("gpr.user") as String? ?: System.getenv("GITHUB_USERNAME")
+            password = project.findProperty("gpr.key") as String? ?: System.getenv("GITHUB_TOKEN")
+        }
+    }
 }
 
 dependencies {
 
     // NAV
+    implementation("no.nav.k9:soknad:$k9FormatVersion")
+
     implementation("no.nav.security:token-validation-spring:$tokenSupportVersion")
     implementation("no.nav.security:token-client-spring:$tokenSupportVersion")
     //implementation("no.nav.dok:dok-journalfoering-hendelse-v1:0.0.3")
