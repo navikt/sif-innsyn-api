@@ -39,8 +39,8 @@ class PleiepengerSyktBarnHendelseKonsument(
     @KafkaListener(
             topics = ["#{'\${topic.listener.pp-sykt-barn.navn}'}"],
             id = "#{'\${topic.listener.pp-sykt-barn.id}'}",
-            groupId = "#{'\${kafka.onprem.consumer.group-id}'}",
-            containerFactory = "onpremKafkaJsonListenerContainerFactory",
+            groupId = "#{'\${kafka.aiven.consumer.group-id}'}",
+            containerFactory = "aivenKafkaJsonListenerContainerFactory",
             autoStartup = "#{'\${topic.listener.pp-sykt-barn.bryter}'}"
     )
     fun konsumer(
@@ -85,7 +85,7 @@ class PleiepengerSyktBarnHendelseKonsument(
             val save = repository.save(søknadDAO)
             logger.info("Søknad for $YTELSE lagret: {}", save)
 
-            dittnavService.sendBeskjedOnprem(
+            dittnavService.sendBeskjedAiven(
                     melding.getString(SØKNAD_ID),
                     melding.somK9Beskjed(hendelse.data.metadata, pleiepengerDittnavBeskjedProperties)
             )
