@@ -66,9 +66,11 @@ logging:
          common:
            metrics: ERROR
 
+kafka-servers: localhost:9092 # placeholder
+
 kafka:
   onprem:
-    servers: localhost:9092 # placeholder
+    servers: ${kafka-servers}
     consumer:
       retry-interval: 5_000 # Egendefinert property
       group-id: sif-innsyn-api-onprem
@@ -78,7 +80,7 @@ kafka:
       client-id: sif-innsyn-api-onprem
 
   aiven:
-    servers: localhost:9092 # placeholder
+    servers: ${kafka-servers}
     consumer:
       retry-interval: 5_000 # Egendefinert property
       group-id: sif-innsyn-api-aiven
