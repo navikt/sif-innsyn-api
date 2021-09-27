@@ -17,6 +17,7 @@ import no.nav.sifinnsynapi.config.SecurityConfiguration
 import no.nav.sifinnsynapi.config.Topics
 import no.nav.sifinnsynapi.config.Topics.AAPEN_DOK_JOURNALFØRING_V1
 import no.nav.sifinnsynapi.config.Topics.K9_DITTNAV_VARSEL_BESKJED
+import no.nav.sifinnsynapi.config.Topics.K9_DITTNAV_VARSEL_BESKJED_AIVEN
 import no.nav.sifinnsynapi.config.Topics.OMP_UTBETALING_ARBEIDSTAKER
 import no.nav.sifinnsynapi.config.Topics.PP_SYKT_BARN
 import no.nav.sifinnsynapi.dittnav.K9Beskjed
@@ -56,11 +57,12 @@ import java.util.concurrent.TimeUnit
 
 @EmbeddedKafka( // Setter opp og tilgjengligjør embeded kafka broker
     count = 3,
-    bootstrapServersProperty = "kafka.onprem.servers", // Setter bootstrap-servers for consumer og producer.
+    bootstrapServersProperty = "kafka-servers", // Setter bootstrap-servers for consumer og producer.
     topics = [
         PP_SYKT_BARN,
         OMP_UTBETALING_ARBEIDSTAKER,
         K9_DITTNAV_VARSEL_BESKJED,
+        K9_DITTNAV_VARSEL_BESKJED_AIVEN,
         AAPEN_DOK_JOURNALFØRING_V1
     ]
 )
@@ -231,7 +233,7 @@ class OnpremKafkaHendelseKonsumentIntegrasjonsTest {
         val hendelse = defaultHendelse(journalpostId = "4")
         producer.leggPåTopic(hendelse, PP_SYKT_BARN, mapper)
 
-        val dittnavBeskjed = dittNavConsumer.lesMelding(hendelse.data.melding["søknadId"] as String)
+        val dittnavBeskjed = dittNavConsumer.lesMelding(hendelse.data.melding["søknadId"] as String, topic = K9_DITTNAV_VARSEL_BESKJED_AIVEN)
         log.info("----> dittnav melding: {}", dittnavBeskjed)
         assertThat(dittnavBeskjed).isNotNull()
     }

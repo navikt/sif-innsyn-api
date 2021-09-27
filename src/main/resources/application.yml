@@ -16,6 +16,7 @@ no.nav:
   gateways:
     k9-selvbetjening-oppslag: # Settes i nais/<cluster>.json
     saf-base-url: # Settes i nais/<cluster>.json
+    k9-sak-innsyn-api-base-url: # Settes i nais/<cluster>.json
     saf-selvbetjening-base-url: # Settes i nais/<cluster>.json
     sts:
       url: # Settes i nais/dev-gcp.json
@@ -39,7 +40,7 @@ topic:
     # topic.listener.pp-sykt-barn
     pp-sykt-barn:
       id: pp-sykt-barn-listener
-      navn: privat-pleiepengesoknad-cleanup
+      navn: dusseldorf.privat-pleiepengesoknad-cleanup
       bryter: true
       dry-run: false
 

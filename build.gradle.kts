@@ -2,12 +2,12 @@ import com.expediagroup.graphql.plugin.gradle.tasks.GraphQLGenerateClientTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("org.springframework.boot") version "2.5.4"
+    id("org.springframework.boot") version "2.5.5"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
     id("com.expediagroup.graphql") version "4.2.0"
-    kotlin("jvm") version "1.5.30"
-    kotlin("plugin.spring") version "1.5.30"
-    kotlin("plugin.jpa") version "1.5.30"
+    kotlin("jvm") version "1.5.31"
+    kotlin("plugin.spring") version "1.5.31"
+    kotlin("plugin.jpa") version "1.5.31"
 }
 
 group = "no.nav"
@@ -27,7 +27,7 @@ val tokenSupportVersion by extra("1.3.8")
 val springCloudVersion by extra("2020.0.3")
 val retryVersion by extra("1.3.0")
 val zalandoVersion by extra("0.26.2")
-val openhtmltopdfVersion = "1.0.9"
+val openhtmltopdfVersion = "1.0.10"
 val handlebarsVersion = "4.2.0"
 val hibernateTypes52Version by extra("2.11.1")
 val awailitilityKotlinVersion by extra("4.1.0")
@@ -38,6 +38,7 @@ val guavaVersion by extra("23.0")
 val okHttp3Version by extra("4.9.1")
 val orgJsonVersion by extra("20210307")
 val graphQLKotlinVersion by extra("4.2.0")
+val k9FormatVersion by extra("5.4.14")
 
 ext["okhttp3.version"] = okHttp3Version
 ext["testcontainersVersion"] = "1.15.3"
@@ -49,11 +50,22 @@ repositories {
         name = "confluent"
         url = uri("https://packages.confluent.io/maven/")
     }
+
+    maven {
+        name = "GitHubPackages"
+        url = uri("https://maven.pkg.github.com/navikt/k9-format")
+        credentials {
+            username = project.findProperty("gpr.user") as String? ?: System.getenv("GITHUB_USERNAME")
+            password = project.findProperty("gpr.key") as String? ?: System.getenv("GITHUB_TOKEN")
+        }
+    }
 }
 
 dependencies {
 
     // NAV
+    implementation("no.nav.k9:soknad:$k9FormatVersion")
+
     implementation("no.nav.security:token-validation-spring:$tokenSupportVersion")
     implementation("no.nav.security:token-client-spring:$tokenSupportVersion")
     //implementation("no.nav.dok:dok-journalfoering-hendelse-v1:0.0.3")
