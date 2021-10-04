@@ -27,12 +27,11 @@ internal object PleiepengersøknadKeysV1 {
 internal object PleiepengerJSONObjectUtils {
 
     fun JSONObject.finnOrganisasjon(søknad: SøknadDAO, organisasjonsnummer: String): JSONObject {
-        val organisasjonerObjekt = get(ARBEIDSGIVERE)
-        val organisasjoner = when (organisasjonerObjekt) {
-                is JSONObject -> organisasjonerObjekt.getJSONArray(PleiepengersøknadKeysV1.ORGANISASJONER)
-                is JSONArray -> organisasjonerObjekt
-                else -> throw Error("Feil JSONObjekt for feltet $ARBEIDSGIVERE") // TODO: 01/10/2021 Lage egen exception?
-            }
+        val organisasjoner = when (val arbeidsgivereObjekt = get(ARBEIDSGIVERE)) {
+            is JSONObject -> arbeidsgivereObjekt.getJSONArray(PleiepengersøknadKeysV1.ORGANISASJONER)
+            is JSONArray -> arbeidsgivereObjekt
+            else -> throw Error("Ugyldig type for feltet $ARBEIDSGIVERE. Forventet enten JSONObject eller JSONArray, men fikk ${arbeidsgivereObjekt.javaClass}")
+        }
 
         var organisasjon: JSONObject? = null
 
