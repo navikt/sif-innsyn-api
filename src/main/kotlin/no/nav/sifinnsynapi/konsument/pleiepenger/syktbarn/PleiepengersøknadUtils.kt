@@ -1,7 +1,9 @@
 package no.nav.sifinnsynapi.konsument.pleiepenger.syktbarn
 
 import no.nav.sifinnsynapi.http.PleiepengesøknadMedOrganisasjonsnummerIkkeFunnetException
+import no.nav.sifinnsynapi.konsument.pleiepenger.syktbarn.PleiepengersøknadKeysV1.ARBEIDSGIVERE
 import no.nav.sifinnsynapi.soknad.SøknadDAO
+import org.json.JSONArray
 import org.json.JSONObject
 import java.time.LocalDate
 
@@ -23,22 +25,28 @@ internal object PleiepengersøknadKeysV1 {
 }
 
 internal object PleiepengerJSONObjectUtils {
+
     fun JSONObject.finnOrganisasjon(søknad: SøknadDAO, organisasjonsnummer: String): JSONObject {
-        val organisasjoner = getJSONObject(PleiepengersøknadKeysV1.ARBEIDSGIVERE).getJSONArray(PleiepengersøknadKeysV1.ORGANISASJONER)
-        var funnetOrg: JSONObject? = null
+        val organisasjoner = when (val arbeidsgivereObjekt = get(ARBEIDSGIVERE)) {
+            is JSONObject -> arbeidsgivereObjekt.getJSONArray(PleiepengersøknadKeysV1.ORGANISASJONER)
+            is JSONArray -> arbeidsgivereObjekt
+            else -> throw Error("Ugyldig type for feltet $ARBEIDSGIVERE. Forventet enten JSONObject eller JSONArray, men fikk ${arbeidsgivereObjekt.javaClass}")
+        }
+
+        var organisasjon: JSONObject? = null
 
         for (i in 0 until organisasjoner.length()) {
             val org = organisasjoner.getJSONObject(i)
             if (org.getString(PleiepengersøknadKeysV1.ORGANISASJONSNUMMER) == organisasjonsnummer) {
-                funnetOrg = org
+                organisasjon = org
             }
         }
 
-        if (funnetOrg == null) throw PleiepengesøknadMedOrganisasjonsnummerIkkeFunnetException(
+        if (organisasjon == null) throw PleiepengesøknadMedOrganisasjonsnummerIkkeFunnetException(
             søknad.id.toString(),
             organisasjonsnummer
         )
-        return funnetOrg
+        return organisasjon
     }
 
     fun JSONObject.tilArbeidstakernavn(): String = when(optString(PleiepengersøknadKeysV1.SØKER_MELLOMNAVN, null)) {
