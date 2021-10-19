@@ -40,7 +40,7 @@ class K9SakInnsynApiService(
             .toUriString()
     }
 
-    fun hentSøknader(): K9SakInnsynSøknad {
+    fun hentSøknadsopplysninger(): K9SakInnsynSøknad {
         val exchange = k9SakInnsynClient.exchange(
             søknaddataUrl,
             HttpMethod.GET,

@@ -22,7 +22,7 @@ class K9SakInnsynSøknadController(
     @ResponseStatus(OK)
     fun hentSøknader(): K9SakInnsynSøknad {
         logger.info("Henter innsyn i søknadsopplysninger...")
-        val søknader = k9SakInnsynApiService.hentSøknader()
+        val søknader = k9SakInnsynApiService.hentSøknadsopplysninger()
         return søknader
     }
 }
