@@ -1,9 +1,7 @@
 package no.nav.sifinnsynapi.config
 
-import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.PropertyNamingStrategies
-import com.fasterxml.jackson.databind.PropertyNamingStrategy
 import com.fasterxml.jackson.databind.SerializationFeature
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -37,7 +35,7 @@ class WebMvcConfig(
      */
     override fun addCorsMappings(registry: CorsRegistry) {
         registry.addMapping("/**")
-            .allowedOrigins(*allowedOrigins.split(",").toTypedArray())
+            .allowedOrigins(*allowedOrigins.split(",").map { it.trim() }.toTypedArray())
             .allowCredentials(true)
 
         super.addCorsMappings(registry)
