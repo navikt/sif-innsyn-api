@@ -40,12 +40,12 @@ class K9SakInnsynApiService(
             .toUriString()
     }
 
-    fun hentSøknader(): List<K9SakInnsynSøknad> {
+    fun hentSøknadsopplysninger(): K9SakInnsynSøknad {
         val exchange = k9SakInnsynClient.exchange(
             søknaddataUrl,
             HttpMethod.GET,
             null,
-            object : ParameterizedTypeReference<List<K9SakInnsynSøknad>>() {})
+            K9SakInnsynSøknad::class.java)
         logger.info("Fikk response {} for oppslag av søknadsdata fra k9-sak-innsyn-api", exchange.statusCode)
 
         return if (exchange.statusCode.is2xxSuccessful) {
@@ -57,19 +57,19 @@ class K9SakInnsynApiService(
     }
 
     @Recover
-    private fun recover(error: HttpServerErrorException): K9SakInnsynSøknad? {
+    private fun recover(error: HttpServerErrorException): K9SakInnsynSøknad {
         logger.error("Error response = '${error.responseBodyAsString}' fra '${søknaddataUrl}'")
         throw IllegalStateException("Feilet med henting av k9 søknadsdata.")
     }
 
     @Recover
-    private fun recover(error: HttpClientErrorException): K9SakInnsynSøknad? {
+    private fun recover(error: HttpClientErrorException): K9SakInnsynSøknad {
         logger.error("Error response = '${error.responseBodyAsString}' fra '${søknaddataUrl}'")
         throw IllegalStateException("Feilet med henting av k9 søknadsdata.")
     }
 
     @Recover
-    private fun recover(error: ResourceAccessException): K9SakInnsynSøknad? {
+    private fun recover(error: ResourceAccessException): K9SakInnsynSøknad {
         logger.error("{}", error.message)
         throw IllegalStateException("Timout ved henting av k9 søknadsdata.")
     }

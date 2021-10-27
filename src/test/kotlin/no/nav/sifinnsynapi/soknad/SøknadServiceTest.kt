@@ -96,4 +96,57 @@ internal class SøknadServiceTest {
             assertThat(bytes).size().isGreaterThan(1000)
         }
     }
+
+    @Test
+    fun `Finner organisasjon selvom arbeidsgivere ligger som JSONArray`() {
+        val organisasjonsnummer = "917755645"
+        val søknad = søknadRepository.save(
+            SøknadDAO(
+                saksId = "abc123",
+                søknadstype = Søknadstype.PP_SYKT_BARN,
+                status = SøknadsStatus.MOTTATT,
+                journalpostId = "123456789",
+                opprettet = ZonedDateTime.parse("2020-08-04T10:30:00Z").withZoneSameInstant(ZoneId.of("UTC")),
+                fødselsnummer = Fødselsnummer("02119970078"),
+                aktørId = AktørId("123456"),
+                søknad =
+                //language=json
+                """
+                {
+                  "fraOgMed": "2021-01-01",
+                  "tilOgMed": "2021-01-01",
+                  "søker": {
+                    "mellomnavn": "Mellomnavn",
+                    "etternavn": "Nordmann",
+                    "aktørId": "123456",
+                    "fødselsnummer": "02119970078",
+                    "fornavn": "Ola"
+                  },
+                  "arbeidsgivere": [
+                    {
+                      "erAnsatt": true,
+                      "navn": "Peppes",
+                      "arbeidsforhold": null,
+                      "organisasjonsnummer": "917755645"
+                    },
+                    {
+                      "erAnsatt": true,
+                      "navn": "Mix",
+                      "arbeidsforhold": null,
+                      "organisasjonsnummer": "896967762"
+                    }
+                  ]
+                }
+                """.trimIndent()
+            )
+        )
+
+        await.atMost(Duration.ofSeconds(10)).ignoreException(SøknadNotFoundException::class.java).untilAsserted {
+            assertThat(søknadRepository.findById(søknad.id)).isNotEqualTo(Optional.empty<Any?>())
+            val bytes = søknadService.hentArbeidsgiverMeldingFil(søknad.id, organisasjonsnummer)
+            assertNotNull(bytes)
+            assertThat(bytes).isNotEmpty()
+            assertThat(bytes).size().isGreaterThan(1000)
+        }
+    }
 }
