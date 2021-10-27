@@ -80,7 +80,7 @@ no.nav:
   dittnav:
     pleiepenger-sykt-barn:
       beskjed:
-        link: https://www.nav.no/familie/sykdom-i-familien/soknad/innsyn/dine-pleiepenger
+        link: https://www.nav.no/familie/sykdom-i-familien/soknad/innsyn/dine-pleiepenger/soknad
 
   metrics:
     interval: 3_600_000 # 1 time
