@@ -3,7 +3,7 @@ no.nav:
     pleiepenger-sykt-barn:
       beskjed:
         tekst: 'Vi har mottatt søknaden din om pleiepenger.'
-        link: https://sif-innsyn.dev.nav.no/familie/sykdom-i-familien/soknad/innsyn/dine-pleiepenger
+        link: https://sif-innsyn.dev.nav.no/familie/sykdom-i-familien/soknad/innsyn/dine-pleiepenger/soknad
         dagerSynlig: 7
     omsorgspengerutbetaling-arbeidstaker:
       beskjed:
