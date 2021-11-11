@@ -29,8 +29,7 @@ class SøknadService(
     private val repo: SøknadRepository,
     private val oppslagsService: OppslagsService,
     private val dokumentService: DokumentService,
-    private val arbeidsgiverMeldingPDFGenerator: ArbeidsgiverMeldingPDFGenerator,
-    @Value("\${application-ingress}") val applicationIngress: String
+    private val arbeidsgiverMeldingPDFGenerator: ArbeidsgiverMeldingPDFGenerator
 ) {
 
     companion object {
@@ -45,9 +44,9 @@ class SøknadService(
         val relevanteBrevKoder: List<String> = søknadDAOs.flatMap { brevkoder[it.søknadstype]!! }
         val dokumentOversikt = dokumentService.hentDokumentOversikt(relevanteBrevKoder)
 
-        val dokumentDTOs: List<DokumentDTO> = dokumentOversikt.journalposter.somDokumentDTO(applicationIngress)
-
-        return søknadDAOs.map { søknadDAO -> søknadDAO.tilSøknadDTO(dokumentDTOs.filter { it.journalpostId == søknadDAO.journalpostId }) }
+        return søknadDAOs.map { søknadDAO ->
+            val dokumentOversikt1 = dokumentOversikt.filter { it.journalpostId == søknadDAO.journalpostId }
+            søknadDAO.tilSøknadDTO(dokumentOversikt1) }
     }
 
     fun hentSøknad(søknadId: UUID): SøknadDTO {
@@ -56,8 +55,9 @@ class SøknadService(
         }
 
         val dokumentOversikt = dokumentService.hentDokumentOversikt(brevkoder[søknadDAO.søknadstype]!!)
+            .filter { it.journalpostId == søknadDAO.journalpostId }
 
-        return søknadDAO.tilSøknadDTO(dokumentOversikt.journalposter.somDokumentDTO(applicationIngress))
+        return søknadDAO.tilSøknadDTO(dokumentOversikt)
     }
 
     fun oppdaterSøknadSaksIdGittJournalpostId(saksId: String, journalpostId: String): SøknadDAO {
@@ -110,28 +110,4 @@ class SøknadService(
         return repo.findByJournalpostId(journalpostId) != null
     }
 }
-
-private fun List<Journalpost>.somDokumentDTO(applicationIngress: String): List<DokumentDTO> =
-    flatMap { journalpost ->
-        journalpost.dokumenter!!.map { dokumentInfo: DokumentInfo? ->
-            val journalpostId = journalpost.journalpostId
-            val sakId = journalpost.sak?.fagsakId
-            val relevanteDatoer = journalpost.relevanteDatoer.map { it!! }
-
-            val dokumentInfoId = dokumentInfo!!.dokumentInfoId
-            val dokumentvariant = dokumentInfo.dokumentvarianter.first { it!!.variantformat == Variantformat.ARKIV }!!
-            val brukerHarTilgang = dokumentvariant.brukerHarTilgang
-            val tittel = dokumentInfo.tittel!!
-
-            DokumentDTO(
-                journalpostId = journalpostId,
-                sakId = sakId,
-                dokumentInfoId = dokumentInfoId,
-                tittel = tittel,
-                harTilgang = brukerHarTilgang,
-                url = URL("$applicationIngress${Routes.DOKUMENT}/$journalpostId/$dokumentInfoId/${dokumentvariant.variantformat.name}"),
-                relevanteDatoer = relevanteDatoer
-            )
-        }
-    }
 

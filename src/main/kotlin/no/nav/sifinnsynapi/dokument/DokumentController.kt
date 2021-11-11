@@ -28,7 +28,7 @@ class DokumentController(
     @ResponseStatus(HttpStatus.OK)
     fun hentDokumentOversikt(
         @RequestParam vararg brevkoder: String
-    ): Dokumentoversikt {
+    ): List<DokumentDTO> {
         logger.info("Henter dokumentoversikt...")
         return dokumentService.hentDokumentOversikt(brevkoder.asList())
     }

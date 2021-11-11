@@ -46,27 +46,25 @@ class DokumentServiceTest {
     fun `gitt dokumentoversikt med 2 ulike journalposter, forvent 1 journalpost ved filtrering av en av dem`() {
         val forventetBrevkode = "NAVe 09-11.05"
         val dokumentoversikt = dokumentService.hentDokumentOversikt(listOf(forventetBrevkode))
-        assertThat(dokumentoversikt.journalposter).hasSize(1)
-        assertThat(dokumentoversikt.journalposter.first())
-            .transform { it.dokumenter!!.first()!!.brevkode }.isEqualTo(forventetBrevkode)
+        assertThat(dokumentoversikt).hasSize(1)
     }
 
     @Test
     fun `gitt dokumentoversikt med 2 ulike journalposter, forvent 0 journalpost når brevkoder ikke matcher`() {
         val dokumentoversikt = dokumentService.hentDokumentOversikt(listOf("ukjent brevkode"))
-        assertThat(dokumentoversikt.journalposter).isEmpty()
+        assertThat(dokumentoversikt).isEmpty()
     }
 
     @Test
     fun `gitt dokumentoversikt med 2 ulike journalposter, forvent begge journalposter når brevkoder matcher`() {
         val dokumentoversikt = dokumentService.hentDokumentOversikt(listOf("NAV 09-11.05", "NAVe 09-11.05"))
-        assertThat(dokumentoversikt.journalposter).hasSize(2)
+        assertThat(dokumentoversikt).hasSize(2)
     }
 
     @Test
     fun `gitt dokumentoversikt med 2 ulike journalposter, forvent at filtrering er case-insensitive`() {
         val dokumentoversikt = dokumentService.hentDokumentOversikt(listOf("nav 09-11.05 ", "NAVe 09-11.05"))
-        assertThat(dokumentoversikt.journalposter).hasSize(2)
+        assertThat(dokumentoversikt).hasSize(2)
     }
 
     private fun stubDokumentOversikt() {

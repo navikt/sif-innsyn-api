@@ -33,6 +33,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.net.URI
+import java.net.URL
 import javax.servlet.http.Cookie
 
 @ExtendWith(SpringExtension::class)
@@ -62,34 +63,23 @@ internal class DokumentControllerTest {
     fun `Gitt 200 respons, forvent korrekt format på dokumentoversikt`() {
         every {
             dokumentService.hentDokumentOversikt(any())
-        } returns Dokumentoversikt(
-            journalposter = listOf(
-                Journalpost(
-                    journalpostId = "510536545",
-                    tittel = "Søknad om pleiepenger – sykt barn - NAV 09-11.05",
-                    journalstatus = Journalstatus.JOURNALFOERT,
-                    relevanteDatoer = listOf(
-                        RelevantDato(
-                            dato = "2021-08-25T09:58:55",
-                            datotype = Datotype.DATO_JOURNALFOERT
-                        )
-                    ),
-                    sak = Sak(
-                        fagsakId = "1DMELD6",
-                        fagsaksystem = "K9"
-                    ),
-                    dokumenter = listOf(
-                        DokumentInfo(
-                            dokumentInfoId = "533440578",
-                            tittel = "Søknad om pleiepenger",
-                            brevkode = "NAV 09-11.05",
-                            dokumentvarianter = listOf(
-                                Dokumentvariant(Variantformat.ARKIV, "PDF", true, listOf()))
+        } returns
+                listOf(
+                    DokumentDTO(
+                        journalpostId = "510536545",
+                        dokumentInfoId = "533440578",
+                        sakId = "1DMELD6",
+                        tittel = "Søknad om pleiepenger",
+                        harTilgang = true,
+                        url = URL("http://localhost:8080/dokument/510536545/533440578/ARKIV"),
+                        relevanteDatoer = listOf(
+                            RelevantDato(
+                                dato = "2021-08-25T09:58:55",
+                                datotype = Datotype.DATO_JOURNALFOERT
+                            )
                         )
                     )
                 )
-            )
-        )
 
         mockMvc.perform(
             MockMvcRequestBuilders
@@ -104,41 +94,23 @@ internal class DokumentControllerTest {
                 content().json(
                     //language=json
                     """
-                    {
-                        "journalposter": [
+                    [
+                      {
+                        "journalpostId": "510536545",
+                        "sakId": "1DMELD6",
+                        "dokumentInfoId": "533440578",
+                        "tittel": "Søknad om pleiepenger",
+                        "url": "http://localhost:8080/dokument/510536545/533440578/ARKIV",
+                        "harTilgang": true,
+                        "relevanteDatoer": [
                           {
-                                "journalpostId": "510536545",
-                                "tittel": "Søknad om pleiepenger – sykt barn - NAV 09-11.05",
-                                "journalstatus": "JOURNALFOERT",
-                                "relevanteDatoer": [
-                                  {
-                                    "dato": "2021-08-25T09:58:55",
-                                    "datotype": "DATO_JOURNALFOERT"
-                                  }
-                                ],
-                                "sak": {
-                                    "fagsakId": "1DMELD6",
-                                    "fagsaksystem": "K9"
-                                },
-                                "dokumenter": [
-                                    {
-                                        "dokumentInfoId": "533440578",
-                                        "tittel": "Søknad om pleiepenger",
-                                        "brevkode": "NAV 09-11.05",
-                                        "dokumentvarianter": [
-                                            {
-                                                "variantformat": "ARKIV",
-                                                "filtype": "PDF",
-                                                "brukerHarTilgang": true,
-                                                "code": []
-                                            }
-                                        ]
-                                    }
-                                ]
-                            }
+                            "dato": "2021-08-25T09:58:55",
+                            "datotype": "DATO_JOURNALFOERT"
+                          }
                         ]
-                    }
-                """.trimIndent(), true
+                      }
+                    ]
+                    """.trimIndent(), true
                 )
             )
     }
