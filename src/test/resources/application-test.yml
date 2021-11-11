@@ -43,6 +43,8 @@ no.nav:
   metrics:
     interval: 36000
 
+application-ingress: http://localhost:9999
+
 spring:
   datasource:
     url: jdbc:tc:postgresql:9.6:///

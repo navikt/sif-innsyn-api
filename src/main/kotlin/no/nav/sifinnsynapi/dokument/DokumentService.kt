@@ -1,6 +1,7 @@
 package no.nav.sifinnsynapi.dokument
 
 import kotlinx.coroutines.runBlocking
+import no.nav.sifinnsynapi.common.Søknadstype
 import no.nav.sifinnsynapi.safselvbetjening.ArkivertDokument
 import no.nav.sifinnsynapi.safselvbetjening.SafSelvbetjeningService
 import no.nav.sifinnsynapi.safselvbetjening.generated.hentdokumentoversikt.DokumentInfo
@@ -14,8 +15,13 @@ class DokumentService(
     private val safSelvbetjeningService: SafSelvbetjeningService,
 
     ) {
-    private companion object {
+
+    companion object {
         private val logger = LoggerFactory.getLogger(DokumentService::class.java)
+        private val fellesBrevkoder = listOf("INNVILGELSE", "INNHEN", "HENLEG", "INNLYS")
+        val brevkoder = mapOf(
+            Søknadstype.PP_SYKT_BARN to listOf("NAV 09-11.05") + fellesBrevkoder
+        )
     }
 
     fun hentDokumentOversikt(brevkoder: List<String>): Dokumentoversikt = runBlocking {

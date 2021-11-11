@@ -58,6 +58,8 @@ topic:
       bryter: true
       dry-run: false
 
+application-ingress: ${APPLICATION_INGRESS}
+
 management:
   endpoints:
     web:

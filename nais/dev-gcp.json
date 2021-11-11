@@ -28,6 +28,7 @@
   "env": {
     "SERVER_PORT": "8080",
     "SPRING_APPLICATION_NAME": "sif-innsyn-api",
+    "APPLICATION_INGRESS": "https://sif-innsyn-api.dev.nav.no",
     "SPRING_PROFILES_ACTIVE": "dev-gcp",
     "KAFKA_ONPREM_SERVERS": "b27apvl00045.preprod.local:8443,b27apvl00046.preprod.local:8443,b27apvl00047.preprod.local:8443",
     "KAFKA_ONPREM_CONSUMER_AUTO_OFFSET_RESET": "latest",
