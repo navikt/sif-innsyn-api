@@ -81,9 +81,8 @@ internal class JoarkKafkaConfig(
                 loggAntallForsøk(it)
 
                 val journalføringsHendelse = it.value()
-                val søknadEksisterer = søknadService.søknadGittJournalpostIdEksisterer("${journalføringsHendelse.journalpostId}")
                 when {
-                    journalføringsHendelse.erRelevant() && søknadEksisterer -> {
+                    journalføringsHendelse.erRelevant() && søknadEksisterer(journalføringsHendelse) -> {
                         MDCUtil.toMDC(Constants.JOURNALPOST_ID, journalføringsHendelse.journalpostId)
                         false
                     }
@@ -91,6 +90,9 @@ internal class JoarkKafkaConfig(
                 }
             }
         }
+
+    private fun søknadEksisterer(journalføringsHendelse: JournalfoeringHendelseRecord) =
+        søknadService.søknadGittJournalpostIdEksisterer("${journalføringsHendelse.journalpostId}")
 
     private fun loggAntallForsøk(it: ConsumerRecord<Long, JournalfoeringHendelseRecord>) {
         val antallForsøk = ByteBuffer.wrap(
