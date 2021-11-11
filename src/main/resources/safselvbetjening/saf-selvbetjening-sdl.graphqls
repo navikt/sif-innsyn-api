@@ -83,6 +83,10 @@ type Journalpost {
     # * Dersom journalposten ikke har noen kjent kanal, returneres verdien "UKJENT"
     kanal: Kanal
 
+    # Brukes for sporing og feilsøking på tvers av systemer.
+    # Eksempler på eksternReferanseId kan være sykmeldingsId for sykmeldinger, Altinn ArchiveReference for Altinn-skjema eller SEDid for SED.
+    eksternReferanseId: String
+
     # Liste over datoer som kan være relevante for denne journalposten, f.eks. DATO_EKSPEDERT. Hvilke relevante datoer som returneres, avhenger av journalposttypen.
     relevanteDatoer: [RelevantDato]!
 
