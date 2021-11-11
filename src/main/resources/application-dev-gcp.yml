@@ -69,5 +69,5 @@ topic:
     dok-journalfoering-v1:
       id: dok-journalfoering-v1-listener
       navn: aapen-dok-journalfoering-v1-q1
-      bryter: false
+      bryter: true
       dry-run: false
