@@ -238,7 +238,7 @@ class OnpremKafkaHendelseKonsumentIntegrasjonsTest {
                                 "dokumentInfoId": "533440578",
                                 "tittel": "Søknad om pleiepenger",
                                 "url": "http://localhost:9999/dokument/3/533440578/ARKIV",
-                                "harTilgang": "true",
+                                "harTilgang": true,
                                 "relevanteDatoer": [
                                   {
                                     "dato": "2021-10-15T11:28:43",
