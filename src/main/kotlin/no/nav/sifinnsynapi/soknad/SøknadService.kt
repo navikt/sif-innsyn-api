@@ -115,7 +115,7 @@ private fun List<Journalpost>.somDokumentDTO(applicationIngress: String): List<D
     flatMap { journalpost ->
         journalpost.dokumenter!!.map { dokumentInfo: DokumentInfo? ->
             val journalpostId = journalpost.journalpostId
-            val sakId = journalpost.sak!!.fagsakId!!
+            val sakId = journalpost.sak?.fagsakId
             val relevanteDatoer = journalpost.relevanteDatoer.map { it!! }
 
             val dokumentInfoId = dokumentInfo!!.dokumentInfoId
