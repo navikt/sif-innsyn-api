@@ -11,8 +11,10 @@ import no.nav.sifinnsynapi.common.Søknadstype
 import no.nav.sifinnsynapi.config.SecurityConfiguration
 import no.nav.sifinnsynapi.dokument.DokumentService
 import no.nav.sifinnsynapi.http.SøknadNotFoundException
+import no.nav.sifinnsynapi.oppslag.TilgangNektetException
 import no.nav.sifinnsynapi.util.CallIdGenerator
 import no.nav.sifinnsynapi.utils.hentToken
+import no.nav.sifinnsynapi.utils.stubForAktørId
 import org.junit.Assert.assertNotNull
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
@@ -22,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.context.annotation.Import
 import org.springframework.http.HttpHeaders.CONTENT_DISPOSITION
+import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit.jupiter.SpringExtension
@@ -196,6 +199,29 @@ class SøknadControllerTest {
             .andExpect(jsonPath("$.endret").doesNotExist())
             .andExpect(jsonPath("$.behandlingsdato").doesNotExist())
             .andExpect(jsonPath("$.søknad").isMap)
+    }
+
+    @Test
+    fun `Gitt 451 feil ved oppsalg av aktørId, forvent tilgang nektet problem detail med 451 statuskode`() {
+
+        val søknadId = UUID.randomUUID()
+        every {
+            søknadService.hentSøknader()
+        } throws TilgangNektetException("Tilgang nektet")
+
+        mockMvc.perform(
+            MockMvcRequestBuilders
+                .get(URI(URLDecoder.decode("$SØKNAD", Charset.defaultCharset())))
+                .accept(MediaType.APPLICATION_JSON)
+                .cookie(Cookie("selvbetjening-idtoken", mockOAuth2Server.hentToken().serialize()))
+        )
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isUnavailableForLegalReasons)
+            .andExpect(jsonPath("$.type").value("/problem-details/tilgang-nektet"))
+            .andExpect(jsonPath("$.title").value("tilgangskontroll-feil"))
+            .andExpect(jsonPath("$.status").value(451))
+            .andExpect(jsonPath("$.detail").value("Tilgang nektet"))
+            .andExpect(jsonPath("$.stackTrace").doesNotExist())
     }
 
     @Test

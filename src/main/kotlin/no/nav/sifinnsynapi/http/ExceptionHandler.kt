@@ -4,6 +4,7 @@ import no.nav.security.token.support.core.exceptions.JwtTokenMissingException
 import no.nav.security.token.support.core.exceptions.JwtTokenValidatorException
 import no.nav.security.token.support.spring.validation.interceptor.JwtTokenUnauthorizedException
 import no.nav.sifinnsynapi.common.Søknadstype
+import no.nav.sifinnsynapi.oppslag.TilgangNektetException
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
@@ -65,6 +66,26 @@ class ExceptionHandler : ProblemHandling, AdviceTrait {
             .withType(URI("/problem-details/søknad-ikke-funnet"))
             .withTitle("Søknad ikke funnet")
             .withStatus(Status.NOT_FOUND)
+            .withDetail(exception.message)
+            .withInstance(URI(URLDecoder.decode(request.request.requestURL.toString(), Charset.defaultCharset())))
+            .build()
+
+        return create(
+            throwableProblem, request
+        )
+    }
+
+    @ExceptionHandler(value = [TilgangNektetException::class])
+    @ResponseStatus(HttpStatus.UNAVAILABLE_FOR_LEGAL_REASONS)
+    fun håndterTilgangNektet(
+        exception: TilgangNektetException,
+        request: ServletWebRequest
+    ): ResponseEntity<Problem> {
+
+        val throwableProblem = Problem.builder()
+            .withType(URI("/problem-details/tilgang-nektet"))
+            .withTitle("tilgangskontroll-feil")
+            .withStatus(Status.UNAVAILABLE_FOR_LEGAL_REASONS)
             .withDetail(exception.message)
             .withInstance(URI(URLDecoder.decode(request.request.requestURL.toString(), Charset.defaultCharset())))
             .build()

@@ -6,7 +6,9 @@ import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
 import no.nav.security.token.support.spring.validation.interceptor.BearerTokenClientHttpRequestInterceptor
 import no.nav.sifinnsynapi.http.MDCValuesPropagatingClienHttpRequesInterceptor
 import no.nav.sifinnsynapi.util.Constants
+import no.nav.sifinnsynapi.utils.stubForAktørId
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.mockito.ArgumentMatchers.anyString
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
@@ -17,6 +19,7 @@ import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Primary
 import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.web.client.RestTemplate
@@ -57,5 +60,11 @@ internal class OppslagsServiceTest {
     fun hentAktørId() {
         val hentAktørId = oppslagsService.hentAktørId()
         assertThat(hentAktørId).isNotNull()
+    }
+
+    @Test
+    fun `gitt http 451 feil, forvent TilgangNektetException`() {
+        stubForAktørId("123", HttpStatus.UNAVAILABLE_FOR_LEGAL_REASONS.value())
+        assertThrows<TilgangNektetException> { oppslagsService.hentAktørId() }
     }
 }
