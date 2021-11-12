@@ -48,8 +48,8 @@ class JoarkHendelseKonsument(
             val fagsak = journalpostinfo.sak
 
             when {
-                (fagsak != null) && (fagsak.fagsaksystem == K9_FAGSAK_SYSTEM) && !fagsak.fagsakId.isNullOrBlank() -> {
-
+                (fagsak != null) && (!fagsak.fagsaksystem.isNullOrBlank() && fagsak.fagsaksystem == K9_FAGSAK_SYSTEM) && !fagsak.fagsakId.isNullOrBlank() -> {
+                    logger.info("Fagsak: {}", fagsak)
                     MDCUtil.toMDC(Constants.K9_SAK_ID, fagsak.fagsakId)
                     logger.info("Oppdaterer søknad med saksId...")
                     try {
