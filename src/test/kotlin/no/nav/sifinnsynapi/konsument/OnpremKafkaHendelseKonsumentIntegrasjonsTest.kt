@@ -266,6 +266,7 @@ class OnpremKafkaHendelseKonsumentIntegrasjonsTest {
     }
 
     @Test
+    @Disabled("Skru på igjen etter prodsetting") // TODO: 11/11/2021 Skrus på igjen etter prodsetting.
     fun `gitt eksisterende søknad, konsumer fra joark, slå opp journalpostinfo og oppdater søknad med saksId`() {
         val journalpostId: Long = 987654321
 
