@@ -12,7 +12,6 @@ interface SøknadRepository : JpaRepository<SøknadDAO, UUID> {
     fun findAllByAktørId(aktørId: AktørId): List<SøknadDAO>
     fun findByJournalpostId(journalpostId: String): SøknadDAO?
     fun existsSøknadDAOByAktørIdAndJournalpostId(aktørId: AktørId, journalpostId: String): Boolean
-    fun findAllBySaksIdIsNotNull(): List<SøknadDAO> // TODO: 11/11/2021 Kan fjernes etter prodsetting
 
     @Query(
             value = "SELECT COUNT(DISTINCT aktør_id) FROM søknad",
