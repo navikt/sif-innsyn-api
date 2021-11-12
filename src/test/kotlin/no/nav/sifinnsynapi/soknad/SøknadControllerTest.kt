@@ -59,9 +59,6 @@ class SøknadControllerTest {
     @MockkBean
     lateinit var dokumentService: DokumentService
 
-    @MockkBean(relaxed = true) // TODO: 11/11/2021 Kan fjernes etter prodsetting
-    lateinit var søknadRepository: SøknadRepository
-
     @BeforeAll
     internal fun setUp() {
         assertNotNull(mockOAuth2Server)
