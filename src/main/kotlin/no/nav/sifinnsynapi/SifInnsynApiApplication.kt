@@ -1,5 +1,8 @@
 package no.nav.sifinnsynapi
 
+import no.nav.sifinnsynapi.soknad.SøknadRepository
+import org.slf4j.LoggerFactory
+import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan
@@ -10,9 +13,11 @@ import org.springframework.retry.annotation.EnableRetry
 import org.springframework.scheduling.annotation.EnableScheduling
 import org.springframework.transaction.annotation.EnableTransactionManagement
 
-@SpringBootApplication(exclude = [
-    ErrorMvcAutoConfiguration::class
-])
+@SpringBootApplication(
+    exclude = [
+        ErrorMvcAutoConfiguration::class
+    ]
+)
 @EnableRetry
 @EnableKafka
 @EnableTransactionManagement

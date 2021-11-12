@@ -22,6 +22,7 @@ class JoarkHendelseKonsument(
 
     companion object {
         private val logger = LoggerFactory.getLogger(JoarkHendelseKonsument::class.java)
+        private val K9_FAGSAK_SYSTEM = "K9"
     }
 
     @KafkaListener(
@@ -42,27 +43,30 @@ class JoarkHendelseKonsument(
         runBlocking {
             logger.info("Slår opp journalpostinfo...")
             val journalpostinfo = safService.hentJournalpostinfo(journalpostId)
-            when (val fagsakId = journalpostinfo.sak?.fagsakId) {
-                null -> {
-                    logger.info("Sak eller fagsakId var null. Ignorerer melding.")
-                } // ikke gjør noe
+            logger.info("JournalpostInfo hentet.")
 
-                else -> {
-                    MDCUtil.toMDC(Constants.K9_SAK_ID, fagsakId)
-                    logger.info("JournalpostInfo hentet.")
+            val fagsak = journalpostinfo.sak
 
+            when {
+                (fagsak != null) && (!fagsak.fagsaksystem.isNullOrBlank() && fagsak.fagsaksystem == K9_FAGSAK_SYSTEM) && !fagsak.fagsakId.isNullOrBlank() -> {
+                    logger.info("Fagsak: {}", fagsak)
+                    MDCUtil.toMDC(Constants.K9_SAK_ID, fagsak.fagsakId)
                     logger.info("Oppdaterer søknad med saksId...")
                     try {
-                        val oppdatertSøknad = søknadService.oppdaterSøknadSaksIdGittJournalpostId(fagsakId, journalpostId)
+                        val oppdatertSøknad =
+                            søknadService.oppdaterSøknadSaksIdGittJournalpostId(fagsak.fagsakId, journalpostId)
                         logger.info("Søknad oppdatert med saksId: {}", oppdatertSøknad)
                     } catch (ex: Throwable) {
-                        when(ex) {
+                        when (ex) {
                             is SøknadWithJournalpostIdNotFoundException -> {
                                 logger.info("${ex.message} Ignorerer.")
                             }
                             else -> throw ex
                         }
                     }
+                }
+                else -> {
+                    logger.info("Sak eller fagsakId var null. Ignorerer melding.")
                 }
             }
         }
