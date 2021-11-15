@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Qualifier
+import org.springframework.http.HttpStatus
 import org.springframework.retry.annotation.Backoff
 import org.springframework.retry.annotation.Recover
 import org.springframework.retry.annotation.Retryable
@@ -52,6 +53,10 @@ class OppslagsService(
 
     @Recover
     private fun recover(error: HttpClientErrorException): OppslagRespons? {
+        if (error.statusCode == HttpStatus.UNAVAILABLE_FOR_LEGAL_REASONS) {
+            throw TilgangNektetException("Tilgang nektet")
+        }
+
         logger.error("Error response = '${error.responseBodyAsString}' fra '${søkerUrl.toUriString()}'")
         throw IllegalStateException("Feil ved henting av søkers personinformasjon")
     }
@@ -62,6 +67,8 @@ class OppslagsService(
         throw IllegalStateException("Timout ved henting av søkers personinformasjon")
     }
 }
+
+data class TilgangNektetException(override val message: String) : RuntimeException(message)
 
 data class OppslagRespons(@JsonProperty("aktør_id") val aktør_id: String){
     override fun toString(): String {
