@@ -2,7 +2,6 @@ package no.nav.sifinnsynapi.soknad
 
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
-import no.nav.sifinnsynapi.Routes
 import no.nav.sifinnsynapi.common.AktørId
 import no.nav.sifinnsynapi.common.Søknadstype
 import no.nav.sifinnsynapi.dokument.DokumentDTO
@@ -15,13 +14,9 @@ import no.nav.sifinnsynapi.konsument.pleiepenger.syktbarn.ArbeidsgiverMeldingPDF
 import no.nav.sifinnsynapi.konsument.pleiepenger.syktbarn.PleiepengerJSONObjectUtils.finnOrganisasjon
 import no.nav.sifinnsynapi.konsument.pleiepenger.syktbarn.PleiepengerJSONObjectUtils.tilPleiepengerAreidsgivermelding
 import no.nav.sifinnsynapi.oppslag.OppslagsService
-import no.nav.sifinnsynapi.safselvbetjening.generated.enums.Variantformat
-import no.nav.sifinnsynapi.safselvbetjening.generated.hentdokumentoversikt.DokumentInfo
-import no.nav.sifinnsynapi.safselvbetjening.generated.hentdokumentoversikt.Journalpost
 import org.json.JSONObject
-import org.springframework.beans.factory.annotation.Value
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
-import java.net.URL
 import java.util.*
 
 @Service
@@ -34,6 +29,7 @@ class SøknadService(
 
     companion object {
         private val mapper = ObjectMapper()
+        private val logger = LoggerFactory.getLogger(SøknadService::class.java)
     }
 
     fun hentSøknader(): List<SøknadDTO> {
@@ -42,11 +38,16 @@ class SøknadService(
 
         val søknadDAOs = repo.findAllByAktørId(aktørId)
         val relevanteBrevKoder: List<String> = søknadDAOs.flatMap { brevkoder[it.søknadstype]!! }
-        val dokumentOversikt = dokumentService.hentDokumentOversikt(relevanteBrevKoder)
+        val dokumentOversikt = try {
+            dokumentService.hentDokumentOversikt(relevanteBrevKoder)
+        } catch (e: Exception) {
+            logger.error("Feilet med å hente dokumentoversikt. Returnerer tom liste.", e)
+            listOf()
+        }
 
         return søknadDAOs.map { søknadDAO ->
-            val dokumentOversikt1 = dokumentOversikt.filter { it.journalpostId == søknadDAO.journalpostId }
-            søknadDAO.tilSøknadDTO(dokumentOversikt1) }
+            val relevanteDokumenter = dokumentOversikt.filter { it.journalpostId == søknadDAO.journalpostId }
+            søknadDAO.tilSøknadDTO(relevanteDokumenter) }
     }
 
     fun hentSøknad(søknadId: UUID): SøknadDTO {
