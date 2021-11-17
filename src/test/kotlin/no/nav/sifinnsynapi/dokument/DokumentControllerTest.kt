@@ -8,8 +8,6 @@ import no.nav.sifinnsynapi.Routes
 import no.nav.sifinnsynapi.config.SecurityConfiguration
 import no.nav.sifinnsynapi.safselvbetjening.ArkivertDokument
 import no.nav.sifinnsynapi.safselvbetjening.generated.enums.Datotype
-import no.nav.sifinnsynapi.safselvbetjening.generated.enums.Journalstatus
-import no.nav.sifinnsynapi.safselvbetjening.generated.enums.Variantformat
 import no.nav.sifinnsynapi.safselvbetjening.generated.hentdokumentoversikt.*
 import no.nav.sifinnsynapi.util.CallIdGenerator
 import no.nav.sifinnsynapi.utils.hentToken
@@ -70,6 +68,7 @@ internal class DokumentControllerTest {
                         dokumentInfoId = "533440578",
                         sakId = "1DMELD6",
                         tittel = "Søknad om pleiepenger",
+                        filtype = "pdf",
                         harTilgang = true,
                         url = URL("http://localhost:8080/dokument/510536545/533440578/ARKIV"),
                         relevanteDatoer = listOf(
@@ -100,6 +99,7 @@ internal class DokumentControllerTest {
                         "sakId": "1DMELD6",
                         "dokumentInfoId": "533440578",
                         "tittel": "Søknad om pleiepenger",
+                        "filtype": "pdf",
                         "url": "http://localhost:8080/dokument/510536545/533440578/ARKIV",
                         "harTilgang": true,
                         "relevanteDatoer": [

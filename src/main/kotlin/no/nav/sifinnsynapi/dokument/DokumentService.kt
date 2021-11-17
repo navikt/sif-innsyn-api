@@ -70,6 +70,7 @@ private fun Dokumentoversikt.somDokumentDTO(applicationIngress: String): List<Do
                 journalpostId = journalpostId,
                 sakId = sakId,
                 dokumentInfoId = dokumentInfoId,
+                filtype = dokumentvariant.filtype,
                 tittel = tittel,
                 harTilgang = brukerHarTilgang,
                 url = URL("$applicationIngress${Routes.DOKUMENT}/$journalpostId/$dokumentInfoId/${dokumentvariant.variantformat.name}"),

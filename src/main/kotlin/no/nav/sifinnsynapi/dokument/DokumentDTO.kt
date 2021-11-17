@@ -8,6 +8,7 @@ data class DokumentDTO(
     val dokumentInfoId: String,
     val sakId: String?,
     val tittel: String,
+    val filtype: String,
     val harTilgang: Boolean,
     val url: URL,
     val relevanteDatoer: List<RelevantDato>
