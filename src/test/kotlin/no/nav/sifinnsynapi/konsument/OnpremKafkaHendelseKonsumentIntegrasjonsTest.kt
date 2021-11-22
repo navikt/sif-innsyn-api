@@ -21,7 +21,6 @@ import no.nav.sifinnsynapi.config.Topics.K9_DITTNAV_VARSEL_BESKJED
 import no.nav.sifinnsynapi.config.Topics.K9_DITTNAV_VARSEL_BESKJED_AIVEN
 import no.nav.sifinnsynapi.config.Topics.PP_SYKT_BARN
 import no.nav.sifinnsynapi.dittnav.K9Beskjed
-import no.nav.sifinnsynapi.konsument.omsorgspenger.utbetaling.arbeidstaker.OmsorgspengerutbetalingArbeidstakerHendelseKonsument
 import no.nav.sifinnsynapi.safselvbetjening.SafSelvbetjeningService
 import no.nav.sifinnsynapi.safselvbetjening.generated.enums.Datotype
 import no.nav.sifinnsynapi.safselvbetjening.generated.enums.Journalstatus
