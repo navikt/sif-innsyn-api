@@ -5,10 +5,6 @@ no.nav:
         tekst: 'Vi har mottatt søknaden din om pleiepenger.'
         link: https://sif-innsyn.dev.nav.no/familie/sykdom-i-familien/soknad/innsyn/dine-pleiepenger/soknad
         dagerSynlig: 7
-    omsorgspengerutbetaling-arbeidstaker:
-      beskjed:
-        tekst: 'Søknad om utbetaling av omsorgspenger er mottatt.'
-        dagerSynlig: 7
 
   apigw:
     sts-apikey: ${STS_APIKEY} # kubectl secret som miljøvariabel i pod
@@ -41,13 +37,6 @@ topic:
     pp-sykt-barn:
       id: pp-sykt-barn-listener
       navn: dusseldorf.privat-pleiepengesoknad-cleanup
-      bryter: true
-      dry-run: false
-
-    # topic.listener.omp-utbetaling-arbeidstaker
-    omp-utbetaling-arbeidstaker:
-      id: omp-utbetaling-arbeidstaker-listener
-      navn: privat-omp-utbetalingsoknad-arbeidstaker-cleanup
       bryter: true
       dry-run: false
 
