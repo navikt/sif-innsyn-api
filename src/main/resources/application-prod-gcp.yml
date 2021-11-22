@@ -4,10 +4,6 @@ topic:
     pp-sykt-barn:
       bryter: true
       dry-run: false
-    omp-utbetaling-arbeidstaker:
-      bryter: true
-    omd-melding:
-      bryter: true
     dok-journalfoering-v1:
       bryter: true
 

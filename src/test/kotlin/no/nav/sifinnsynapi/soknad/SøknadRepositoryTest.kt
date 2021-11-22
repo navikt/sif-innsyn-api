@@ -149,19 +149,6 @@ class SøknadRepositoryTest {
         assertk.assertThat(repository.finnAntallUnikeSøkere()).isEqualTo(2)
     }
 
-
-    @Test
-    fun `gitt lagrede søknader, forvent 1 av hver søknadstype`() {
-        repository.saveAll(listOf(
-                lagSøknadDAO(søknadstype = Søknadstype.PP_SYKT_BARN),
-                lagSøknadDAO(søknadstype = Søknadstype.OMP_UTBETALING_ARBEIDSTAKER),
-                lagSøknadDAO(søknadstype = Søknadstype.OMD_OVERFØRING)
-        )).forEach {
-            assertk.assertThat(repository.finnAntallSøknaderGittSøknadstype(it.søknadstype.name)).isEqualTo(1)
-        }
-    }
-
-
     private fun lagSøknadDAO(
             customAktørId: AktørId = aktørId,
             customJournalpostId: String = journalpostId,

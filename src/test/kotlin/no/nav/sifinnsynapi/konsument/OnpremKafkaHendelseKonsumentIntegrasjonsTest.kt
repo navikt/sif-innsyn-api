@@ -14,14 +14,11 @@ import no.nav.sifinnsynapi.common.Fødselsnummer
 import no.nav.sifinnsynapi.common.SøknadsStatus
 import no.nav.sifinnsynapi.common.Søknadstype
 import no.nav.sifinnsynapi.config.SecurityConfiguration
-import no.nav.sifinnsynapi.config.Topics
 import no.nav.sifinnsynapi.config.Topics.AAPEN_DOK_JOURNALFØRING_V1
 import no.nav.sifinnsynapi.config.Topics.K9_DITTNAV_VARSEL_BESKJED
 import no.nav.sifinnsynapi.config.Topics.K9_DITTNAV_VARSEL_BESKJED_AIVEN
-import no.nav.sifinnsynapi.config.Topics.OMP_UTBETALING_ARBEIDSTAKER
 import no.nav.sifinnsynapi.config.Topics.PP_SYKT_BARN
 import no.nav.sifinnsynapi.dittnav.K9Beskjed
-import no.nav.sifinnsynapi.konsument.omsorgspenger.utbetaling.arbeidstaker.OmsorgspengerutbetalingArbeidstakerHendelseKonsument
 import no.nav.sifinnsynapi.soknad.SøknadDAO
 import no.nav.sifinnsynapi.soknad.SøknadDTO
 import no.nav.sifinnsynapi.soknad.SøknadRepository
@@ -60,7 +57,6 @@ import java.util.concurrent.TimeUnit
     bootstrapServersProperty = "kafka-servers", // Setter bootstrap-servers for consumer og producer.
     topics = [
         PP_SYKT_BARN,
-        OMP_UTBETALING_ARBEIDSTAKER,
         K9_DITTNAV_VARSEL_BESKJED,
         K9_DITTNAV_VARSEL_BESKJED_AIVEN,
         AAPEN_DOK_JOURNALFØRING_V1
@@ -250,19 +246,6 @@ class OnpremKafkaHendelseKonsumentIntegrasjonsTest {
         await.atMost(10, TimeUnit.SECONDS).until {
             repository.findAllByAktørId(aktørId).size == 1
         }
-    }
-
-    @Test
-    fun `Konsumer hendelse om omsorgspengerutbetaling - arbeidstaker og forvent at dittNav beskjed blir sendt ut`() {
-        val hendelse =
-            defaultHendelse(søknadIdKey = OmsorgspengerutbetalingArbeidstakerHendelseKonsument.Companion.Keys.SØKNAD_ID)
-        producer.leggPåTopic(hendelse, Topics.OMP_UTBETALING_ARBEIDSTAKER, mapper)
-
-        // forvent at dittNav melding blir sendt
-        val dittnavBeskjed =
-            dittNavConsumer.lesMelding(hendelse.data.melding[OmsorgspengerutbetalingArbeidstakerHendelseKonsument.Companion.Keys.SØKNAD_ID] as String)
-        log.info("----> dittnav melding: {}", dittnavBeskjed)
-        assertThat(dittnavBeskjed).isNotNull()
     }
 
     @Test
