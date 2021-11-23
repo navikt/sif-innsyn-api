@@ -30,9 +30,9 @@ class SøknadService(
 
         val aktørId = AktørId.valueOf(oppslagsService.hentAktørId()!!.aktør_id)
 
-        return repo.findAllByAktørId(aktørId).map {
-            it.tilSøknadDTO()
-        }
+        return repo.findAllByAktørId(aktørId)
+            .filter { it.søknadstype == Søknadstype.PP_SYKT_BARN || it.søknadstype == Søknadstype.PP_ETTERSENDELSE }
+            .map { it.tilSøknadDTO() }
     }
 
     fun hentSøknad(søknadId: UUID): SøknadDTO {
