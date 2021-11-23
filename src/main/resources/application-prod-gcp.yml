@@ -4,6 +4,9 @@ topic:
     pp-sykt-barn:
       bryter: true
       dry-run: false
+    k9-ettersending:
+      bryter: true
+      dry-run: true
     dok-journalfoering-v1:
       bryter: true
 

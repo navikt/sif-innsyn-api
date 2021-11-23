@@ -6,6 +6,16 @@ no.nav:
         link: https://sif-innsyn.dev.nav.no/familie/sykdom-i-familien/soknad/innsyn/dine-pleiepenger/soknad
         dagerSynlig: 7
 
+    k9-ettersending-pp:
+      beskjed:
+        tekst: 'Vi har mottatt din ettersendelse til pleiepenger.'
+        dagerSynlig: 7
+
+    k9-ettersending-oms:
+      beskjed:
+        tekst: 'Vi har mottatt din ettersendelse til omsorgspenger.'
+        dagerSynlig: 7
+
   apigw:
     sts-apikey: ${STS_APIKEY} # kubectl secret som miljøvariabel i pod
 
@@ -36,6 +46,13 @@ topic:
     pp-sykt-barn:
       id: pp-sykt-barn-listener
       navn: dusseldorf.privat-pleiepengesoknad-cleanup
+      bryter: true
+      dry-run: false
+
+    # topic.listener.k9-ettersending
+    k9-ettersending:
+      id: k9-ettersending-listener
+      navn: dusseldorf.privat-k9-ettersending-cleanup
       bryter: true
       dry-run: false
 
