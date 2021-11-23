@@ -19,6 +19,7 @@ import no.nav.sifinnsynapi.soknad.SøknadRepository
 import no.nav.sifinnsynapi.util.storForbokstav
 import org.json.JSONObject
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.messaging.handler.annotation.Payload
 import org.springframework.stereotype.Service
@@ -32,6 +33,7 @@ class K9EttersendingKonsument(
     private val dittNavService: DittnavService,
     private val k9EttersendingPPBeskjedProperties: K9EttersendingPPBeskjedProperties,
     private val k9EttersendingOMSBeskjedProperties: K9EttersendingOMSBeskjedProperties,
+    @Value("\${topic.listener.k9-ettersending.dry-run}") private val dryRun: Boolean
 ) {
 
     companion object {
@@ -68,42 +70,46 @@ class K9EttersendingKonsument(
     fun konsumer(
         @Payload hendelse: TopicEntry
     ) {
-        val melding = JSONObject(hendelse.data.melding)
-        val søknadId = melding.getString(SØKNAD_ID)
-        val søknadstype = Søknadstype.valueOf(melding.getString(SØKNAD_TYPE).storForbokstav())
+        if (dryRun) {
+            logger.info("DRY RUN - ettersendelse om $YTELSE")
+        } else {
+            val melding = JSONObject(hendelse.data.melding)
+            val søknadId = melding.getString(SØKNAD_ID)
+            val søknadstype = Søknadstype.valueOf(melding.getString(SØKNAD_TYPE).storForbokstav())
 
-        logger.info("Mottok hendelse om '$YTELSE - ${søknadstype.utskriftsvennlig}' med søknadId: $søknadId")
+            logger.info("Mottok hendelse om '$YTELSE - ${søknadstype.utskriftsvennlig}' med søknadId: $søknadId")
 
-        val beskjedProperties = when (søknadstype) {
-            Søknadstype.PLEIEPENGER_SYKT_BARN, Søknadstype.PLEIEPENGER_SYKT_BARN -> k9EttersendingPPBeskjedProperties
-            else -> k9EttersendingOMSBeskjedProperties
-        }
+            val beskjedProperties = when (søknadstype) {
+                Søknadstype.PLEIEPENGER_SYKT_BARN, Søknadstype.PLEIEPENGER_SYKT_BARN -> k9EttersendingPPBeskjedProperties
+                else -> k9EttersendingOMSBeskjedProperties
+            }
 
-        val søknadsHendelse = Søknad(
-            aktørId = AktørId(melding.getJSONObject(SØKER).getString(AKTØR_ID)),
-            mottattDato = ZonedDateTime.parse(melding.getString(MOTTATT)),
-            fødselsnummer = Fødselsnummer(melding.getJSONObject(SØKER).getString(FØDSELSNUMMER)),
-            journalpostId = hendelse.data.journalførtMelding.journalpostId,
-            søknadstype = when (søknadstype) {
-                Søknadstype.PLEIEPENGER_SYKT_BARN -> no.nav.sifinnsynapi.common.Søknadstype.PP_ETTERSENDELSE
-                else -> no.nav.sifinnsynapi.common.Søknadstype.OMS_ETTERSENDELSE
-            },
-            status = SøknadsStatus.MOTTATT,
-            søknad = hendelse.data.melding
-        )
-
-        logger.info("Lagrer melding om ettersending for $søknadstype")
-        val ettersending = søknadRepository.save(søknadsHendelse.tilSøknadDAO())
-        logger.info("Ettersendelse for $søknadstype lagret: {}", ettersending)
-
-        logger.info("Sender DittNav beskjed for ytelse $YTELSE - ${søknadstype.utskriftsvennlig}")
-        dittNavService.sendBeskjedAiven(
-            søknadId = melding.getString(SØKNAD_ID),
-            k9Beskjed = melding.somK9Beskjed(
-                metadata = hendelse.data.metadata,
-                beskjedProperties = beskjedProperties
+            val søknadsHendelse = Søknad(
+                aktørId = AktørId(melding.getJSONObject(SØKER).getString(AKTØR_ID)),
+                mottattDato = ZonedDateTime.parse(melding.getString(MOTTATT)),
+                fødselsnummer = Fødselsnummer(melding.getJSONObject(SØKER).getString(FØDSELSNUMMER)),
+                journalpostId = hendelse.data.journalførtMelding.journalpostId,
+                søknadstype = when (søknadstype) {
+                    Søknadstype.PLEIEPENGER_SYKT_BARN -> no.nav.sifinnsynapi.common.Søknadstype.PP_ETTERSENDELSE
+                    else -> no.nav.sifinnsynapi.common.Søknadstype.OMS_ETTERSENDELSE
+                },
+                status = SøknadsStatus.MOTTATT,
+                søknad = hendelse.data.melding
             )
-        )
+
+            logger.info("Lagrer melding om ettersending for $søknadstype")
+            val ettersending = søknadRepository.save(søknadsHendelse.tilSøknadDAO())
+            logger.info("Ettersendelse for $søknadstype lagret: {}", ettersending)
+
+            logger.info("Sender DittNav beskjed for ytelse $YTELSE - ${søknadstype.utskriftsvennlig}")
+            dittNavService.sendBeskjedAiven(
+                søknadId = melding.getString(SØKNAD_ID),
+                k9Beskjed = melding.somK9Beskjed(
+                    metadata = hendelse.data.metadata,
+                    beskjedProperties = beskjedProperties
+                )
+            )
+        }
     }
 
     private fun Søknad.tilSøknadDAO(): SøknadDAO = SøknadDAO(
