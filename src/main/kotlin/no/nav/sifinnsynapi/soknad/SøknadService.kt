@@ -37,6 +37,8 @@ class SøknadService(
         val aktørId = AktørId.valueOf(oppslagsService.hentAktørId()!!.aktør_id)
 
         val søknadDAOs = repo.findAllByAktørId(aktørId)
+            .filter { it.søknadstype == Søknadstype.PP_SYKT_BARN || it.søknadstype == Søknadstype.PP_ETTERSENDELSE }
+
         val relevanteBrevKoder: List<String> = søknadDAOs.flatMap { brevkoder[it.søknadstype]!! }
         val dokumentOversikt = try {
             dokumentService.hentDokumentOversikt(relevanteBrevKoder)
@@ -45,7 +47,8 @@ class SøknadService(
             listOf()
         }
 
-        return søknadDAOs.map { søknadDAO ->
+        return søknadDAOs
+            .map { søknadDAO ->
             val relevanteDokumenter = dokumentOversikt.filter { it.journalpostId == søknadDAO.journalpostId }
             søknadDAO.tilSøknadDTO(relevanteDokumenter) }
     }

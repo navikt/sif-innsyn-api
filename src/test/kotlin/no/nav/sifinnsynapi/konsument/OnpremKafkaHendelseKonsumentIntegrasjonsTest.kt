@@ -19,6 +19,7 @@ import no.nav.sifinnsynapi.config.SecurityConfiguration
 import no.nav.sifinnsynapi.config.Topics.AAPEN_DOK_JOURNALFØRING_V1
 import no.nav.sifinnsynapi.config.Topics.K9_DITTNAV_VARSEL_BESKJED
 import no.nav.sifinnsynapi.config.Topics.K9_DITTNAV_VARSEL_BESKJED_AIVEN
+import no.nav.sifinnsynapi.config.Topics.K9_ETTERSENDING
 import no.nav.sifinnsynapi.config.Topics.PP_SYKT_BARN
 import no.nav.sifinnsynapi.dittnav.K9Beskjed
 import no.nav.sifinnsynapi.safselvbetjening.SafSelvbetjeningService
@@ -26,6 +27,7 @@ import no.nav.sifinnsynapi.safselvbetjening.generated.enums.Datotype
 import no.nav.sifinnsynapi.safselvbetjening.generated.enums.Journalstatus
 import no.nav.sifinnsynapi.safselvbetjening.generated.enums.Variantformat
 import no.nav.sifinnsynapi.safselvbetjening.generated.hentdokumentoversikt.*
+import no.nav.sifinnsynapi.konsument.ettersending.K9EttersendingKonsument
 import no.nav.sifinnsynapi.soknad.SøknadDAO
 import no.nav.sifinnsynapi.soknad.SøknadDTO
 import no.nav.sifinnsynapi.soknad.SøknadRepository
@@ -33,6 +35,7 @@ import no.nav.sifinnsynapi.utils.*
 import org.apache.kafka.clients.consumer.Consumer
 import org.apache.kafka.clients.producer.Producer
 import org.awaitility.kotlin.await
+import org.junit.Assert
 import org.junit.Assert.assertNotNull
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.extension.ExtendWith
@@ -46,6 +49,7 @@ import org.springframework.boot.test.web.client.TestRestTemplate
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock
 import org.springframework.context.annotation.Import
 import org.springframework.core.ParameterizedTypeReference
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpMethod
 import org.springframework.http.ResponseEntity
@@ -64,6 +68,7 @@ import java.util.concurrent.TimeUnit
     bootstrapServersProperty = "kafka-servers", // Setter bootstrap-servers for consumer og producer.
     topics = [
         PP_SYKT_BARN,
+        K9_ETTERSENDING,
         K9_DITTNAV_VARSEL_BESKJED,
         K9_DITTNAV_VARSEL_BESKJED_AIVEN,
         AAPEN_DOK_JOURNALFØRING_V1
@@ -299,6 +304,66 @@ class OnpremKafkaHendelseKonsumentIntegrasjonsTest {
             assertThat { repository.findByJournalpostId("$journalpostId") }.transform { it.getOrNull() }
                 .isNotNull()
                 .transform { it.saksId }.isNotNull()
+        }
+    }
+
+    @Test
+    fun `Konsumer hendelse om ettersending av PLEIEPENGER_SYKT_BARN og forvent at dittNav beskjed blir sendt ut`() {
+        val søknadstype = K9EttersendingKonsument.Companion.Søknadstype.PLEIEPENGER_SYKT_BARN
+        val hendelse = defaultHendelseK9Ettersending(søknadstype = søknadstype)
+        producer.leggPåTopic(hendelse, K9_ETTERSENDING, mapper)
+        val søknadId = hendelse.data.melding["soknadId"] as String
+
+        await.atMost(Duration.ofSeconds(10)).untilAsserted {
+            val ettersendelse = repository.findByIdOrNull(UUID.fromString(søknadId))
+            assertThat(ettersendelse).isNotNull()
+            assertThat(ettersendelse!!.søknadstype).isEqualTo(Søknadstype.PP_ETTERSENDELSE)
+
+            // forvent at dittNav melding blir sendt
+            val dittnavBeskjed = dittNavConsumer.lesMelding(søknadId, K9_DITTNAV_VARSEL_BESKJED_AIVEN)
+            log.info("----> dittnav melding: {}", dittnavBeskjed)
+            assertThat(dittnavBeskjed).isNotNull()
+            Assert.assertTrue(dittnavBeskjed.toString().contains("pleiepenger"))
+        }
+    }
+
+    @Test
+    fun `Konsumer hendelse om ettersending av OMP_UTV_KS og forvent at dittNav beskjed blir sendt ut`() {
+        val søknadstype = K9EttersendingKonsument.Companion.Søknadstype.OMP_UTV_KS
+        val hendelse = defaultHendelseK9Ettersending(søknadstype = søknadstype)
+        producer.leggPåTopic(hendelse, K9_ETTERSENDING, mapper)
+        val søknadId = hendelse.data.melding["soknadId"] as String
+
+        await.atMost(Duration.ofSeconds(10)).untilAsserted {
+            val ettersendelse = repository.findByIdOrNull(UUID.fromString(søknadId))
+            assertThat(ettersendelse).isNotNull()
+            assertThat(ettersendelse!!.søknadstype).isEqualTo(Søknadstype.OMS_ETTERSENDELSE)
+
+            // forvent at dittNav melding blir sendt
+            val dittnavBeskjed = dittNavConsumer.lesMelding(søknadId, K9_DITTNAV_VARSEL_BESKJED_AIVEN)
+            log.info("----> dittnav melding: {}", dittnavBeskjed)
+            assertThat(dittnavBeskjed).isNotNull()
+            Assert.assertTrue(dittnavBeskjed.toString().contains("omsorgspenger"))
+        }
+    }
+
+    @Test
+    fun `Konsumer hendelse om ettersending av OMP_DELE_DAGER og forvent at dittNav beskjed blir sendt ut`() {
+        val søknadstype = K9EttersendingKonsument.Companion.Søknadstype.OMP_DELE_DAGER
+        val hendelse = defaultHendelseK9Ettersending(søknadstype = søknadstype)
+        producer.leggPåTopic(hendelse, K9_ETTERSENDING, mapper)
+        val søknadId = hendelse.data.melding["soknadId"] as String
+
+        await.atMost(Duration.ofSeconds(10)).untilAsserted {
+            val ettersendelse = repository.findByIdOrNull(UUID.fromString(søknadId))
+            assertThat(ettersendelse).isNotNull()
+            assertThat(ettersendelse!!.søknadstype).isEqualTo(Søknadstype.OMS_ETTERSENDELSE)
+
+            // forvent at dittNav melding blir sendt
+            val dittnavBeskjed = dittNavConsumer.lesMelding(søknadId, K9_DITTNAV_VARSEL_BESKJED_AIVEN)
+            log.info("----> dittnav melding: {}", dittnavBeskjed)
+            assertThat(dittnavBeskjed).isNotNull()
+            Assert.assertTrue(dittnavBeskjed.toString().contains("omsorgspenger"))
         }
     }
 
