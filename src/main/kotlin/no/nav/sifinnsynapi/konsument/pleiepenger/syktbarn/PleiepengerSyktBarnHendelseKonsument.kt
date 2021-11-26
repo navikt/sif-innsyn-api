@@ -114,7 +114,7 @@ private fun JSONObject.somK9Beskjed(metadata: Metadata, beskjedProperties: Pleie
             metadata = metadata,
             søkerFødselsnummer = getJSONObject(SØKER).getString(FØDSELSNUMMER),
             tekst = beskjedProperties.tekst,
-            link = "${beskjedProperties.link}/$søknadId",
+            link = "${beskjedProperties.link}",
             grupperingsId = søknadId,
             eventId = UUID.randomUUID().toString(),
             dagerSynlig = beskjedProperties.dagerSynlig
