@@ -20,7 +20,7 @@ class K9SakInnsynSøknadController(
     @GetMapping(K9_SAK_INNSYN, produces = [MediaType.APPLICATION_JSON_VALUE])
     @Protected
     @ResponseStatus(OK)
-    fun hentSøknader(): K9SakInnsynSøknad {
+    fun hentSøknader(): K9SakInnsynSøknader {
         logger.info("Henter innsyn i søknadsopplysninger...")
         val søknader = k9SakInnsynApiService.hentSøknadsopplysninger()
         return søknader
