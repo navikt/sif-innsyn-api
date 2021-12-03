@@ -1,23 +1,25 @@
 package no.nav.sifinnsynapi.soknad
 
 import assertk.assertThat
-import assertk.assertions.isGreaterThan
-import assertk.assertions.isNotEmpty
-import assertk.assertions.isNotEqualTo
-import assertk.assertions.size
+import assertk.assertions.*
+import com.ninjasquad.springmockk.MockkBean
+import io.mockk.every
 import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
 import no.nav.sifinnsynapi.common.AktørId
 import no.nav.sifinnsynapi.common.Fødselsnummer
 import no.nav.sifinnsynapi.common.SøknadsStatus
 import no.nav.sifinnsynapi.common.Søknadstype
+import no.nav.sifinnsynapi.dokument.DokumentService
 import no.nav.sifinnsynapi.http.SøknadNotFoundException
+import no.nav.sifinnsynapi.oppslag.OppslagRespons
+import no.nav.sifinnsynapi.oppslag.OppslagsService
 import org.awaitility.kotlin.await
+import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.assertNotNull
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit.jupiter.SpringExtension
@@ -40,6 +42,21 @@ internal class SøknadServiceTest {
     @Autowired
     private lateinit var søknadService: SøknadService
 
+    @MockkBean
+    private lateinit var dokumentService: DokumentService
+
+    @MockkBean
+    private lateinit var oppslagsService: OppslagsService
+
+    @BeforeEach
+    internal fun setUp() {
+        every { oppslagsService.hentAktørId() } returns OppslagRespons("123456")
+    }
+
+    @AfterAll
+    internal fun tearDown() {
+        søknadRepository.deleteAll()
+    }
 
     @Test
     fun hentArbeidsgiverMeldingFil() {
@@ -148,5 +165,32 @@ internal class SøknadServiceTest {
             assertThat(bytes).isNotEmpty()
             assertThat(bytes).size().isGreaterThan(1000)
         }
+    }
+
+    @Test
+    fun `gitt henting av dokumentoversikt feiler, forvent at søknader fortsatt hentes`() {
+        søknadRepository.save(
+            SøknadDAO(
+                saksId = "abc123",
+                søknadstype = Søknadstype.PP_SYKT_BARN,
+                status = SøknadsStatus.MOTTATT,
+                journalpostId = "123456789",
+                opprettet = ZonedDateTime.parse("2020-08-04T10:30:00Z").withZoneSameInstant(ZoneId.of("UTC")),
+                fødselsnummer = Fødselsnummer("02119970078"),
+                aktørId = AktørId("123456"),
+                søknad =
+                //language=json
+                """
+                {}
+                """.trimIndent()
+            )
+        )
+
+        every { dokumentService.hentDokumentOversikt(any()) } throws IllegalStateException("Feilet med å hente dokumentoversikt")
+
+        val søknader = søknadService.hentSøknader()
+        assertThat(søknader).isNotEmpty()
+        assertThat(søknader.first().dokumenter).isEmpty()
+
     }
 }

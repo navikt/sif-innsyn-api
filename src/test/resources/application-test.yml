@@ -4,6 +4,7 @@ no.nav:
   gateways:
     k9-selvbetjening-oppslag: http://localhost:${wiremock.server.port}/k9-selvbetjening-oppslag-mock
     saf-base-url: http://localhost:${wiremock.server.port}/saf-api-mock
+    saf-selvbetjening-base-url: http://localhost:${wiremock.server.port}/saf-selvbetjening-graphql-mock
     sts:
       url: http://localhost:${wiremock.server.port}/security-token-service
       username: sts-username
@@ -41,6 +42,8 @@ no.nav:
 
   metrics:
     interval: 36000
+
+application-ingress: http://localhost:9999
 
 spring:
   datasource:

@@ -128,7 +128,8 @@ class SøknadControllerTest {
                         "fødselsnummer" to "1234567",
                         "aktørId" to AktørId.valueOf("123456")
                     )
-                )
+                ),
+                dokumenter = listOf()
             )
         )
 
@@ -175,7 +176,8 @@ class SøknadControllerTest {
                             "fødselsnummer" to "1234567",
                             "aktørId" to AktørId.valueOf("123456")
                         )
-                    )
+                    ),
+                    dokumenter = listOf()
                 )
 
         mockMvc.perform(

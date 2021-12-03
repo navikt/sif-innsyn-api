@@ -4,6 +4,8 @@ import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isNotNull
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.ninjasquad.springmockk.MockkBean
+import io.mockk.coEvery
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
 import no.nav.security.mock.oauth2.MockOAuth2Server
 import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
@@ -20,6 +22,11 @@ import no.nav.sifinnsynapi.config.Topics.K9_DITTNAV_VARSEL_BESKJED_AIVEN
 import no.nav.sifinnsynapi.config.Topics.K9_ETTERSENDING
 import no.nav.sifinnsynapi.config.Topics.PP_SYKT_BARN
 import no.nav.sifinnsynapi.dittnav.K9Beskjed
+import no.nav.sifinnsynapi.safselvbetjening.SafSelvbetjeningService
+import no.nav.sifinnsynapi.safselvbetjening.generated.enums.Datotype
+import no.nav.sifinnsynapi.safselvbetjening.generated.enums.Journalstatus
+import no.nav.sifinnsynapi.safselvbetjening.generated.enums.Variantformat
+import no.nav.sifinnsynapi.safselvbetjening.generated.hentdokumentoversikt.*
 import no.nav.sifinnsynapi.konsument.ettersending.K9EttersendingKonsument
 import no.nav.sifinnsynapi.soknad.SøknadDAO
 import no.nav.sifinnsynapi.soknad.SøknadDTO
@@ -97,6 +104,9 @@ class OnpremKafkaHendelseKonsumentIntegrasjonsTest {
     @Autowired
     lateinit var mockOAuth2Server: MockOAuth2Server
 
+    @MockkBean
+    lateinit var safSelvbetjeningService: SafSelvbetjeningService
+
     lateinit var producer: Producer<String, Any> // Kafka producer som brukes til å legge på kafka meldinger. Mer spesifikk, Hendelser om pp-sykt-barn
     lateinit var joarkProducer: Producer<Long, JournalfoeringHendelseRecord> // Kafka producer som brukes til å legge på kafka meldinger for joark hendelser.
     lateinit var dittNavConsumer: Consumer<String, K9Beskjed> // Kafka consumer som brukes til å lese kafka meldinger.
@@ -118,6 +128,7 @@ class OnpremKafkaHendelseKonsumentIntegrasjonsTest {
     @BeforeEach
     internal fun beforeEach() {
         repository.deleteAll()
+        stubDokumentOversikt()
     }
 
     @AfterEach
@@ -220,7 +231,23 @@ class OnpremKafkaHendelseKonsumentIntegrasjonsTest {
                                 "fødselsnummer": "1234567",
                                 "aktørId": "123456"
                               }
-                            }
+                            },
+                            "dokumenter": [
+                              {
+                                "journalpostId": "3",
+                                "sakId": "1DMELD6",
+                                "dokumentInfoId": "533440578",
+                                "tittel": "Søknad om pleiepenger",
+                                "url": "http://localhost:9999/dokument/3/533440578/ARKIV",
+                                "harTilgang": true,
+                                "relevanteDatoer": [
+                                  {
+                                    "dato": "2021-10-15T11:28:43",
+                                    "datotype": "DATO_JOURNALFOERT"
+                                  }
+                                ]
+                              }
+                            ]
                           }
                     """.trimIndent()
             responseEntity.assert(forventetRespons, 200)
@@ -351,5 +378,61 @@ class OnpremKafkaHendelseKonsumentIntegrasjonsTest {
     }
 
     private fun hentToken(): HttpEntity<String> = mockOAuth2Server.hentToken().tokenTilHttpEntity()
+
+    private fun stubDokumentOversikt() {
+        coEvery {
+            safSelvbetjeningService.hentDokumentoversikt()
+        } returns Dokumentoversikt(
+            journalposter = listOf(
+                Journalpost(
+                    journalpostId = "3",
+                    tittel = "Søknad om pleiepenger – sykt barn - NAV 09-11.05",
+                    journalstatus = Journalstatus.JOURNALFOERT,
+                    relevanteDatoer = listOf(
+                        RelevantDato(
+                            dato = "2021-10-15T11:28:43",
+                            datotype = Datotype.DATO_JOURNALFOERT
+                        )
+                    ),
+                    sak = Sak(
+                        fagsakId = "1DMELD6",
+                        fagsaksystem = "K9"
+                    ),
+                    dokumenter = listOf(
+                        DokumentInfo(
+                            dokumentInfoId = "533440578",
+                            tittel = "Søknad om pleiepenger",
+                            brevkode = "NAV 09-11.05",
+                            dokumentvarianter = listOf(
+                                Dokumentvariant(Variantformat.ARKIV, "PDF", true, listOf())
+                            )
+                        )
+                    )
+                ),
+                Journalpost(
+                    journalpostId = "4",
+                    tittel = "Søknad om pleiepenger – sykt barn - NAVe 09-11.05",
+                    journalstatus = Journalstatus.MOTTATT,
+                    relevanteDatoer = listOf(
+                        RelevantDato(
+                            dato = "2021-10-15T11:28:43",
+                            datotype = Datotype.DATO_OPPRETTET
+                        )
+                    ),
+                    sak = null,
+                    dokumenter = listOf(
+                        DokumentInfo(
+                            dokumentInfoId = "533439503",
+                            tittel = "Ettersendelse pleiepenger sykt barn",
+                            brevkode = "NAVe 09-11.05",
+                            dokumentvarianter = listOf(
+                                Dokumentvariant(Variantformat.ARKIV, "PDF", true, listOf())
+                            )
+                        )
+                    )
+                )
+            )
+        )
+    }
 }
 
