@@ -51,7 +51,7 @@ class DokumentService(
 
     fun List<DokumentInfo?>.harRelevantBrevkode(brevkoder: List<String>): Boolean =
         any { dokumentInfo: DokumentInfo? ->
-            dokumentInfo!!.brevkode != null || brevkoder.map { it.lowercase().trim() }
+            dokumentInfo!!.brevkode != null && brevkoder.map { it.lowercase().trim() }
                 .contains(dokumentInfo.brevkode!!.lowercase().trim())
         }
 
