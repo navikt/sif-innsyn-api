@@ -32,6 +32,7 @@ class DokumentService(
     fun hentDokumentOversikt(brevkoder: List<String>): List<DokumentDTO> = runBlocking {
         safSelvbetjeningService.hentDokumentoversikt()
             .medRelevanteBrevkoder(brevkoder)
+            .medTilgang()
             .somDokumentDTO(applicationIngress)
     }
 
@@ -53,6 +54,29 @@ class DokumentService(
             brevkoder.map { it.lowercase().trim() }
                 .contains(dokumentInfo!!.brevkode!!.lowercase().trim())
         }
+
+
+    fun Dokumentoversikt.medTilgang(): Dokumentoversikt {
+        return Dokumentoversikt(
+            journalposter = journalposter.filter { journalpost: Journalpost ->
+                val dokumenterMedTilgang = journalpost.dokumenter!!.filter { dokumentInfo: DokumentInfo? ->
+                    /*
+                    Filtrerer bort alle varianter uten tilgang
+                    Filtrerer bort alle dokumentInfo der dokumentVarianter er tom.
+                    Hvis dokumentVarianter er tom, betyr det at det kun var varianter uten tilgang.
+                    Dermed har vi ikke behov for det dokumentet.
+                    */
+                    dokumentInfo!!.copy(
+                        dokumentvarianter = dokumentInfo.dokumentvarianter.filter { it!!.brukerHarTilgang }
+                    ).dokumentvarianter.isNotEmpty()
+
+                }
+
+                // Filtrerer ut journalposter uten dokumenter.
+                dokumenterMedTilgang.isNotEmpty()
+            }
+        )
+    }
 }
 
 private fun Dokumentoversikt.somDokumentDTO(applicationIngress: String): List<DokumentDTO> =

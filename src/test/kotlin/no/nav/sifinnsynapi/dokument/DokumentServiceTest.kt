@@ -118,6 +118,28 @@ class DokumentServiceTest {
                             )
                         )
                     )
+                ),
+                Journalpost(
+                    journalpostId = "545635017",
+                    tittel = "skannet dokument",
+                    journalstatus = Journalstatus.MOTTATT,
+                    relevanteDatoer = listOf(
+                        RelevantDato(
+                            dato = "",
+                            datotype = Datotype.DATO_OPPRETTET
+                        )
+                    ),
+                    sak = null,
+                    dokumenter = listOf(
+                        DokumentInfo(
+                            dokumentInfoId = "533439507",
+                            tittel = "skannet dokument",
+                            brevkode = "NAVe 09-11.05",
+                            dokumentvarianter = listOf(
+                                Dokumentvariant(Variantformat.ARKIV, "PDF", false, listOf())
+                            )
+                        )
+                    )
                 )
             )
         )
