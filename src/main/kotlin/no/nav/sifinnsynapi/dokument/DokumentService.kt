@@ -49,9 +49,8 @@ class DokumentService(
         )
     }
 
-    fun List<DokumentInfo?>.harRelevantBrevkode(brevkoder: List<String>): Boolean =
-        any { dokumentInfo: DokumentInfo? ->
-            logger.debug("{}", dokumentInfo?.copy(tittel = null))
+    fun List<DokumentInfo?>.harRelevantBrevkode(brevkoder: List<String>): Boolean = filter { it!!.brevkode != null }
+        .any { dokumentInfo: DokumentInfo? ->
             brevkoder.map { it.lowercase().trim() }
                 .contains(dokumentInfo!!.brevkode!!.lowercase().trim())
         }

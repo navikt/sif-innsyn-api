@@ -140,6 +140,28 @@ class DokumentServiceTest {
                             )
                         )
                     )
+                ),
+                Journalpost(
+                    journalpostId = "545635088",
+                    tittel = "uten brevkode",
+                    journalstatus = Journalstatus.MOTTATT,
+                    relevanteDatoer = listOf(
+                        RelevantDato(
+                            dato = "",
+                            datotype = Datotype.DATO_OPPRETTET
+                        )
+                    ),
+                    sak = null,
+                    dokumenter = listOf(
+                        DokumentInfo(
+                            dokumentInfoId = "533439507",
+                            tittel = "uten brevkode",
+                            brevkode = null,
+                            dokumentvarianter = listOf(
+                                Dokumentvariant(Variantformat.ARKIV, "PDF", false, listOf())
+                            )
+                        )
+                    )
                 )
             )
         )
