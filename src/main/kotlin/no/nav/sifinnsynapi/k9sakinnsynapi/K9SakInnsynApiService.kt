@@ -4,6 +4,7 @@ import no.nav.k9.søknad.Søknad
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Qualifier
+import org.springframework.core.ParameterizedTypeReference
 import org.springframework.http.HttpMethod
 import org.springframework.retry.annotation.Backoff
 import org.springframework.retry.annotation.Recover
@@ -43,12 +44,12 @@ class K9SakInnsynApiService(
             søknaddataUrl,
             HttpMethod.GET,
             null,
-            K9SakInnsynSøknader::class.java
+            object: ParameterizedTypeReference<List<K9SakInnsynSøknad>>() {}
         )
         logger.info("Fikk response {} for oppslag av søknadsdata fra k9-sak-innsyn-api", exchange.statusCode)
 
         return if (exchange.statusCode.is2xxSuccessful) {
-            exchange.body!!.søknader
+            exchange.body!!
         } else {
             logger.error(
                 "Henting av søknadsdata feilet med status: {}, og respons: {}",
@@ -60,27 +61,23 @@ class K9SakInnsynApiService(
     }
 
     @Recover
-    private fun recover(error: HttpServerErrorException): K9SakInnsynSøknader {
+    private fun recover(error: HttpServerErrorException): List<K9SakInnsynSøknad> {
         logger.error("Error response = '${error.responseBodyAsString}' fra '${søknaddataUrl}'")
         throw IllegalStateException("Feilet med henting av k9 søknadsdata.")
     }
 
     @Recover
-    private fun recover(error: HttpClientErrorException): K9SakInnsynSøknader {
+    private fun recover(error: HttpClientErrorException): List<K9SakInnsynSøknad> {
         logger.error("Error response = '${error.responseBodyAsString}' fra '${søknaddataUrl}'")
         throw IllegalStateException("Feilet med henting av k9 søknadsdata.")
     }
 
     @Recover
-    private fun recover(error: ResourceAccessException): K9SakInnsynSøknader {
+    private fun recover(error: ResourceAccessException): List<K9SakInnsynSøknad> {
         logger.error("{}", error.message)
         throw IllegalStateException("Timout ved henting av k9 søknadsdata.")
     }
 }
-
-data class K9SakInnsynSøknader(
-    val søknader: List<K9SakInnsynSøknad>
-)
 
 data class K9SakInnsynSøknad(
     val pleietrengendeAktørId: String,
