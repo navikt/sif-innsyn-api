@@ -38,18 +38,23 @@ class K9SakInnsynApiService(
             .toUriString()
     }
 
-    fun hentSøknadsopplysninger(): K9SakInnsynSøknader {
+    fun hentSøknadsopplysninger(): List<K9SakInnsynSøknad> {
         val exchange = k9SakInnsynClient.exchange(
             søknaddataUrl,
             HttpMethod.GET,
             null,
-            K9SakInnsynSøknader::class.java)
+            K9SakInnsynSøknader::class.java
+        )
         logger.info("Fikk response {} for oppslag av søknadsdata fra k9-sak-innsyn-api", exchange.statusCode)
 
         return if (exchange.statusCode.is2xxSuccessful) {
-            exchange.body!!
+            exchange.body!!.søknader
         } else {
-            logger.error("Henting av søknadsdata feilet med status: {}, og respons: {}", exchange.statusCode, exchange.body)
+            logger.error(
+                "Henting av søknadsdata feilet med status: {}, og respons: {}",
+                exchange.statusCode,
+                exchange.body
+            )
             throw IllegalStateException("Feilet med henting av k9 søknadsdata.")
         }
     }
@@ -74,5 +79,10 @@ class K9SakInnsynApiService(
 }
 
 data class K9SakInnsynSøknader(
+    val søknader: List<K9SakInnsynSøknad>
+)
+
+data class K9SakInnsynSøknad(
+    val pleietrengendeAktørId: String,
     val søknad: Søknad
 )
