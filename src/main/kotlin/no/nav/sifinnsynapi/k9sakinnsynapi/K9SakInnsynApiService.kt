@@ -15,7 +15,7 @@ import org.springframework.web.client.HttpServerErrorException
 import org.springframework.web.client.ResourceAccessException
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.util.UriComponentsBuilder
-import java.util.*
+import java.time.LocalDate
 
 @Service
 @Retryable(
@@ -40,41 +40,56 @@ class K9SakInnsynApiService(
             .toUriString()
     }
 
-    fun hentSøknadsopplysninger(): K9SakInnsynSøknad {
+    fun hentSøknadsopplysninger(): List<K9SakInnsynSøknad> {
         val exchange = k9SakInnsynClient.exchange(
             søknaddataUrl,
             HttpMethod.GET,
             null,
-            K9SakInnsynSøknad::class.java)
+            object: ParameterizedTypeReference<List<K9SakInnsynSøknad>>() {}
+        )
         logger.info("Fikk response {} for oppslag av søknadsdata fra k9-sak-innsyn-api", exchange.statusCode)
 
         return if (exchange.statusCode.is2xxSuccessful) {
             exchange.body!!
         } else {
-            logger.error("Henting av søknadsdata feilet med status: {}, og respons: {}", exchange.statusCode, exchange.body)
+            logger.error(
+                "Henting av søknadsdata feilet med status: {}, og respons: {}",
+                exchange.statusCode,
+                exchange.body
+            )
             throw IllegalStateException("Feilet med henting av k9 søknadsdata.")
         }
     }
 
     @Recover
-    private fun recover(error: HttpServerErrorException): K9SakInnsynSøknad {
+    private fun recover(error: HttpServerErrorException): List<K9SakInnsynSøknad> {
         logger.error("Error response = '${error.responseBodyAsString}' fra '${søknaddataUrl}'")
         throw IllegalStateException("Feilet med henting av k9 søknadsdata.")
     }
 
     @Recover
-    private fun recover(error: HttpClientErrorException): K9SakInnsynSøknad {
+    private fun recover(error: HttpClientErrorException): List<K9SakInnsynSøknad> {
         logger.error("Error response = '${error.responseBodyAsString}' fra '${søknaddataUrl}'")
         throw IllegalStateException("Feilet med henting av k9 søknadsdata.")
     }
 
     @Recover
-    private fun recover(error: ResourceAccessException): K9SakInnsynSøknad {
+    private fun recover(error: ResourceAccessException): List<K9SakInnsynSøknad> {
         logger.error("{}", error.message)
         throw IllegalStateException("Timout ved henting av k9 søknadsdata.")
     }
 }
 
 data class K9SakInnsynSøknad(
+    val barn: Barn,
     val søknad: Søknad
+)
+
+data class Barn(
+    val fødselsdato: LocalDate,
+    val fornavn: String,
+    val mellomnavn: String? = null,
+    val etternavn: String,
+    val aktør_id: String,
+    val identitetsnummer: String? = null
 )

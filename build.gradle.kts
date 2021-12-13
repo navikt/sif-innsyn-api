@@ -38,7 +38,7 @@ val guavaVersion by extra("23.0")
 val okHttp3Version by extra("4.9.1")
 val orgJsonVersion by extra("20210307")
 val graphQLKotlinVersion by extra("4.2.0")
-val k9FormatVersion by extra("5.4.14")
+val k9FormatVersion by extra("5.5.20")
 
 ext["okhttp3.version"] = okHttp3Version
 ext["testcontainersVersion"] = "1.15.3"

@@ -1,7 +1,6 @@
 package no.nav.sifinnsynapi.k9sakinnsynapi
 
-import no.nav.security.token.support.client.core.oauth2.OAuth2AccessTokenService
-import no.nav.security.token.support.client.spring.ClientConfigurationProperties
+import no.nav.security.token.support.spring.validation.interceptor.BearerTokenClientHttpRequestInterceptor
 import no.nav.sifinnsynapi.http.MDCValuesPropagatingClienHttpRequesInterceptor
 import no.nav.sifinnsynapi.util.Constants
 import org.slf4j.LoggerFactory
@@ -20,8 +19,6 @@ import java.util.*
 
 @Configuration
 class K9SakInnsynApiClientConfig(
-    oauth2Config: ClientConfigurationProperties,
-    private val oAuth2AccessTokenService: OAuth2AccessTokenService,
     @Value("\${no.nav.gateways.k9-sak-innsyn-api-base-url}") private val k9SakInnsynApiBaseUrl: String
 ) {
 
@@ -29,11 +26,12 @@ class K9SakInnsynApiClientConfig(
         private val logger = LoggerFactory.getLogger(K9SakInnsynApiClientConfig::class.java)
     }
 
-    private val tokenxK9SakInnsynApiClientProperties = oauth2Config.registration["tokenx-k9-sak-innsyn-api"]
-        ?: throw RuntimeException("could not find oauth2 client config for tokenx-k9-sak-innsyn-ap")
-
     @Bean(name = ["k9SakInnsynApiClient"])
-    fun restTemplate(builder: RestTemplateBuilder, mdcInterceptor: MDCValuesPropagatingClienHttpRequesInterceptor): RestTemplate {
+    fun restTemplate(
+        builder: RestTemplateBuilder,
+        bearerTokenClientHttpRequestInterceptor: BearerTokenClientHttpRequestInterceptor,
+        mdcInterceptor: MDCValuesPropagatingClienHttpRequesInterceptor
+    ): RestTemplate {
         return builder
             .setConnectTimeout(Duration.ofSeconds(20))
             .setReadTimeout(Duration.ofSeconds(20))
@@ -41,16 +39,8 @@ class K9SakInnsynApiClientConfig(
             .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
             .rootUri(k9SakInnsynApiBaseUrl)
             .defaultMessageConverters()
-            .interceptors(bearerTokenInterceptor(), mdcInterceptor, requestLoggerInterceptor())
+            .interceptors(bearerTokenClientHttpRequestInterceptor, mdcInterceptor, requestLoggerInterceptor())
             .build()
-    }
-
-    private fun bearerTokenInterceptor(): ClientHttpRequestInterceptor {
-        return ClientHttpRequestInterceptor { request: HttpRequest, body: ByteArray, execution: ClientHttpRequestExecution ->
-            val response = oAuth2AccessTokenService.getAccessToken(tokenxK9SakInnsynApiClientProperties)
-            request.headers.setBearerAuth(response.accessToken)
-            execution.execute(request, body)
-        }
     }
 
     private fun requestLoggerInterceptor() =
