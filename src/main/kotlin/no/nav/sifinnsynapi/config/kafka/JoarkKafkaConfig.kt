@@ -35,18 +35,18 @@ internal class JoarkKafkaConfig(
 
     @Bean
     fun joarkConsumerFactory(): DefaultKafkaConsumerFactory<Long, JournalfoeringHendelseRecord> {
-        val consumerProps = kafkaClusterProperties.onprem.consumer
+        val consumerProps = kafkaClusterProperties.aiven.consumer
         return DefaultKafkaConsumerFactory(
             mutableMapOf<String, Any>(
                 ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG to consumerProps.enableAutoCommit,
                 ConsumerConfig.GROUP_ID_CONFIG to consumerProps.groupId,
-                ConsumerConfig.AUTO_OFFSET_RESET_CONFIG to consumerProps.autoOffsetReset,
+                ConsumerConfig.AUTO_OFFSET_RESET_CONFIG to "latest", // TODO: 14/12/2021 Settes tilbake til consumerProps.autoOffsetReset når consumer har offset.
                 ConsumerConfig.ISOLATION_LEVEL_CONFIG to consumerProps.isolationLevel,
                 ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG to consumerProps.keyDeserializer,
                 ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG to "io.confluent.kafka.serializers.KafkaAvroDeserializer",
                 KafkaAvroDeserializerConfig.SCHEMA_REGISTRY_URL_CONFIG to consumerProps.schemaRegistryUrl,
                 KafkaAvroDeserializerConfig.SPECIFIC_AVRO_READER_CONFIG to "true"
-            ) + CommonKafkaConfig.commonConfig(kafkaClusterProperties.onprem)
+            ) + CommonKafkaConfig.commonConfig(kafkaClusterProperties.aiven)
         )
     }
 
@@ -71,7 +71,7 @@ internal class JoarkKafkaConfig(
             setErrorHandler(
                 SeekToCurrentErrorHandler(
                     defaultRecoverer(logger),
-                    FixedBackOff(kafkaClusterProperties.onprem.consumer.retryInterval, Long.MAX_VALUE)
+                    FixedBackOff(kafkaClusterProperties.aiven.consumer.retryInterval, Long.MAX_VALUE)
                 )
             )
 

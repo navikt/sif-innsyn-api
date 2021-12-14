@@ -17,7 +17,6 @@ import no.nav.sifinnsynapi.common.SøknadsStatus
 import no.nav.sifinnsynapi.common.Søknadstype
 import no.nav.sifinnsynapi.config.SecurityConfiguration
 import no.nav.sifinnsynapi.config.Topics.AAPEN_DOK_JOURNALFØRING_V1
-import no.nav.sifinnsynapi.config.Topics.K9_DITTNAV_VARSEL_BESKJED
 import no.nav.sifinnsynapi.config.Topics.K9_DITTNAV_VARSEL_BESKJED_AIVEN
 import no.nav.sifinnsynapi.config.Topics.K9_ETTERSENDING
 import no.nav.sifinnsynapi.config.Topics.PP_SYKT_BARN
@@ -69,7 +68,6 @@ import java.util.concurrent.TimeUnit
     topics = [
         PP_SYKT_BARN,
         K9_ETTERSENDING,
-        K9_DITTNAV_VARSEL_BESKJED,
         K9_DITTNAV_VARSEL_BESKJED_AIVEN,
         AAPEN_DOK_JOURNALFØRING_V1
     ]
@@ -85,7 +83,7 @@ import java.util.concurrent.TimeUnit
     classes = [SifInnsynApiApplication::class],
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
 ) // Integrasjonstest - Kjører opp hele Spring Context med alle konfigurerte beans.
-class OnpremKafkaHendelseKonsumentIntegrasjonsTest {
+class KafkaHendelseKonsumentIntegrasjonsTest {
 
     @Autowired
     lateinit var mapper: ObjectMapper
@@ -113,7 +111,7 @@ class OnpremKafkaHendelseKonsumentIntegrasjonsTest {
 
     companion object {
         private val log: Logger =
-            LoggerFactory.getLogger(OnpremKafkaHendelseKonsumentIntegrasjonsTest::class.java)
+            LoggerFactory.getLogger(KafkaHendelseKonsumentIntegrasjonsTest::class.java)
         private val aktørId = AktørId.valueOf("123456")
     }
 

@@ -7,7 +7,7 @@ import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
 import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
 import no.nav.sifinnsynapi.common.AktørId
-import no.nav.sifinnsynapi.config.Topics.K9_DITTNAV_VARSEL_BESKJED
+import no.nav.sifinnsynapi.config.Topics.K9_DITTNAV_VARSEL_BESKJED_AIVEN
 import no.nav.sifinnsynapi.config.Topics.PP_SYKT_BARN
 import no.nav.sifinnsynapi.dittnav.DittnavService
 import no.nav.sifinnsynapi.soknad.SøknadRepository
@@ -31,8 +31,8 @@ import java.util.concurrent.TimeUnit
 
 @EmbeddedKafka( // Setter opp og tilgjengligjør embeded kafka broker
     count = 3,
-    topics = [PP_SYKT_BARN, K9_DITTNAV_VARSEL_BESKJED],
-    bootstrapServersProperty = "kafka.onprem.servers" // Setter bootstrap-servers for consumer og producer.
+    topics = [PP_SYKT_BARN, K9_DITTNAV_VARSEL_BESKJED_AIVEN],
+    bootstrapServersProperty = "kafka.aiven.servers" // Setter bootstrap-servers for consumer og producer.
 )
 @ExtendWith(SpringExtension::class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -80,7 +80,7 @@ class KafkaTransactionRollbackTest {
     @Test
     fun `Konsumere hendelse, forevnt rolback ved feil`() {
         every {
-            dittnavService.sendBeskjedOnprem(any(), any())
+            dittnavService.sendBeskjedAiven(any(), any())
         } throws Exception("Ooops, noe gikk galt...")
 
         // legg på 1 hendelse om mottatt søknad om pleiepenger sykt barn...

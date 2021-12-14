@@ -12,17 +12,6 @@ spring:
       ddl-auto: none
 
 kafka:
-  onprem:
-    properties:
-      security:
-        protocol: SASL_SSL
-      sasl:
-        mechanism: PLAIN
-        jaas-config: org.apache.kafka.common.security.plain.PlainLoginModule required username="${sts.username}" password="${sts.password}";
-      ssl:
-        trust-store-location: file:${javax.net.ssl.trustStore}
-        trust-store-password: ${javax.net.ssl.trustStorePassword}
-        trust-store-type: JKS
   aiven:
     properties:
       security:
@@ -57,6 +46,6 @@ topic:
     # topic.listener.dok-journalfoering-v1
     dok-journalfoering-v1:
       id: dok-journalfoering-v1-listener
-      navn: aapen-dok-journalfoering-v1-q1
+      navn: teamdokumenthandtering.aapen-dok-journalfoering-q1
       bryter: true
       dry-run: false

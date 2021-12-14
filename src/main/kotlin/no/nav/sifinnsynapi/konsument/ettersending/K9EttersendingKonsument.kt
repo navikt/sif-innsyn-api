@@ -61,7 +61,7 @@ class K9EttersendingKonsument(
     @KafkaListener(
         topics = ["#{'\${topic.listener.k9-ettersending.navn}'}"],
         id = "#{'\${topic.listener.k9-ettersending.id}'}",
-        groupId = "#{'\${kafka.onprem.consumer.group-id}'}",
+        groupId = "#{'\${kafka.aiven.consumer.group-id}'}",
         containerFactory = "aivenKafkaJsonListenerContainerFactory",
         autoStartup = "#{'\${topic.listener.k9-ettersending.bryter}'}"
     )

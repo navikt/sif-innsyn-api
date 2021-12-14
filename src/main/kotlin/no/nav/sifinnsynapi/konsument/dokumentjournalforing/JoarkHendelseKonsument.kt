@@ -28,7 +28,7 @@ class JoarkHendelseKonsument(
     @KafkaListener(
         topics = ["#{'\${topic.listener.dok-journalfoering-v1.navn}'}"],
         id = "#{'\${topic.listener.dok-journalfoering-v1.id}'}",
-        groupId = "#{'\${kafka.onprem.consumer.group-id}'}",
+        groupId = "#{'\${kafka.aiven.consumer.group-id}'}",
         containerFactory = "joarkKafkaJsonListenerContainerFactor",
         autoStartup = "#{'\${topic.listener.dok-journalfoering-v1.bryter}'}"
     )

@@ -6,7 +6,6 @@ import junit.framework.Assert.assertEquals
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
 import no.nav.sifinnsynapi.common.TopicEntry
 import no.nav.sifinnsynapi.config.Topics.AAPEN_DOK_JOURNALFØRING_V1
-import no.nav.sifinnsynapi.config.Topics.K9_DITTNAV_VARSEL_BESKJED
 import no.nav.sifinnsynapi.config.Topics.K9_DITTNAV_VARSEL_BESKJED_AIVEN
 import no.nav.sifinnsynapi.dittnav.K9Beskjed
 import org.apache.kafka.clients.consumer.Consumer
@@ -53,7 +52,6 @@ fun Producer<Long, JournalfoeringHendelseRecord>.leggPåTopic(hendelse: Journalf
 
 fun EmbeddedKafkaBroker.opprettDittnavConsumer(
     topics: List<String> = listOf(
-        K9_DITTNAV_VARSEL_BESKJED,
         K9_DITTNAV_VARSEL_BESKJED_AIVEN
     )
 ): Consumer<String, K9Beskjed> {
@@ -70,7 +68,7 @@ fun EmbeddedKafkaBroker.opprettDittnavConsumer(
 
 fun Consumer<String, K9Beskjed>.lesMelding(
     søknadId: String,
-    topic: String = K9_DITTNAV_VARSEL_BESKJED,
+    topic: String = K9_DITTNAV_VARSEL_BESKJED_AIVEN,
     maxWaitInSeconds: Long = 20
 ): ConsumerRecord<String, K9Beskjed> {
 
