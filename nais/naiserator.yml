@@ -55,6 +55,8 @@ spec:
     path: /actuator/prometheus
   envFrom:
     - configmap: loginservice-idporten
+    - secret: sif-innsyn-api.sts-credentials
+    - secret: sif-innsyn-api.sts-apikey
   env:
   {{#each env}}
    - name: {{@key}}
