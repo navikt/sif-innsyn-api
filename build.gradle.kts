@@ -39,7 +39,7 @@ val okHttp3Version by extra("4.9.1")
 val orgJsonVersion by extra("20210307")
 val graphQLKotlinVersion by extra("4.2.0")
 val k9FormatVersion by extra("5.5.20")
-val teamDokumenthåndteringAvroSchemaVersion by extra("58cb38b3")
+val teamDokumenthåndteringAvroSchemaVersion by extra("bbea40a3")
 
 ext["okhttp3.version"] = okHttp3Version
 ext["testcontainersVersion"] = "1.15.3"
@@ -80,7 +80,7 @@ dependencies {
     implementation("no.nav.security:token-validation-spring:$tokenSupportVersion")
     implementation("no.nav.security:token-client-spring:$tokenSupportVersion")
 
-    implementation("no.nav.doknotifikasjon:teamdokumenthandtering-avro-schemas:$teamDokumenthåndteringAvroSchemaVersion")
+    implementation("no.nav.teamdokumenthandtering:teamdokumenthandtering-avro-schemas:$teamDokumenthåndteringAvroSchemaVersion")
     testImplementation("no.nav.security:token-validation-spring-test:$tokenSupportVersion")
     testImplementation("com.squareup.okhttp3:okhttp:$okHttp3Version")
 
