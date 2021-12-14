@@ -5,7 +5,7 @@ plugins {
     id("org.springframework.boot") version "2.5.5"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
     id("com.expediagroup.graphql") version "4.2.0"
-    kotlin("jvm") version "1.5.31"
+    kotlin("jvm") version "1.6.10"
     kotlin("plugin.spring") version "1.5.31"
     kotlin("plugin.jpa") version "1.5.31"
 }
@@ -39,6 +39,7 @@ val okHttp3Version by extra("4.9.1")
 val orgJsonVersion by extra("20210307")
 val graphQLKotlinVersion by extra("4.2.0")
 val k9FormatVersion by extra("5.5.20")
+val teamDokumenthåndteringAvroSchemaVersion by extra("bbea40a3")
 
 ext["okhttp3.version"] = okHttp3Version
 ext["testcontainersVersion"] = "1.15.3"
@@ -53,8 +54,17 @@ repositories {
     }
 
     maven {
-        name = "GitHubPackages"
+        name = "k9FormatPakker"
         url = uri("https://maven.pkg.github.com/navikt/k9-format")
+        credentials {
+            username = project.findProperty("gpr.user") as String? ?: System.getenv("GITHUB_USERNAME")
+            password = project.findProperty("gpr.key") as String? ?: System.getenv("GITHUB_TOKEN")
+        }
+    }
+
+    maven {
+        name = "TeamDokumenthåndteringAvroSchemaPakker"
+        url = uri("https://maven.pkg.github.com/navikt/teamdokumenthandtering-avro-schemas")
         credentials {
             username = project.findProperty("gpr.user") as String? ?: System.getenv("GITHUB_USERNAME")
             password = project.findProperty("gpr.key") as String? ?: System.getenv("GITHUB_TOKEN")
@@ -69,8 +79,8 @@ dependencies {
 
     implementation("no.nav.security:token-validation-spring:$tokenSupportVersion")
     implementation("no.nav.security:token-client-spring:$tokenSupportVersion")
-    //implementation("no.nav.dok:dok-journalfoering-hendelse-v1:0.0.3")
-    implementation("no.nav.syfo.schemas:dok-journalfoering-hendelse-v1:67a9be4476b63b7247cfacfaf821ab656bd2a952")
+
+    implementation("no.nav.teamdokumenthandtering:teamdokumenthandtering-avro-schemas:$teamDokumenthåndteringAvroSchemaVersion")
     testImplementation("no.nav.security:token-validation-spring-test:$tokenSupportVersion")
     testImplementation("com.squareup.okhttp3:okhttp:$okHttp3Version")
 
