@@ -26,6 +26,9 @@ spring:
 
 kafka:
   aiven:
+    consumer:
+      schemaRegistryUser: ${KAFKA_SCHEMA_REGISTRY_USER}
+      schemaRegistryPassword: ${KAFKA_SCHEMA_REGISTRY_PASSWORD}
     properties:
       security:
         protocol: SSL

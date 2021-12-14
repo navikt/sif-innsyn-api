@@ -45,6 +45,7 @@ internal class JoarkKafkaConfig(
                 ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG to consumerProps.keyDeserializer,
                 ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG to "io.confluent.kafka.serializers.KafkaAvroDeserializer",
                 KafkaAvroDeserializerConfig.SCHEMA_REGISTRY_URL_CONFIG to consumerProps.schemaRegistryUrl,
+                KafkaAvroDeserializerConfig.USER_INFO_CONFIG to "${consumerProps.schemaRegistryUser}:${consumerProps.schemaRegistryPassword}",
                 KafkaAvroDeserializerConfig.SPECIFIC_AVRO_READER_CONFIG to "true"
             ) + CommonKafkaConfig.commonConfig(kafkaClusterProperties.aiven)
         )
