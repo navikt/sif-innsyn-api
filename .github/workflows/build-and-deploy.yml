@@ -16,7 +16,6 @@ env:
   IMAGE: docker.pkg.github.com/${{ github.repository }}/sif-innsyn-api:${{ github.sha }}
   GITHUB_USERNAME: x-access-token
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  READER_TOKEN: ${{ secrets.READER_TOKEN }}
 
 jobs:
   test:
