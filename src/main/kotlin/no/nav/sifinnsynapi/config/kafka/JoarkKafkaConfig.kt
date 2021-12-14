@@ -105,5 +105,5 @@ internal class JoarkKafkaConfig(
     }
 
     private fun JournalfoeringHendelseRecord.erRelevant(): Boolean =
-        temaNytt.lowercase() == TEMA_NYTT_OMS && hendelsesType.lowercase() == ENDELIG_JOURNALFØRT
+        temaNytt.toString().lowercase() == TEMA_NYTT_OMS && hendelsesType.toString().lowercase() == ENDELIG_JOURNALFØRT
 }
