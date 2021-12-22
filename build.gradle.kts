@@ -2,12 +2,12 @@ import com.expediagroup.graphql.plugin.gradle.tasks.GraphQLGenerateClientTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("org.springframework.boot") version "2.5.5"
+    id("org.springframework.boot") version "2.5.8"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
-    id("com.expediagroup.graphql") version "4.2.0"
-    kotlin("jvm") version "1.5.31"
-    kotlin("plugin.spring") version "1.5.31"
-    kotlin("plugin.jpa") version "1.5.31"
+    id("com.expediagroup.graphql") version "5.3.1"
+    kotlin("jvm") version "1.6.10"
+    kotlin("plugin.spring") version "1.6.10"
+    kotlin("plugin.jpa") version "1.6.10"
 }
 
 group = "no.nav"
@@ -28,7 +28,7 @@ val springCloudVersion by extra("2020.0.3")
 val retryVersion by extra("1.3.0")
 val zalandoVersion by extra("0.26.2")
 val openhtmltopdfVersion = "1.0.10"
-val handlebarsVersion = "4.2.0"
+val handlebarsVersion = "4.3.0"
 val hibernateTypes52Version by extra("2.11.1")
 val awailitilityKotlinVersion by extra("4.1.0")
 val assertkJvmVersion by extra("0.24")
@@ -37,13 +37,12 @@ val mockkVersion by extra("1.11.0")
 val guavaVersion by extra("23.0")
 val okHttp3Version by extra("4.9.1")
 val orgJsonVersion by extra("20210307")
-val graphQLKotlinVersion by extra("4.2.0")
+val graphQLKotlinVersion by extra("5.3.1")
 val k9FormatVersion by extra("5.5.20")
 val teamDokumenthåndteringAvroSchemaVersion by extra("bbea40a3")
 
 ext["okhttp3.version"] = okHttp3Version
 ext["testcontainersVersion"] = "1.15.3"
-ext["log4j2.version"] = "2.16.0" // TODO: 13/12/2021 kan fjernes når spring boot oppgraderes til  v2.5.8 eller v2.6.2
 
 repositories {
     mavenCentral()
@@ -181,16 +180,16 @@ tasks.getByName<Jar>("jar") {
  * For å generere flere, må først den default "task"en hentes og konfigureres, og deretter opprette en ny "task" for en ny endepunkt.
  *
  * For mer info, se lenke under
- * https://opensource.expediagroup.com/graphql-kotlin/docs/4.x.x/plugins/gradle-plugin-usage#generating-multiple-clients
+ * https://opensource.expediagroup.com/graphql-kotlin/docs/plugins/gradle-plugin-usage#generating-multiple-clients
  */
 val graphqlGenerateClient by tasks.getting(GraphQLGenerateClientTask::class) {
-    queryFileDirectory.set("${project.projectDir}/src/main/resources/saf")
+    queryFileDirectory.set(file("${project.projectDir}/src/main/resources/saf"))
     schemaFile.set(file("${project.projectDir}/src/main/resources/saf/saf-api-sdl.graphqls"))
     packageName.set("no.nav.sifinnsynapi.saf.generated")
 }
 
 val graphqlGenerateOtherClient by tasks.creating(GraphQLGenerateClientTask::class) {
-    queryFileDirectory.set("${project.projectDir}/src/main/resources/safselvbetjening")
+    queryFileDirectory.set(file("${project.projectDir}/src/main/resources/safselvbetjening"))
     schemaFile.set(file("${project.projectDir}/src/main/resources/safselvbetjening/saf-selvbetjening-sdl.graphqls"))
     packageName.set("no.nav.sifinnsynapi.safselvbetjening.generated")
 }
