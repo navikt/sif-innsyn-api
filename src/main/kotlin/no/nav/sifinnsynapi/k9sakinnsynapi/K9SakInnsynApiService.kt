@@ -90,6 +90,6 @@ data class Barn(
     val fornavn: String,
     val mellomnavn: String? = null,
     val etternavn: String,
-    val aktør_id: String,
+    val aktørId: String,
     val identitetsnummer: String? = null
 )
