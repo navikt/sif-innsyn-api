@@ -274,6 +274,7 @@ class KafkaHendelseKonsumentIntegrasjonsTest {
         producer.leggPåTopic(hendelse, PP_ENDRINGSMELDING, mapper)
 
         //TODO Lagre søknad og sjekke om vi finner den
+
     }
 
     @Test
