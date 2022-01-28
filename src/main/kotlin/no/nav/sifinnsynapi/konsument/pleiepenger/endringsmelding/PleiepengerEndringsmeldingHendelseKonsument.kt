@@ -29,8 +29,8 @@ class PleiepengerEndringsmeldingHendelseKonsument(
     fun konsumer(
         @Payload hendelse: TopicEntry
     ){
-        logger.info("KONSUMERER PP ENDRINGSMELDING. $hendelse")
         val melding = JSONObject(hendelse.data.melding)
+        logger.info("KONSUMERER PP ENDRINGSMELDING. $melding")
 
     }
 }
