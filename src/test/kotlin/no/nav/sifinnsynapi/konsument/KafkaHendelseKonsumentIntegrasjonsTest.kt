@@ -19,14 +19,15 @@ import no.nav.sifinnsynapi.config.SecurityConfiguration
 import no.nav.sifinnsynapi.config.Topics.AAPEN_DOK_JOURNALFØRING_V1
 import no.nav.sifinnsynapi.config.Topics.K9_DITTNAV_VARSEL_BESKJED_AIVEN
 import no.nav.sifinnsynapi.config.Topics.K9_ETTERSENDING
+import no.nav.sifinnsynapi.config.Topics.PP_ENDRINGSMELDING
 import no.nav.sifinnsynapi.config.Topics.PP_SYKT_BARN
 import no.nav.sifinnsynapi.dittnav.K9Beskjed
+import no.nav.sifinnsynapi.konsument.ettersending.K9EttersendingKonsument
 import no.nav.sifinnsynapi.safselvbetjening.SafSelvbetjeningService
 import no.nav.sifinnsynapi.safselvbetjening.generated.enums.Datotype
 import no.nav.sifinnsynapi.safselvbetjening.generated.enums.Journalstatus
 import no.nav.sifinnsynapi.safselvbetjening.generated.enums.Variantformat
 import no.nav.sifinnsynapi.safselvbetjening.generated.hentdokumentoversikt.*
-import no.nav.sifinnsynapi.konsument.ettersending.K9EttersendingKonsument
 import no.nav.sifinnsynapi.soknad.SøknadDAO
 import no.nav.sifinnsynapi.soknad.SøknadDTO
 import no.nav.sifinnsynapi.soknad.SøknadRepository
@@ -262,6 +263,17 @@ class KafkaHendelseKonsumentIntegrasjonsTest {
         val dittnavBeskjed = dittNavConsumer.lesMelding(hendelse.data.melding["søknadId"] as String, topic = K9_DITTNAV_VARSEL_BESKJED_AIVEN)
         log.info("----> dittnav melding: {}", dittnavBeskjed)
         assertThat(dittnavBeskjed).isNotNull()
+    }
+
+    @Test
+    fun `Konsumere hendelse om Pleiepenger - Endringsmelding, hente søknad med id`() {
+
+        // legg på 1 hendelse om mottatt søknad om pleiepenger sykt barn...
+        val hendelse = defaultHendelse(journalpostId = "3")
+        val søknadId = hendelse.data.melding["søknadId"] as String
+        producer.leggPåTopic(hendelse, PP_ENDRINGSMELDING, mapper)
+
+        //TODO Lagre søknad og sjekke om vi finner den
     }
 
     @Test

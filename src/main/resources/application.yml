@@ -50,6 +50,13 @@ topic:
       bryter: true
       dry-run: false
 
+    # topic.listener.pp-endringsmelding
+    pp-endringsmelding:
+      id: pp-endringsmelding-listener
+      navn: dusseldorf.privat-endringsmelding-pleiepenger-sykt-barn-cleanup
+      bryter: true
+      dry-run: false
+
     # topic.listener.k9-ettersending
     k9-ettersending:
       id: k9-ettersending-listener
