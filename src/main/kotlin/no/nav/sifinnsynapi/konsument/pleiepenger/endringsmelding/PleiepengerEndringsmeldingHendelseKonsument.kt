@@ -22,7 +22,6 @@ class PleiepengerEndringsmeldingHendelseKonsument(
     private val logger = LoggerFactory.getLogger(PleiepengerEndringsmeldingHendelseKonsument::class.java)
     private val YTELSE = "'pleiepenger - sykt barn - endringsmelding'"
 
-
     @Transactional(TxConfiguration.TRANSACTION_MANAGER)
     @KafkaListener(
         topics = ["#{'\${topic.listener.pp-sykt-barn-endringsmelding.navn}'}"],

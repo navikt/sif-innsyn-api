@@ -37,7 +37,7 @@ class SøknadService(
         val aktørId = AktørId.valueOf(oppslagsService.hentAktørId()!!.aktør_id)
 
         val søknadDAOs = repo.findAllByAktørId(aktørId)
-            .filter { it.søknadstype == Søknadstype.PP_SYKT_BARN || it.søknadstype == Søknadstype.PP_ETTERSENDELSE || it.søknadstype == Søknadstype.PP_SYKT_BARN_ENDRINGSMELDING }
+            .filter { it.søknadstype.gjelderPP() }
 
         val relevanteBrevKoder: List<String> = søknadDAOs.flatMap { brevkoder[it.søknadstype]!! }
         val dokumentOversikt = try {
