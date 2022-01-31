@@ -25,7 +25,8 @@ class DokumentService(
         private val fellesBrevkoder = listOf("INNVILGELSE", "INNHEN", "HENLEG", "INNLYS")
         val brevkoder = mapOf(
             Søknadstype.PP_SYKT_BARN to listOf("NAV 09-11.05"),
-            Søknadstype.PP_ETTERSENDELSE to listOf("NAVe 09-11.05")
+            Søknadstype.PP_ETTERSENDELSE to listOf("NAVe 09-11.05"),
+            Søknadstype.PP_SYKT_BARN_ENDRINGSMELDING to listOf("NAV 09-11.05")
         )
     }
 

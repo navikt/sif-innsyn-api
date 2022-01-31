@@ -12,7 +12,6 @@ import no.nav.sifinnsynapi.konsument.ettersending.K9EttersendingKonsument.Compan
 import no.nav.sifinnsynapi.konsument.ettersending.K9EttersendingKonsument.Companion.Keys.SØKNAD_ID
 import no.nav.sifinnsynapi.konsument.ettersending.K9EttersendingKonsument.Companion.Keys.SØKNAD_TYPE
 import no.nav.sifinnsynapi.soknad.Søknad
-import no.nav.sifinnsynapi.soknad.SøknadDAO
 import no.nav.sifinnsynapi.soknad.SøknadRepository
 import no.nav.sifinnsynapi.util.storForbokstav
 import org.json.JSONObject
@@ -96,7 +95,7 @@ class K9EttersendingKonsument(
             )
 
             logger.info("Lagrer melding om ettersending for $søknadstype")
-            val ettersending = søknadRepository.save(søknadsHendelse.tilSøknadDAO())
+            val ettersending = søknadRepository.save(søknadsHendelse.tilSøknadDAO(søknadId))
             logger.info("Ettersendelse for $søknadstype lagret: {}", ettersending)
 
             logger.info("Sender DittNav beskjed for ytelse $YTELSE - ${søknadstype.utskriftsvennlig}")
@@ -109,20 +108,6 @@ class K9EttersendingKonsument(
             )
         }
     }
-
-    private fun Søknad.tilSøknadDAO(): SøknadDAO = SøknadDAO(
-        id = UUID.fromString(JSONObject(søknad).getString(SØKNAD_ID)),
-        aktørId = aktørId,
-        saksId = saksnummer,
-        fødselsnummer = fødselsnummer,
-        journalpostId = journalpostId,
-        søknad = JSONObject(søknad).toString(),
-        status = status,
-        søknadstype = søknadstype,
-        behandlingsdato = førsteBehandlingsdato,
-        opprettet = mottattDato,
-        endret = null
-    )
 }
 
 private fun JSONObject.somK9Beskjed(metadata: Metadata, beskjedProperties: K9BeskjedProperties): K9Beskjed {

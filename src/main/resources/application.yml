@@ -50,9 +50,9 @@ topic:
       bryter: true
       dry-run: false
 
-    # topic.listener.pp-endringsmelding
-    pp-endringsmelding:
-      id: pp-endringsmelding-listener
+    # topic.listener.pp-sykt-barn-endringsmelding
+    pp-sykt-barn-endringsmelding:
+      id: pp-sykt-barn-endringsmelding-listener
       navn: dusseldorf.privat-endringsmelding-pleiepenger-sykt-barn-cleanup
       bryter: true
       dry-run: false

@@ -19,8 +19,8 @@ import no.nav.sifinnsynapi.config.SecurityConfiguration
 import no.nav.sifinnsynapi.config.Topics.AAPEN_DOK_JOURNALFØRING_V1
 import no.nav.sifinnsynapi.config.Topics.K9_DITTNAV_VARSEL_BESKJED_AIVEN
 import no.nav.sifinnsynapi.config.Topics.K9_ETTERSENDING
-import no.nav.sifinnsynapi.config.Topics.PP_ENDRINGSMELDING
 import no.nav.sifinnsynapi.config.Topics.PP_SYKT_BARN
+import no.nav.sifinnsynapi.config.Topics.PP_SYKT_BARN_ENDRINGSMELDING
 import no.nav.sifinnsynapi.dittnav.K9Beskjed
 import no.nav.sifinnsynapi.konsument.ettersending.K9EttersendingKonsument
 import no.nav.sifinnsynapi.safselvbetjening.SafSelvbetjeningService
@@ -35,6 +35,7 @@ import no.nav.sifinnsynapi.utils.*
 import org.apache.kafka.clients.consumer.Consumer
 import org.apache.kafka.clients.producer.Producer
 import org.awaitility.kotlin.await
+import org.json.JSONObject
 import org.junit.Assert
 import org.junit.Assert.assertNotNull
 import org.junit.jupiter.api.*
@@ -266,14 +267,58 @@ class KafkaHendelseKonsumentIntegrasjonsTest {
     }
 
     @Test
-    fun `Konsumere hendelse om Pleiepenger - Endringsmelding, hente søknad med id`() {
+    fun `Konsumere hendelse om Pleiepenger - sykt barn - endringsmelding, hente søknad med id`() {
 
-        // legg på 1 hendelse om mottatt søknad om pleiepenger sykt barn...
-        val hendelse = defaultHendelse(journalpostId = "3")
-        val søknadId = hendelse.data.melding["søknadId"] as String
-        producer.leggPåTopic(hendelse, PP_ENDRINGSMELDING, mapper)
+        // legg på 1 hendelse om mottatt søknad om pleiepenger sykt barn endringsmelding...
+        val hendelse = defaultHendelsePPEndringsmelding(journalpostId = "6")
+        val søknadId = JSONObject(hendelse.data.melding).getJSONObject("k9FormatSøknad").getString("søknadId")
+        producer.leggPåTopic(hendelse, PP_SYKT_BARN_ENDRINGSMELDING, mapper)
 
-        //TODO Lagre søknad og sjekke om vi finner den
+        // forvent at mottatt hendelse konsumeres og persisteres, samt at gitt restkall gir forventet resultat.
+        await.atMost(15, TimeUnit.SECONDS).ignoreExceptions().untilAsserted {
+            val responseEntity = restTemplate.exchange("${SØKNAD}/${søknadId}", HttpMethod.GET, hentToken(), SøknadDTO::class.java)
+            val forventetRespons =
+                //language=json
+                """
+                    {
+                      "søknadId" : "$søknadId",
+                      "søknadstype" : "PP_SYKT_BARN_ENDRINGSMELDING",
+                      "status" : "MOTTATT",
+                      "søknad" : {
+                        "søker" : {
+                          "aktørId" : "123456",
+                          "fødselsnummer" : "1234567"
+                        },
+                        "dokumentId" : [ "123", "456" ],
+                        "k9FormatSøknad" : {
+                          "søknadId" : "$søknadId",
+                          "mottattDato" : "2022-01-31T12:20:47.151403+01:00"
+                        }
+                      },
+                      "saksId" : null,
+                      "journalpostId" : "6",
+                      "dokumenter": [
+                        {
+                          "journalpostId": "6",
+                          "dokumentInfoId": "533440578",
+                          "sakId": "1DMELD6",
+                          "tittel": "Endringsmelding om pleiepenger",
+                          "filtype": "PDF",
+                          "harTilgang": true,
+                          "url": "http://localhost:9999/dokument/6/533440578/ARKIV",
+                          "relevanteDatoer": [
+                            {
+                              "dato": "2021-10-15T11:28:43",
+                              "datotype": "DATO_JOURNALFOERT"
+                            }
+                          ]
+                        }
+                      ],
+                      "behandlingsdato" : null
+                    }
+                """.trimIndent()
+            responseEntity.assert(forventetRespons, 200)
+        }
     }
 
     @Test
@@ -440,7 +485,32 @@ class KafkaHendelseKonsumentIntegrasjonsTest {
                             )
                         )
                     )
-                )
+                ),
+                Journalpost(
+                    journalpostId = "6",
+                    tittel = "Endringsmelding om pleiepenger - NAV 09-11.05",
+                    journalstatus = Journalstatus.JOURNALFOERT,
+                    relevanteDatoer = listOf(
+                        RelevantDato(
+                            dato = "2021-10-15T11:28:43",
+                            datotype = Datotype.DATO_JOURNALFOERT
+                        )
+                    ),
+                    sak = Sak(
+                        fagsakId = "1DMELD6",
+                        fagsaksystem = "K9"
+                    ),
+                    dokumenter = listOf(
+                        DokumentInfo(
+                            dokumentInfoId = "533440578",
+                            tittel = "Endringsmelding om pleiepenger",
+                            brevkode = "NAV 09-11.05",
+                            dokumentvarianter = listOf(
+                                Dokumentvariant(Variantformat.ARKIV, "PDF", true, listOf())
+                            )
+                        )
+                    )
+                ),
             )
         )
     }

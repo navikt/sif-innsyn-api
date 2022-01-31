@@ -10,7 +10,6 @@ import no.nav.sifinnsynapi.konsument.pleiepenger.syktbarn.PleiepengersøknadKeys
 import no.nav.sifinnsynapi.konsument.pleiepenger.syktbarn.PleiepengersøknadKeysV1.SØKER
 import no.nav.sifinnsynapi.konsument.pleiepenger.syktbarn.PleiepengersøknadKeysV1.SØKNAD_ID
 import no.nav.sifinnsynapi.soknad.Søknad
-import no.nav.sifinnsynapi.soknad.SøknadDAO
 import no.nav.sifinnsynapi.soknad.SøknadRepository
 import org.json.JSONObject
 import org.slf4j.LoggerFactory
@@ -81,7 +80,7 @@ class PleiepengerSyktBarnHendelseKonsument(
             )
 
             logger.info("Lagrer Søknad for $YTELSE")
-            val søknadDAO = søknadsHendelse.tilSøknadDAO()
+            val søknadDAO = søknadsHendelse.tilSøknadDAO(søknadId)
             val save = repository.save(søknadDAO)
             logger.info("Søknad for $YTELSE lagret: {}", save)
 
@@ -91,20 +90,6 @@ class PleiepengerSyktBarnHendelseKonsument(
             )
         }
     }
-
-    private fun Søknad.tilSøknadDAO(): SøknadDAO = SøknadDAO(
-            id = UUID.fromString(JSONObject(søknad).getString(SØKNAD_ID)),
-            aktørId = aktørId,
-            saksId = saksnummer,
-            fødselsnummer = fødselsnummer,
-            journalpostId = journalpostId,
-            søknad = JSONObject(søknad).toString(),
-            status = status,
-            søknadstype = søknadstype,
-            behandlingsdato = førsteBehandlingsdato,
-            opprettet = mottattDato,
-            endret = null
-    )
 
 }
 
