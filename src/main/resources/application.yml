@@ -6,6 +6,12 @@ no.nav:
         link: https://sif-innsyn.dev.nav.no/familie/sykdom-i-familien/soknad/innsyn/dine-pleiepenger
         dagerSynlig: 7
 
+    pleiepenger-sykt-barn-endringsmelding:
+      beskjed:
+        tekst: 'Vi har mottatt endringsmeldingen din om pleiepenger.'
+        link: https://sif-innsyn.dev.nav.no/familie/sykdom-i-familien/soknad/innsyn/dine-pleiepenger
+        dagerSynlig: 7
+
     k9-ettersending-pp:
       beskjed:
         tekst: 'Vi har mottatt din ettersendelse til pleiepenger.'

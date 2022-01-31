@@ -2,6 +2,8 @@ package no.nav.sifinnsynapi.konsument.pleiepenger.endringsmelding
 
 import no.nav.sifinnsynapi.common.*
 import no.nav.sifinnsynapi.config.TxConfiguration
+import no.nav.sifinnsynapi.dittnav.DittnavService
+import no.nav.sifinnsynapi.dittnav.byggK9Beskjed
 import no.nav.sifinnsynapi.soknad.Søknad
 import no.nav.sifinnsynapi.soknad.SøknadRepository
 import org.json.JSONObject
@@ -16,6 +18,8 @@ import java.time.ZonedDateTime
 @Service
 class PleiepengerEndringsmeldingHendelseKonsument(
     private val repository: SøknadRepository,
+    private val dittNavService: DittnavService,
+    private val beskjedProperties: PleiepengerEndringsmeldingDittnavBeskjedProperties,
     @Value("\${topic.listener.pp-sykt-barn-endringsmelding.dry-run}") private val dryRun: Boolean
 ) {
 
@@ -50,6 +54,10 @@ class PleiepengerEndringsmeldingHendelseKonsument(
         val søknadDAO = søknadsHendelse.tilSøknadDAO(søknadId)
         val save = repository.save(søknadDAO)
         logger.info("Søknad for $YTELSE lagret: {}", save)
+
+        logger.info("Sender DittNav beskjed for ytelse $YTELSE")
+        val k9Beskjed = byggK9Beskjed(hendelse.data.metadata, søknadId, beskjedProperties, hendelse.hentFødselsnummerFraEndringsmelding())
+        dittNavService.sendBeskjedAiven(k9Beskjed)
     }
 }
 

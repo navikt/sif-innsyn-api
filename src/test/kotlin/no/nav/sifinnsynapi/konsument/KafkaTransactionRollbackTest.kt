@@ -80,7 +80,7 @@ class KafkaTransactionRollbackTest {
     @Test
     fun `Konsumere hendelse, forevnt rolback ved feil`() {
         every {
-            dittnavService.sendBeskjedAiven(any(), any())
+            dittnavService.sendBeskjedAiven(any())
         } throws Exception("Ooops, noe gikk galt...")
 
         // legg på 1 hendelse om mottatt søknad om pleiepenger sykt barn...

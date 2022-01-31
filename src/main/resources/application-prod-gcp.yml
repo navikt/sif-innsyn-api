@@ -62,6 +62,9 @@ no.nav:
     pleiepenger-sykt-barn:
       beskjed:
         link: https://www.nav.no/familie/sykdom-i-familien/soknad/innsyn/dine-pleiepenger
+    pleiepenger-sykt-barn-endringsmelding:
+      beskjed:
+        link: https://www.nav.no/familie/sykdom-i-familien/soknad/innsyn/dine-pleiepenger
 
   metrics:
     interval: 3_600_000 # 1 time

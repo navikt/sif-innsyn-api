@@ -267,7 +267,7 @@ class KafkaHendelseKonsumentIntegrasjonsTest {
     }
 
     @Test
-    fun `Konsumere hendelse om Pleiepenger - sykt barn - endringsmelding, hente søknad med id`() {
+    fun `Konsumere hendelse om Pleiepenger - sykt barn - endringsmelding, hente søknad med id og sjekke at dittnav varsel sendes`() {
 
         // legg på 1 hendelse om mottatt søknad om pleiepenger sykt barn endringsmelding...
         val hendelse = defaultHendelsePPEndringsmelding(journalpostId = "6")
@@ -319,6 +319,10 @@ class KafkaHendelseKonsumentIntegrasjonsTest {
                 """.trimIndent()
             responseEntity.assert(forventetRespons, 200)
         }
+
+        val dittnavBeskjed = dittNavConsumer.lesMelding(søknadId, topic = K9_DITTNAV_VARSEL_BESKJED_AIVEN)
+        log.info("----> dittnav melding: {}", dittnavBeskjed)
+        assertThat(dittnavBeskjed).isNotNull()
     }
 
     @Test
