@@ -8,7 +8,7 @@ no.nav:
 
     pleiepenger-sykt-barn-endringsmelding:
       beskjed:
-        tekst: 'Vi har mottatt endringsmeldingen din om pleiepenger.'
+        tekst: 'Vi har mottatt endringsmelding for pleiepenger'
         link: https://sif-innsyn.dev.nav.no/familie/sykdom-i-familien/soknad/innsyn/dine-pleiepenger
         dagerSynlig: 7
 

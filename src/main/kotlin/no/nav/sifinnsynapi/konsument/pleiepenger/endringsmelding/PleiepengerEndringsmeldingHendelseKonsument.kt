@@ -37,27 +37,42 @@ class PleiepengerEndringsmeldingHendelseKonsument(
     fun konsumer(
         @Payload hendelse: TopicEntry
     ){
-        val søknadId = hendelse.hentSøknadIdFraEndringsmelding()
-        logger.info("Mottok hendelse om $YTELSE med søknadId: $søknadId")
+        if(dryRun){
+            val søknadId = hendelse.hentSøknadIdFraEndringsmelding()
+            logger.info("DRY_RUN --> Mottok hendelse om $YTELSE med søknadId: $søknadId")
+            logger.info("DRY_RUN --> Mapper fra TopicEntry til Søknad for $YTELSE")
+            val søknadsHendelse = Søknad(
+                aktørId = AktørId(hendelse.hentAktørIdFraEndringsmelding()),
+                mottattDato = ZonedDateTime.parse(hendelse.hentMottattDatoFraEndringsmelding()),
+                fødselsnummer = Fødselsnummer(hendelse.hentFødselsnummerFraEndringsmelding()),
+                journalpostId = hendelse.data.journalførtMelding.journalpostId,
+                søknadstype = Søknadstype.PP_SYKT_BARN_ENDRINGSMELDING,
+                status = SøknadsStatus.MOTTATT,
+                søknad = hendelse.data.melding
+            )
+        } else {
+            val søknadId = hendelse.hentSøknadIdFraEndringsmelding()
+            logger.info("Mottok hendelse om $YTELSE med søknadId: $søknadId")
 
-        val søknadsHendelse = Søknad(
-            aktørId = AktørId(hendelse.hentAktørIdFraEndringsmelding()),
-            mottattDato = ZonedDateTime.parse(hendelse.hentMottattDatoFraEndringsmelding()),
-            fødselsnummer = Fødselsnummer(hendelse.hentFødselsnummerFraEndringsmelding()),
-            journalpostId = hendelse.data.journalførtMelding.journalpostId,
-            søknadstype = Søknadstype.PP_SYKT_BARN_ENDRINGSMELDING,
-            status = SøknadsStatus.MOTTATT,
-            søknad = hendelse.data.melding
-        )
+            val søknadsHendelse = Søknad(
+                aktørId = AktørId(hendelse.hentAktørIdFraEndringsmelding()),
+                mottattDato = ZonedDateTime.parse(hendelse.hentMottattDatoFraEndringsmelding()),
+                fødselsnummer = Fødselsnummer(hendelse.hentFødselsnummerFraEndringsmelding()),
+                journalpostId = hendelse.data.journalførtMelding.journalpostId,
+                søknadstype = Søknadstype.PP_SYKT_BARN_ENDRINGSMELDING,
+                status = SøknadsStatus.MOTTATT,
+                søknad = hendelse.data.melding
+            )
 
-        logger.info("Lagrer Søknad for $YTELSE")
-        val søknadDAO = søknadsHendelse.tilSøknadDAO(søknadId)
-        val save = repository.save(søknadDAO)
-        logger.info("Søknad for $YTELSE lagret: {}", save)
+            logger.info("Lagrer Søknad for $YTELSE")
+            val søknadDAO = søknadsHendelse.tilSøknadDAO(søknadId)
+            val save = repository.save(søknadDAO)
+            logger.info("Søknad for $YTELSE lagret: {}", save)
 
-        logger.info("Sender DittNav beskjed for ytelse $YTELSE")
-        val k9Beskjed = byggK9Beskjed(hendelse.data.metadata, søknadId, beskjedProperties, hendelse.hentFødselsnummerFraEndringsmelding())
-        dittNavService.sendBeskjedAiven(k9Beskjed)
+            logger.info("Sender DittNav beskjed for ytelse $YTELSE")
+            val k9Beskjed = byggK9Beskjed(hendelse.data.metadata, søknadId, beskjedProperties, hendelse.hentFødselsnummerFraEndringsmelding())
+            dittNavService.sendBeskjedAiven(k9Beskjed)
+        }
     }
 }
 

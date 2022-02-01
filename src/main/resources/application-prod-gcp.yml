@@ -4,6 +4,9 @@ topic:
     pp-sykt-barn:
       bryter: true
       dry-run: false
+    pp-sykt-barn-endringsmelding:
+      bryter: false
+      dry-run: false
     k9-ettersending:
       bryter: true
       dry-run: false
