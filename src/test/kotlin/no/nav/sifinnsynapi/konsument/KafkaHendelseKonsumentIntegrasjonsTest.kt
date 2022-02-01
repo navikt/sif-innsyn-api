@@ -23,6 +23,7 @@ import no.nav.sifinnsynapi.config.Topics.PP_SYKT_BARN
 import no.nav.sifinnsynapi.config.Topics.PP_SYKT_BARN_ENDRINGSMELDING
 import no.nav.sifinnsynapi.dittnav.K9Beskjed
 import no.nav.sifinnsynapi.konsument.ettersending.K9EttersendingKonsument
+import no.nav.sifinnsynapi.konsument.pleiepenger.endringsmelding.PleiepengerEndringsmeldingDittnavBeskjedProperties
 import no.nav.sifinnsynapi.safselvbetjening.SafSelvbetjeningService
 import no.nav.sifinnsynapi.safselvbetjening.generated.enums.Datotype
 import no.nav.sifinnsynapi.safselvbetjening.generated.enums.Journalstatus
@@ -110,6 +111,9 @@ class KafkaHendelseKonsumentIntegrasjonsTest {
     lateinit var producer: Producer<String, Any> // Kafka producer som brukes til å legge på kafka meldinger. Mer spesifikk, Hendelser om pp-sykt-barn
     lateinit var joarkProducer: Producer<Long, JournalfoeringHendelseRecord> // Kafka producer som brukes til å legge på kafka meldinger for joark hendelser.
     lateinit var dittNavConsumer: Consumer<String, K9Beskjed> // Kafka consumer som brukes til å lese kafka meldinger.
+
+    @Autowired
+    lateinit var endringsmeldingBeskjedProperties: PleiepengerEndringsmeldingDittnavBeskjedProperties
 
     companion object {
         private val log: Logger =
@@ -267,9 +271,7 @@ class KafkaHendelseKonsumentIntegrasjonsTest {
     }
 
     @Test
-    fun `Konsumere hendelse om Pleiepenger - sykt barn - endringsmelding, hente søknad med id og sjekke at dittnav varsel sendes`() {
-
-        // legg på 1 hendelse om mottatt søknad om pleiepenger sykt barn endringsmelding...
+    fun `Konsumere hendelse om Pleiepenger - sykt barn - endringsmelding, hente søknad med id og sjekke at forventet dittnav varsel sendes`() {
         val hendelse = defaultHendelsePPEndringsmelding(journalpostId = "6")
         val søknadId = JSONObject(hendelse.data.melding).getJSONObject("k9FormatSøknad").getString("søknadId")
         producer.leggPåTopic(hendelse, PP_SYKT_BARN_ENDRINGSMELDING, mapper)
@@ -321,8 +323,9 @@ class KafkaHendelseKonsumentIntegrasjonsTest {
         }
 
         val dittnavBeskjed = dittNavConsumer.lesMelding(søknadId, topic = K9_DITTNAV_VARSEL_BESKJED_AIVEN)
-        log.info("----> dittnav melding: {}", dittnavBeskjed)
         assertThat(dittnavBeskjed).isNotNull()
+        assertThat(dittnavBeskjed.toString().contains(endringsmeldingBeskjedProperties.tekst))
+        assertThat(dittnavBeskjed.toString().contains(endringsmeldingBeskjedProperties.link))
     }
 
     @Test
