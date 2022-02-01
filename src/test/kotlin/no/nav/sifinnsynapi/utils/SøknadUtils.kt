@@ -43,6 +43,30 @@ fun defaultHendelse(
     )
 )
 
+fun defaultHendelsePPEndringsmelding(
+    søknadIdKey: String = "søknadId",
+    søknadId: UUID = UUID.randomUUID(),
+    journalpostId: String = "123456789"
+) = TopicEntry(
+    data = SøknadsHendelse(
+        metadata = defaultMetadata,
+        melding = mapOf(
+            "søker" to mapOf(
+                "fødselsnummer" to "1234567",
+                "aktørId" to "123456"
+            ),
+            "k9FormatSøknad" to mapOf(
+                "$søknadIdKey" to "$søknadId",
+                "mottattDato" to ZonedDateTime.parse("2022-01-31T12:20:47.151403+01:00")
+            ),
+            "dokumentId" to listOf("123", "456")
+        ),
+        journalførtMelding = JournalfortMelding(
+            journalpostId = "$journalpostId"
+        )
+    )
+)
+
 fun defaultHendelseK9Ettersending(
     søknadIdKey: String = "soknadId",
     søknadId: UUID = UUID.randomUUID(),

@@ -3,8 +3,7 @@ package no.nav.sifinnsynapi.konsument.ettersending
 import no.nav.sifinnsynapi.common.*
 import no.nav.sifinnsynapi.config.TxConfiguration
 import no.nav.sifinnsynapi.dittnav.DittnavService
-import no.nav.sifinnsynapi.dittnav.K9Beskjed
-import no.nav.sifinnsynapi.dittnav.K9BeskjedProperties
+import no.nav.sifinnsynapi.dittnav.byggK9Beskjed
 import no.nav.sifinnsynapi.konsument.ettersending.K9EttersendingKonsument.Companion.Keys.AKTØR_ID
 import no.nav.sifinnsynapi.konsument.ettersending.K9EttersendingKonsument.Companion.Keys.FØDSELSNUMMER
 import no.nav.sifinnsynapi.konsument.ettersending.K9EttersendingKonsument.Companion.Keys.MOTTATT
@@ -12,7 +11,6 @@ import no.nav.sifinnsynapi.konsument.ettersending.K9EttersendingKonsument.Compan
 import no.nav.sifinnsynapi.konsument.ettersending.K9EttersendingKonsument.Companion.Keys.SØKNAD_ID
 import no.nav.sifinnsynapi.konsument.ettersending.K9EttersendingKonsument.Companion.Keys.SØKNAD_TYPE
 import no.nav.sifinnsynapi.soknad.Søknad
-import no.nav.sifinnsynapi.soknad.SøknadDAO
 import no.nav.sifinnsynapi.soknad.SøknadRepository
 import no.nav.sifinnsynapi.util.storForbokstav
 import org.json.JSONObject
@@ -23,7 +21,6 @@ import org.springframework.messaging.handler.annotation.Payload
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.ZonedDateTime
-import java.util.*
 
 @Service
 class K9EttersendingKonsument(
@@ -78,7 +75,7 @@ class K9EttersendingKonsument(
             logger.info("Mottok hendelse om '$YTELSE - ${søknadstype.utskriftsvennlig}' med søknadId: $søknadId")
 
             val beskjedProperties = when (søknadstype) {
-                Søknadstype.PLEIEPENGER_SYKT_BARN, Søknadstype.PLEIEPENGER_SYKT_BARN -> k9EttersendingPPBeskjedProperties
+                Søknadstype.PLEIEPENGER_SYKT_BARN -> k9EttersendingPPBeskjedProperties
                 else -> k9EttersendingOMSBeskjedProperties
             }
 
@@ -96,44 +93,12 @@ class K9EttersendingKonsument(
             )
 
             logger.info("Lagrer melding om ettersending for $søknadstype")
-            val ettersending = søknadRepository.save(søknadsHendelse.tilSøknadDAO())
+            val ettersending = søknadRepository.save(søknadsHendelse.tilSøknadDAO(søknadId))
             logger.info("Ettersendelse for $søknadstype lagret: {}", ettersending)
 
             logger.info("Sender DittNav beskjed for ytelse $YTELSE - ${søknadstype.utskriftsvennlig}")
-            dittNavService.sendBeskjedAiven(
-                søknadId = melding.getString(SØKNAD_ID),
-                k9Beskjed = melding.somK9Beskjed(
-                    metadata = hendelse.data.metadata,
-                    beskjedProperties = beskjedProperties
-                )
-            )
+            val k9Beskjed = byggK9Beskjed(hendelse.data.metadata, søknadId, beskjedProperties, melding.getJSONObject(SØKER).getString(FØDSELSNUMMER) )
+            dittNavService.sendBeskjedAiven(k9Beskjed = k9Beskjed)
         }
     }
-
-    private fun Søknad.tilSøknadDAO(): SøknadDAO = SøknadDAO(
-        id = UUID.fromString(JSONObject(søknad).getString(SØKNAD_ID)),
-        aktørId = aktørId,
-        saksId = saksnummer,
-        fødselsnummer = fødselsnummer,
-        journalpostId = journalpostId,
-        søknad = JSONObject(søknad).toString(),
-        status = status,
-        søknadstype = søknadstype,
-        behandlingsdato = førsteBehandlingsdato,
-        opprettet = mottattDato,
-        endret = null
-    )
-}
-
-private fun JSONObject.somK9Beskjed(metadata: Metadata, beskjedProperties: K9BeskjedProperties): K9Beskjed {
-    val søknadId = getString(SØKNAD_ID)
-    return K9Beskjed(
-        metadata = metadata,
-        søkerFødselsnummer = getJSONObject(SØKER).getString(FØDSELSNUMMER),
-        tekst = beskjedProperties.tekst,
-        link = beskjedProperties.link,
-        grupperingsId = søknadId,
-        eventId = UUID.randomUUID().toString(),
-        dagerSynlig = beskjedProperties.dagerSynlig
-    )
 }

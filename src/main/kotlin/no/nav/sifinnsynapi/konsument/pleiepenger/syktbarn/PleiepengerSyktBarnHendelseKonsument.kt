@@ -3,14 +3,13 @@ package no.nav.sifinnsynapi.konsument.pleiepenger.syktbarn
 import no.nav.sifinnsynapi.common.*
 import no.nav.sifinnsynapi.config.TxConfiguration.Companion.TRANSACTION_MANAGER
 import no.nav.sifinnsynapi.dittnav.DittnavService
-import no.nav.sifinnsynapi.dittnav.K9Beskjed
+import no.nav.sifinnsynapi.dittnav.byggK9Beskjed
 import no.nav.sifinnsynapi.konsument.pleiepenger.syktbarn.PleiepengersøknadKeysV1.AKTØR_ID
 import no.nav.sifinnsynapi.konsument.pleiepenger.syktbarn.PleiepengersøknadKeysV1.FØDSELSNUMMER
 import no.nav.sifinnsynapi.konsument.pleiepenger.syktbarn.PleiepengersøknadKeysV1.MOTTATT
 import no.nav.sifinnsynapi.konsument.pleiepenger.syktbarn.PleiepengersøknadKeysV1.SØKER
 import no.nav.sifinnsynapi.konsument.pleiepenger.syktbarn.PleiepengersøknadKeysV1.SØKNAD_ID
 import no.nav.sifinnsynapi.soknad.Søknad
-import no.nav.sifinnsynapi.soknad.SøknadDAO
 import no.nav.sifinnsynapi.soknad.SøknadRepository
 import org.json.JSONObject
 import org.slf4j.LoggerFactory
@@ -20,7 +19,6 @@ import org.springframework.messaging.handler.annotation.Payload
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.ZonedDateTime
-import java.util.*
 
 @Service
 class PleiepengerSyktBarnHendelseKonsument(
@@ -81,42 +79,13 @@ class PleiepengerSyktBarnHendelseKonsument(
             )
 
             logger.info("Lagrer Søknad for $YTELSE")
-            val søknadDAO = søknadsHendelse.tilSøknadDAO()
+            val søknadDAO = søknadsHendelse.tilSøknadDAO(søknadId)
             val save = repository.save(søknadDAO)
             logger.info("Søknad for $YTELSE lagret: {}", save)
 
-            dittnavService.sendBeskjedAiven(
-                    melding.getString(SØKNAD_ID),
-                    melding.somK9Beskjed(hendelse.data.metadata, pleiepengerDittnavBeskjedProperties)
-            )
+            logger.info("Sender DittNav beskjed for ytelse $YTELSE")
+            val k9Beskjed = byggK9Beskjed(hendelse.data.metadata, søknadId, pleiepengerDittnavBeskjedProperties, melding.getJSONObject(SØKER).getString(FØDSELSNUMMER))
+            dittnavService.sendBeskjedAiven(k9Beskjed)
         }
     }
-
-    private fun Søknad.tilSøknadDAO(): SøknadDAO = SøknadDAO(
-            id = UUID.fromString(JSONObject(søknad).getString(SØKNAD_ID)),
-            aktørId = aktørId,
-            saksId = saksnummer,
-            fødselsnummer = fødselsnummer,
-            journalpostId = journalpostId,
-            søknad = JSONObject(søknad).toString(),
-            status = status,
-            søknadstype = søknadstype,
-            behandlingsdato = førsteBehandlingsdato,
-            opprettet = mottattDato,
-            endret = null
-    )
-
-}
-
-private fun JSONObject.somK9Beskjed(metadata: Metadata, beskjedProperties: PleiepengerDittnavBeskjedProperties): K9Beskjed {
-    val søknadId = getString(SØKNAD_ID)
-    return K9Beskjed(
-            metadata = metadata,
-            søkerFødselsnummer = getJSONObject(SØKER).getString(FØDSELSNUMMER),
-            tekst = beskjedProperties.tekst,
-            link = "${beskjedProperties.link}",
-            grupperingsId = søknadId,
-            eventId = UUID.randomUUID().toString(),
-            dagerSynlig = beskjedProperties.dagerSynlig
-    )
 }

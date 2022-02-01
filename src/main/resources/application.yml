@@ -6,6 +6,12 @@ no.nav:
         link: https://sif-innsyn.dev.nav.no/familie/sykdom-i-familien/soknad/innsyn/dine-pleiepenger
         dagerSynlig: 7
 
+    pleiepenger-sykt-barn-endringsmelding:
+      beskjed:
+        tekst: 'Vi har mottatt endringsmelding for pleiepenger'
+        link: https://sif-innsyn.dev.nav.no/familie/sykdom-i-familien/soknad/innsyn/dine-pleiepenger
+        dagerSynlig: 7
+
     k9-ettersending-pp:
       beskjed:
         tekst: 'Vi har mottatt din ettersendelse til pleiepenger.'
@@ -47,6 +53,13 @@ topic:
     pp-sykt-barn:
       id: pp-sykt-barn-listener
       navn: dusseldorf.privat-pleiepengesoknad-cleanup
+      bryter: true
+      dry-run: false
+
+    # topic.listener.pp-sykt-barn-endringsmelding
+    pp-sykt-barn-endringsmelding:
+      id: pp-sykt-barn-endringsmelding-listener
+      navn: dusseldorf.privat-endringsmelding-pleiepenger-sykt-barn-cleanup
       bryter: true
       dry-run: false
 

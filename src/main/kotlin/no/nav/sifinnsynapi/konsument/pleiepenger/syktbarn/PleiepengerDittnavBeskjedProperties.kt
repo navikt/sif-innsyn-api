@@ -1,15 +1,15 @@
 package no.nav.sifinnsynapi.konsument.pleiepenger.syktbarn
 
+import no.nav.sifinnsynapi.dittnav.K9BeskjedProperties
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.ConstructorBinding
 import org.springframework.validation.annotation.Validated
-import java.net.URI
 
 @ConstructorBinding
 @ConfigurationProperties(prefix = "no.nav.dittnav.pleiepenger-sykt-barn.beskjed")
 @Validated
 data class PleiepengerDittnavBeskjedProperties(
-        val tekst: String,
-        val link: URI,
-        val dagerSynlig: Long
-)
+        override val tekst: String,
+        override val link: String,
+        override val dagerSynlig: Long
+) : K9BeskjedProperties

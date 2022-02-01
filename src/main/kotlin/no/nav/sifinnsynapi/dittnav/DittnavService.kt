@@ -18,12 +18,12 @@ class DittnavService(
         private val log: Logger = LoggerFactory.getLogger(DittnavService::class.java)
     }
 
-    fun sendBeskjedAiven(søknadId: String, k9Beskjed: K9Beskjed) {
-        log.info("Sender ut dittnav beskjed til aiven med eventID: {}", søknadId)
+    fun sendBeskjedAiven(k9Beskjed: K9Beskjed) {
+        log.info("Sender ut dittnav beskjed til aiven med eventID: {} for søknadId: {}", k9Beskjed.eventId, k9Beskjed.grupperingsId)
         return aivenKafkaTemplate.send(
             ProducerRecord(
                 K9_DITTNAV_VARSEL_BESKJED_AIVEN,
-                søknadId,
+                k9Beskjed.grupperingsId,
                 k9Beskjed.somJson(objectMapper)
             )
         )

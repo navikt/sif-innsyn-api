@@ -4,6 +4,9 @@ topic:
     pp-sykt-barn:
       bryter: true
       dry-run: false
+    pp-sykt-barn-endringsmelding:
+      bryter: false
+      dry-run: false
     k9-ettersending:
       bryter: true
       dry-run: false
@@ -60,6 +63,9 @@ no.nav:
 
   dittnav:
     pleiepenger-sykt-barn:
+      beskjed:
+        link: https://www.nav.no/familie/sykdom-i-familien/soknad/innsyn/dine-pleiepenger
+    pleiepenger-sykt-barn-endringsmelding:
       beskjed:
         link: https://www.nav.no/familie/sykdom-i-familien/soknad/innsyn/dine-pleiepenger
 
