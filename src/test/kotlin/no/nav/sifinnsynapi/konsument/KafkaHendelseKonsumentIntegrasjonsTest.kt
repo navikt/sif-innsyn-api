@@ -23,6 +23,7 @@ import no.nav.sifinnsynapi.config.Topics.PP_SYKT_BARN
 import no.nav.sifinnsynapi.config.Topics.PP_SYKT_BARN_ENDRINGSMELDING
 import no.nav.sifinnsynapi.dittnav.K9Beskjed
 import no.nav.sifinnsynapi.konsument.ettersending.K9EttersendingKonsument
+import no.nav.sifinnsynapi.konsument.ettersending.K9EttersendingKonsument.Companion.Søknadstype.PLEIEPENGER_LIVETS_SLUTTFASE
 import no.nav.sifinnsynapi.konsument.pleiepenger.endringsmelding.PleiepengerEndringsmeldingDittnavBeskjedProperties
 import no.nav.sifinnsynapi.safselvbetjening.SafSelvbetjeningService
 import no.nav.sifinnsynapi.safselvbetjening.generated.enums.Datotype
@@ -426,6 +427,25 @@ class KafkaHendelseKonsumentIntegrasjonsTest {
             log.info("----> dittnav melding: {}", dittnavBeskjed)
             assertThat(dittnavBeskjed).isNotNull()
             Assert.assertTrue(dittnavBeskjed.toString().contains("omsorgspenger"))
+        }
+    }
+
+    @Test
+    fun `Konsumer hendelse om ettersending av PLEIEPENGER_LIVETS_SLUTTFASE og forvent at dittNav beskjed blir sendt ut`() {
+        val hendelse = defaultHendelseK9Ettersending(søknadstype = PLEIEPENGER_LIVETS_SLUTTFASE)
+        producer.leggPåTopic(hendelse, K9_ETTERSENDING, mapper)
+        val søknadId = hendelse.data.melding["soknadId"] as String
+
+        await.atMost(Duration.ofSeconds(10)).untilAsserted {
+            val ettersendelse = repository.findByIdOrNull(UUID.fromString(søknadId))
+            assertThat(ettersendelse).isNotNull()
+            assertThat(ettersendelse!!.søknadstype).isEqualTo(Søknadstype.PP_LIVETS_SLUTTFASE_ETTERSENDELSE)
+
+            // forvent at dittNav melding blir sendt
+            val dittnavBeskjed = dittNavConsumer.lesMelding(søknadId, K9_DITTNAV_VARSEL_BESKJED_AIVEN)
+            log.info("----> dittnav melding: {}", dittnavBeskjed)
+            assertThat(dittnavBeskjed).isNotNull()
+            Assert.assertTrue(dittnavBeskjed.toString().contains("pleiepenger"))
         }
     }
 

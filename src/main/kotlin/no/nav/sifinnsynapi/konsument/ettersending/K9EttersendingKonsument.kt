@@ -10,6 +10,7 @@ import no.nav.sifinnsynapi.konsument.ettersending.K9EttersendingKonsument.Compan
 import no.nav.sifinnsynapi.konsument.ettersending.K9EttersendingKonsument.Companion.Keys.SØKER
 import no.nav.sifinnsynapi.konsument.ettersending.K9EttersendingKonsument.Companion.Keys.SØKNAD_ID
 import no.nav.sifinnsynapi.konsument.ettersending.K9EttersendingKonsument.Companion.Keys.SØKNAD_TYPE
+import no.nav.sifinnsynapi.konsument.ettersending.K9EttersendingKonsument.Companion.Søknadstype.*
 import no.nav.sifinnsynapi.soknad.Søknad
 import no.nav.sifinnsynapi.soknad.SøknadRepository
 import no.nav.sifinnsynapi.util.storForbokstav
@@ -46,6 +47,7 @@ class K9EttersendingKonsument(
 
         enum class Søknadstype(val utskriftsvennlig: String) {
             PLEIEPENGER_SYKT_BARN("pleiepenger"),
+            PLEIEPENGER_LIVETS_SLUTTFASE("pleiepenger livets sluttfase"),
             OMP_UTV_KS("omsorgspenger"), // Omsorgspenger utvidet rett - kronisk syke eller funksjonshemming.
             OMP_UT_SNF("omsorgspenger"), // Omsorgspenger utbetaling SNF ytelse.
             OMP_UT_ARBEIDSTAKER("omsorgspenger"), // Omsorgspenger utbetaling arbeidstaker ytelse.
@@ -70,12 +72,12 @@ class K9EttersendingKonsument(
         } else {
             val melding = JSONObject(hendelse.data.melding)
             val søknadId = melding.getString(SØKNAD_ID)
-            val søknadstype = Søknadstype.valueOf(melding.getString(SØKNAD_TYPE).storForbokstav())
+            val søknadstype = valueOf(melding.getString(SØKNAD_TYPE).storForbokstav())
 
             logger.info("Mottok hendelse om '$YTELSE - ${søknadstype.utskriftsvennlig}' med søknadId: $søknadId")
 
             val beskjedProperties = when (søknadstype) {
-                Søknadstype.PLEIEPENGER_SYKT_BARN -> k9EttersendingPPBeskjedProperties
+                PLEIEPENGER_SYKT_BARN, PLEIEPENGER_LIVETS_SLUTTFASE -> k9EttersendingPPBeskjedProperties
                 else -> k9EttersendingOMSBeskjedProperties
             }
 
@@ -85,7 +87,8 @@ class K9EttersendingKonsument(
                 fødselsnummer = Fødselsnummer(melding.getJSONObject(SØKER).getString(FØDSELSNUMMER)),
                 journalpostId = hendelse.data.journalførtMelding.journalpostId,
                 søknadstype = when (søknadstype) {
-                    Søknadstype.PLEIEPENGER_SYKT_BARN -> no.nav.sifinnsynapi.common.Søknadstype.PP_ETTERSENDELSE
+                    PLEIEPENGER_SYKT_BARN -> no.nav.sifinnsynapi.common.Søknadstype.PP_ETTERSENDELSE
+                    PLEIEPENGER_LIVETS_SLUTTFASE -> no.nav.sifinnsynapi.common.Søknadstype.PP_LIVETS_SLUTTFASE_ETTERSENDELSE
                     else -> no.nav.sifinnsynapi.common.Søknadstype.OMS_ETTERSENDELSE
                 },
                 status = SøknadsStatus.MOTTATT,
