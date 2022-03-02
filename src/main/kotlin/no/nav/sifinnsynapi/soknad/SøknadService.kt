@@ -47,8 +47,6 @@ class SøknadService(
             listOf()
         }
 
-        logger.info("DEBUGGER dokumentoversikt: {}", dokumentOversikt)
-
         return søknadDAOs
             .map { søknadDAO ->
             val relevanteDokumenter = dokumentOversikt.filter { it.journalpostId == søknadDAO.journalpostId }

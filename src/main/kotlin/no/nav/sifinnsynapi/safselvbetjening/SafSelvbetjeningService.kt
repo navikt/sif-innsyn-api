@@ -31,7 +31,7 @@ class SafSelvbetjeningService(
             )
         )
 
-        return when {
+        val dokumenter =  when {
             response.data != null -> response.data!!.dokumentoversiktSelvbetjening
 
             !response.errors.isNullOrEmpty() -> {
@@ -41,6 +41,10 @@ class SafSelvbetjeningService(
             }
             else -> throw IllegalStateException("Feil ved henting av dokumentoversikt.")
         }
+
+        logger.info("DEBUGGER dokumentoversikt: {}", dokumenter)
+
+        return dokumenter
     }
 
     fun hentDokument(journalpostId: String, dokumentInfoId: String, varianFormat: String): ArkivertDokument {
