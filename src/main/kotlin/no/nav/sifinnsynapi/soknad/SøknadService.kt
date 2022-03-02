@@ -40,12 +40,14 @@ class SøknadService(
             .filter { it.søknadstype.gjelderPP() }
 
         val relevanteBrevKoder: List<String> = søknadDAOs.flatMap { brevkoder[it.søknadstype]!! }
-        val dokumentOversikt = try {
+        val dokumentOversikt: List<DokumentDTO> = try {
             dokumentService.hentDokumentOversikt(relevanteBrevKoder)
         } catch (e: Exception) {
             logger.error("Feilet med å hente dokumentoversikt. Returnerer tom liste.", e)
             listOf()
         }
+
+        logger.info("DEBUGGER dokumentoversikt: {}", dokumentOversikt)
 
         return søknadDAOs
             .map { søknadDAO ->
