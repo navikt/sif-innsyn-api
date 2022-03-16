@@ -60,7 +60,7 @@ class ResponseDecoratorFilter : Filter {
         chain.doFilter(requestWrapper, responseWrapper)
 
         when (response.status) {
-            200, 201, 202, 204 -> {}
+            200, 201, 202, 204, 401, 403, 404 -> {}
             else -> {
                 val content = String(responseWrapper.contentAsByteArray, Charsets.UTF_8)
                 response.addHeader("problem-details", content)
