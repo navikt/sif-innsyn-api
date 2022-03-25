@@ -139,8 +139,3 @@ kafka:
 
 springdoc:
   version: 1.0
-  api-docs:
-    path: /api-docs
-  swagger-ui:
-    use-root-path: true
-    path: /swagger
