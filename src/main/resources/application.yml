@@ -137,3 +137,5 @@ kafka:
       transaction-id-prefix: .tx-
       retries: 3
 
+springdoc:
+  packagesToScan: no.nav.sifinnsynapi
