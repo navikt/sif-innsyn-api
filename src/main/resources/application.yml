@@ -136,3 +136,13 @@ kafka:
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
       transaction-id-prefix: .tx-
       retries: 3
+
+springdoc:
+  show-actuator: false
+  version: '1.0.0'
+  swagger-ui:
+    display-request-duration: true
+    groups-order: DESC
+    operationsSorter: method
+    disable-swagger-default-url: true
+    use-root-path: true
