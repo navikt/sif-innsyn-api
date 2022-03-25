@@ -24,9 +24,6 @@ class SwaggerConfiguration : EnvironmentAware {
     fun openAPI(): OpenAPI {
         return OpenAPI()
             .addServersItem(Server().url("https://sif-innsyn-api.dev.nav.no/").description("Swagger Server"))
-            .security(listOf(
-                SecurityRequirement().addList("")
-            ))
             .info(
                 Info()
                     .title("Sif Innsyn Api")
