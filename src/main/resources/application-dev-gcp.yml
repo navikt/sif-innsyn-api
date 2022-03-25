@@ -2,7 +2,7 @@ management:
   endpoint:
     web:
       exposure:
-        include: *
+        include: '*'
     health:
       show-details: always
 
