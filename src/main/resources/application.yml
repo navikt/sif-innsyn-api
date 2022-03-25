@@ -139,3 +139,5 @@ kafka:
 
 springdoc:
   version: '1.0.0'
+  swagger-ui:
+    use-root-path: true
