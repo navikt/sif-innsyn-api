@@ -139,3 +139,5 @@ kafka:
 
 springdoc:
   packagesToScan: no.nav.sifinnsynapi
+  swagger-ui:
+    disable-swagger-default-url: true
