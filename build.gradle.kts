@@ -100,7 +100,7 @@ dependencies {
 
     // SpringFox
     /*implementation("io.springfox:springfox-boot-starter:$springfoxVersion")*/
-    //implementation("org.springdoc:springdoc-openapi-kotlin:1.6.6")
+    implementation("org.springdoc:springdoc-openapi-kotlin:1.6.6")
     implementation("org.springdoc:springdoc-openapi-ui:1.6.6")
 
 
