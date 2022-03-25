@@ -17,20 +17,13 @@ import org.springframework.core.env.Environment
 
 @Configuration
 @Profile("local", "dev-gcp")
-@SecurityScheme(
-    name = "cookieAuth",
-    type = SecuritySchemeType.APIKEY,
-    `in` = SecuritySchemeIn.COOKIE,
-    scheme = "bearer",
-    bearerFormat = "JWT"
-)
 class SwaggerConfiguration : EnvironmentAware {
     private var env: Environment? = null
 
     @Bean
     fun openAPI(): OpenAPI {
         return OpenAPI()
-            .addServersItem(Server().url("https://sif-innsyn-api.dev.nav.no").description("Swagger Server"))
+            .addServersItem(Server().url("https://sif-innsyn-api.dev.nav.no/").description("Swagger Server"))
             .security(listOf(
                 SecurityRequirement().addList("")
             ))
