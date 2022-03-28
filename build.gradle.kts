@@ -2,9 +2,9 @@ import com.expediagroup.graphql.plugin.gradle.tasks.GraphQLGenerateClientTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("org.springframework.boot") version "2.5.8"
+    id("org.springframework.boot") version "2.6.5"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
-    id("com.expediagroup.graphql") version "5.3.1"
+    id("com.expediagroup.graphql") version "5.3.2"
     kotlin("jvm") version "1.6.10"
     kotlin("plugin.spring") version "1.6.10"
     kotlin("plugin.jpa") version "1.6.10"
@@ -20,11 +20,10 @@ configurations {
     }
 }
 
-val springfoxVersion by extra("3.0.0")
 val confluentVersion by extra("5.5.0")
 val logstashLogbackEncoderVersion by extra("6.6")
-val tokenSupportVersion by extra("1.3.8")
-val springCloudVersion by extra("2020.0.3")
+val tokenSupportVersion by extra("1.3.19")
+val springCloudVersion by extra("2021.0.1")
 val retryVersion by extra("1.3.0")
 val zalandoVersion by extra("0.26.2")
 val openhtmltopdfVersion = "1.0.10"
@@ -37,12 +36,13 @@ val mockkVersion by extra("1.11.0")
 val guavaVersion by extra("23.0")
 val okHttp3Version by extra("4.9.1")
 val orgJsonVersion by extra("20210307")
-val graphQLKotlinVersion by extra("5.3.1")
+val graphQLKotlinVersion by extra("5.3.2")
 val k9FormatVersion by extra("5.5.20")
 val teamDokumenthåndteringAvroSchemaVersion by extra("bbea40a3")
+val springdocVersion by extra("1.6.6")
 
 ext["okhttp3.version"] = okHttp3Version
-ext["testcontainersVersion"] = "1.15.3"
+ext["testcontainersVersion"] = "1.16.3"
 
 repositories {
     mavenCentral()
@@ -61,7 +61,6 @@ repositories {
         }
     }
 }
-
 dependencies {
 
     // NAV
@@ -99,8 +98,10 @@ dependencies {
     testImplementation("org.springframework.cloud:spring-cloud-starter-contract-stub-runner")
     testImplementation("org.springframework.cloud:spring-cloud-starter")
 
-    // SpringFox
-    implementation("io.springfox:springfox-boot-starter:$springfoxVersion")
+    // Swagger (openapi 3)
+    implementation("org.springdoc:springdoc-openapi-kotlin:$springdocVersion")
+    implementation("org.springdoc:springdoc-openapi-ui:$springdocVersion")
+
 
     // Metrics
     implementation("io.micrometer:micrometer-registry-prometheus")
@@ -113,8 +114,8 @@ dependencies {
     implementation("org.flywaydb:flyway-core")
     runtimeOnly("org.hibernate:hibernate-jpamodelgen")
     implementation("com.vladmihalcea:hibernate-types-52:$hibernateTypes52Version")
-    testImplementation("org.testcontainers:junit-jupiter")
-    testImplementation("org.testcontainers:postgresql")
+    testImplementation("org.testcontainers:junit-jupiter:1.16.3")
+    testImplementation("org.testcontainers:postgresql:1.16.3")
 
     // Jackson
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")

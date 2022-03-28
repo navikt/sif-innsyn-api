@@ -71,3 +71,7 @@ no.nav:
 
   metrics:
     interval: 3_600_000 # 1 time
+
+springdoc:
+  swagger-ui:
+    enabled: false

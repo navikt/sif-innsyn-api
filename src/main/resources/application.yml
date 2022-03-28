@@ -136,3 +136,8 @@ kafka:
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
       transaction-id-prefix: .tx-
       retries: 3
+
+springdoc:
+  swagger-ui:
+    disable-swagger-default-url: true
+    path: swagger-ui.html

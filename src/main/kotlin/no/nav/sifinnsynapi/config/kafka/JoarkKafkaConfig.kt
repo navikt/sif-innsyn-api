@@ -15,7 +15,7 @@ import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory
 import org.springframework.kafka.core.ConsumerFactory
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory
 import org.springframework.kafka.listener.ContainerProperties
-import org.springframework.kafka.listener.SeekToCurrentErrorHandler
+import org.springframework.kafka.listener.DefaultErrorHandler
 import org.springframework.kafka.support.KafkaHeaders
 import org.springframework.util.backoff.FixedBackOff
 import java.nio.ByteBuffer
@@ -58,7 +58,7 @@ internal class JoarkKafkaConfig(
             consumerFactory = joarkConsumerFactory
 
             // https://docs.spring.io/spring-kafka/reference/html/#listener-container
-            containerProperties.authorizationExceptionRetryInterval = Duration.ofSeconds(10L)
+            containerProperties.setAuthExceptionRetryInterval(Duration.ofSeconds(10L))
 
             // https://docs.spring.io/spring-kafka/docs/2.5.2.RELEASE/reference/html/#delivery-header
             containerProperties.isDeliveryAttemptHeader = true
@@ -67,11 +67,11 @@ internal class JoarkKafkaConfig(
             containerProperties.ackMode = ContainerProperties.AckMode.RECORD;
 
             // https://docs.spring.io/spring-kafka/docs/2.5.2.RELEASE/reference/html/#exactly-once
-            containerProperties.eosMode = ContainerProperties.EOSMode.BETA
+            containerProperties.eosMode = ContainerProperties.EOSMode.V2
 
             // https://docs.spring.io/spring-kafka/reference/html/#seek-to-current
-            setErrorHandler(
-                SeekToCurrentErrorHandler(
+            setCommonErrorHandler(
+                DefaultErrorHandler(
                     defaultRecoverer(logger),
                     FixedBackOff(kafkaClusterProperties.aiven.consumer.retryInterval, Long.MAX_VALUE)
                 )
