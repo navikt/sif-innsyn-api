@@ -39,6 +39,7 @@ val orgJsonVersion by extra("20210307")
 val graphQLKotlinVersion by extra("5.3.2")
 val k9FormatVersion by extra("5.5.20")
 val teamDokumenthåndteringAvroSchemaVersion by extra("bbea40a3")
+val springdocVersion by extra("1.6.6")
 
 ext["okhttp3.version"] = okHttp3Version
 ext["testcontainersVersion"] = "1.16.3"
@@ -60,7 +61,6 @@ repositories {
         }
     }
 }
-
 dependencies {
 
     // NAV
@@ -98,10 +98,9 @@ dependencies {
     testImplementation("org.springframework.cloud:spring-cloud-starter-contract-stub-runner")
     testImplementation("org.springframework.cloud:spring-cloud-starter")
 
-    // SpringFox
-    /*implementation("io.springfox:springfox-boot-starter:$springfoxVersion")*/
-    implementation("org.springdoc:springdoc-openapi-kotlin:1.6.6")
-    implementation("org.springdoc:springdoc-openapi-ui:1.6.6")
+    // Swagger (openapi 3)
+    implementation("org.springdoc:springdoc-openapi-kotlin:$springdocVersion")
+    implementation("org.springdoc:springdoc-openapi-ui:$springdocVersion")
 
 
     // Metrics
