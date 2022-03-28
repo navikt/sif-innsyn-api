@@ -22,7 +22,7 @@ configurations {
 
 val confluentVersion by extra("5.5.0")
 val logstashLogbackEncoderVersion by extra("6.6")
-val tokenSupportVersion by extra("1.3.8")
+val tokenSupportVersion by extra("1.3.19")
 val springCloudVersion by extra("2021.0.1")
 val retryVersion by extra("1.3.0")
 val zalandoVersion by extra("0.26.2")
