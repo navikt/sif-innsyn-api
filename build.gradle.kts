@@ -4,7 +4,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     id("org.springframework.boot") version "2.6.5"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
-    id("com.expediagroup.graphql") version "5.3.1"
+    id("com.expediagroup.graphql") version "5.3.2"
     kotlin("jvm") version "1.6.10"
     kotlin("plugin.spring") version "1.6.10"
     kotlin("plugin.jpa") version "1.6.10"
@@ -36,7 +36,7 @@ val mockkVersion by extra("1.11.0")
 val guavaVersion by extra("23.0")
 val okHttp3Version by extra("4.9.1")
 val orgJsonVersion by extra("20210307")
-val graphQLKotlinVersion by extra("5.3.1")
+val graphQLKotlinVersion by extra("5.3.2")
 val k9FormatVersion by extra("5.5.20")
 val teamDokumenthåndteringAvroSchemaVersion by extra("bbea40a3")
 

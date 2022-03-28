@@ -4,7 +4,6 @@ import io.swagger.v3.oas.models.ExternalDocumentation
 import io.swagger.v3.oas.models.OpenAPI
 import io.swagger.v3.oas.models.info.Info
 import io.swagger.v3.oas.models.servers.Server
-import no.nav.security.token.support.core.api.Unprotected
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
@@ -27,7 +26,7 @@ class SwaggerConfiguration {
             )
             .externalDocs(
                 ExternalDocumentation()
-                    .description("sif-innsyn-api github repository")
+                    .description("Sif Innsyn Api GitHub repository")
                     .url("https://github.com/navikt/sif-innsyn-api")
             )
     }
