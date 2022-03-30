@@ -14,7 +14,6 @@ import no.nav.sifinnsynapi.http.SøknadNotFoundException
 import no.nav.sifinnsynapi.oppslag.TilgangNektetException
 import no.nav.sifinnsynapi.util.CallIdGenerator
 import no.nav.sifinnsynapi.utils.hentToken
-import no.nav.sifinnsynapi.utils.stubForAktørId
 import org.junit.Assert.assertNotNull
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
@@ -23,8 +22,8 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.context.annotation.Import
+import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpHeaders.CONTENT_DISPOSITION
-import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit.jupiter.SpringExtension
@@ -184,7 +183,7 @@ class SøknadControllerTest {
             MockMvcRequestBuilders
                 .get(URI(URLDecoder.decode(SØKNAD, Charset.defaultCharset())))
                 .accept(MediaType.APPLICATION_JSON)
-                .cookie(Cookie("selvbetjening-idtoken", mockOAuth2Server.hentToken(issuerId = "tokenx").serialize()))
+                .header(HttpHeaders.AUTHORIZATION, "Bearer ${mockOAuth2Server.hentToken(issuerId = "tokenx").serialize()}")
         )
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk)
