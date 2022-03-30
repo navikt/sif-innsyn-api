@@ -157,6 +157,53 @@ class SøknadControllerTest {
     }
 
     @Test
+    fun `Gitt 200 respons, forvent korrekt format på liste av søknader med tokenx token`() {
+        every {
+            søknadService.hentSøknader()
+        } returns listOf(
+            SøknadDTO(
+                søknadId = UUID.randomUUID(),
+                saksId = "abc123",
+                søknadstype = Søknadstype.PP_SYKT_BARN,
+                status = SøknadsStatus.MOTTATT,
+                journalpostId = "123456789",
+                opprettet = ZonedDateTime.parse("2020-08-04T10:30:00Z").withZoneSameInstant(ZoneId.of("UTC")),
+                søknad = mapOf(
+                    "soknadId" to UUID.randomUUID().toString(),
+                    "mottatt" to ZonedDateTime.now(),
+                    "søker" to mapOf(
+                        "fødselsnummer" to "1234567",
+                        "aktørId" to AktørId.valueOf("123456")
+                    )
+                ),
+                dokumenter = listOf()
+            )
+        )
+
+        mockMvc.perform(
+            MockMvcRequestBuilders
+                .get(URI(URLDecoder.decode(SØKNAD, Charset.defaultCharset())))
+                .accept(MediaType.APPLICATION_JSON)
+                .cookie(Cookie("selvbetjening-idtoken", mockOAuth2Server.hentToken(issuerId = "tokenx").serialize()))
+        )
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("[0].saksId").isString)
+            .andExpect(jsonPath("[0].saksId").value("abc123"))
+            .andExpect(jsonPath("[0].søknadstype").isString)
+            .andExpect(jsonPath("[0].søknadstype").value("PP_SYKT_BARN"))
+            .andExpect(jsonPath("[0].status").isString)
+            .andExpect(jsonPath("[0].status").value("MOTTATT"))
+            .andExpect(jsonPath("[0].journalpostId").isString)
+            .andExpect(jsonPath("[0].journalpostId").value("123456789"))
+            .andExpect(jsonPath("[0].opprettet").isString)
+            .andExpect(jsonPath("[0].opprettet").value("2020-08-04T10:30:00.000Z"))
+            .andExpect(jsonPath("[0].endret").doesNotExist())
+            .andExpect(jsonPath("[0].behandlingsdato").doesNotExist())
+            .andExpect(jsonPath("[0].søknad").isMap)
+    }
+
+    @Test
     fun `Gitt 200 respons, forvent korrekt format ved henting av søknad`() {
         val søknadId = UUID.randomUUID()
         every {
