@@ -41,7 +41,44 @@ no.nav:
     jwt:
       issuer:
         loginservice:
+          discoveryUrl: ${LOGINSERVICE_IDPORTEN_DISCOVERY_URL} # settes av configmap: loginservice-idporten i naiserator.yml
+          accepted_audience: ${LOGINSERVICE_IDPORTEN_AUDIENCE} # settes av configmap: loginservice-idporten i naiserator.yml
           cookie_name: # Settes inais/<cluster>.json
+        tokenx:
+          discoveryUrl: ${TOKEN_X_WELL_KNOWN_URL}
+          accepted_audience: ${TOKEN_X_CLIENT_ID}
+
+      client:
+        registration:
+          tokenx-safselvbetjening:
+            token-endpoint-url: ${TOKENDINGS_BASE_URL}/token
+            grant-type: urn:ietf:params:oauth:grant-type:token-exchange
+            authentication:
+              client-auth-method: private_key_jwt
+              client-id: ${TOKEN_X_CLIENT_ID}
+              client-jwk: ${TOKEN_X_PRIVATE_JWK}
+            token-exchange:
+              audience: ${SAFSELVBETJENING_TOKEN_X_AUDIENCE}
+
+          tokenx-k9-sak-innsyn-api:
+            token-endpoint-url: ${TOKENDINGS_BASE_URL}/token
+            grant-type: urn:ietf:params:oauth:grant-type:token-exchange
+            authentication:
+              client-auth-method: private_key_jwt
+              client-id: ${TOKEN_X_CLIENT_ID}
+              client-jwk: ${TOKEN_X_PRIVATE_JWK}
+            token-exchange:
+              audience: ${K9_SAK_INNSYN_API_TOKEN_X_AUDIENCE}
+
+          tokenx-k9-selvbetjening-oppslag:
+            token-endpoint-url: ${TOKENDINGS_BASE_URL}/token
+            grant-type: urn:ietf:params:oauth:grant-type:token-exchange
+            authentication:
+              client-auth-method: private_key_jwt
+              client-id: ${TOKEN_X_CLIENT_ID}
+              client-jwk: ${TOKEN_X_PRIVATE_JWK}
+            token-exchange:
+              audience: ${K9_SELVBETJENING_OPPSLAG_TOKEN_X_AUDIENCE}
 
   metrics:
     interval: 60_000
@@ -120,6 +157,7 @@ spring:
 kafka:
   aiven:
     servers: ${KAFKA_BROKERS}
+
     consumer:
       enable-auto-commit: false
       group-id: ${spring.application.name}
@@ -129,6 +167,8 @@ kafka:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       schemaRegistryUrl: ${KAFKA_SCHEMA_REGISTRY}
+      schemaRegistryUser: ${KAFKA_SCHEMA_REGISTRY_USER}
+      schemaRegistryPassword: ${KAFKA_SCHEMA_REGISTRY_PASSWORD}
 
     producer:
       client-id: ${HOSTNAME}
@@ -138,6 +178,9 @@ kafka:
       retries: 3
 
 springdoc:
+  disable-swagger-default-url: true
+  api-docs:
+    enabled: ${SWAGGER_ENABLED:false}
   swagger-ui:
-    disable-swagger-default-url: true
+    enabled: ${SWAGGER_ENABLED:false}
     path: swagger-ui.html
