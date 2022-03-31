@@ -459,7 +459,7 @@ class KafkaHendelseKonsumentIntegrasjonsTest {
         JSONAssert.assertEquals(forventetResponse, body!!.somJson(mapper), JSONCompareMode.LENIENT)
     }
 
-    private fun hentToken(): HttpEntity<String> = mockOAuth2Server.hentToken().tokenTilHttpEntity()
+    private fun hentToken(): HttpEntity<String> = mockOAuth2Server.hentToken(issuerId = "tokenx").tokenTilHttpEntity()
 
     private fun stubDokumentOversikt() {
         coEvery {

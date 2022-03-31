@@ -1,6 +1,7 @@
 package no.nav.sifinnsynapi.oppslag
 
-import no.nav.security.token.support.spring.validation.interceptor.BearerTokenClientHttpRequestInterceptor
+import no.nav.security.token.support.client.core.oauth2.OAuth2AccessTokenService
+import no.nav.security.token.support.client.spring.ClientConfigurationProperties
 import no.nav.sifinnsynapi.http.MDCValuesPropagatingClienHttpRequesInterceptor
 import no.nav.sifinnsynapi.util.Constants.X_CORRELATION_ID
 import org.slf4j.Logger
@@ -10,7 +11,10 @@ import org.springframework.boot.web.client.RestTemplateBuilder
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpHeaders.CONTENT_TYPE
+import org.springframework.http.HttpRequest
 import org.springframework.http.MediaType
+import org.springframework.http.client.ClientHttpRequestExecution
+import org.springframework.http.client.ClientHttpRequestInterceptor
 import org.springframework.retry.RetryCallback
 import org.springframework.retry.RetryContext
 import org.springframework.retry.RetryListener
@@ -20,18 +24,23 @@ import java.util.*
 
 @Configuration
 class OppslagsKlientKonfig(
-        @Value("\${no.nav.gateways.k9-selvbetjening-oppslag}")
-        private val oppslagsUrl: String,
-        @Value("\${spring.rest.retry.maxAttempts}")
-        private val maxAttempts: Int
+    @Value("\${no.nav.gateways.k9-selvbetjening-oppslag}") private val oppslagsUrl: String,
+    @Value("\${spring.rest.retry.maxAttempts}") private val maxAttempts: Int,
+    oauth2Config: ClientConfigurationProperties,
+    private val oAuth2AccessTokenService: OAuth2AccessTokenService
 ) : RetryListener {
 
     private companion object {
         val logger: Logger = LoggerFactory.getLogger(OppslagsKlientKonfig::class.java)
+        const val TOKEN_X_K9_SELVBETJENING_OPPSLAG = "tokenx-k9-selvbetjening-oppslag"
     }
 
+    private val tokenxK9SelvbetjeningOppslagClientProperties =
+        oauth2Config.registration[TOKEN_X_K9_SELVBETJENING_OPPSLAG]
+            ?: throw RuntimeException("could not find oauth2 client config for $TOKEN_X_K9_SELVBETJENING_OPPSLAG")
+
     @Bean(name = ["k9OppslagsKlient"])
-    fun restTemplate(builder: RestTemplateBuilder, tokenInterceptor: BearerTokenClientHttpRequestInterceptor, mdcInterceptor: MDCValuesPropagatingClienHttpRequesInterceptor): RestTemplate {
+    fun restTemplate(builder: RestTemplateBuilder, mdcInterceptor: MDCValuesPropagatingClienHttpRequesInterceptor): RestTemplate {
         return builder
                 .setConnectTimeout(Duration.ofSeconds(20))
                 .setReadTimeout(Duration.ofSeconds(20))
@@ -39,7 +48,7 @@ class OppslagsKlientKonfig(
                 .defaultHeader(CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .rootUri(oppslagsUrl)
                 .defaultMessageConverters()
-                .interceptors(tokenInterceptor, mdcInterceptor)
+                .interceptors(bearerTokenInterceptor(), mdcInterceptor)
                 .build()
     }
 
@@ -63,6 +72,19 @@ class OppslagsKlientKonfig(
         logger.warn("Forsøk {} av {}, {}", currentTry, maxAttempts, contextString.split(" ")[2])
 
         if (currentTry < maxAttempts) logger.info("Forsøker om: {} ms", nextInterval)
+    }
+
+    private fun bearerTokenInterceptor(): ClientHttpRequestInterceptor {
+        return ClientHttpRequestInterceptor { request: HttpRequest, body: ByteArray, execution: ClientHttpRequestExecution ->
+            when {
+                request.uri.path == "/isalive" -> {} // ignorer
+                else -> {
+                    val response = oAuth2AccessTokenService.getAccessToken(tokenxK9SelvbetjeningOppslagClientProperties)
+                    request.headers.setBearerAuth(response.accessToken)
+                }
+            }
+            execution.execute(request, body)
+        }
     }
 }
 
