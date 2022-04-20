@@ -5,9 +5,9 @@ plugins {
     id("org.springframework.boot") version "2.6.6"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
     id("com.expediagroup.graphql") version "5.3.2"
-    kotlin("jvm") version "1.6.10"
-    kotlin("plugin.spring") version "1.6.10"
-    kotlin("plugin.jpa") version "1.6.10"
+    kotlin("jvm") version "1.6.21"
+    kotlin("plugin.spring") version "1.6.21"
+    kotlin("plugin.jpa") version "1.6.21"
 }
 
 group = "no.nav"
@@ -21,28 +21,29 @@ configurations {
 }
 
 val confluentVersion by extra("5.5.0")
-val logstashLogbackEncoderVersion by extra("6.6")
-val tokenSupportVersion by extra("1.3.19")
+val logstashLogbackEncoderVersion by extra("7.0.1")
+val tokenSupportVersion by extra("2.0.14")
 val springCloudVersion by extra("2021.0.1")
 val retryVersion by extra("1.3.0")
-val zalandoVersion by extra("0.26.2")
+val zalandoVersion by extra("0.27.0")
 val openhtmltopdfVersion = "1.0.10"
 val handlebarsVersion = "4.3.0"
-val hibernateTypes52Version by extra("2.11.1")
-val awailitilityKotlinVersion by extra("4.1.0")
-val assertkJvmVersion by extra("0.24")
-val springMockkVersion by extra("3.0.1")
-val mockkVersion by extra("1.11.0")
-val guavaVersion by extra("23.0")
+val hibernateTypes52Version by extra("2.15.1")
+val awailitilityKotlinVersion by extra("4.1.1")
+val assertkJvmVersion by extra("0.25")
+val springMockkVersion by extra("3.1.1")
+val mockkVersion by extra("1.12.3")
+val guavaVersion by extra("31.1-jre")
 val okHttp3Version by extra("4.9.1")
-val orgJsonVersion by extra("20210307")
+val orgJsonVersion by extra("20220320")
 val graphQLKotlinVersion by extra("5.3.2")
 val k9FormatVersion by extra("5.5.20")
 val teamDokumenthåndteringAvroSchemaVersion by extra("bbea40a3")
-val springdocVersion by extra("1.6.6")
+val testContainersVersion by extra( "1.16.3")
 
+val springdocVersion by extra("1.6.7")
 ext["okhttp3.version"] = okHttp3Version
-ext["testcontainersVersion"] = "1.16.3"
+ext["testcontainersVersion"] = testContainersVersion
 
 repositories {
     mavenCentral()
@@ -114,8 +115,8 @@ dependencies {
     implementation("org.flywaydb:flyway-core")
     runtimeOnly("org.hibernate:hibernate-jpamodelgen")
     implementation("com.vladmihalcea:hibernate-types-52:$hibernateTypes52Version")
-    testImplementation("org.testcontainers:junit-jupiter:1.16.3")
-    testImplementation("org.testcontainers:postgresql:1.16.3")
+    testImplementation("org.testcontainers:junit-jupiter:$testContainersVersion")
+    testImplementation("org.testcontainers:postgresql:$testContainersVersion")
 
     // Jackson
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")

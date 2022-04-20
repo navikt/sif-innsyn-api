@@ -252,7 +252,7 @@ class SøknadControllerTest {
     @Test
     fun `Gitt 451 feil ved oppsalg av aktørId, forvent tilgang nektet problem detail med 451 statuskode`() {
 
-        val søknadId = UUID.randomUUID()
+        UUID.randomUUID()
         every {
             søknadService.hentSøknader()
         } throws TilgangNektetException("Tilgang nektet")
@@ -268,7 +268,6 @@ class SøknadControllerTest {
             .andExpect(jsonPath("$.type").value("/problem-details/tilgang-nektet"))
             .andExpect(jsonPath("$.title").value("tilgangskontroll-feil"))
             .andExpect(jsonPath("$.status").value(451))
-            .andExpect(jsonPath("$.detail").value("Tilgang nektet"))
             .andExpect(jsonPath("$.stackTrace").doesNotExist())
     }
 
@@ -288,7 +287,6 @@ class SøknadControllerTest {
             .andExpect(jsonPath("$.type").value("/problem-details/søknad-ikke-funnet"))
             .andExpect(jsonPath("$.title").value("Søknad ikke funnet"))
             .andExpect(jsonPath("$.status").value(404))
-            .andExpect(jsonPath("$.detail").value("Søknad med søknadId = $søknadId ble ikke funnet."))
             .andExpect(jsonPath("$.stackTrace").doesNotExist())
     }
 
@@ -304,7 +302,6 @@ class SøknadControllerTest {
             .andExpect(jsonPath("$.type").value("/problem-details/uautentisert-forespørsel"))
             .andExpect(jsonPath("$.title").value("Ikke autentisert"))
             .andExpect(jsonPath("$.status").value(401))
-            .andExpect(jsonPath("$.detail").value("no.nav.security.token.support.core.exceptions.JwtTokenMissingException: no valid token found in validation context"))
             .andExpect(jsonPath("$.stackTrace").doesNotExist())
     }
 
@@ -326,7 +323,6 @@ class SøknadControllerTest {
             .andExpect(jsonPath("$.type").value("/problem-details/uautentisert-forespørsel"))
             .andExpect(jsonPath("$.title").value("Ikke autentisert"))
             .andExpect(jsonPath("$.status").value(401))
-            .andExpect(jsonPath("$.detail").value("no.nav.security.token.support.core.exceptions.JwtTokenMissingException: no valid token found in validation context"))
             .andExpect(jsonPath("$.stackTrace").doesNotExist())
     }
 
@@ -348,7 +344,6 @@ class SøknadControllerTest {
             .andExpect(jsonPath("$.type").value("/problem-details/uautentisert-forespørsel"))
             .andExpect(jsonPath("$.title").value("Ikke autentisert"))
             .andExpect(jsonPath("$.status").value(401))
-            .andExpect(jsonPath("$.detail").value("no.nav.security.token.support.core.exceptions.JwtTokenMissingException: no valid token found in validation context"))
             .andExpect(jsonPath("$.stackTrace").doesNotExist())
     }
 

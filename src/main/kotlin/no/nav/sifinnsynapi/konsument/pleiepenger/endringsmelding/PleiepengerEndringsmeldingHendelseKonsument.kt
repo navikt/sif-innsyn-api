@@ -41,7 +41,7 @@ class PleiepengerEndringsmeldingHendelseKonsument(
             val søknadId = hendelse.hentSøknadIdFraEndringsmelding()
             logger.info("DRY_RUN --> Mottok hendelse om $YTELSE med søknadId: $søknadId")
             logger.info("DRY_RUN --> Mapper fra TopicEntry til Søknad for $YTELSE")
-            val søknadsHendelse = Søknad(
+            Søknad(
                 aktørId = AktørId(hendelse.hentAktørIdFraEndringsmelding()),
                 mottattDato = ZonedDateTime.parse(hendelse.hentMottattDatoFraEndringsmelding()),
                 fødselsnummer = Fødselsnummer(hendelse.hentFødselsnummerFraEndringsmelding()),

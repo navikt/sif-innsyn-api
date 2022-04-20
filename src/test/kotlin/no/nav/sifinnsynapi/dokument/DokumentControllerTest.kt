@@ -159,8 +159,7 @@ internal class DokumentControllerTest {
                       "type": "/problem-details/uautentisert-forespørsel",
                       "instance": "http://localhost/dokument/oversikt",
                       "title": "Ikke autentisert",
-                      "status": 401,
-                      "detail": "no.nav.security.token.support.core.exceptions.JwtTokenMissingException: no valid token found in validation context"
+                      "status": 401
                     }
                 """.trimIndent(), true
                 )
