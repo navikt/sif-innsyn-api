@@ -1,6 +1,5 @@
 package no.nav.sifinnsynapi.saf
 
-import assertk.Result
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import kotlinx.coroutines.runBlocking
