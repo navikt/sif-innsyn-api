@@ -24,7 +24,7 @@ jobs:
         with:
           java-version: 17
           distribution: 'zulu'
-          #cache: 'gradle'
+          cache: 'gradle'
       - name: Build JAR
         run: ./gradlew clean build -x test # Creates a combined JAR of project and runTime dependencies.
       - name: Build Docker image
