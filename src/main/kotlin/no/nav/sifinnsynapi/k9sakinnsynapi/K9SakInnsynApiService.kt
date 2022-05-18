@@ -15,7 +15,6 @@ import org.springframework.web.client.HttpServerErrorException
 import org.springframework.web.client.ResourceAccessException
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.util.UriComponentsBuilder
-import java.time.LocalDate
 
 @Service
 @Retryable(
@@ -81,6 +80,6 @@ class K9SakInnsynApiService(
 }
 
 data class K9SakInnsynSøknad(
-    val barnFolkeregistrertIdent: String,
+    val pleietrengendeIdent: String,
     val søknad: Søknad
 )
