@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import no.nav.security.token.support.spring.SpringTokenValidationContextHolder
 import no.nav.sifinnsynapi.safselvbetjening.generated.HentDokumentOversikt
 import no.nav.sifinnsynapi.safselvbetjening.generated.hentdokumentoversikt.Dokumentoversikt
+import no.nav.sifinnsynapi.util.personIdent
 import org.slf4j.LoggerFactory
 import org.springframework.http.ContentDisposition
 import org.springframework.http.HttpMethod
@@ -24,10 +25,10 @@ class SafSelvbetjeningService(
     }
 
     suspend fun hentDokumentoversikt(): Dokumentoversikt {
-        val token = tokenValidationContextHolder.tokenValidationContext.firstValidToken.get()
+        val personIdent = tokenValidationContextHolder.personIdent()
         val response = safSelvbetjeningGraphQLClient.execute(
             HentDokumentOversikt(
-                HentDokumentOversikt.Variables(token.subject)
+                HentDokumentOversikt.Variables(personIdent)
             )
         )
 
