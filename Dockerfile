@@ -1,3 +1,3 @@
-FROM openjdk:17-alpine
+FROM gcr.io/distroless/java17
 
 COPY build/libs/*.jar app.jar
