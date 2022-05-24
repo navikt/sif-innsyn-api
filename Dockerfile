@@ -1,3 +1,3 @@
-FROM navikt/java:17
+FROM openjdk/java:17-alpine
 
 COPY build/libs/*.jar app.jar
