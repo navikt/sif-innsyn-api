@@ -63,5 +63,4 @@ class K9SakInnsynApiClientConfig(
             logger.info("{} {}", request.method, request.uri)
             execution.execute(request, body)
         }
-
 }
