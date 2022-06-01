@@ -40,7 +40,7 @@
     "TOKENDINGS_BASE_URL": "https://tokendings.dev-gcp.nais.io",
     "SAFSELVBETJENING_TOKEN_X_AUDIENCE": "dev-fss:teamdokumenthandtering:safselvbetjening-q1",
     "K9_SAK_INNSYN_API_TOKEN_X_AUDIENCE": "dev-gcp:dusseldorf:k9-sak-innsyn-api",
-    "K9_SELVBETJENING_OPPSLAG_TOKEN_X_AUDIENCE": "dev-fss:dusseldorf:k9-selvbetjening-oppslag",
+    "K9_SELVBETJENING_OPPSLAG_TOKEN_X_AUDIENCE": "dev-gcp:dusseldorf:k9-selvbetjening-oppslag",
     "SWAGGER_ENABLED": "true"
   },
   "slack-channel": "sif-alerts-dev",
