@@ -5,7 +5,7 @@ plugins {
     id("org.springframework.boot") version "2.6.7"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
     id("com.expediagroup.graphql") version "5.3.2"
-    kotlin("jvm") version "1.6.21"
+    kotlin("jvm") version "1.7.0"
     kotlin("plugin.spring") version "1.6.21"
     kotlin("plugin.jpa") version "1.6.21"
 }
