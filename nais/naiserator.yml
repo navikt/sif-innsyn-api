@@ -26,6 +26,7 @@ spec:
         {{/each}}
       rules:
         - application: k9-selvbetjening-oppslag
+        - application: k9-sak-innsyn-api
   liveness:
     path: /actuator/health
     initialDelay: 60
