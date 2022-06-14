@@ -36,7 +36,7 @@
     "NO_NAV_GATEWAYS_SAF_BASE_URL": "https://saf.dev-fss-pub.nais.io",
     "NO_NAV_GATEWAYS_SAF_SELVBETJENING_BASE_URL": "https://safselvbetjening-q1.dev-fss-pub.nais.io",
     "NO_NAV_GATEWAYS_STS_URL": "https://api-gw-q1.oera.no/security-token-service",
-    "NO_NAV_GATEWAYS_K9_SAK_INNSYN_API_BASE_URL": "https://k9-sak-innsyn-api.dev.nav.no",
+    "NO_NAV_GATEWAYS_K9_SAK_INNSYN_API_BASE_URL": "http://k9-sak-innsyn-api",
     "TOKENDINGS_BASE_URL": "https://tokendings.dev-gcp.nais.io",
     "SAFSELVBETJENING_TOKEN_X_AUDIENCE": "dev-fss:teamdokumenthandtering:safselvbetjening-q1",
     "K9_SAK_INNSYN_API_TOKEN_X_AUDIENCE": "dev-gcp:dusseldorf:k9-sak-innsyn-api",
