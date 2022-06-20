@@ -22,7 +22,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.context.annotation.Import
-import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.http.HttpHeaders.CONTENT_DISPOSITION
 import org.springframework.http.MediaType
 import org.springframework.test.context.ActiveProfiles
@@ -183,7 +183,7 @@ class SøknadControllerTest {
             MockMvcRequestBuilders
                 .get(URI(URLDecoder.decode(SØKNAD, Charset.defaultCharset())))
                 .accept(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer ${mockOAuth2Server.hentToken(issuerId = "tokenx").serialize()}")
+                .header(AUTHORIZATION, "Bearer ${mockOAuth2Server.hentToken(issuerId = "tokenx").serialize()}")
         )
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk)
@@ -317,6 +317,22 @@ class SøknadControllerTest {
                         mockOAuth2Server.hentToken(issuerId = "ukjent issuer").serialize()
                     )
                 )
+        )
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isUnauthorized)
+            .andExpect(jsonPath("$.type").value("/problem-details/uautentisert-forespørsel"))
+            .andExpect(jsonPath("$.title").value("Ikke autentisert"))
+            .andExpect(jsonPath("$.status").value(401))
+            .andExpect(jsonPath("$.stackTrace").doesNotExist())
+    }
+
+    @Test
+    fun `gitt request med utgått token, forevnt 401`() {
+        mockMvc.perform(
+            MockMvcRequestBuilders
+                .get(URI(URLDecoder.decode(SØKNAD, Charset.defaultCharset())))
+                .accept(MediaType.APPLICATION_JSON)
+                .header(AUTHORIZATION, "Bearer ${mockOAuth2Server.hentToken(issuerId = "tokenx", expiry = -100).serialize()}")
         )
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isUnauthorized)
