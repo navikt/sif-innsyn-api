@@ -20,6 +20,8 @@ import org.springframework.retry.RetryContext
 import org.springframework.retry.RetryListener
 import org.springframework.web.client.RestTemplate
 import java.time.Duration
+import java.time.ZoneOffset.UTC
+import java.time.ZonedDateTime
 import java.util.*
 
 @Configuration
@@ -80,6 +82,7 @@ class OppslagsKlientKonfig(
                 request.uri.path == "/isalive" -> {} // ignorer
                 else -> {
                     val response = oAuth2AccessTokenService.getAccessToken(tokenxK9SelvbetjeningOppslagClientProperties)
+                    logger.debug("Utveklset token utgår kl. {}", ZonedDateTime.now(UTC).plusNanos(response.expiresIn.toLong()))
                     request.headers.setBearerAuth(response.accessToken)
                 }
             }
