@@ -48,7 +48,7 @@ class OppslagsService(
     @Recover
     private fun recover(error: HttpServerErrorException): OppslagRespons? {
         if (error.responseBodyAsString.isNotEmpty()) logger.error("Error response = '${error.responseBodyAsString}' fra '${søkerUrl.toUriString()}'")
-        else logger.error("Feil ved henting av søkers personinformasjon: {}", error.toString())
+        else logger.error("Feil ved henting av søkers personinformasjon", error)
         throw IllegalStateException("Feil ved henting av søkers personinformasjon")
     }
 
@@ -59,7 +59,7 @@ class OppslagsService(
         }
 
         if (error.responseBodyAsString.isNotEmpty()) logger.error("Error response = '${error.responseBodyAsString}' fra '${søkerUrl.toUriString()}'")
-        else logger.error("Feil ved henting av søkers personinformasjon: {}", error.toString())
+        else logger.error("Feil ved henting av søkers personinformasjon", error)
         throw IllegalStateException("Feil ved henting av søkers personinformasjon")
     }
 
