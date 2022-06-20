@@ -82,7 +82,7 @@ class OppslagsKlientKonfig(
                 request.uri.path == "/isalive" -> {} // ignorer
                 else -> {
                     val response = oAuth2AccessTokenService.getAccessToken(tokenxK9SelvbetjeningOppslagClientProperties)
-                    logger.debug("Utveklset token utgår kl. {}", ZonedDateTime.now(ZoneOffset.of("Europe/Oslo")).plusNanos(response.expiresIn.toLong()))
+                    logger.debug("Utveklset token utgår kl. {}", ZonedDateTime.now(ZoneOffset.of("Europe/Oslo")).plusSeconds(response.expiresIn.toLong()))
                     request.headers.setBearerAuth(response.accessToken)
                 }
             }
