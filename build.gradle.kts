@@ -2,12 +2,12 @@ import com.expediagroup.graphql.plugin.gradle.tasks.GraphQLGenerateClientTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("org.springframework.boot") version "2.6.7"
+    id("org.springframework.boot") version "2.7.0"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
-    id("com.expediagroup.graphql") version "5.3.2"
-    kotlin("jvm") version "1.6.21"
-    kotlin("plugin.spring") version "1.6.21"
-    kotlin("plugin.jpa") version "1.6.21"
+    id("com.expediagroup.graphql") version "5.5.0"
+    kotlin("jvm") version "1.7.0"
+    kotlin("plugin.spring") version "1.7.0"
+    kotlin("plugin.jpa") version "1.7.0"
 }
 
 group = "no.nav"
@@ -22,7 +22,7 @@ configurations {
 
 val confluentVersion by extra("5.5.0")
 val logstashLogbackEncoderVersion by extra("7.0.1")
-val tokenSupportVersion by extra("2.0.14")
+val tokenSupportVersion by extra("2.1.0")
 val springCloudVersion by extra("2021.0.1")
 val retryVersion by extra("1.3.0")
 val zalandoVersion by extra("0.27.0")
@@ -36,9 +36,9 @@ val mockkVersion by extra("1.12.3")
 val guavaVersion by extra("31.1-jre")
 val okHttp3Version by extra("4.9.1")
 val orgJsonVersion by extra("20220320")
-val graphQLKotlinVersion by extra("5.3.2")
+val graphQLKotlinVersion by extra("5.5.0")
 val k9FormatVersion by extra("5.5.20")
-val teamDokumenthåndteringAvroSchemaVersion by extra("bbea40a3")
+val teamDokumenthåndteringAvroSchemaVersion by extra("357738b9")
 val testContainersVersion by extra( "1.16.3")
 
 val springdocVersion by extra("1.6.7")
