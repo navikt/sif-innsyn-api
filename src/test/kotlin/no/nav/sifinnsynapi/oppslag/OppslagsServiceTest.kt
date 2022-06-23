@@ -4,7 +4,7 @@ import assertk.assertThat
 import assertk.assertions.isNotNull
 import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
 import no.nav.security.token.support.spring.validation.interceptor.BearerTokenClientHttpRequestInterceptor
-import no.nav.sifinnsynapi.http.MDCValuesPropagatingClienHttpRequesInterceptor
+import no.nav.sifinnsynapi.filter.MDCValuesPropagatingClienHttpRequesInterceptor
 import no.nav.sifinnsynapi.util.Constants
 import no.nav.sifinnsynapi.utils.stubForAktørId
 import org.junit.jupiter.api.Test

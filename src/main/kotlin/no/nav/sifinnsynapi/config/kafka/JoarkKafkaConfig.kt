@@ -20,6 +20,7 @@ import org.springframework.kafka.support.KafkaHeaders
 import org.springframework.util.backoff.FixedBackOff
 import java.nio.ByteBuffer
 import java.time.Duration
+import java.util.UUID
 
 @Configuration
 internal class JoarkKafkaConfig(
@@ -86,6 +87,7 @@ internal class JoarkKafkaConfig(
                 when {
                     journalføringsHendelse.erRelevant() && søknadEksisterer(journalføringsHendelse) -> {
                         MDCUtil.toMDC(Constants.JOURNALPOST_ID, journalføringsHendelse.journalpostId)
+                        MDCUtil.toMDC(Constants.CORRELATION_ID, UUID.randomUUID().toString())
                         false
                     }
                     else -> true

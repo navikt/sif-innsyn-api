@@ -2,8 +2,7 @@ package no.nav.sifinnsynapi.k9sakinnsynapi
 
 import no.nav.security.token.support.client.core.oauth2.OAuth2AccessTokenService
 import no.nav.security.token.support.client.spring.ClientConfigurationProperties
-import no.nav.sifinnsynapi.http.MDCValuesPropagatingClienHttpRequesInterceptor
-import no.nav.sifinnsynapi.util.Constants
+import no.nav.sifinnsynapi.filter.MDCValuesPropagatingClienHttpRequesInterceptor
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.web.client.RestTemplateBuilder
@@ -42,7 +41,6 @@ class K9SakInnsynApiClientConfig(
         return builder
             .setConnectTimeout(Duration.ofSeconds(20))
             .setReadTimeout(Duration.ofSeconds(20))
-            .defaultHeader(Constants.X_CORRELATION_ID, UUID.randomUUID().toString())
             .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
             .rootUri(k9SakInnsynApiBaseUrl)
             .defaultMessageConverters()
