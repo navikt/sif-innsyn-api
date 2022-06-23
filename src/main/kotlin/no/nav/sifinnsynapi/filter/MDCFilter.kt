@@ -69,6 +69,7 @@ class HeadersToMDCFilterRegistrationBean(headersFilter: MDCFilter) : FilterRegis
 @Component
 @Order(Ordered.LOWEST_PRECEDENCE)
 class MDCValuesPropagatingClienHttpRequesInterceptor : ClientHttpRequestInterceptor {
+
     @Throws(IOException::class)
     override fun intercept(request: HttpRequest, body: ByteArray, execution: ClientHttpRequestExecution): ClientHttpResponse {
         propagerFraMDC(request, Constants.CORRELATION_ID, Constants.NAV_CONSUMER_ID)
@@ -76,9 +77,11 @@ class MDCValuesPropagatingClienHttpRequesInterceptor : ClientHttpRequestIntercep
     }
 
     companion object {
+        private val logger = LoggerFactory.getLogger(MDCValuesPropagatingClienHttpRequesInterceptor::class.java)
         private fun propagerFraMDC(request: HttpRequest, vararg keys: String) {
             keys.forEach { key ->
                 val value = MDC.get(key)
+                logger.debug("MDC: {}={}", key, value)
                 if (value != null) {
                     request.headers.add(key, value)
                 }
