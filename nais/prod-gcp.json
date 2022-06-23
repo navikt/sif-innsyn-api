@@ -10,7 +10,6 @@
   ],
   "externalHosts": [
     "login.microsoftonline.com",
-    "kafka-schema-registry.nais.adeo.no",
     "saf.prod-fss-pub.nais.io",
     "safselvbetjening.prod-fss-pub.nais.io"
   ],
