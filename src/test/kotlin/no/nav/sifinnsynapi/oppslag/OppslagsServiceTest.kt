@@ -4,8 +4,8 @@ import assertk.assertThat
 import assertk.assertions.isNotNull
 import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
 import no.nav.security.token.support.spring.validation.interceptor.BearerTokenClientHttpRequestInterceptor
-import no.nav.sifinnsynapi.http.MDCValuesPropagatingClienHttpRequesInterceptor
-import no.nav.sifinnsynapi.util.Constants
+import no.nav.sifinnsynapi.filter.MDCValuesPropagatingClienHttpRequesInterceptor
+import no.nav.sifinnsynapi.util.HttpHeaderConstants
 import no.nav.sifinnsynapi.utils.stubForAktørId
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -44,7 +44,7 @@ internal class OppslagsServiceTest {
             return builder
                     .setConnectTimeout(Duration.ofSeconds(20))
                     .setReadTimeout(Duration.ofSeconds(20))
-                    .defaultHeader(Constants.X_CORRELATION_ID, UUID.randomUUID().toString())
+                    .defaultHeader(HttpHeaderConstants.X_CORRELATION_ID, UUID.randomUUID().toString())
                     .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                     .defaultHeader(HttpHeaders.AUTHORIZATION, anyString())
                     .defaultMessageConverters()

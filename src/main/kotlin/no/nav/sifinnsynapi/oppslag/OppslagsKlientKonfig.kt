@@ -2,8 +2,7 @@ package no.nav.sifinnsynapi.oppslag
 
 import no.nav.security.token.support.client.core.oauth2.OAuth2AccessTokenService
 import no.nav.security.token.support.client.spring.ClientConfigurationProperties
-import no.nav.sifinnsynapi.http.MDCValuesPropagatingClienHttpRequesInterceptor
-import no.nav.sifinnsynapi.util.Constants.X_CORRELATION_ID
+import no.nav.sifinnsynapi.filter.MDCValuesPropagatingClienHttpRequesInterceptor
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
@@ -46,7 +45,6 @@ class OppslagsKlientKonfig(
         return builder
                 .setConnectTimeout(Duration.ofSeconds(20))
                 .setReadTimeout(Duration.ofSeconds(20))
-                .defaultHeader(X_CORRELATION_ID, UUID.randomUUID().toString())
                 .defaultHeader(CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .rootUri(oppslagsUrl)
                 .defaultMessageConverters()

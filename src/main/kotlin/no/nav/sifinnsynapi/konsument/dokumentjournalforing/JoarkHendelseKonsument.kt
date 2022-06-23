@@ -5,7 +5,7 @@ import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
 import no.nav.sifinnsynapi.http.SøknadWithJournalpostIdNotFoundException
 import no.nav.sifinnsynapi.saf.SafService
 import no.nav.sifinnsynapi.soknad.SøknadService
-import no.nav.sifinnsynapi.util.Constants
+import no.nav.sifinnsynapi.util.MDCConstants.K9_SAK_ID
 import no.nav.sifinnsynapi.util.MDCUtil
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.slf4j.LoggerFactory
@@ -50,7 +50,7 @@ class JoarkHendelseKonsument(
             when {
                 (fagsak != null) && (!fagsak.fagsaksystem.isNullOrBlank() && fagsak.fagsaksystem == K9_FAGSAK_SYSTEM) && !fagsak.fagsakId.isNullOrBlank() -> {
                     logger.info("Fagsak: {}", fagsak)
-                    MDCUtil.toMDC(Constants.K9_SAK_ID, fagsak.fagsakId)
+                    MDCUtil.toMDC(K9_SAK_ID, fagsak.fagsakId)
                     logger.info("Oppdaterer søknad med saksId...")
                     try {
                         val oppdatertSøknad =

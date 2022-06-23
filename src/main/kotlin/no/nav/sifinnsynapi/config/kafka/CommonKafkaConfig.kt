@@ -4,7 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import no.nav.sifinnsynapi.common.AktørId
 import no.nav.sifinnsynapi.common.TopicEntry
 import no.nav.sifinnsynapi.soknad.SøknadRepository
-import no.nav.sifinnsynapi.util.Constants
+import no.nav.sifinnsynapi.util.MDCConstants.CORRELATION_ID
+import no.nav.sifinnsynapi.util.MDCConstants.JOURNALPOST_ID
+import no.nav.sifinnsynapi.util.MDCConstants.NAV_CONSUMER_ID
 import no.nav.sifinnsynapi.util.MDCUtil
 import org.apache.kafka.clients.CommonClientConfigs
 import org.apache.kafka.clients.consumer.ConsumerConfig
@@ -26,7 +28,6 @@ import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.util.backoff.FixedBackOff
 import java.nio.ByteBuffer
 import java.time.Duration
-import java.util.function.BiConsumer
 
 class CommonKafkaConfig {
     companion object {
@@ -128,9 +129,9 @@ class CommonKafkaConfig {
 
                 val topicEntry = objectMapper.readValue(it.value(), TopicEntry::class.java).data
                 val correlationId = topicEntry.metadata.correlationId
-                MDCUtil.toMDC(Constants.CORRELATION_ID, correlationId)
-                MDCUtil.toMDC(Constants.NAV_CONSUMER_ID, clientId)
-                MDCUtil.toMDC(Constants.JOURNALPOST_ID, topicEntry.journalførtMelding.journalpostId)
+                MDCUtil.toMDC(CORRELATION_ID, correlationId)
+                MDCUtil.toMDC(NAV_CONSUMER_ID, clientId)
+                MDCUtil.toMDC(JOURNALPOST_ID, topicEntry.journalførtMelding.journalpostId)
 
                 val søker = JSONObject(topicEntry.melding).getJSONObject("søker")
                 when (søknadRepository.existsSøknadDAOByAktørIdAndJournalpostId(
