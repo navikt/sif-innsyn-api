@@ -2,7 +2,7 @@ package no.nav.sifinnsynapi.saf
 
 import com.expediagroup.graphql.client.spring.GraphQLWebClient
 import no.nav.sifinnsynapi.sts.STSClient
-import no.nav.sifinnsynapi.util.Constants
+import no.nav.sifinnsynapi.util.HttpHeaderConstants
 import no.nav.sifinnsynapi.util.MDCUtil
 import no.nav.sifinnsynapi.util.asAuthoriationHeader
 import org.slf4j.LoggerFactory
@@ -43,7 +43,9 @@ class SafClientConfig(
             )
             .defaultRequest {
                 it.header(AUTHORIZATION, stsClient.oicdToken().asAuthoriationHeader())
-                it.header(Constants.NAV_CALL_ID, MDCUtil.callId())
+                val correlationId = MDCUtil.callIdOrNew()
+                it.header(HttpHeaderConstants.NAV_CALL_ID, correlationId)
+                it.header(HttpHeaderConstants.X_CORRELATION_ID, correlationId)
             }
     )
 }

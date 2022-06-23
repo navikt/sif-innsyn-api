@@ -5,7 +5,7 @@ import com.expediagroup.graphql.client.types.GraphQLClientResponse
 import com.fasterxml.jackson.databind.ObjectMapper
 import no.nav.sifinnsynapi.saf.generated.HentJournalpostinfo
 import no.nav.sifinnsynapi.saf.generated.hentjournalpostinfo.Journalpost
-import no.nav.sifinnsynapi.util.Constants.CORRELATION_ID
+import no.nav.sifinnsynapi.util.HttpHeaderConstants.X_CORRELATION_ID
 import no.nav.sifinnsynapi.util.MDCUtil
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
@@ -22,7 +22,7 @@ class SafService(
     suspend fun hentJournalpostinfo(journalpostId: String): Journalpost {
         val response: GraphQLClientResponse<HentJournalpostinfo.Result> =
             safClient.execute(HentJournalpostinfo(HentJournalpostinfo.Variables(journalpostId))) {
-                header(CORRELATION_ID, MDCUtil.callIdOrNew())
+                header(X_CORRELATION_ID, MDCUtil.callIdOrNew())
             }
 
         return when {

@@ -4,7 +4,8 @@ import com.expediagroup.graphql.client.spring.GraphQLWebClient
 import no.nav.security.token.support.client.core.ClientProperties
 import no.nav.security.token.support.client.core.oauth2.OAuth2AccessTokenService
 import no.nav.security.token.support.client.spring.ClientConfigurationProperties
-import no.nav.sifinnsynapi.util.Constants.NAV_CALL_ID
+import no.nav.sifinnsynapi.util.HttpHeaderConstants.NAV_CALL_ID
+import no.nav.sifinnsynapi.util.HttpHeaderConstants.X_CORRELATION_ID
 import no.nav.sifinnsynapi.util.MDCUtil
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
@@ -53,7 +54,9 @@ class SafSelvbetjeningClientsConfig(
                 )
             )
             .defaultRequest {
-                it.header(NAV_CALL_ID, MDCUtil.callId())
+                val correlationId = MDCUtil.callIdOrNew()
+                it.header(NAV_CALL_ID, correlationId)
+                it.header(X_CORRELATION_ID, correlationId)
                 it.header(
                     AUTHORIZATION,
                     "Bearer ${oAuth2AccessTokenService.getAccessToken(tokenxSafSelvbetjeningClientProperties).accessToken}"

@@ -4,7 +4,9 @@ import io.confluent.kafka.serializers.KafkaAvroDeserializerConfig
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
 import no.nav.sifinnsynapi.config.kafka.CommonKafkaConfig.Companion.defaultRecoverer
 import no.nav.sifinnsynapi.soknad.SøknadService
-import no.nav.sifinnsynapi.util.Constants
+import no.nav.sifinnsynapi.util.MDCConstants.CORRELATION_ID
+import no.nav.sifinnsynapi.util.MDCConstants.JOURNALPOST_ID
+import no.nav.sifinnsynapi.util.MDCConstants.K9_SAK_ID
 import no.nav.sifinnsynapi.util.MDCUtil
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.consumer.ConsumerRecord
@@ -79,15 +81,16 @@ internal class JoarkKafkaConfig(
             )
 
             setRecordFilterStrategy {
-                MDCUtil.clearFomMDC(Constants.JOURNALPOST_ID)
-                MDCUtil.clearFomMDC(Constants.K9_SAK_ID)
+                MDCUtil.clearFomMDC(JOURNALPOST_ID)
+                MDCUtil.clearFomMDC(K9_SAK_ID)
+                MDCUtil.clearFomMDC(CORRELATION_ID)
                 loggAntallForsøk(it)
 
                 val journalføringsHendelse = it.value()
                 when {
                     journalføringsHendelse.erRelevant() && søknadEksisterer(journalføringsHendelse) -> {
-                        MDCUtil.toMDC(Constants.JOURNALPOST_ID, journalføringsHendelse.journalpostId)
-                        MDCUtil.toMDC(Constants.CORRELATION_ID, UUID.randomUUID().toString())
+                        MDCUtil.toMDC(JOURNALPOST_ID, journalføringsHendelse.journalpostId)
+                        MDCUtil.toMDC(CORRELATION_ID, MDCUtil.callIdOrNew())
                         false
                     }
                     else -> true

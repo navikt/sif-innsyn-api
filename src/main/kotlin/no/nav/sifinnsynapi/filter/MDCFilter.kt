@@ -1,8 +1,10 @@
 package no.nav.sifinnsynapi.filter
 
 import no.nav.sifinnsynapi.util.CallIdGenerator
-import no.nav.sifinnsynapi.util.Constants
-import no.nav.sifinnsynapi.util.Constants.NAV_CALL_ID
+import no.nav.sifinnsynapi.util.HttpHeaderConstants.NAV_CALL_ID
+import no.nav.sifinnsynapi.util.HttpHeaderConstants.X_CORRELATION_ID
+import no.nav.sifinnsynapi.util.MDCConstants.CORRELATION_ID
+import no.nav.sifinnsynapi.util.MDCConstants.NAV_CONSUMER_ID
 import no.nav.sifinnsynapi.util.MDCUtil
 import org.slf4j.LoggerFactory
 import org.slf4j.MDC
@@ -42,8 +44,8 @@ class MDCFilter(
 
     private fun putValues(req: HttpServletRequest) {
         try {
-            MDCUtil.toMDC(Constants.NAV_CONSUMER_ID, req.getHeader(Constants.NAV_CONSUMER_ID), applicationName)
-            MDCUtil.toMDC(Constants.CORRELATION_ID, req.getHeader(Constants.CORRELATION_ID), generator.create())
+            MDCUtil.toMDC(NAV_CONSUMER_ID, req.getHeader(NAV_CONSUMER_ID), applicationName)
+            MDCUtil.toMDC(CORRELATION_ID, req.getHeader(X_CORRELATION_ID), generator.create())
         } catch (e: Exception) {
             logger.warn("Feil ved setting av MDC-verdier for {}, MDC-verdier er inkomplette", req.requestURI, e)
         }
@@ -77,8 +79,8 @@ class MDCValuesPropagatingClienHttpRequesInterceptor : ClientHttpRequestIntercep
         body: ByteArray,
         execution: ClientHttpRequestExecution
     ): ClientHttpResponse {
-        MDC.get(Constants.CORRELATION_ID)?.apply { request.headers.add(Constants.X_CORRELATION_ID, this) }
-        MDC.get(Constants.NAV_CONSUMER_ID)?.apply { request.headers.add(NAV_CALL_ID, this) }
+        MDC.get(CORRELATION_ID)?.apply { request.headers.add(X_CORRELATION_ID, this) }
+        MDC.get(NAV_CONSUMER_ID)?.apply { request.headers.add(NAV_CALL_ID, this) }
         return execution.execute(request, body)
     }
 }
