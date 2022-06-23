@@ -2,6 +2,7 @@ package no.nav.sifinnsynapi.filter
 
 import no.nav.sifinnsynapi.util.CallIdGenerator
 import no.nav.sifinnsynapi.util.Constants
+import no.nav.sifinnsynapi.util.Constants.NAV_CALL_ID
 import no.nav.sifinnsynapi.util.MDCUtil
 import org.slf4j.LoggerFactory
 import org.slf4j.MDC
@@ -71,22 +72,13 @@ class HeadersToMDCFilterRegistrationBean(headersFilter: MDCFilter) : FilterRegis
 class MDCValuesPropagatingClienHttpRequesInterceptor : ClientHttpRequestInterceptor {
 
     @Throws(IOException::class)
-    override fun intercept(request: HttpRequest, body: ByteArray, execution: ClientHttpRequestExecution): ClientHttpResponse {
-        propagerFraMDC(request, Constants.CORRELATION_ID, Constants.NAV_CONSUMER_ID)
+    override fun intercept(
+        request: HttpRequest,
+        body: ByteArray,
+        execution: ClientHttpRequestExecution
+    ): ClientHttpResponse {
+        MDC.get(Constants.CORRELATION_ID)?.apply { request.headers.add(Constants.X_CORRELATION_ID, this) }
+        MDC.get(Constants.NAV_CONSUMER_ID)?.apply { request.headers.add(NAV_CALL_ID, this) }
         return execution.execute(request, body)
-    }
-
-    companion object {
-        private val logger = LoggerFactory.getLogger(MDCValuesPropagatingClienHttpRequesInterceptor::class.java)
-        private fun propagerFraMDC(request: HttpRequest, vararg keys: String) {
-            keys.forEach { key ->
-                val value = MDC.get(key)
-                logger.debug("MDC: {}={}", key, value)
-                if (value != null) {
-                    request.headers.add(key, value)
-                }
-            }
-            request.headers.add(Constants.CALL_ID, MDCUtil.callId())
-        }
     }
 }
