@@ -1,8 +1,9 @@
 package no.nav.sifinnsynapi.soknad
 
-import no.nav.security.token.support.core.api.Protected
 import no.nav.security.token.support.core.api.ProtectedWithClaims
+import no.nav.security.token.support.core.api.RequiredIssuers
 import no.nav.sifinnsynapi.Routes.SØKNAD
+import no.nav.sifinnsynapi.config.Issuers
 import org.slf4j.LoggerFactory
 import org.springframework.core.io.ByteArrayResource
 import org.springframework.core.io.Resource
@@ -14,7 +15,10 @@ import org.springframework.web.bind.annotation.*
 import java.util.*
 
 @RestController
-@ProtectedWithClaims(issuer = "selvbetjening", claimMap = ["acr=Level4"])
+@RequiredIssuers(
+    ProtectedWithClaims(issuer = Issuers.ID_PORTEN, claimMap = ["acr=Level4"]),
+    ProtectedWithClaims(issuer = Issuers.TOKEN_X, claimMap = ["acr=Level4"])
+)
 class SøknadController(
         private val søknadService: SøknadService
 ) {
@@ -23,7 +27,6 @@ class SøknadController(
     }
 
     @GetMapping(SØKNAD, produces = [MediaType.APPLICATION_JSON_VALUE])
-    @Protected
     @ResponseStatus(OK)
     fun hentSøknader(): List<SøknadDTO> {
         logger.info("Forsøker å hente søknader...")
@@ -33,7 +36,6 @@ class SøknadController(
     }
 
     @GetMapping("$SØKNAD/{søknadId}", produces = [MediaType.APPLICATION_JSON_VALUE])
-    @Protected
     @ResponseStatus(OK)
     fun hentSøknad(@PathVariable søknadId: UUID): SøknadDTO {
         logger.info("Forsøker å hente søknad med id : {}...", søknadId)
@@ -41,7 +43,6 @@ class SøknadController(
     }
 
     @GetMapping("$SØKNAD/{søknadId}/arbeidsgivermelding", produces = [MediaType.APPLICATION_PDF_VALUE])
-    @Protected
     @ResponseStatus(OK)
     fun lastNedArbeidsgivermelding(
         @PathVariable søknadId: UUID,

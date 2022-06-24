@@ -15,6 +15,7 @@ import no.nav.sifinnsynapi.common.AktørId
 import no.nav.sifinnsynapi.common.Fødselsnummer
 import no.nav.sifinnsynapi.common.SøknadsStatus
 import no.nav.sifinnsynapi.common.Søknadstype
+import no.nav.sifinnsynapi.config.Issuers
 import no.nav.sifinnsynapi.config.SecurityConfiguration
 import no.nav.sifinnsynapi.config.Topics.AAPEN_DOK_JOURNALFØRING_V1
 import no.nav.sifinnsynapi.config.Topics.K9_DITTNAV_VARSEL_BESKJED_AIVEN
@@ -459,7 +460,7 @@ class KafkaHendelseKonsumentIntegrasjonsTest {
         JSONAssert.assertEquals(forventetResponse, body!!.somJson(mapper), JSONCompareMode.LENIENT)
     }
 
-    private fun hentToken(): HttpEntity<String> = mockOAuth2Server.hentToken(issuerId = "tokenx").tokenTilHttpEntity()
+    private fun hentToken(): HttpEntity<String> = mockOAuth2Server.hentToken(issuerId = Issuers.TOKEN_X).tokenTilHttpEntity()
 
     private fun stubDokumentOversikt() {
         coEvery {

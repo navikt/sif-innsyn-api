@@ -8,6 +8,7 @@ import no.nav.sifinnsynapi.Routes.SØKNAD
 import no.nav.sifinnsynapi.common.AktørId
 import no.nav.sifinnsynapi.common.SøknadsStatus
 import no.nav.sifinnsynapi.common.Søknadstype
+import no.nav.sifinnsynapi.config.Issuers
 import no.nav.sifinnsynapi.config.SecurityConfiguration
 import no.nav.sifinnsynapi.dokument.DokumentService
 import no.nav.sifinnsynapi.http.SøknadNotFoundException
@@ -183,7 +184,7 @@ class SøknadControllerTest {
             MockMvcRequestBuilders
                 .get(URI(URLDecoder.decode(SØKNAD, Charset.defaultCharset())))
                 .accept(MediaType.APPLICATION_JSON)
-                .header(AUTHORIZATION, "Bearer ${mockOAuth2Server.hentToken(issuerId = "tokenx").serialize()}")
+                .header(AUTHORIZATION, "Bearer ${mockOAuth2Server.hentToken(issuerId = Issuers.TOKEN_X).serialize()}")
         )
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk)
@@ -332,7 +333,7 @@ class SøknadControllerTest {
             MockMvcRequestBuilders
                 .get(URI(URLDecoder.decode(SØKNAD, Charset.defaultCharset())))
                 .accept(MediaType.APPLICATION_JSON)
-                .header(AUTHORIZATION, "Bearer ${mockOAuth2Server.hentToken(issuerId = "tokenx", expiry = -100).serialize()}")
+                .header(AUTHORIZATION, "Bearer ${mockOAuth2Server.hentToken(issuerId = Issuers.TOKEN_X, expiry = -100).serialize()}")
         )
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isUnauthorized)
@@ -352,6 +353,27 @@ class SøknadControllerTest {
                     Cookie(
                         "selvbetjening-idtoken",
                         mockOAuth2Server.hentToken(audience = "ukjent audience").serialize()
+                    )
+                )
+        )
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isUnauthorized)
+            .andExpect(jsonPath("$.type").value("/problem-details/uautentisert-forespørsel"))
+            .andExpect(jsonPath("$.title").value("Ikke autentisert"))
+            .andExpect(jsonPath("$.status").value(401))
+            .andExpect(jsonPath("$.stackTrace").doesNotExist())
+    }
+
+    @Test
+    fun `gitt request med token med acr=Level3, forevnt 401`() {
+        mockMvc.perform(
+            MockMvcRequestBuilders
+                .get(URI(URLDecoder.decode(SØKNAD, Charset.defaultCharset())))
+                .accept(MediaType.APPLICATION_JSON)
+                .cookie(
+                    Cookie(
+                        "selvbetjening-idtoken",
+                        mockOAuth2Server.hentToken(claims = mapOf("acr" to "Level3")).serialize()
                     )
                 )
         )
