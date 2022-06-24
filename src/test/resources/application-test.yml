@@ -12,8 +12,8 @@ no.nav:
   security:
     jwt:
       issuer:
-        loginservice:
-          discoveryurl: http://localhost:${mock-oauth2-server.port}/loginservice/.well-known/openid-configuration
+        idporten:
+          discoveryurl: http://localhost:${mock-oauth2-server.port}/idporten/.well-known/openid-configuration
           accepted_audience: aud-localhost
           cookie_name: selvbetjening-idtoken
         tokenx:
