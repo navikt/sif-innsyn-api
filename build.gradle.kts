@@ -7,7 +7,7 @@ plugins {
     id("com.expediagroup.graphql") version "5.5.0"
     kotlin("jvm") version "1.7.0"
     kotlin("plugin.spring") version "1.7.0"
-    kotlin("plugin.jpa") version "1.7.0"
+    kotlin("plugin.jpa") version "1.7.10"
 }
 
 group = "no.nav"
