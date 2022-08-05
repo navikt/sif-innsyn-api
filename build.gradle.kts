@@ -28,6 +28,7 @@ val retryVersion by extra("1.3.0")
 val zalandoVersion by extra("0.27.0")
 val openhtmltopdfVersion = "1.0.10"
 val handlebarsVersion = "4.3.0"
+val postgresqlVersion by extra("42.4.1")
 val hibernateTypes52Version by extra("2.15.1")
 val awailitilityKotlinVersion by extra("4.1.1")
 val assertkJvmVersion by extra("0.25")
@@ -111,7 +112,7 @@ dependencies {
     implementation("net.logstash.logback:logstash-logback-encoder:$logstashLogbackEncoderVersion")
 
     // Database
-    runtimeOnly("org.postgresql:postgresql")
+    runtimeOnly("org.postgresql:postgresql:$postgresqlVersion")
     implementation("org.flywaydb:flyway-core")
     runtimeOnly("org.hibernate:hibernate-jpamodelgen")
     implementation("com.vladmihalcea:hibernate-types-52:$hibernateTypes52Version")
