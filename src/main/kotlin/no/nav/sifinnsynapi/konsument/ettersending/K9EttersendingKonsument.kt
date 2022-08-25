@@ -56,7 +56,7 @@ class K9EttersendingKonsument(
         }
     }
 
-    @Transactional(TxConfiguration.TRANSACTION_MANAGER)
+    @Transactional(transactionManager = TxConfiguration.TRANSACTION_MANAGER, rollbackFor = [Exception::class])
     @KafkaListener(
         topics = ["#{'\${topic.listener.k9-ettersending.navn}'}"],
         id = "#{'\${topic.listener.k9-ettersending.id}'}",

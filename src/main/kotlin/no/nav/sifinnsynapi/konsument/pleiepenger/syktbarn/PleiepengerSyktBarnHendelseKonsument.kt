@@ -33,7 +33,7 @@ class PleiepengerSyktBarnHendelseKonsument(
         private val YTELSE = "'pleiepenger - sykt barn'"
     }
 
-    @Transactional(TRANSACTION_MANAGER)
+    @Transactional(transactionManager = TRANSACTION_MANAGER, rollbackFor = [Exception::class])
     @KafkaListener(
             topics = ["#{'\${topic.listener.pp-sykt-barn.navn}'}"],
             id = "#{'\${topic.listener.pp-sykt-barn.id}'}",
