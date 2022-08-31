@@ -31,6 +31,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 import java.net.URI
 import java.net.URLDecoder
@@ -154,6 +155,68 @@ class SøknadControllerTest {
             .andExpect(jsonPath("[0].endret").doesNotExist())
             .andExpect(jsonPath("[0].behandlingsdato").doesNotExist())
             .andExpect(jsonPath("[0].søknad").isMap)
+    }
+
+    @Test
+    fun `Gitt at søknad blir funnet, forvent korrekt format på sist mottatte PSB søknad`() {
+        every {
+            søknadService.hentSistInnsendteSøknad(any())
+        } returns
+                SøknadDTO(
+                    søknadId = UUID.randomUUID(),
+                    saksId = "abc123",
+                    søknadstype = Søknadstype.PP_SYKT_BARN,
+                    status = SøknadsStatus.MOTTATT,
+                    journalpostId = "123456789",
+                    opprettet = ZonedDateTime.parse("2020-08-04T10:30:00Z").withZoneSameInstant(ZoneId.of("UTC")),
+                    søknad = mapOf(
+                        "soknadId" to UUID.randomUUID().toString(),
+                        "mottatt" to ZonedDateTime.now(),
+                        "søker" to mapOf(
+                            "fødselsnummer" to "1234567",
+                            "aktørId" to AktørId.valueOf("123456")
+                        )
+                    ),
+                    dokumenter = listOf()
+                )
+
+        mockMvc.perform(
+            MockMvcRequestBuilders
+                .get(URI(URLDecoder.decode("$SØKNAD/psb/siste", Charset.defaultCharset())))
+                .accept(MediaType.APPLICATION_JSON)
+                .cookie(Cookie("selvbetjening-idtoken", mockOAuth2Server.hentToken().serialize()))
+        )
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$.saksId").isString)
+            .andExpect(jsonPath("$.saksId").value("abc123"))
+            .andExpect(jsonPath("$.søknadstype").isString)
+            .andExpect(jsonPath("$.søknadstype").value("PP_SYKT_BARN"))
+            .andExpect(jsonPath("$.status").isString)
+            .andExpect(jsonPath("$.status").value("MOTTATT"))
+            .andExpect(jsonPath("$.journalpostId").isString)
+            .andExpect(jsonPath("$.journalpostId").value("123456789"))
+            .andExpect(jsonPath("$.opprettet").isString)
+            .andExpect(jsonPath("$.opprettet").value("2020-08-04T10:30:00.000Z"))
+            .andExpect(jsonPath("$.endret").doesNotExist())
+            .andExpect(jsonPath("$.behandlingsdato").doesNotExist())
+            .andExpect(jsonPath("$.søknad").isMap)
+    }
+
+    @Test
+    fun `Gitt at søknad ikke blir funnet, forvent korrekt format på sist mottatte PSB søknad`() {
+        every {
+            søknadService.hentSistInnsendteSøknad(any())
+        } returns null
+
+        mockMvc.perform(
+            MockMvcRequestBuilders
+                .get(URI(URLDecoder.decode("$SØKNAD/psb/siste", Charset.defaultCharset())))
+                .accept(MediaType.APPLICATION_JSON)
+                .cookie(Cookie("selvbetjening-idtoken", mockOAuth2Server.hentToken().serialize()))
+        )
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isNotFound)
     }
 
     @Test
@@ -333,7 +396,10 @@ class SøknadControllerTest {
             MockMvcRequestBuilders
                 .get(URI(URLDecoder.decode(SØKNAD, Charset.defaultCharset())))
                 .accept(MediaType.APPLICATION_JSON)
-                .header(AUTHORIZATION, "Bearer ${mockOAuth2Server.hentToken(issuerId = Issuers.TOKEN_X, expiry = -100).serialize()}")
+                .header(
+                    AUTHORIZATION,
+                    "Bearer ${mockOAuth2Server.hentToken(issuerId = Issuers.TOKEN_X, expiry = -100).serialize()}"
+                )
         )
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isUnauthorized)
@@ -394,7 +460,14 @@ class SøknadControllerTest {
         val forventetFilnavn = "Bekreftelse_til_arbeidsgiver_12345678.pdf"
         mockMvc.perform(
             MockMvcRequestBuilders
-                .get(URI(URLDecoder.decode("$SØKNAD/${UUID.randomUUID()}/arbeidsgivermelding", Charset.defaultCharset())))
+                .get(
+                    URI(
+                        URLDecoder.decode(
+                            "$SØKNAD/${UUID.randomUUID()}/arbeidsgivermelding",
+                            Charset.defaultCharset()
+                        )
+                    )
+                )
                 .queryParam("organisasjonsnummer", "12345678")
                 .accept(MediaType.APPLICATION_PDF_VALUE)
                 .cookie(Cookie("selvbetjening-idtoken", mockOAuth2Server.hentToken().serialize()))

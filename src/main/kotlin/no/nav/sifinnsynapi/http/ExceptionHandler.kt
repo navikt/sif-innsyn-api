@@ -75,6 +75,26 @@ class ExceptionHandler : ProblemHandling, AdviceTrait {
         )
     }
 
+    @ExceptionHandler(value = [SøknaderNotFoundException::class])
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    fun håndterSøknaderIkkeFunnet(
+        exception: SøknaderNotFoundException,
+        request: ServletWebRequest
+    ): ResponseEntity<Problem> {
+
+        val throwableProblem = Problem.builder()
+            .withType(URI("/problem-details/søknader-ikke-funnet"))
+            .withTitle("Søknader ikke funnet")
+            .withStatus(Status.NOT_FOUND)
+            .withDetail(exception.message)
+            .withInstance(URI(URLDecoder.decode(request.request.requestURL.toString(), Charset.defaultCharset())))
+            .build()
+
+        return create(
+            throwableProblem, request
+        )
+    }
+
     @ExceptionHandler(value = [TilgangNektetException::class])
     @ResponseStatus(HttpStatus.UNAVAILABLE_FOR_LEGAL_REASONS)
     fun håndterTilgangNektet(
@@ -197,6 +217,7 @@ class DocumentNotFoundException(søknadId: String) :
     RuntimeException("Dokument med søknadId = $søknadId ble ikke funnet.")
 
 class SøknadNotFoundException(søknadId: String) : RuntimeException("Søknad med søknadId = $søknadId ble ikke funnet.")
+class SøknaderNotFoundException() : RuntimeException("Ingen søknader ble funnet.")
 
 class SøknadWithJournalpostIdNotFoundException(journalpostId: String) :
     RuntimeException("Søknad med journalpostId = $journalpostId ble ikke funnet.")

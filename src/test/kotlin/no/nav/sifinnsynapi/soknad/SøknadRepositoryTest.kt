@@ -1,6 +1,9 @@
 package no.nav.sifinnsynapi.soknad
 
 import assertk.assertions.isEqualTo
+import assertk.assertions.isNotNull
+import assertk.assertions.isSameAs
+import no.nav.k9.søknad.ytelse.psb.v1.PleiepengerSyktBarn
 import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
 import no.nav.sifinnsynapi.common.AktørId
 import no.nav.sifinnsynapi.common.Fødselsnummer
@@ -17,6 +20,8 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit.jupiter.SpringExtension
+import java.time.LocalDate
+import java.time.ZoneOffset.UTC
 import java.time.ZonedDateTime
 import java.util.*
 
@@ -26,7 +31,7 @@ import java.util.*
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(SpringExtension::class)
 @AutoConfigureTestDatabase(
-        replace = AutoConfigureTestDatabase.Replace.NONE
+    replace = AutoConfigureTestDatabase.Replace.NONE
 )
 class SøknadRepositoryTest {
 
@@ -115,7 +120,8 @@ class SøknadRepositoryTest {
     fun `Sjekke om søknad eksisterer ved bruk av aktørId som ikke eksisterer`() {
         val søknadDAO = lagSøknadDAO()
         repository.save(søknadDAO)
-        val eksistererSøknad = repository.existsSøknadDAOByAktørIdAndJournalpostId(aktørIdSomIkkeEksisterer, journalpostId)
+        val eksistererSøknad =
+            repository.existsSøknadDAOByAktørIdAndJournalpostId(aktørIdSomIkkeEksisterer, journalpostId)
 
         assertFalse(eksistererSøknad)
     }
@@ -140,31 +146,52 @@ class SøknadRepositoryTest {
 
     @Test
     fun `gitt søknader i database, forvent 2 unike brukere`() {
-        repository.saveAll(listOf(
+        repository.saveAll(
+            listOf(
                 lagSøknadDAO(),
                 lagSøknadDAO(customAktørId = AktørId("789010")),
                 lagSøknadDAO(customAktørId = AktørId("789010"))
-        ))
+            )
+        )
 
         assertk.assertThat(repository.finnAntallUnikeSøkere()).isEqualTo(2)
     }
 
+    @Test
+    fun `gitt søknader med 3 ulike datoer, forvent siste`() {
+        val forventetDato = LocalDate.parse("2022-01-03")
+        repository.saveAll(
+            listOf(
+                lagSøknadDAO(mottatt = LocalDate.parse("2022-01-01").atStartOfDay(UTC)),
+                lagSøknadDAO(mottatt = LocalDate.parse("2022-01-02").atStartOfDay(UTC)),
+                lagSøknadDAO(mottatt = forventetDato.atStartOfDay(UTC))
+            )
+        )
+
+        val sistMottattSøknad =
+            repository.finnSisteSøknadGittAktørIdOgSøknadstype(aktørId.aktørId!!, Søknadstype.PP_SYKT_BARN.name)
+        assertk
+            .assertThat(sistMottattSøknad).isNotNull()
+            .assertThat(sistMottattSøknad!!.opprettet!!.toLocalDate())
+    }
+
     private fun lagSøknadDAO(
-            customAktørId: AktørId = aktørId,
-            customJournalpostId: String = journalpostId,
-            søknadstype: Søknadstype = Søknadstype.PP_SYKT_BARN
+        mottatt: ZonedDateTime = ZonedDateTime.now(),
+        customAktørId: AktørId = aktørId,
+        customJournalpostId: String = journalpostId,
+        søknadstype: Søknadstype = Søknadstype.PP_SYKT_BARN,
     ): SøknadDAO = SøknadDAO(
-            id = UUID.randomUUID(),
-            aktørId = customAktørId,
-            fødselsnummer = fødselsnummer,
-            søknadstype = søknadstype,
-            status = SøknadsStatus.MOTTATT,
-            journalpostId = customJournalpostId,
-            saksId = "2222",
-            opprettet = ZonedDateTime.now(),
-            søknad =
-            //language=json
-            """
+        id = UUID.randomUUID(),
+        aktørId = customAktørId,
+        fødselsnummer = fødselsnummer,
+        søknadstype = søknadstype,
+        status = SøknadsStatus.MOTTATT,
+        journalpostId = customJournalpostId,
+        saksId = "2222",
+        opprettet = mottatt,
+        søknad =
+        //language=json
+        """
                     {
                         "søknadId": "05ce3630-76eb-40f4-87a3-a5d55af58e40",
                         "språk": "nb"

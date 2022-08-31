@@ -14,14 +14,20 @@ interface SøknadRepository : JpaRepository<SøknadDAO, UUID> {
     fun existsSøknadDAOByAktørIdAndJournalpostId(aktørId: AktørId, journalpostId: String): Boolean
 
     @Query(
-            value = "SELECT COUNT(DISTINCT aktør_id) FROM søknad",
-            nativeQuery = true
+        value = "SELECT COUNT(DISTINCT aktør_id) FROM søknad",
+        nativeQuery = true
     )
     fun finnAntallUnikeSøkere(): Long
 
     @Query(
-            value = "SELECT COUNT(*) FROM søknad WHERE søknadstype = ?1",
-            nativeQuery = true
+        value = "SELECT COUNT(*) FROM søknad WHERE søknadstype = ?1",
+        nativeQuery = true
     )
     fun finnAntallSøknaderGittSøknadstype(søknadstype: String): Long
+
+    @Query(
+        value = "SELECT * FROM søknad WHERE aktør_id = ?1 and søknadstype = ?2 ORDER BY opprettet LIMIT 1",
+        nativeQuery = true
+    )
+    fun finnSisteSøknadGittAktørIdOgSøknadstype(aktørId: String, søknadstype: String): SøknadDAO?
 }

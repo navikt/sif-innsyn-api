@@ -64,6 +64,12 @@ class SøknadService(
         return søknadDAO.tilSøknadDTO(dokumentOversikt)
     }
 
+    fun hentSistInnsendteSøknad(søknadstype: Søknadstype): SøknadDTO? {
+        val aktørId = AktørId.valueOf(oppslagsService.hentAktørId()!!.aktør_id)
+        return repo.finnSisteSøknadGittAktørIdOgSøknadstype(aktørId = aktørId.aktørId!!, søknadstype = søknadstype.name)
+            ?.tilSøknadDTO()
+    }
+
     fun oppdaterSøknadSaksIdGittJournalpostId(saksId: String, journalpostId: String): SøknadDAO {
         val søknad = repo.findByJournalpostId(journalpostId)
             ?: throw SøknadWithJournalpostIdNotFoundException(journalpostId)
@@ -71,22 +77,24 @@ class SøknadService(
         return repo.save(søknad.copy(saksId = saksId))
     }
 
-    fun SøknadDAO.tilSøknadDTO(dokumentOversikt: List<DokumentDTO>) = SøknadDTO(
-        søknadId = id,
-        saksId = saksId,
-        journalpostId = journalpostId,
-        søknadstype = søknadstype,
-        status = status,
-        opprettet = opprettet,
-        endret = endret,
-        behandlingsdato = behandlingsdato,
-        dokumenter = dokumentOversikt,
-        søknad = mapper.readValue(
-            søknad,
-            object :
-                TypeReference<MutableMap<String, Any>>() {}
+    fun SøknadDAO.tilSøknadDTO(dokumentOversikt: List<DokumentDTO>? = null): SøknadDTO {
+        return SøknadDTO(
+            søknadId = id,
+            saksId = saksId,
+            journalpostId = journalpostId,
+            søknadstype = søknadstype,
+            status = status,
+            opprettet = opprettet,
+            endret = endret,
+            behandlingsdato = behandlingsdato,
+            dokumenter = dokumentOversikt?: listOf(),
+            søknad = mapper.readValue(
+                søknad,
+                object :
+                    TypeReference<MutableMap<String, Any>>() {}
+            )
         )
-    )
+    }
 
     fun hentArbeidsgiverMeldingFil(søknadId: UUID, organisasjonsnummer: String): ByteArray {
 

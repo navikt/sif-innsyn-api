@@ -3,7 +3,9 @@ package no.nav.sifinnsynapi.soknad
 import no.nav.security.token.support.core.api.ProtectedWithClaims
 import no.nav.security.token.support.core.api.RequiredIssuers
 import no.nav.sifinnsynapi.Routes.SØKNAD
+import no.nav.sifinnsynapi.common.Søknadstype
 import no.nav.sifinnsynapi.config.Issuers
+import no.nav.sifinnsynapi.http.SøknaderNotFoundException
 import org.slf4j.LoggerFactory
 import org.springframework.core.io.ByteArrayResource
 import org.springframework.core.io.Resource
@@ -40,6 +42,13 @@ class SøknadController(
     fun hentSøknad(@PathVariable søknadId: UUID): SøknadDTO {
         logger.info("Forsøker å hente søknad med id : {}...", søknadId)
         return søknadService.hentSøknad(søknadId)
+    }
+
+    @GetMapping("$SØKNAD/psb/siste", produces = [MediaType.APPLICATION_JSON_VALUE])
+    @ResponseStatus(OK)
+    fun hentSistInnsendtePSBSøknad(): SøknadDTO {
+        logger.info("Forsøker å hente sist innsendte søknad...")
+        return søknadService.hentSistInnsendteSøknad(Søknadstype.PP_SYKT_BARN) ?: throw SøknaderNotFoundException()
     }
 
     @GetMapping("$SØKNAD/{søknadId}/arbeidsgivermelding", produces = [MediaType.APPLICATION_PDF_VALUE])
