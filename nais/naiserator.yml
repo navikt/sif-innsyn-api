@@ -19,6 +19,7 @@ spec:
       rules:
         - application: sif-innsyn
         - application: pleiepengesoknad-api
+        - application: pleiepengesoknad
     outbound:
       external:
         {{#each externalHosts as |host|}}
