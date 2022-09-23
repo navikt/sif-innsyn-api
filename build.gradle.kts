@@ -65,6 +65,13 @@ repositories {
 }
 dependencies {
 
+    // Overstyrer snakeyaml grunnet sårbarhet i v1.30. Kan fjernes når avhengiheter har oppdatert.
+    implementation("org.yaml:snakeyaml") {
+        version {
+            strictly("1.32")
+        }
+    }
+
     // NAV
     implementation("no.nav.k9:soknad:$k9FormatVersion")
 
