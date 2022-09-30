@@ -27,14 +27,6 @@ kafka:
         key-store-password: ${KAFKA_CREDSTORE_PASSWORD}
         key-store-type: PKCS12
 
-  dittnav:
-    pleiepenger-sykt-barn:
-      beskjed:
-        link: https://sif-innsyn.dev.nav.no/familie/sykdom-i-familien/soknad/innsyn/dine-pleiepenger
-    pleiepenger-sykt-barn-endringsmelding:
-      beskjed:
-        link: https://sif-innsyn.dev.nav.no/familie/sykdom-i-familien/soknad/innsyn/dine-pleiepenger
-
 topic:
   listener:
     # topic.listener.dok-journalfoering-v1
@@ -43,3 +35,12 @@ topic:
       navn: teamdokumenthandtering.aapen-dok-journalfoering-q1
       bryter: true
       dry-run: false
+
+no.nav:
+  dittnav:
+    pleiepenger-sykt-barn:
+      beskjed:
+        link: https://sif-innsyn.dev.nav.no/familie/sykdom-i-familien/soknad/innsyn/dine-pleiepenger
+    pleiepenger-sykt-barn-endringsmelding:
+      beskjed:
+        link: https://sif-innsyn.dev.nav.no/familie/sykdom-i-familien/soknad/innsyn/dine-pleiepenger
