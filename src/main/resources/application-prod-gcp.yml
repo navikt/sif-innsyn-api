@@ -37,13 +37,5 @@ kafka:
         key-store-password: ${KAFKA_CREDSTORE_PASSWORD}
         key-store-type: PKCS12
 
-  dittnav:
-    pleiepenger-sykt-barn:
-      beskjed:
-        link: https://www.nav.no/familie/sykdom-i-familien/soknad/innsyn/dine-pleiepenger
-    pleiepenger-sykt-barn-endringsmelding:
-      beskjed:
-        link: https://www.nav.no/familie/sykdom-i-familien/soknad/innsyn/dine-pleiepenger
-
   metrics:
     interval: 3_600_000 # 1 time
