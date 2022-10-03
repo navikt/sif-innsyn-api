@@ -35,3 +35,12 @@ topic:
       navn: teamdokumenthandtering.aapen-dok-journalfoering-q1
       bryter: true
       dry-run: false
+
+no.nav:
+  dittnav:
+    pleiepenger-sykt-barn:
+      beskjed:
+        link: https://sif-innsyn.dev.nav.no/familie/sykdom-i-familien/soknad/innsyn/dine-pleiepenger
+    pleiepenger-sykt-barn-endringsmelding:
+      beskjed:
+        link: https://sif-innsyn.dev.nav.no/familie/sykdom-i-familien/soknad/innsyn/dine-pleiepenger
