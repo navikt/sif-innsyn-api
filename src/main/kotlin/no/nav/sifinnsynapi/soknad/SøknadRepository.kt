@@ -26,7 +26,7 @@ interface SøknadRepository : JpaRepository<SøknadDAO, UUID> {
     fun finnAntallSøknaderGittSøknadstype(søknadstype: String): Long
 
     @Query(
-        value = "SELECT * FROM søknad WHERE aktør_id = ?1 and søknadstype = ?2 ORDER BY opprettet LIMIT 1",
+        value = "SELECT * FROM søknad WHERE aktør_id = ?1 and søknadstype = ?2 ORDER BY opprettet DESC LIMIT 1",
         nativeQuery = true
     )
     fun finnSisteSøknadGittAktørIdOgSøknadstype(aktørId: String, søknadstype: String): SøknadDAO?

@@ -172,7 +172,7 @@ class SøknadRepositoryTest {
             repository.finnSisteSøknadGittAktørIdOgSøknadstype(aktørId.aktørId!!, Søknadstype.PP_SYKT_BARN.name)
         assertk
             .assertThat(sistMottattSøknad).isNotNull()
-            .assertThat(sistMottattSøknad!!.opprettet!!.toLocalDate())
+            .assertThat(sistMottattSøknad!!.opprettet!!.toLocalDate()).isEqualTo(forventetDato)
     }
 
     private fun lagSøknadDAO(
