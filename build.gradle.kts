@@ -27,7 +27,7 @@ val springCloudVersion by extra("2021.0.1")
 val retryVersion by extra("1.3.3")
 val zalandoVersion by extra("0.27.0")
 val openhtmltopdfVersion = "1.0.10"
-val handlebarsVersion = "4.3.0"
+val handlebarsVersion = "4.3.1"
 val postgresqlVersion by extra("42.5.0")
 val hibernateTypes52Version by extra("2.19.2")
 val awailitilityKotlinVersion by extra("4.1.1")
