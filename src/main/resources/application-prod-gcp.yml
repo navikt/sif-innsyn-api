@@ -15,6 +15,9 @@ topic:
 
 management:
   endpoint:
+    web:
+      exposure:
+        include: health
     health:
       show-details: never
 
