@@ -28,13 +28,13 @@ spec:
         - application: k9-selvbetjening-oppslag
         - application: k9-sak-innsyn-api
   liveness:
-    path: /actuator/health
+    path: /internal/actuator/health/liveness
     initialDelay: 60
     timeout: 1
     periodSeconds: 5
     failureThreshold: 10
   readiness:
-    path: /actuator/health
+    path: /internal/actuator/health/readiness
     initialDelay: 60
     timeout: 1
   resources:
