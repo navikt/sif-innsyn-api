@@ -54,7 +54,7 @@ spec:
     cpuThresholdPercentage: 90
   prometheus:
     enabled: true
-    path: /prometheus
+    path: /metrics
   envFrom:
     - configmap: loginservice-idporten
     - secret: sif-innsyn-api.sts-credentials
