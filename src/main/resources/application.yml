@@ -122,7 +122,7 @@ management:
       show-details: always
   endpoints:
     web:
-      base-path: /internal/actuator
+      base-path: /
       exposure:
         include: health, prometheus
 
