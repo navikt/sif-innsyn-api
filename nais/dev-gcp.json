@@ -37,6 +37,7 @@
     "NO_NAV_GATEWAYS_K9_SAK_INNSYN_API_BASE_URL": "http://k9-sak-innsyn-api",
     "TOKENDINGS_BASE_URL": "https://tokendings.dev-gcp.nais.io",
     "SAFSELVBETJENING_TOKEN_X_AUDIENCE": "dev-fss:teamdokumenthandtering:safselvbetjening-q1",
+    "SAF_AZURE_SCOPE": "api://dev-fss.teamdokumenthandtering.saf-q1/.default",
     "K9_SAK_INNSYN_API_TOKEN_X_AUDIENCE": "dev-gcp:dusseldorf:k9-sak-innsyn-api",
     "K9_SELVBETJENING_OPPSLAG_TOKEN_X_AUDIENCE": "dev-gcp:dusseldorf:k9-selvbetjening-oppslag",
     "SWAGGER_ENABLED": "true"

@@ -13,11 +13,6 @@ topic:
     dok-journalfoering-v1:
       bryter: true
 
-management:
-  endpoint:
-    health:
-      show-details: never
-
 spring:
   jpa:
     show-sql: false

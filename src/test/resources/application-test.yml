@@ -1,14 +1,8 @@
 no.nav:
-  apigw:
-    sts-apikey: sts-apikey
   gateways:
     k9-selvbetjening-oppslag: http://localhost:${wiremock.server.port}/k9-selvbetjening-oppslag-mock
     saf-base-url: http://localhost:${wiremock.server.port}/saf-api-mock
     saf-selvbetjening-base-url: http://localhost:${wiremock.server.port}/saf-selvbetjening-graphql-mock
-    sts:
-      url: http://localhost:${wiremock.server.port}/security-token-service
-      username: sts-username
-      password: sts-password
   security:
     jwt:
       issuer:
@@ -50,6 +44,15 @@ no.nav:
               client-jwk: src/test/resources/tokenx-jwk.json
             token-exchange:
               audience: dev-fss:dusseldorf:k9-selvbetjening-oppslag
+
+          azure-saf:
+            token-endpoint-url: http://localhost:${mock-oauth2-server.port}/oauth2/v2.0/token
+            grant-type: client_credentials
+            scope: api://dev-fss.teamdokumenthandtering.saf-q1/.default
+            authentication:
+              client-auth-method: private_key_jwt
+              client-id: dev-gcp:dusseldorf:sif-innsyn-api
+              client-jwk: src/test/resources/tokenx-jwk.json
     cors:
       allowed-origins: http://localhost:8080
 

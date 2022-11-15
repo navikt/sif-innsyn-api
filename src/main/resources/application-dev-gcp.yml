@@ -1,10 +1,8 @@
 management:
-  endpoint:
+  endpoints:
     web:
       exposure:
         include: '*'
-    health:
-      show-details: always
 
 spring:
   mvc:

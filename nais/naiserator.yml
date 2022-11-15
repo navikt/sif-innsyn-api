@@ -29,13 +29,13 @@ spec:
         - application: k9-selvbetjening-oppslag
         - application: k9-sak-innsyn-api
   liveness:
-    path: /actuator/health
+    path: /health/liveness
     initialDelay: 60
     timeout: 1
     periodSeconds: 5
     failureThreshold: 10
   readiness:
-    path: /actuator/health
+    path: /health/readiness
     initialDelay: 60
     timeout: 1
   resources:
@@ -55,11 +55,9 @@ spec:
     cpuThresholdPercentage: 90
   prometheus:
     enabled: true
-    path: /actuator/prometheus
+    path: /metrics
   envFrom:
     - configmap: loginservice-idporten
-    - secret: sif-innsyn-api.sts-credentials
-    - secret: sif-innsyn-api.sts-apikey
   env:
   {{#each env}}
    - name: {{@key}}
