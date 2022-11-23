@@ -3,11 +3,11 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     id("org.springframework.boot") version "2.7.4"
-    id("io.spring.dependency-management") version "1.0.14.RELEASE"
+    id("io.spring.dependency-management") version "1.1.0"
     id("com.expediagroup.graphql") version "6.2.5"
-    kotlin("jvm") version "1.7.10"
-    kotlin("plugin.spring") version "1.7.10"
-    kotlin("plugin.jpa") version "1.7.10"
+    kotlin("jvm") version "1.7.21"
+    kotlin("plugin.spring") version "1.7.21"
+    kotlin("plugin.jpa") version "1.7.21"
 }
 
 group = "no.nav"
@@ -22,27 +22,27 @@ configurations {
 
 val confluentVersion by extra("5.5.0")
 val logstashLogbackEncoderVersion by extra("7.2")
-val tokenSupportVersion by extra("2.1.4")
+val tokenSupportVersion by extra("2.1.8")
 val springCloudVersion by extra("2021.0.1")
 val retryVersion by extra("1.3.3")
 val zalandoVersion by extra("0.27.0")
-val openhtmltopdfVersion = "1.0.10"
-val handlebarsVersion = "4.3.0"
+val openhtmltopdfVersion by extra("1.0.10")
+val handlebarsVersion by extra("4.3.1")
 val postgresqlVersion by extra("42.5.0")
-val hibernateTypes52Version by extra("2.19.2")
-val awailitilityKotlinVersion by extra("4.1.1")
+val hibernateTypes52Version by extra("2.20.0")
+val awailitilityKotlinVersion by extra("4.2.0")
 val assertkJvmVersion by extra("0.25")
 val springMockkVersion by extra("3.1.1")
-val mockkVersion by extra("1.12.8")
+val mockkVersion by extra("1.13.2")
 val guavaVersion by extra("31.1-jre")
 val okHttp3Version by extra("4.10.0")
-val orgJsonVersion by extra("20220320")
+val orgJsonVersion by extra("20220924")
 val graphQLKotlinVersion by extra("6.2.5")
 val k9FormatVersion by extra("5.5.20")
 val teamDokumenthåndteringAvroSchemaVersion by extra("357738b9")
-val testContainersVersion by extra("1.17.3")
+val testContainersVersion by extra("1.17.6")
 
-val springdocVersion by extra("1.6.11")
+val springdocVersion by extra("1.6.13")
 ext["okhttp3.version"] = okHttp3Version
 ext["testcontainersVersion"] = testContainersVersion
 
