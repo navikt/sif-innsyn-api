@@ -2,7 +2,7 @@ import com.expediagroup.graphql.plugin.gradle.tasks.GraphQLGenerateClientTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("org.springframework.boot") version "2.7.4"
+    id("org.springframework.boot") version "2.7.5"
     id("io.spring.dependency-management") version "1.1.0"
     id("com.expediagroup.graphql") version "6.2.5"
     kotlin("jvm") version "1.7.21"
