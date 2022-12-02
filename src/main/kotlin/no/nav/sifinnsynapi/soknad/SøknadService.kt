@@ -28,7 +28,7 @@ class SøknadService(
     private val repo: SøknadRepository,
     private val oppslagsService: OppslagsService,
     private val dokumentService: DokumentService,
-    private val arbeidsgiverMeldingPDFGenerator: ArbeidsgiverMeldingPDFGenerator,
+    private val arbeidsgiverMeldingPDFGenerator: ArbeidsgiverMeldingPDFGenerator
 ) {
 
     companion object {
