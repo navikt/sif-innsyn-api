@@ -7,7 +7,6 @@ import no.nav.sifinnsynapi.common.Søknadstype
 import no.nav.sifinnsynapi.dokument.DokumentDTO
 import no.nav.sifinnsynapi.dokument.DokumentService
 import no.nav.sifinnsynapi.dokument.DokumentService.Companion.brevkoder
-import no.nav.sifinnsynapi.http.SøknadNotFoundException
 import no.nav.sifinnsynapi.konsument.pleiepenger.syktbarn.ArbeidsgiverMeldingPDFGenerator
 import no.nav.sifinnsynapi.konsument.pleiepenger.syktbarn.PleiepengerJSONObjectUtils.finnOrganisasjon
 import no.nav.sifinnsynapi.konsument.pleiepenger.syktbarn.PleiepengerJSONObjectUtils.tilPleiepengerAreidsgivermelding
@@ -29,7 +28,7 @@ class SøknadService(
     private val repo: SøknadRepository,
     private val oppslagsService: OppslagsService,
     private val dokumentService: DokumentService,
-    private val arbeidsgiverMeldingPDFGenerator: ArbeidsgiverMeldingPDFGenerator
+    private val arbeidsgiverMeldingPDFGenerator: ArbeidsgiverMeldingPDFGenerator,
 ) {
 
     companion object {
@@ -54,8 +53,9 @@ class SøknadService(
 
         return søknadDAOs
             .map { søknadDAO ->
-            val relevanteDokumenter = dokumentOversikt.filter { it.journalpostId == søknadDAO.journalpostId }
-            søknadDAO.tilSøknadDTO(relevanteDokumenter) }
+                val relevanteDokumenter = dokumentOversikt.filter { it.journalpostId == søknadDAO.journalpostId }
+                søknadDAO.tilSøknadDTO(relevanteDokumenter)
+            }
     }
 
     fun hentSøknad(søknadId: UUID): SøknadDTO {
@@ -92,7 +92,7 @@ class SøknadService(
             opprettet = opprettet,
             endret = endret,
             behandlingsdato = behandlingsdato,
-            dokumenter = dokumentOversikt?: listOf(),
+            dokumenter = dokumentOversikt ?: listOf(),
             søknad = mapper.readValue(
                 søknad,
                 object :
@@ -125,6 +125,35 @@ class SøknadService(
 
     fun søknadGittJournalpostIdEksisterer(journalpostId: String): Boolean {
         return repo.findByJournalpostId(journalpostId) != null
+    }
+}
+
+class SøknadNotFoundException : ErrorResponseException {
+    constructor(søknadId: String) : super(HttpStatus.NOT_FOUND, asProblemDetail(søknadId), null)
+    constructor(søknadstype: Søknadstype) : super(HttpStatus.NOT_FOUND, asProblemDetail(søknadstype), null)
+
+    private companion object {
+        private fun asProblemDetail(søknadId: String): ProblemDetail {
+            val problemDetail = ProblemDetail.forStatus(HttpStatus.NOT_FOUND)
+            problemDetail.title = "Søknad ble ikke funnet"
+            problemDetail.detail = "Søknad med id $søknadId ble ikke funnet."
+            problemDetail.type = URI("/problem-details/søknad-ikke-funnet")
+            ServletUtils.currentHttpRequest()?.let {
+                problemDetail.instance = URI(URLDecoder.decode(it.requestURL.toString(), Charset.defaultCharset()))
+            }
+            return problemDetail
+        }
+
+        private fun asProblemDetail(søknadstype: Søknadstype): ProblemDetail {
+            val problemDetail = ProblemDetail.forStatus(HttpStatus.NOT_FOUND)
+            problemDetail.title = "Søknad ble ikke funnet"
+            problemDetail.detail = "Søknad med type $søknadstype ble ikke funnet."
+            problemDetail.type = URI("/problem-details/søknad-ikke-funnet")
+            ServletUtils.currentHttpRequest()?.let {
+                problemDetail.instance = URI(URLDecoder.decode(it.requestURL.toString(), Charset.defaultCharset()))
+            }
+            return problemDetail
+        }
     }
 }
 

@@ -10,7 +10,6 @@ import no.nav.sifinnsynapi.common.Fødselsnummer
 import no.nav.sifinnsynapi.common.SøknadsStatus
 import no.nav.sifinnsynapi.common.Søknadstype
 import no.nav.sifinnsynapi.dokument.DokumentService
-import no.nav.sifinnsynapi.http.SøknadNotFoundException
 import no.nav.sifinnsynapi.oppslag.OppslagRespons
 import no.nav.sifinnsynapi.oppslag.OppslagsService
 import org.awaitility.kotlin.await
@@ -19,7 +18,6 @@ import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit.jupiter.SpringExtension

@@ -88,19 +88,3 @@ class ExceptionHandler : ResponseEntityExceptionHandler() {
         return problemDetails
     }
 }
-
-class SøknadNotFoundException(søknadId: String) :
-    ErrorResponseException(HttpStatus.NOT_FOUND, asProblemDetail(søknadId), null) {
-    private companion object {
-        private fun asProblemDetail(søknadId: String): ProblemDetail {
-            val problemDetail = ProblemDetail.forStatus(HttpStatus.NOT_FOUND)
-            problemDetail.title = "Søknad ble ikke funnet"
-            problemDetail.detail = "Søknad med id $søknadId ble ikke funnet."
-            problemDetail.type = URI("/problem-details/søknad-ikke-funnet")
-            currentHttpRequest()?.let {
-                problemDetail.instance = URI(URLDecoder.decode(it.requestURL.toString(), Charset.defaultCharset()))
-            }
-            return problemDetail
-        }
-    }
-}

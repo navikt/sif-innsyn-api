@@ -2,6 +2,7 @@ package no.nav.sifinnsynapi.soknad
 
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
+import jakarta.servlet.http.Cookie
 import no.nav.security.mock.oauth2.MockOAuth2Server
 import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
 import no.nav.sifinnsynapi.Routes.SØKNAD
@@ -11,7 +12,6 @@ import no.nav.sifinnsynapi.common.Søknadstype
 import no.nav.sifinnsynapi.config.Issuers
 import no.nav.sifinnsynapi.config.SecurityConfiguration
 import no.nav.sifinnsynapi.dokument.DokumentService
-import no.nav.sifinnsynapi.http.SøknadNotFoundException
 import no.nav.sifinnsynapi.oppslag.TilgangNektetException
 import no.nav.sifinnsynapi.util.CallIdGenerator
 import no.nav.sifinnsynapi.utils.hentToken
@@ -31,7 +31,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 import java.net.URI
 import java.net.URLDecoder
@@ -39,7 +38,6 @@ import java.nio.charset.Charset
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.util.*
-import jakarta.servlet.http.Cookie
 
 
 @ExtendWith(SpringExtension::class)
