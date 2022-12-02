@@ -451,12 +451,12 @@ class KafkaHendelseKonsumentIntegrasjonsTest {
     }
 
     private fun ResponseEntity<List<SøknadDTO>>.listAssert(forventetResponse: String, forventetStatus: Int) {
-        assertThat(statusCodeValue).isEqualTo(forventetStatus)
+        assertThat(statusCode.value()).isEqualTo(forventetStatus)
         JSONAssert.assertEquals(forventetResponse, body!!.somJson(mapper), JSONCompareMode.LENIENT)
     }
 
     private fun ResponseEntity<SøknadDTO>.assert(forventetResponse: String, forventetStatus: Int) {
-        assertThat(statusCodeValue).isEqualTo(forventetStatus)
+        assertThat(statusCode.value()).isEqualTo(forventetStatus)
         JSONAssert.assertEquals(forventetResponse, body!!.somJson(mapper), JSONCompareMode.LENIENT)
     }
 

@@ -38,7 +38,7 @@ import java.nio.charset.Charset
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.util.*
-import javax.servlet.http.Cookie
+import jakarta.servlet.http.Cookie
 
 
 @ExtendWith(SpringExtension::class)
@@ -104,7 +104,7 @@ class SøknadControllerTest {
                 header().string(
                     "problem-details",
                     //language=json
-                    """{"type":"/problem-details/internal-server-error","title":"Internal Server Error","status":500,"detail":"Ooops, noe gikk galt..."}""".trimIndent()
+                    """{"type":"/problem-details/internal-server-error","title":"Et uventet feil har oppstått","status":500,"detail":"Ooops, noe gikk galt...","instance":"http://localhost/soknad"}""".trimIndent()
                 )
             )
     }
@@ -254,9 +254,7 @@ class SøknadControllerTest {
     fun `Gitt 451 feil ved oppsalg av aktørId, forvent tilgang nektet problem detail med 451 statuskode`() {
 
         UUID.randomUUID()
-        every {
-            søknadService.hentSøknader()
-        } throws TilgangNektetException("Tilgang nektet")
+        every { søknadService.hentSøknader() } throws TilgangNektetException()
 
         mockMvc.perform(
             MockMvcRequestBuilders
@@ -267,7 +265,8 @@ class SøknadControllerTest {
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isUnavailableForLegalReasons)
             .andExpect(jsonPath("$.type").value("/problem-details/tilgang-nektet"))
-            .andExpect(jsonPath("$.title").value("tilgangskontroll-feil"))
+            .andExpect(jsonPath("$.title").value("Tilgang til person nektet"))
+            .andExpect(jsonPath("$.detail").value("Tilgang til personen ble nektet fordi personen enten er under 18 år eller ikke i live."))
             .andExpect(jsonPath("$.status").value(451))
             .andExpect(jsonPath("$.stackTrace").doesNotExist())
     }
@@ -286,7 +285,7 @@ class SøknadControllerTest {
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isNotFound)
             .andExpect(jsonPath("$.type").value("/problem-details/søknad-ikke-funnet"))
-            .andExpect(jsonPath("$.title").value("Søknad ikke funnet"))
+            .andExpect(jsonPath("$.title").value("Søknad ble ikke funnet"))
             .andExpect(jsonPath("$.status").value(404))
             .andExpect(jsonPath("$.stackTrace").doesNotExist())
     }

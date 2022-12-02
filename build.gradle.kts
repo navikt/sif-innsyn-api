@@ -2,12 +2,12 @@ import com.expediagroup.graphql.plugin.gradle.tasks.GraphQLGenerateClientTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("org.springframework.boot") version "2.7.4"
+    id("org.springframework.boot") version "3.0.0"
     id("io.spring.dependency-management") version "1.1.0"
-    id("com.expediagroup.graphql") version "6.2.5"
-    kotlin("jvm") version "1.7.21"
-    kotlin("plugin.spring") version "1.7.21"
-    kotlin("plugin.jpa") version "1.7.21"
+    id("com.expediagroup.graphql") version "6.3.0"
+    kotlin("jvm") version "1.7.22"
+    kotlin("plugin.spring") version "1.7.22"
+    kotlin("plugin.jpa") version "1.7.22"
 }
 
 group = "no.nav"
@@ -22,32 +22,31 @@ configurations {
 
 val confluentVersion by extra("5.5.0")
 val logstashLogbackEncoderVersion by extra("7.2")
-val tokenSupportVersion by extra("2.1.8")
-val springCloudVersion by extra("2021.0.1")
-val retryVersion by extra("1.3.3")
+val tokenSupportVersion by extra("3.0.0")
+val springCloudVersion by extra("2022.0.0-RC2")
+val retryVersion by extra("2.0.0")
 val zalandoVersion by extra("0.27.0")
 val openhtmltopdfVersion by extra("1.0.10")
 val handlebarsVersion by extra("4.3.1")
-val postgresqlVersion by extra("42.5.0")
-val hibernateTypes52Version by extra("2.20.0")
+val postgresqlVersion by extra("42.5.1")
 val awailitilityKotlinVersion by extra("4.2.0")
 val assertkJvmVersion by extra("0.25")
-val springMockkVersion by extra("3.1.1")
+val springMockkVersion by extra("3.1.2")
 val mockkVersion by extra("1.13.2")
 val guavaVersion by extra("31.1-jre")
-val okHttp3Version by extra("4.10.0")
 val orgJsonVersion by extra("20220924")
-val graphQLKotlinVersion by extra("6.2.5")
-val k9FormatVersion by extra("5.5.20")
+val graphQLKotlinVersion by extra("6.3.0")
+val k9FormatVersion by extra("8.0.0")
 val teamDokumenthåndteringAvroSchemaVersion by extra("357738b9")
 val testContainersVersion by extra("1.17.6")
 
-val springdocVersion by extra("1.6.13")
-ext["okhttp3.version"] = okHttp3Version
+val springdocVersion by extra("2.0.0")
 ext["testcontainersVersion"] = testContainersVersion
 
 repositories {
     mavenCentral()
+
+    maven { url = uri("https://repo.spring.io/milestone") }
 
     maven {
         name = "confluent"
@@ -65,13 +64,6 @@ repositories {
 }
 dependencies {
 
-    // Overstyrer snakeyaml grunnet sårbarhet i v1.30. Kan fjernes når avhengiheter har oppdatert.
-    implementation("org.yaml:snakeyaml") {
-        version {
-            strictly("1.32")
-        }
-    }
-
     // NAV
     implementation("no.nav.k9:soknad:$k9FormatVersion")
 
@@ -80,27 +72,26 @@ dependencies {
 
     implementation("no.nav.teamdokumenthandtering:teamdokumenthandtering-avro-schemas:$teamDokumenthåndteringAvroSchemaVersion")
     testImplementation("no.nav.security:token-validation-spring-test:$tokenSupportVersion")
-    testImplementation("com.squareup.okhttp3:okhttp:$okHttp3Version")
 
     // Spring Boot
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-web") {
-        exclude(group = "org.springframework.boot", module = "spring-boot-starter-tomcat")
+       // exclude(group = "org.springframework.boot", module = "spring-boot-starter-tomcat")
     }
-    implementation("org.springframework.boot:spring-boot-starter-jetty")
+    //implementation("org.springframework.boot:spring-boot-starter-jetty")
     implementation("org.springframework.retry:spring-retry:$retryVersion")
     implementation("org.springframework:spring-aspects")
     runtimeOnly("org.springframework.boot:spring-boot-properties-migrator")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
-    annotationProcessor("org.springframework.boot:spring-boot-autoconfigure-processor")
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
-        exclude(group = "junit")
         exclude(module = "mockito-core")
     }
-    testImplementation("org.junit.jupiter:junit-jupiter-api")
-    testImplementation("org.junit.jupiter:junit-jupiter-engine")
+
+    runtimeOnly("org.springframework.boot:spring-boot-properties-migrator")
+
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.9.1")
 
     // Spring Cloud
     // https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-contract-stub-runner
@@ -108,9 +99,7 @@ dependencies {
     testImplementation("org.springframework.cloud:spring-cloud-starter")
 
     // Swagger (openapi 3)
-    implementation("org.springdoc:springdoc-openapi-kotlin:$springdocVersion")
-    implementation("org.springdoc:springdoc-openapi-ui:$springdocVersion")
-
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:$springdocVersion")
 
     // Metrics
     implementation("io.micrometer:micrometer-registry-prometheus")
@@ -121,8 +110,6 @@ dependencies {
     // Database
     runtimeOnly("org.postgresql:postgresql:$postgresqlVersion")
     implementation("org.flywaydb:flyway-core")
-    runtimeOnly("org.hibernate:hibernate-jpamodelgen")
-    implementation("com.vladmihalcea:hibernate-types-52:$hibernateTypes52Version")
     testImplementation("org.testcontainers:junit-jupiter:$testContainersVersion")
     testImplementation("org.testcontainers:postgresql:$testContainersVersion")
 
@@ -153,7 +140,6 @@ dependencies {
     // Diverse
     implementation("org.json:json:$orgJsonVersion")
     implementation("com.github.ben-manes.caffeine:caffeine")
-    implementation("org.zalando:problem-spring-web-starter:$zalandoVersion")
     implementation("com.google.guava:guava:$guavaVersion")
     testImplementation("org.awaitility:awaitility-kotlin:$awailitilityKotlinVersion")
     testImplementation("com.willowtreeapps.assertk:assertk-jvm:$assertkJvmVersion")

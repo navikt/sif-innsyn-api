@@ -6,12 +6,13 @@ import org.apache.kafka.clients.producer.ProducerRecord
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.kafka.core.KafkaTemplate
+import org.springframework.kafka.support.SendResult
 import org.springframework.stereotype.Service
 
 @Service
 class DittnavService(
     private val aivenKafkaTemplate: KafkaTemplate<String, String>,
-    private val objectMapper: ObjectMapper
+    private val objectMapper: ObjectMapper,
 ) {
 
     companion object {
@@ -19,29 +20,29 @@ class DittnavService(
     }
 
     fun sendBeskjedAiven(k9Beskjed: K9Beskjed) {
-        log.info("Sender ut dittnav beskjed til aiven med eventID: {} for søknadId: {}", k9Beskjed.eventId, k9Beskjed.grupperingsId)
-        return aivenKafkaTemplate.send(
+        log.info(
+            "Sender ut dittnav beskjed til aiven med eventID: {} for søknadId: {}",
+            k9Beskjed.eventId,
+            k9Beskjed.grupperingsId
+        )
+        aivenKafkaTemplate.send(
             ProducerRecord(
                 K9_DITTNAV_VARSEL_BESKJED_AIVEN,
                 k9Beskjed.grupperingsId,
                 k9Beskjed.somJson(objectMapper)
             )
         )
-            .addCallback(
-                { result ->
-                    result?.let {
-                        log.info(
-                            "Sendte melding med offset {} på {}",
-                            result.recordMetadata.offset(),
-                            result.producerRecord.topic()
-                        );
-                    }
-                },
-                { ex ->
-                    log.warn("Kunne ikke sende melding {} på {}", k9Beskjed, K9_DITTNAV_VARSEL_BESKJED_AIVEN, ex);
-                    throw ex
-                }
-            )
+            .exceptionally { ex: Throwable ->
+                log.warn("Kunne ikke sende melding {} på {}", k9Beskjed, K9_DITTNAV_VARSEL_BESKJED_AIVEN, ex)
+                throw ex
+            }
+            .thenAccept { result: SendResult<String, String> ->
+                log.info(
+                    "Sendte melding med offset {} på {}",
+                    result.recordMetadata.offset(),
+                    result.producerRecord.topic()
+                )
+            }
     }
 }
 

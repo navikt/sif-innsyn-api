@@ -149,6 +149,17 @@ class SøknadRepositoryTest {
         assertk.assertThat(repository.finnAntallUnikeSøkere()).isEqualTo(2)
     }
 
+    @Test
+    fun `gitt 3 PSB søknader i DB, forvent riktig antall hentes ut med type`() {
+        repository.saveAll(listOf(
+                lagSøknadDAO(søknadstype =Søknadstype.PP_SYKT_BARN),
+                lagSøknadDAO(søknadstype =Søknadstype.PP_SYKT_BARN),
+                lagSøknadDAO(søknadstype =Søknadstype.PP_SYKT_BARN),
+        ))
+
+        assertk.assertThat(repository.finnAntallSøknaderGittSøknadstype(Søknadstype.PP_SYKT_BARN.name)).isEqualTo(3)
+    }
+
     private fun lagSøknadDAO(
             customAktørId: AktørId = aktørId,
             customJournalpostId: String = journalpostId,
