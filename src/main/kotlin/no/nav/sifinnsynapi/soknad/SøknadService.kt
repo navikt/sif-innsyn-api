@@ -7,7 +7,6 @@ import no.nav.sifinnsynapi.common.Søknadstype
 import no.nav.sifinnsynapi.dokument.DokumentDTO
 import no.nav.sifinnsynapi.dokument.DokumentService
 import no.nav.sifinnsynapi.dokument.DokumentService.Companion.brevkoder
-import no.nav.sifinnsynapi.http.SøknadNotFoundException
 import no.nav.sifinnsynapi.konsument.pleiepenger.syktbarn.ArbeidsgiverMeldingPDFGenerator
 import no.nav.sifinnsynapi.konsument.pleiepenger.syktbarn.PleiepengerJSONObjectUtils.finnOrganisasjon
 import no.nav.sifinnsynapi.konsument.pleiepenger.syktbarn.PleiepengerJSONObjectUtils.tilPleiepengerAreidsgivermelding
@@ -117,6 +116,22 @@ class SøknadService(
 
     fun søknadGittJournalpostIdEksisterer(journalpostId: String): Boolean {
         return repo.findByJournalpostId(journalpostId) != null
+    }
+}
+
+class SøknadNotFoundException(søknadId: String) :
+    ErrorResponseException(HttpStatus.NOT_FOUND, asProblemDetail(søknadId), null) {
+    private companion object {
+        private fun asProblemDetail(søknadId: String): ProblemDetail {
+            val problemDetail = ProblemDetail.forStatus(HttpStatus.NOT_FOUND)
+            problemDetail.title = "Søknad ble ikke funnet"
+            problemDetail.detail = "Søknad med id $søknadId ble ikke funnet."
+            problemDetail.type = URI("/problem-details/søknad-ikke-funnet")
+            ServletUtils.currentHttpRequest()?.let {
+                problemDetail.instance = URI(URLDecoder.decode(it.requestURL.toString(), Charset.defaultCharset()))
+            }
+            return problemDetail
+        }
     }
 }
 

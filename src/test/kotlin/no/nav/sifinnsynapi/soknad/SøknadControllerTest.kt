@@ -11,7 +11,6 @@ import no.nav.sifinnsynapi.common.Søknadstype
 import no.nav.sifinnsynapi.config.Issuers
 import no.nav.sifinnsynapi.config.SecurityConfiguration
 import no.nav.sifinnsynapi.dokument.DokumentService
-import no.nav.sifinnsynapi.http.SøknadNotFoundException
 import no.nav.sifinnsynapi.oppslag.TilgangNektetException
 import no.nav.sifinnsynapi.util.CallIdGenerator
 import no.nav.sifinnsynapi.utils.hentToken
