@@ -2,9 +2,9 @@ package no.nav.sifinnsynapi.konsument.dokumentjournalforing
 
 import kotlinx.coroutines.runBlocking
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
-import no.nav.sifinnsynapi.http.SøknadWithJournalpostIdNotFoundException
 import no.nav.sifinnsynapi.saf.SafService
 import no.nav.sifinnsynapi.soknad.SøknadService
+import no.nav.sifinnsynapi.soknad.SøknadWithJournalpostIdNotFoundException
 import no.nav.sifinnsynapi.util.MDCConstants.K9_SAK_ID
 import no.nav.sifinnsynapi.util.MDCUtil
 import org.apache.kafka.clients.consumer.ConsumerRecord

@@ -158,6 +158,17 @@ class SøknadRepositoryTest {
     }
 
     @Test
+    fun `gitt 3 PSB søknader i DB, forvent riktig antall hentes ut med type`() {
+        repository.saveAll(listOf(
+                lagSøknadDAO(søknadstype =Søknadstype.PP_SYKT_BARN),
+                lagSøknadDAO(søknadstype =Søknadstype.PP_SYKT_BARN),
+                lagSøknadDAO(søknadstype =Søknadstype.PP_SYKT_BARN),
+        ))
+
+        assertk.assertThat(repository.finnAntallSøknaderGittSøknadstype(Søknadstype.PP_SYKT_BARN.name)).isEqualTo(3)
+    }
+
+    @Test
     fun `gitt søknader med 3 ulike datoer, forvent siste`() {
         val forventetDato = LocalDate.parse("2022-01-03")
         repository.saveAll(

@@ -2,7 +2,7 @@ package no.nav.sifinnsynapi.common
 
 import com.fasterxml.jackson.annotation.JsonValue
 import java.util.*
-import javax.persistence.Embeddable
+import jakarta.persistence.Embeddable
 
 @Embeddable
 data class AktørId(@get:JsonValue var aktørId: String? = null) {
