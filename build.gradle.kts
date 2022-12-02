@@ -20,7 +20,7 @@ configurations {
     }
 }
 
-val confluentVersion by extra("5.5.0")
+val confluentVersion by extra("7.3.0")
 val logstashLogbackEncoderVersion by extra("7.2")
 val tokenSupportVersion by extra("3.0.0")
 val springCloudVersion by extra("2022.0.0-RC2")
