@@ -11,8 +11,6 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.servlet.config.annotation.CorsRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
-import org.zalando.problem.jackson.ProblemModule
-import org.zalando.problem.violations.ConstraintViolationProblemModule
 
 @Configuration
 class WebMvcConfig(
@@ -38,16 +36,6 @@ class WebMvcConfig(
             .allowCredentials(true)
 
         super.addCorsMappings(registry)
-    }
-
-    @Bean
-    fun problemModules(): ProblemModule {
-        return ProblemModule()
-    }
-
-    @Bean
-    fun violationProblemModule(): ConstraintViolationProblemModule {
-        return ConstraintViolationProblemModule()
     }
 
     @Bean

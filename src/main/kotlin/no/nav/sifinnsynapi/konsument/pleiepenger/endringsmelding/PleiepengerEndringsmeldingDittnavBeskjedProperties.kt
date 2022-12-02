@@ -5,7 +5,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.ConstructorBinding
 import org.springframework.validation.annotation.Validated
 
-@ConstructorBinding
+//@ConstructorBinding
 @ConfigurationProperties(prefix = "no.nav.dittnav.pleiepenger-sykt-barn-endringsmelding.beskjed")
 @Validated
 data class PleiepengerEndringsmeldingDittnavBeskjedProperties(

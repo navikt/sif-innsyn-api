@@ -2,10 +2,10 @@ package no.nav.sifinnsynapi.konsument.ettersending
 
 import no.nav.sifinnsynapi.dittnav.K9BeskjedProperties
 import org.springframework.boot.context.properties.ConfigurationProperties
-import org.springframework.boot.context.properties.ConstructorBinding
+import org.springframework.boot.context.properties.bind.ConstructorBinding
 import org.springframework.validation.annotation.Validated
 
-@ConstructorBinding
+//@ConstructorBinding
 @ConfigurationProperties(prefix = "no.nav.dittnav.k9-ettersending-pp.beskjed")
 @Validated
 data class K9EttersendingPPBeskjedProperties (
@@ -15,7 +15,7 @@ data class K9EttersendingPPBeskjedProperties (
 ) : K9BeskjedProperties
 
 
-@ConstructorBinding
+//@ConstructorBinding
 @ConfigurationProperties(prefix = "no.nav.dittnav.k9-ettersending-oms.beskjed")
 @Validated
 data class K9EttersendingOMSBeskjedProperties (

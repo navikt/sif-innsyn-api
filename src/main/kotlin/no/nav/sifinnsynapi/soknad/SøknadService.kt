@@ -7,16 +7,21 @@ import no.nav.sifinnsynapi.common.Søknadstype
 import no.nav.sifinnsynapi.dokument.DokumentDTO
 import no.nav.sifinnsynapi.dokument.DokumentService
 import no.nav.sifinnsynapi.dokument.DokumentService.Companion.brevkoder
-import no.nav.sifinnsynapi.http.NotSupportedArbeidsgiverMeldingException
 import no.nav.sifinnsynapi.http.SøknadNotFoundException
-import no.nav.sifinnsynapi.http.SøknadWithJournalpostIdNotFoundException
 import no.nav.sifinnsynapi.konsument.pleiepenger.syktbarn.ArbeidsgiverMeldingPDFGenerator
 import no.nav.sifinnsynapi.konsument.pleiepenger.syktbarn.PleiepengerJSONObjectUtils.finnOrganisasjon
 import no.nav.sifinnsynapi.konsument.pleiepenger.syktbarn.PleiepengerJSONObjectUtils.tilPleiepengerAreidsgivermelding
 import no.nav.sifinnsynapi.oppslag.OppslagsService
+import no.nav.sifinnsynapi.util.ServletUtils
 import org.json.JSONObject
 import org.slf4j.LoggerFactory
+import org.springframework.http.HttpStatus
+import org.springframework.http.ProblemDetail
 import org.springframework.stereotype.Service
+import org.springframework.web.ErrorResponseException
+import java.net.URI
+import java.net.URLDecoder
+import java.nio.charset.Charset
 import java.util.*
 
 @Service
@@ -112,6 +117,26 @@ class SøknadService(
 
     fun søknadGittJournalpostIdEksisterer(journalpostId: String): Boolean {
         return repo.findByJournalpostId(journalpostId) != null
+    }
+}
+
+class SøknadWithJournalpostIdNotFoundException(journalpostId: String) :
+    RuntimeException("Søknad med journalpostId = $journalpostId ble ikke funnet.")
+
+class NotSupportedArbeidsgiverMeldingException(søknadId: String, søknadstype: Søknadstype) :
+    ErrorResponseException(HttpStatus.BAD_REQUEST, asProblemDetail(søknadId, søknadstype), null) {
+    private companion object {
+        private fun asProblemDetail(søknadId: String, søknadstype: Søknadstype): ProblemDetail {
+            val problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST)
+            problemDetail.title = "Arbeidsgivermelding ikke støttet"
+            problemDetail.detail =
+                "Søknad med søknadId = $søknadId  og søknadstype = $søknadstype støtter ikke arbeidsgivermelding."
+            problemDetail.type = URI("/problem-details/arbeidsgivermelding-ikke-støttet")
+            ServletUtils.currentHttpRequest()?.let {
+                problemDetail.instance = URI(URLDecoder.decode(it.requestURL.toString(), Charset.defaultCharset()))
+            }
+            return problemDetail
+        }
     }
 }
 
