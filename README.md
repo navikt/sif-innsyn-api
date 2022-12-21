@@ -1,4 +1,11 @@
 # SIF Innsynstjeneste
+![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=navikt_sif-innsyn-api&metric=ncloc)
+![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=navikt_sif-innsyn-api&metric=alert_status)
+![Coverage](https://sonarcloud.io/api/project_badges/measure?project=navikt_sif-innsyn-api&metric=coverage)
+![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=navikt_sif-innsyn-api&metric=code_smells)
+![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=navikt_sif-innsyn-api&metric=sqale_index)
+![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=navikt_sif-innsyn-api&metric=duplicated_lines_density)
+![Bugs](https://sonarcloud.io/api/project_badges/measure?project=navikt_k9-brukerdialog-api&metric=bugs)
 
 ![CI / CD](https://github.com/navikt/sif-innsyn-api/workflows/CI%20/%20CD/badge.svg)
 ![Alerts](https://github.com/navikt/sif-innsyn-api/workflows/Alerts/badge.svg)
