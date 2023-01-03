@@ -38,6 +38,8 @@ class K9SakInnsynApiService(
             .fromUriString("/soknad")
             .build()
             .toUriString()
+
+        val søknadOpplysningerOppslafFeil = IllegalStateException("Feilet med henting av k9 søknadsdata.")
     }
 
     fun hentSøknadsopplysninger(): List<K9SakInnsynSøknad> {
@@ -64,19 +66,19 @@ class K9SakInnsynApiService(
     @Recover
     private fun recover(error: HttpServerErrorException): List<K9SakInnsynSøknad> {
         logger.error("Error response = '${error.responseBodyAsString}' fra '${søknaddataUrl}'")
-        throw IllegalStateException("Feilet med henting av k9 søknadsdata.")
+        throw søknadOpplysningerOppslafFeil
     }
 
     @Recover
     private fun recover(error: HttpClientErrorException): List<K9SakInnsynSøknad> {
         logger.error("Error response = '${error.responseBodyAsString}' fra '${søknaddataUrl}'")
-        throw IllegalStateException("Feilet med henting av k9 søknadsdata.")
+        throw søknadOpplysningerOppslafFeil
     }
 
     @Recover
     private fun recover(error: ResourceAccessException): List<K9SakInnsynSøknad> {
         logger.error("{}", error.message)
-        throw IllegalStateException("Timout ved henting av k9 søknadsdata.")
+        throw søknadOpplysningerOppslafFeil
     }
 }
 

@@ -3,21 +3,17 @@ package no.nav.sifinnsynapi.http
 import no.nav.security.token.support.core.exceptions.JwtTokenMissingException
 import no.nav.security.token.support.core.exceptions.JwtTokenValidatorException
 import no.nav.security.token.support.spring.validation.interceptor.JwtTokenUnauthorizedException
-import no.nav.sifinnsynapi.util.ServletUtils.currentHttpRequest
 import no.nav.sifinnsynapi.util.ServletUtils.respondProblemDetails
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ProblemDetail
-import org.springframework.web.ErrorResponseException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.context.request.ServletWebRequest
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler
 import java.net.URI
-import java.net.URLDecoder
-import java.nio.charset.Charset
 
 @ControllerAdvice
 class ExceptionHandler : ResponseEntityExceptionHandler() {

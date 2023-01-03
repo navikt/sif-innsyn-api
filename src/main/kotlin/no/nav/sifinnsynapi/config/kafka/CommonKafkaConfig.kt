@@ -99,14 +99,13 @@ class CommonKafkaConfig {
             }
 
         fun configureConcurrentKafkaListenerContainerFactory(
-            clientId: String,
+            kafkaClusterProperties: KafkaConfigProperties,
             consumerFactory: ConsumerFactory<String, String>,
-            retryInterval: Long,
             transactionManager: PlatformTransactionManager,
             kafkaTemplate: KafkaTemplate<String, String>,
             objectMapper: ObjectMapper,
             søknadRepository: SøknadRepository,
-            logger: Logger
+            logger: Logger,
         ): ConcurrentKafkaListenerContainerFactory<String, String> {
             val factory = ConcurrentKafkaListenerContainerFactory<String, String>()
 
@@ -130,7 +129,7 @@ class CommonKafkaConfig {
                 val topicEntry = objectMapper.readValue(it.value(), TopicEntry::class.java).data
                 val correlationId = topicEntry.metadata.correlationId
                 MDCUtil.toMDC(CORRELATION_ID, correlationId)
-                MDCUtil.toMDC(NAV_CONSUMER_ID, clientId)
+                MDCUtil.toMDC(NAV_CONSUMER_ID, kafkaClusterProperties.consumer.groupId)
                 MDCUtil.toMDC(JOURNALPOST_ID, topicEntry.journalførtMelding.journalpostId)
 
                 val søker = JSONObject(topicEntry.melding).getJSONObject("søker")
@@ -166,7 +165,7 @@ class CommonKafkaConfig {
 
             //https://docs.spring.io/spring-kafka/docs/2.5.2.RELEASE/reference/html/#after-rollback
 
-            factory.setAfterRollbackProcessor(defaultAfterRollbackProsessor(logger, retryInterval))
+            factory.setAfterRollbackProcessor(defaultAfterRollbackProsessor(logger, kafkaClusterProperties.consumer.retryInterval))
             return factory
         }
 

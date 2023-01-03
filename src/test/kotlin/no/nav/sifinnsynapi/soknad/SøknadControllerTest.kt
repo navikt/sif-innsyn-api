@@ -38,6 +38,7 @@ import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.util.*
 import jakarta.servlet.http.Cookie
+import no.nav.sifinnsynapi.util.HttpHeaderConstants.PROBLEM_DETAILS
 
 
 @ExtendWith(SpringExtension::class)
@@ -98,10 +99,10 @@ class SøknadControllerTest {
         )
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isInternalServerError)
-            .andExpect(header().exists("problem-details"))
+            .andExpect(header().exists(PROBLEM_DETAILS))
             .andExpect(
                 header().string(
-                    "problem-details",
+                    PROBLEM_DETAILS,
                     //language=json
                     """{"type":"/problem-details/internal-server-error","title":"Et uventet feil har oppstått","status":500,"detail":"Ooops, noe gikk galt...","instance":"http://localhost/soknad"}""".trimIndent()
                 )

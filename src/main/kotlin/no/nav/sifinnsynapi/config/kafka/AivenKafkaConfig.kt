@@ -47,11 +47,10 @@ class AivenKafkaConfig(
         aivenKafkaTemplate: KafkaTemplate<String, String>,
         aivenKafkaTransactionManager: KafkaTransactionManager<String, String>
     ): ConcurrentKafkaListenerContainerFactory<String, String> = configureConcurrentKafkaListenerContainerFactory(
-        clientId = kafkaClusterProperties.aiven.consumer.groupId,
+        kafkaClusterProperties = kafkaClusterProperties.aiven,
         consumerFactory = aivenConsumerFactory,
         kafkaTemplate = aivenKafkaTemplate,
         transactionManager = aivenKafkaTransactionManager,
-        retryInterval = kafkaClusterProperties.aiven.consumer.retryInterval,
         objectMapper = objectMapper,
         søknadRepository = søknadRepository,
         logger = logger

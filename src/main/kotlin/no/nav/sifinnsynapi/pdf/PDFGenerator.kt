@@ -73,51 +73,73 @@ abstract class PDFGenerator<in T> {
 
     private fun configureHandlebars(): Handlebars {
         return Handlebars(ClassPathTemplateLoader("/${ROOT}")).apply {
-            registerHelper("image", Helper<String> { context, _ ->
-                if (context == null) "" else bilder[context]
-            })
-            registerHelper("eq", Helper<String> { context, options ->
-                if (context == options.param(0)) options.fn() else options.inverse()
-            })
-            registerHelper("eqTall", Helper<Int> { context, options ->
-                if (context == options.param(0)) options.fn() else options.inverse()
-            })
-            registerHelper("fritekst", Helper<String> { context, _ ->
-                if (context == null) "" else {
-                    val text = Handlebars.Utils.escapeExpression(context)
-                        .toString()
-                        .replace(Regex("\\r\\n|[\\n\\r]"), "<br/>")
-                    Handlebars.SafeString(text)
-                }
-            })
-            registerHelper("jaNeiSvar", Helper<Boolean> { context, _ ->
-                if (context == true) "Ja" else "Nei"
-            })
+            imageHelper()
+            equalsHelper()
+            equalsNumberHelper()
+            fritekstHelper()
+            jaNeiSvarHelper()
 
             infiniteLoops(true)
         }
     }
 
-    private fun PdfRendererBuilder.medFonter() =
-        useFont(
+    private fun Handlebars.jaNeiSvarHelper() {
+        registerHelper("jaNeiSvar", Helper<Boolean> { context, _ ->
+            if (context == true) "Ja" else "Nei"
+        })
+    }
+
+    private fun Handlebars.fritekstHelper() {
+        registerHelper("fritekst", Helper<String> { context, _ ->
+            if (context == null) "" else {
+                val text = Handlebars.Utils.escapeExpression(context)
+                    .toString()
+                    .replace(Regex("\\r\\n|[\\n\\r]"), "<br/>")
+                Handlebars.SafeString(text)
+            }
+        })
+    }
+
+    private fun Handlebars.equalsNumberHelper() {
+        registerHelper("eqTall", Helper<Int> { context, options ->
+            if (context == options.param(0)) options.fn() else options.inverse()
+        })
+    }
+
+    private fun Handlebars.equalsHelper() {
+        registerHelper("eq", Helper<String> { context, options ->
+            if (context == options.param(0)) options.fn() else options.inverse()
+        })
+    }
+
+    private fun Handlebars.imageHelper() {
+        registerHelper("image", Helper<String> { context, _ ->
+            if (context == null) "" else bilder[context]
+        })
+    }
+
+    private fun PdfRendererBuilder.medFonter(): PdfRendererBuilder {
+        val sourceSansPro = "Source Sans Pro"
+        return useFont(
             { ByteArrayInputStream(REGULAR_FONT) },
-            "Source Sans Pro",
+            sourceSansPro,
             400,
             BaseRendererBuilder.FontStyle.NORMAL,
             false
         )
             .useFont(
                 { ByteArrayInputStream(BOLD_FONT) },
-                "Source Sans Pro",
+                sourceSansPro,
                 700,
                 BaseRendererBuilder.FontStyle.NORMAL,
                 false
             )
             .useFont(
                 { ByteArrayInputStream(ITALIC_FONT) },
-                "Source Sans Pro",
+                sourceSansPro,
                 400,
                 BaseRendererBuilder.FontStyle.ITALIC,
                 false
             )
+    }
 }

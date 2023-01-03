@@ -3,6 +3,7 @@ package no.nav.sifinnsynapi.util
 object HttpHeaderConstants {
     const val NAV_CALL_ID = "Nav-Callid"
     const val X_CORRELATION_ID = "X-Correlation-ID"
+    const val PROBLEM_DETAILS = "problem-details"
 }
 
 object MDCConstants {

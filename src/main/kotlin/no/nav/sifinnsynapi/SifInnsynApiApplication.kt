@@ -1,8 +1,5 @@
 package no.nav.sifinnsynapi
 
-import no.nav.sifinnsynapi.soknad.SøknadRepository
-import org.slf4j.LoggerFactory
-import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan

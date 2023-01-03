@@ -42,6 +42,8 @@ class OppslagsService(
                 .fromUriString("/meg")
                 .queryParam("a", "aktør_id")
                 .build()
+
+        val søkerOppslagFeil = IllegalStateException("Timout ved henting av søkers personinformasjon")
     }
 
     fun hentAktørId(): OppslagRespons? {
@@ -55,7 +57,7 @@ class OppslagsService(
     private fun recover(error: HttpServerErrorException): OppslagRespons? {
         if (error.responseBodyAsString.isNotEmpty()) logger.error("Error response = '${error.responseBodyAsString}' fra '${søkerUrl.toUriString()}'")
         else logger.error("Feil ved henting av søkers personinformasjon", error)
-        throw IllegalStateException("Feil ved henting av søkers personinformasjon")
+        throw søkerOppslagFeil
     }
 
     @Recover
@@ -66,7 +68,7 @@ class OppslagsService(
 
         if (error.responseBodyAsString.isNotEmpty()) logger.error("Error response = '${error.responseBodyAsString}' fra '${søkerUrl.toUriString()}'")
         else logger.error("Feil ved henting av søkers personinformasjon", error)
-        throw IllegalStateException("Feil ved henting av søkers personinformasjon")
+        throw søkerOppslagFeil
     }
 
     @Recover

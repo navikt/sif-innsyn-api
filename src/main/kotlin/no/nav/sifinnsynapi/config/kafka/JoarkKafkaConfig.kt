@@ -22,7 +22,6 @@ import org.springframework.kafka.support.KafkaHeaders
 import org.springframework.util.backoff.FixedBackOff
 import java.nio.ByteBuffer
 import java.time.Duration
-import java.util.UUID
 
 @Configuration
 internal class JoarkKafkaConfig(

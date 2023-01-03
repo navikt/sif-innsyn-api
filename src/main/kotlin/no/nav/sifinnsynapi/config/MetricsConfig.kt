@@ -2,6 +2,7 @@ package no.nav.sifinnsynapi.config
 
 import io.micrometer.common.KeyValue
 import io.micrometer.common.KeyValues
+import no.nav.sifinnsynapi.util.HttpHeaderConstants.PROBLEM_DETAILS
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Configuration
@@ -25,9 +26,9 @@ class MetricsConfig() : DefaultServerRequestObservationConvention() {
 
     private fun problemDetailsKeyValue(context: ServerRequestObservationContext): KeyValue {
         val httpServletResponse = context.response
-        return when (val problemDetailsHeader = httpServletResponse?.getHeader("problem-details")) {
-            null -> KeyValue.of("problem-details", "n/a")
-            else -> KeyValue.of("problem-details", problemDetailsHeader)
+        return when (val problemDetailsHeader = httpServletResponse?.getHeader(PROBLEM_DETAILS)) {
+            null -> KeyValue.of(PROBLEM_DETAILS, "n/a")
+            else -> KeyValue.of(PROBLEM_DETAILS, problemDetailsHeader)
         }
     }
 }

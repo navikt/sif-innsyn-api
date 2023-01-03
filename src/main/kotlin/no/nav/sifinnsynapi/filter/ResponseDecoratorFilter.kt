@@ -13,6 +13,7 @@ import jakarta.servlet.ServletRequest
 import jakarta.servlet.ServletResponse
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
+import no.nav.sifinnsynapi.util.HttpHeaderConstants.PROBLEM_DETAILS
 
 @Component
 @Order(Ordered.LOWEST_PRECEDENCE)
@@ -60,10 +61,12 @@ class ResponseDecoratorFilter : Filter {
         chain.doFilter(requestWrapper, responseWrapper)
 
         when (response.status) {
-            200, 201, 202, 204, 401, 403, 404 -> {}
+            200, 201, 202, 204, 401, 403, 404 -> {
+                // do nothing
+            }
             else -> {
                 val content = String(responseWrapper.contentAsByteArray, Charsets.UTF_8)
-                response.addHeader("problem-details", content)
+                response.addHeader(PROBLEM_DETAILS, content)
             }
         }
         responseWrapper.copyBodyToResponse()

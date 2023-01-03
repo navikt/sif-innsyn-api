@@ -3,7 +3,6 @@ package no.nav.sifinnsynapi.dokument
 import no.nav.security.token.support.core.api.Protected
 import no.nav.security.token.support.core.api.ProtectedWithClaims
 import no.nav.sifinnsynapi.Routes.DOKUMENT
-import no.nav.sifinnsynapi.safselvbetjening.generated.hentdokumentoversikt.Dokumentoversikt
 import org.slf4j.LoggerFactory
 import org.springframework.core.io.ByteArrayResource
 import org.springframework.core.io.Resource

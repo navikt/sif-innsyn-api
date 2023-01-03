@@ -77,7 +77,9 @@ class OppslagsKlientKonfig(
     private fun bearerTokenInterceptor(): ClientHttpRequestInterceptor {
         return ClientHttpRequestInterceptor { request: HttpRequest, body: ByteArray, execution: ClientHttpRequestExecution ->
             when {
-                request.uri.path == "/isalive" -> {} // ignorer
+                request.uri.path == "/isalive" -> {
+                    // isalive skal ikke ha token
+                }
                 else -> {
                     val response = oAuth2AccessTokenService.getAccessToken(tokenxK9SelvbetjeningOppslagClientProperties)
                     val expiresIn = response.expiresIn
