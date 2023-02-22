@@ -6,9 +6,6 @@ no.nav:
   security:
     jwt:
       issuer:
-        idporten:
-          discoveryurl: http://localhost:${mock-oauth2-server.port}/idporten/.well-known/openid-configuration
-          accepted_audience: aud-localhost
         tokenx:
           discoveryurl: http://localhost:${mock-oauth2-server.port}/tokenx/.well-known/openid-configuration
           accepted_audience: aud-localhost

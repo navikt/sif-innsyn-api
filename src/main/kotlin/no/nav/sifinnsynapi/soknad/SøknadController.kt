@@ -16,7 +16,6 @@ import java.util.*
 
 @RestController
 @RequiredIssuers(
-    ProtectedWithClaims(issuer = Issuers.ID_PORTEN, claimMap = ["acr=Level4"]),
     ProtectedWithClaims(issuer = Issuers.TOKEN_X, claimMap = ["acr=Level4"])
 )
 class SøknadController(

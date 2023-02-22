@@ -2,6 +2,7 @@ package no.nav.sifinnsynapi.soknad
 
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
+import jakarta.servlet.http.Cookie
 import no.nav.security.mock.oauth2.MockOAuth2Server
 import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
 import no.nav.sifinnsynapi.Routes.SØKNAD
@@ -13,6 +14,7 @@ import no.nav.sifinnsynapi.config.SecurityConfiguration
 import no.nav.sifinnsynapi.dokument.DokumentService
 import no.nav.sifinnsynapi.oppslag.TilgangNektetException
 import no.nav.sifinnsynapi.util.CallIdGenerator
+import no.nav.sifinnsynapi.util.HttpHeaderConstants.PROBLEM_DETAILS
 import no.nav.sifinnsynapi.utils.hentToken
 import org.junit.Assert.assertNotNull
 import org.junit.jupiter.api.BeforeAll
@@ -37,8 +39,6 @@ import java.nio.charset.Charset
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.util.*
-import jakarta.servlet.http.Cookie
-import no.nav.sifinnsynapi.util.HttpHeaderConstants.PROBLEM_DETAILS
 
 
 @ExtendWith(SpringExtension::class)
@@ -77,7 +77,7 @@ class SøknadControllerTest {
             MockMvcRequestBuilders
                 .get(URI(URLDecoder.decode(SØKNAD, Charset.defaultCharset())))
                 .accept(MediaType.APPLICATION_JSON)
-                .cookie(Cookie("selvbetjening-idtoken", mockOAuth2Server.hentToken().serialize()))
+                .header(AUTHORIZATION, "Bearer ${mockOAuth2Server.hentToken().serialize()}")
         )
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isInternalServerError)
@@ -95,7 +95,7 @@ class SøknadControllerTest {
             MockMvcRequestBuilders
                 .get(URI(URLDecoder.decode(SØKNAD, Charset.defaultCharset())))
                 .accept(MediaType.APPLICATION_JSON)
-                .cookie(Cookie("selvbetjening-idtoken", mockOAuth2Server.hentToken().serialize()))
+                .header(AUTHORIZATION, "Bearer ${mockOAuth2Server.hentToken().serialize()}")
         )
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isInternalServerError)
@@ -137,7 +137,7 @@ class SøknadControllerTest {
             MockMvcRequestBuilders
                 .get(URI(URLDecoder.decode(SØKNAD, Charset.defaultCharset())))
                 .accept(MediaType.APPLICATION_JSON)
-                .cookie(Cookie("selvbetjening-idtoken", mockOAuth2Server.hentToken().serialize()))
+                .header(AUTHORIZATION, "Bearer ${mockOAuth2Server.hentToken().serialize()}")
         )
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk)
@@ -231,7 +231,7 @@ class SøknadControllerTest {
             MockMvcRequestBuilders
                 .get(URI(URLDecoder.decode("${SØKNAD}/$søknadId", Charset.defaultCharset())))
                 .accept(MediaType.APPLICATION_JSON)
-                .cookie(Cookie("selvbetjening-idtoken", mockOAuth2Server.hentToken().serialize()))
+                .header(AUTHORIZATION, "Bearer ${mockOAuth2Server.hentToken().serialize()}")
         )
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk)
@@ -260,7 +260,7 @@ class SøknadControllerTest {
             MockMvcRequestBuilders
                 .get(URI(URLDecoder.decode("$SØKNAD", Charset.defaultCharset())))
                 .accept(MediaType.APPLICATION_JSON)
-                .cookie(Cookie("selvbetjening-idtoken", mockOAuth2Server.hentToken().serialize()))
+                .header(AUTHORIZATION, "Bearer ${mockOAuth2Server.hentToken().serialize()}")
         )
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isUnavailableForLegalReasons)
@@ -280,7 +280,7 @@ class SøknadControllerTest {
             MockMvcRequestBuilders
                 .get(URI(URLDecoder.decode("${SØKNAD}/$søknadId", Charset.defaultCharset())))
                 .accept(MediaType.APPLICATION_JSON)
-                .cookie(Cookie("selvbetjening-idtoken", mockOAuth2Server.hentToken().serialize()))
+                .header(AUTHORIZATION, "Bearer ${mockOAuth2Server.hentToken().serialize()}")
         )
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isNotFound)
@@ -396,7 +396,7 @@ class SøknadControllerTest {
                 .get(URI(URLDecoder.decode("$SØKNAD/${UUID.randomUUID()}/arbeidsgivermelding", Charset.defaultCharset())))
                 .queryParam("organisasjonsnummer", "12345678")
                 .accept(MediaType.APPLICATION_PDF_VALUE)
-                .cookie(Cookie("selvbetjening-idtoken", mockOAuth2Server.hentToken().serialize()))
+                .header(AUTHORIZATION, "Bearer ${mockOAuth2Server.hentToken().serialize()}")
         )
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk)

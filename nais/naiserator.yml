@@ -56,8 +56,6 @@ spec:
   prometheus:
     enabled: true
     path: /metrics
-  envFrom:
-    - configmap: loginservice-idporten
   env:
   {{#each env}}
    - name: {{@key}}
