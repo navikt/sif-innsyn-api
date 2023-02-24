@@ -8,7 +8,7 @@ import org.springframework.http.HttpHeaders
 
 fun MockOAuth2Server.hentToken(
     subject: String = "12345678910",
-    issuerId: String = Issuers.ID_PORTEN,
+    issuerId: String = Issuers.TOKEN_X,
     claims: Map<String, String> = mapOf("acr" to "Level4"),
     audience: String = "aud-localhost",
     expiry: Long = 3600
