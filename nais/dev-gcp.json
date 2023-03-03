@@ -6,7 +6,8 @@
   "minReplicas": "2",
   "maxReplicas": "2",
   "ingresses": [
-    "https://sif-innsyn-api.dev.nav.no"
+    "https://sif-innsyn-api.dev.nav.no",
+    "https://sif-innsyn-api.ekstern.dev.nav.no"
   ],
   "externalHosts": [
     "login.microsoftonline.com",
