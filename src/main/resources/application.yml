@@ -87,7 +87,7 @@ topic:
     # topic.listener.pp-sykt-barn
     pp-sykt-barn:
       id: pp-sykt-barn-listener
-      navn: dusseldorf.privat-pleiepengesoknad-cleanup
+      navn: dusseldorf.pp-sykt-barn-soknad-cleanup
       bryter: true
       dry-run: false
 
