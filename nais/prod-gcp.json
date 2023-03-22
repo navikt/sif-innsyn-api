@@ -6,7 +6,8 @@
   "minReplicas": "2",
   "maxReplicas": "2",
   "ingresses": [
-    "https://sif-innsyn-api.nav.no"
+    "https://sif-innsyn-api.nav.no",
+    "https://sif-innsyn-api.intern.nav.no"
   ],
   "externalHosts": [
     "login.microsoftonline.com",
@@ -26,7 +27,7 @@
   "env": {
     "SERVER_PORT": "8080",
     "SPRING_APPLICATION_NAME": "sif-innsyn-api",
-    "APPLICATION_INGRESS": "https://sif-innsyn-api.nav.no",
+    "APPLICATION_INGRESS": "https://sif-innsyn-api.intern.nav.no",
     "SPRING_PROFILES_ACTIVE": "prod-gcp",
     "KAFKA_AIVEN_CONSUMER_AUTO_OFFSET_RESET": "none",
     "NO_NAV_SECURITY_CORS_ALLOWED_ORIGINS": "https://www.nav.no",
