@@ -16,7 +16,7 @@ class SwaggerConfiguration {
     fun openAPI(): OpenAPI {
         return OpenAPI()
             .addServersItem(
-                Server().url("https://sif-innsyn-api.dev.nav.no/").description("Swagger Server")
+                Server().url("https://sif-innsyn-api.intern.dev.nav.no/").description("Swagger Server")
             )
             .info(
                 Info()
