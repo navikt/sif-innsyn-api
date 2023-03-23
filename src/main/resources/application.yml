@@ -101,7 +101,7 @@ topic:
     # topic.listener.k9-ettersending
     k9-ettersending:
       id: k9-ettersending-listener
-      navn: dusseldorf.privat-k9-ettersending-cleanup
+      navn: dusseldorf.ettersendelse-cleanup
       bryter: true
       dry-run: false
 
