@@ -5,7 +5,7 @@ plugins {
     kotlin("jvm") version "1.8.10"
     kotlin("plugin.spring") version "1.8.10"
     kotlin("plugin.jpa") version "1.8.10"
-    id("org.springframework.boot") version "3.0.4"
+    id("org.springframework.boot") version "3.0.5"
     id("io.spring.dependency-management") version "1.1.0"
     id("com.expediagroup.graphql") version "6.4.0"
     id("org.sonarqube") version "4.0.0.2929"
@@ -24,7 +24,7 @@ configurations {
 
 val confluentVersion by extra("7.3.0")
 val logstashLogbackEncoderVersion by extra("7.2")
-val tokenSupportVersion by extra("3.0.0")
+val tokenSupportVersion by extra("3.0.8")
 val springCloudVersion by extra("2022.0.0-RC2")
 val retryVersion by extra("2.0.0")
 val zalandoVersion by extra("0.27.0")
