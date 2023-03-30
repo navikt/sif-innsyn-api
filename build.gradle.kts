@@ -4,7 +4,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     kotlin("jvm") version "1.8.10"
     kotlin("plugin.spring") version "1.8.10"
-    kotlin("plugin.jpa") version "1.8.10"
+    kotlin("plugin.jpa") version "1.8.20"
     id("org.springframework.boot") version "3.0.5"
     id("io.spring.dependency-management") version "1.1.0"
     id("com.expediagroup.graphql") version "6.4.0"
