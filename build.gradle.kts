@@ -2,12 +2,12 @@ import com.expediagroup.graphql.plugin.gradle.tasks.GraphQLGenerateClientTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.8.10"
-    kotlin("plugin.spring") version "1.8.10"
-    kotlin("plugin.jpa") version "1.8.10"
-    id("org.springframework.boot") version "3.0.5"
+    kotlin("jvm") version "1.8.21"
+    kotlin("plugin.spring") version "1.8.21"
+    kotlin("plugin.jpa") version "1.8.21"
+    id("org.springframework.boot") version "3.0.6"
     id("io.spring.dependency-management") version "1.1.0"
-    id("com.expediagroup.graphql") version "6.4.0"
+    id("com.expediagroup.graphql") version "6.4.1"
     id("org.sonarqube") version "4.0.0.2929"
     jacoco
 }
@@ -22,33 +22,29 @@ configurations {
     }
 }
 
-val confluentVersion by extra("7.3.0")
-val logstashLogbackEncoderVersion by extra("7.2")
-val tokenSupportVersion by extra("3.0.8")
-val springCloudVersion by extra("2022.0.0-RC2")
-val retryVersion by extra("2.0.0")
-val zalandoVersion by extra("0.27.0")
-val openhtmltopdfVersion by extra("1.0.10")
-val handlebarsVersion by extra("4.3.1")
-val postgresqlVersion by extra("42.5.1")
-val awailitilityKotlinVersion by extra("4.2.0")
-val assertkJvmVersion by extra("0.25")
-val springMockkVersion by extra("3.1.2")
-val mockkVersion by extra("1.13.2")
-val guavaVersion by extra("31.1-jre")
-val orgJsonVersion by extra("20230227")
-val graphQLKotlinVersion by extra("6.3.0")
-val k9FormatVersion by extra("8.0.7")
-val teamDokumenthåndteringAvroSchemaVersion by extra("357738b9")
-val testContainersVersion by extra("1.17.6")
-
-val springdocVersion by extra("2.0.0")
-ext["testcontainersVersion"] = testContainersVersion
+val confluentVersion = "7.3.0"
+val springCloudVersion = "4.0.2"
+val logstashLogbackEncoderVersion = "7.2"
+val tokenSupportVersion = "3.0.8"
+val retryVersion = "2.0.0"
+val zalandoVersion = "0.27.0"
+val openhtmltopdfVersion = "1.0.10"
+val handlebarsVersion = "4.3.1"
+val postgresqlVersion = "42.5.1"
+val awailitilityKotlinVersion = "4.2.0"
+val assertkJvmVersion = "0.25"
+val springMockkVersion = "3.1.2"
+val mockkVersion = "1.13.2"
+val guavaVersion = "31.1-jre"
+val orgJsonVersion = "20230227"
+val graphQLKotlinVersion = "6.3.0"
+val k9FormatVersion = "8.0.7"
+val teamDokumenthåndteringAvroSchemaVersion = "357738b9"
+val testContainersVersion = "1.17.6"
+val springdocVersion = "2.0.0"
 
 repositories {
     mavenCentral()
-
-    maven { url = uri("https://repo.spring.io/milestone") }
 
     maven {
         name = "confluent"
@@ -91,12 +87,11 @@ dependencies {
         exclude(module = "mockito-core")
     }
 
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.9.2")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.9.3")
 
     // Spring Cloud
     // https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-contract-stub-runner
-    testImplementation("org.springframework.cloud:spring-cloud-starter-contract-stub-runner")
-    testImplementation("org.springframework.cloud:spring-cloud-starter")
+    testImplementation("org.springframework.cloud:spring-cloud-starter-contract-stub-runner:$springCloudVersion")
 
     // Swagger (openapi 3)
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:$springdocVersion")
@@ -145,13 +140,7 @@ dependencies {
     testImplementation("com.willowtreeapps.assertk:assertk-jvm:$assertkJvmVersion")
     testImplementation("com.ninja-squad:springmockk:$springMockkVersion")
     testImplementation("io.mockk:mockk:$mockkVersion")
-}
-
-dependencyManagement {
-    imports {
-        mavenBom("org.testcontainers:testcontainers-bom:${property("testcontainersVersion")}")
-        mavenBom("org.springframework.cloud:spring-cloud-dependencies:${property("springCloudVersion")}")
-    }
+    testImplementation("org.testcontainers:testcontainers:$testContainersVersion")
 }
 
 tasks.withType<Test> {
