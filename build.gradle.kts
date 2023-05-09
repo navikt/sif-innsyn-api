@@ -24,7 +24,7 @@ configurations {
 
 val confluentVersion = "7.3.0"
 val springCloudVersion = "4.0.2"
-val logstashLogbackEncoderVersion = "7.2"
+val logstashLogbackEncoderVersion = "7.3"
 val tokenSupportVersion = "3.0.8"
 val retryVersion = "2.0.0"
 val zalandoVersion = "0.27.0"
