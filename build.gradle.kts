@@ -63,7 +63,7 @@ repositories {
 dependencies {
 
     implementation("org.yaml:snakeyaml:2.0") {
-        because("https://github.com/navikt/k9-sak-innsyn-api/security/dependabot/2")
+        because("https://github.com/navikt/sif-innsyn-api/security/dependabot/2")
     }
 
     // NAV
