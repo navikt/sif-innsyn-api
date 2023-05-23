@@ -62,6 +62,10 @@ repositories {
 }
 dependencies {
 
+    implementation("org.yaml:snakeyaml:2.0") {
+        because("https://github.com/navikt/k9-sak-innsyn-api/security/dependabot/2")
+    }
+
     // NAV
     implementation("no.nav.k9:soknad:$k9FormatVersion")
 
