@@ -8,7 +8,7 @@ plugins {
     id("org.springframework.boot") version "3.1.0"
     id("io.spring.dependency-management") version "1.1.0"
     id("com.expediagroup.graphql") version "6.4.1"
-    id("org.sonarqube") version "4.0.0.2929"
+    id("org.sonarqube") version "4.2.0.3129"
     jacoco
 }
 
