@@ -22,7 +22,7 @@ configurations {
     }
 }
 
-val confluentVersion = "7.4.0"
+val confluentVersion = "7.4.1"
 val springCloudVersion = "4.0.3"
 val logstashLogbackEncoderVersion = "7.3"
 val tokenSupportVersion = "3.1.0"
