@@ -91,8 +91,6 @@ dependencies {
         exclude(module = "mockito-core")
     }
 
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.10.0")
-
     // Spring Cloud
     // https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-contract-stub-runner
     testImplementation("org.springframework.cloud:spring-cloud-starter-contract-stub-runner:$springCloudVersion")
