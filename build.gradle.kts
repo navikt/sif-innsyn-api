@@ -2,13 +2,13 @@ import com.expediagroup.graphql.plugin.gradle.tasks.GraphQLGenerateClientTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.8.21"
-    kotlin("plugin.spring") version "1.8.21"
-    kotlin("plugin.jpa") version "1.8.21"
-    id("org.springframework.boot") version "3.1.0"
-    id("io.spring.dependency-management") version "1.1.0"
-    id("com.expediagroup.graphql") version "6.4.1"
-    id("org.sonarqube") version "4.0.0.2929"
+    kotlin("jvm") version "1.9.0"
+    kotlin("plugin.spring") version "1.9.0"
+    kotlin("plugin.jpa") version "1.9.0"
+    id("org.springframework.boot") version "3.1.2"
+    id("io.spring.dependency-management") version "1.1.2"
+    id("com.expediagroup.graphql") version "6.5.3"
+    id("org.sonarqube") version "4.3.0.3225"
     jacoco
 }
 
@@ -22,11 +22,11 @@ configurations {
     }
 }
 
-val confluentVersion = "7.4.0"
-val springCloudVersion = "4.0.3"
-val logstashLogbackEncoderVersion = "7.3"
+val confluentVersion = "7.4.1"
+val springCloudVersion = "4.0.4"
+val logstashLogbackEncoderVersion = "7.4"
 val tokenSupportVersion = "3.1.0"
-val retryVersion = "2.0.1"
+val retryVersion = "2.0.2"
 val zalandoVersion = "0.27.0"
 val openhtmltopdfVersion = "1.0.10"
 val handlebarsVersion = "4.3.1"
@@ -35,12 +35,12 @@ val awailitilityKotlinVersion = "4.2.0"
 val assertkJvmVersion = "0.26.1"
 val springMockkVersion = "4.0.2"
 val mockkVersion = "1.13.5"
-val guavaVersion = "32.0.0-jre"
-val orgJsonVersion = "20230227"
-val graphQLKotlinVersion = "6.4.1"
+val guavaVersion = "32.1.1-jre"
+val orgJsonVersion = "20230618"
+val graphQLKotlinVersion = "6.5.3"
 val k9FormatVersion = "8.3.4"
 val teamDokumenthåndteringAvroSchemaVersion = "357738b9"
-val testContainersVersion = "1.18.1"
+val testContainersVersion = "1.18.3"
 val springdocVersion = "2.1.0"
 
 repositories {
@@ -91,7 +91,7 @@ dependencies {
         exclude(module = "mockito-core")
     }
 
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.9.3")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.10.0")
 
     // Spring Cloud
     // https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-contract-stub-runner
