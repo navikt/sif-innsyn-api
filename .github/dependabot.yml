@@ -11,3 +11,7 @@ updates:
     schedule:
       interval: daily
     open-pull-requests-limit: 15
+    groups:
+      maven:
+        patterns:
+          - "*"
