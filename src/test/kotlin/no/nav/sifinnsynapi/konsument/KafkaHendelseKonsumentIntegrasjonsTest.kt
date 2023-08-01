@@ -365,7 +365,8 @@ class KafkaHendelseKonsumentIntegrasjonsTest {
         joarkProducer.leggPåTopic(defaultJournalfoeringHendelseRecord(journalpostId))
 
         await.atMost(Duration.ofSeconds(10)).untilAsserted {
-            assertThat { repository.findByJournalpostId("$journalpostId") }.transform { it.getOrNull() }
+            assertThat(runCatching<SøknadDAO?> { repository.findByJournalpostId("$journalpostId") })
+                .transform { it.getOrNull() }
                 .isNotNull()
                 .transform { it.saksId }.isNotNull()
         }

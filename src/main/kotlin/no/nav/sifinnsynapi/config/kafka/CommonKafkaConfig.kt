@@ -114,7 +114,7 @@ class CommonKafkaConfig {
             factory.setReplyTemplate(kafkaTemplate)
 
             // https://docs.spring.io/spring-kafka/docs/2.5.2.RELEASE/reference/html/#payload-conversion-with-batch
-            factory.setMessageConverter(JsonMessageConverter(objectMapper))
+            factory.setRecordMessageConverter(JsonMessageConverter(objectMapper))
 
             // https://docs.spring.io/spring-kafka/docs/2.5.2.RELEASE/reference/html/#filtering-messages
             factory.setRecordFilterStrategy {
