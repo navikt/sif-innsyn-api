@@ -1,5 +1,6 @@
 package no.nav.sifinnsynapi.http
 
+import jakarta.validation.ConstraintViolationException
 import no.nav.security.token.support.core.exceptions.JwtTokenMissingException
 import no.nav.security.token.support.core.exceptions.JwtTokenValidatorException
 import no.nav.security.token.support.spring.validation.interceptor.JwtTokenUnauthorizedException
@@ -30,6 +31,33 @@ class ExceptionHandler : ResponseEntityExceptionHandler() {
             title = "Et uventet feil har oppstått",
             type = URI("/problem-details/internal-server-error"),
             detail = exception.message ?: ""
+        )
+        log.error("{}", problemDetails)
+        return problemDetails
+    }
+
+    @ExceptionHandler(value = [ConstraintViolationException::class])
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    fun håndtereConstraintViolationException(
+        exception: ConstraintViolationException,
+        request: ServletWebRequest,
+    ): ProblemDetail {
+        val problemDetails = request.respondProblemDetails(
+            status = HttpStatus.BAD_REQUEST,
+            title = "Ugyldig forespørsel",
+            type = URI("/problem-details/ugyldig-forespørsel"),
+            detail = "Forespørselen inneholder valideringsfeil",
+            properties = mapOf(
+                "violations" to exception.constraintViolations
+                    .sortedBy { it.propertyPath.toString()}
+                    .map {
+                        mapOf(
+                            "property" to it.propertyPath.toString(),
+                            "message" to it.message,
+                            "invalidValue" to it.invalidValue,
+                        )
+                    }
+            )
         )
         log.error("{}", problemDetails)
         return problemDetails

@@ -128,7 +128,7 @@ internal class DokumentControllerTest {
 
         mockMvc.perform(
             MockMvcRequestBuilders
-                .get("${Routes.DOKUMENT}/{journalpostId}/{dokumentinfoId}/{variant}", "123", "321", "ARKIV")
+                .get("${Routes.DOKUMENT}/{journalpostId}/{dokumentinfoId}/{variant}", "123456789", "987654321", "ARKIV")
                 .queryParam("dokumentTittel", "Screenshot 2021-04-23 at 12.59.57.png")
                 .accept(MediaType.APPLICATION_PDF_VALUE)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer ${mockOAuth2Server.hentToken().serialize()}")
@@ -139,6 +139,58 @@ internal class DokumentControllerTest {
             .andExpect(
                 MockMvcResultMatchers.header()
                     .string(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=$forventetFilnavn")
+            )
+    }
+
+    @Test
+    fun `hent dokument med ugyldige url parametere`() {
+        every {
+            dokumentService.hentDokument(any(), any(), any())
+        } returns ArkivertDokument(
+            body = "some byteArray".toByteArray(),
+            contentType = "application/pdf",
+            contentDisposition = ContentDisposition.parse("inline; filename=533439502_ARKIV.pdf")
+        )
+
+        mockMvc.perform(
+            MockMvcRequestBuilders
+                .get("${Routes.DOKUMENT}/{journalpostId}/{dokumentinfoId}/{variant}", "123", "321", "ANNET")
+                .queryParam("dokumentTittel", "Screenshot 2021-04-23 at 12.59.57.png")
+                .accept(MediaType.APPLICATION_PDF_VALUE)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer ${mockOAuth2Server.hentToken().serialize()}")
+        )
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isBadRequest)
+            .andExpect(
+                content().json(
+                    //language=json
+                    """
+                    {
+                      "type": "/problem-details/ugyldig-forespørsel",
+                      "instance": "http://localhost/dokument/123/321/ANNET",
+                      "title": "Ugyldig forespørsel",
+                      "status": 400,
+                      "detail": "Forespørselen inneholder valideringsfeil",
+                      "violations": [
+                        {
+                          "property": "hentDokument.dokumentInfoId",
+                          "message":  "[321] matcher ikke tillatt pattern [\\d{9}]",
+                          "invalidValue": "321"
+                        },
+                        {
+                          "property": "hentDokument.journalpostId",
+                          "message": "[123] matcher ikke tillatt pattern [\\d{9}]",
+                          "invalidValue": "123"
+                        },
+                        {
+                          "property": "hentDokument.variantFormat",
+                          "message":  "[ANNET] matcher ikke tillatt pattern [ARKIV]",
+                          "invalidValue": "ANNET"
+                        }
+                      ]
+                    }
+                """.trimIndent(), true
+                )
             )
     }
 

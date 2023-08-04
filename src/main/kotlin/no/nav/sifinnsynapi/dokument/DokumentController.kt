@@ -1,5 +1,6 @@
 package no.nav.sifinnsynapi.dokument
 
+import jakarta.validation.constraints.Pattern
 import no.nav.security.token.support.core.api.Protected
 import no.nav.security.token.support.core.api.ProtectedWithClaims
 import no.nav.sifinnsynapi.Routes.DOKUMENT
@@ -10,12 +11,14 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
+import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 
 @RestController
 @ProtectedWithClaims(issuer = "selvbetjening", claimMap = ["acr=Level4"])
+@Validated
 class DokumentController(
-    private val dokumentService: DokumentService
+    private val dokumentService: DokumentService,
 ) {
 
     private companion object {
@@ -26,7 +29,7 @@ class DokumentController(
     @Protected
     @ResponseStatus(HttpStatus.OK)
     fun hentDokumentOversikt(
-        @RequestParam vararg brevkoder: String
+        @RequestParam vararg brevkoder: String,
     ): List<DokumentDTO> {
         logger.info("Henter dokumentoversikt...")
         return dokumentService.hentDokumentOversikt(brevkoder.asList())
@@ -39,10 +42,10 @@ class DokumentController(
     @Protected
     @ResponseStatus(HttpStatus.OK)
     fun hentDokument(
-        @PathVariable journalpostId: String,
-        @PathVariable dokumentInfoId: String,
-        @PathVariable variantFormat: String,
-        @RequestParam dokumentTittel: String
+        @PathVariable @Pattern(regexp = "\\d{9}", message = "[\${validatedValue}] matcher ikke tillatt pattern [{regexp}]") journalpostId: String,
+        @PathVariable @Pattern(regexp = "\\d{9}", message = "[\${validatedValue}] matcher ikke tillatt pattern [{regexp}]") dokumentInfoId: String,
+        @PathVariable @Pattern(regexp = "ARKIV", message = "[\${validatedValue}] matcher ikke tillatt pattern [{regexp}]") variantFormat: String,
+        @RequestParam dokumentTittel: String,
     ): ResponseEntity<Resource> {
         logger.info("Henter dokument for journalpostId: {}", journalpostId)
 
