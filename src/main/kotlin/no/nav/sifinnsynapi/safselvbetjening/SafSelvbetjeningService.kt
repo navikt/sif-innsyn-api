@@ -2,6 +2,7 @@ package no.nav.sifinnsynapi.safselvbetjening
 
 import com.expediagroup.graphql.client.spring.GraphQLWebClient
 import com.fasterxml.jackson.databind.ObjectMapper
+import jakarta.validation.constraints.Pattern
 import no.nav.security.token.support.spring.SpringTokenValidationContextHolder
 import no.nav.sifinnsynapi.safselvbetjening.generated.HentDokumentOversikt
 import no.nav.sifinnsynapi.safselvbetjening.generated.hentdokumentoversikt.Dokumentoversikt
@@ -10,6 +11,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.http.ContentDisposition
 import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Service
+import org.springframework.validation.annotation.Validated
 import org.springframework.web.client.RestTemplate
 
 @Service
@@ -44,9 +46,14 @@ class SafSelvbetjeningService(
         }
     }
 
-    fun hentDokument(journalpostId: String, dokumentInfoId: String, varianFormat: String): ArkivertDokument {
+    @Validated
+    fun hentDokument(
+        @Pattern(regexp = "\\d{9}", message = "[\${validatedValue}] matcher ikke tillatt pattern [{regexp}]") journalpostId: String,
+        @Pattern(regexp = "\\d{9}", message = "[\${validatedValue}] matcher ikke tillatt pattern [{regexp}]") dokumentInfoId: String,
+        @Pattern(regexp = "ARKIV", message = "[\${validatedValue}] matcher ikke tillatt pattern [{regexp}]") variantFormat: String,
+    ): ArkivertDokument {
         val response = safSelvbetjeningRestTemplate.exchange(
-            "/rest/hentdokument/${journalpostId}/${dokumentInfoId}/${varianFormat}",
+            "/rest/hentdokument/${journalpostId}/${dokumentInfoId}/${variantFormat}",
             HttpMethod.GET,
             null,
             ByteArray::class.java
