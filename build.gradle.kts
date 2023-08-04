@@ -62,7 +62,7 @@ repositories {
 }
 dependencies {
 
-    implementation("org.yaml:snakeyaml:2.0") {
+    implementation("org.yaml:snakeyaml:2.1") {
         because("https://github.com/navikt/sif-innsyn-api/security/dependabot/2")
     }
 
