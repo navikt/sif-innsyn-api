@@ -25,7 +25,7 @@ configurations {
 val confluentVersion = "7.4.1"
 val springCloudVersion = "4.0.4"
 val logstashLogbackEncoderVersion = "7.4"
-val tokenSupportVersion = "3.1.1"
+val tokenSupportVersion = "3.1.2"
 val retryVersion = "2.0.2"
 val zalandoVersion = "0.27.0"
 val openhtmltopdfVersion = "1.0.10"
@@ -41,7 +41,7 @@ val graphQLKotlinVersion = "6.5.3"
 val k9FormatVersion = "8.3.4"
 val teamDokumenthåndteringAvroSchemaVersion = "357738b9"
 val testContainersVersion = "1.18.3"
-val springdocVersion = "2.1.0"
+val springdocVersion = "2.2.0"
 
 repositories {
     mavenCentral()
@@ -62,7 +62,7 @@ repositories {
 }
 dependencies {
 
-    implementation("org.yaml:snakeyaml:2.0") {
+    implementation("org.yaml:snakeyaml:2.1") {
         because("https://github.com/navikt/sif-innsyn-api/security/dependabot/2")
     }
 
