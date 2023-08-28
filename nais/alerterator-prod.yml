@@ -47,7 +47,7 @@ spec:
             summary: "Følgende request feilet: `Status \{{ $labels.status }} - \{{ $labels.method }} \{{ $labels.route }}`.\n
                         Grunn:\n ```\{{ $labels.problem_details }}```\n
                         Sjekk loggene for å se hvorfor dette feiler."
-            action: "`kubectl logs \{{ $labels.kubernetes_pod_name }} -n \{{ $labels.kubernetes_namespace }} -c \{{ $labels.app }}`"
+            action: "`kubectl logs \{{ $labels.pod }} -n \{{ $labels.namespace }} -c \{{ $labels.app }}`"
           labels:
             namespace: {{namespace}}
             severity: danger
@@ -59,14 +59,14 @@ spec:
           description: "Følgende request feilet: `Status \{{ $labels.status }} - \{{ $labels.method }} \{{ $labels.route }}`.\n
                     Grunn:\n ```\{{ $labels.problem_details }}```\n
                     Sjekk loggene for å se hvorfor dette feiler"
-          action: "`kubectl logs \{{ $labels.kubernetes_pod_name }} -n \{{ $labels.kubernetes_namespace }} -c \{{ $labels.app }}`"
+          action: "`kubectl logs \{{ $labels.pod }} -n \{{ $labels.namespace }} -c \{{ $labels.app }}`"
 
         - alert: Konsumering av meldinger feiler
           expr: ceil(increase(spring_kafka_listener_seconds_count{result="failure", app="{{app}}"}[3m])) > 0
           for: 1m
           annotations:
             summary: "Konsumering av melding i \{{ $labels.name }} feiler. Sjekk loggene for å finne ut hvorfor dette feiler."
-            action: "`kubectl logs \{{ $labels.pod_name }} -n \{{ $labels.namespace }} -c \{{ $labels.app }}`"
+            action: "`kubectl logs \{{ $labels.pod }} -n \{{ $labels.namespace }} -c \{{ $labels.app }}`"
           labels:
             namespace: {{namespace}}
             severity: danger
@@ -76,7 +76,7 @@ spec:
           for: 2m
           annotations:
             summary: "Sjekk loggene for å se hvorfor helsesjekken feiler.`"
-            action: "`kubectl logs \{{ $labels.kubernetes_pod_name }} -n \{{ $labels.kubernetes_namespace }} -c \{{ $labels.app }}`"
+            action: "`kubectl logs \{{ $labels.pod }} -n \{{ $labels.namespace }} -c \{{ $labels.app }}`"
           labels:
             namespace: {{namespace}}
             severity: danger
