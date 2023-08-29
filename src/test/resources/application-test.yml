@@ -96,6 +96,7 @@ kafka:
       schemaRegistryPassword: password
     producer:
       client-id: sif-innsyn-api-aiven
+      transaction-id-prefix: .tx-sif-innsyn-api-
 
 wiremock:
   reset-mappings-after-each-test: true
