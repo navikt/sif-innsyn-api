@@ -40,7 +40,7 @@ no.nav:
       client:
         registration:
           tokenx-safselvbetjening:
-            token-endpoint-url: ${TOKENDINGS_BASE_URL}/token
+            token-endpoint-url: ${TOKEN_X_TOKEN_ENDPOINT}
             grant-type: urn:ietf:params:oauth:grant-type:token-exchange
             authentication:
               client-auth-method: private_key_jwt
@@ -50,7 +50,7 @@ no.nav:
               audience: ${SAFSELVBETJENING_TOKEN_X_AUDIENCE}
 
           tokenx-k9-sak-innsyn-api:
-            token-endpoint-url: ${TOKENDINGS_BASE_URL}/token
+            token-endpoint-url: ${TOKEN_X_TOKEN_ENDPOINT}
             grant-type: urn:ietf:params:oauth:grant-type:token-exchange
             authentication:
               client-auth-method: private_key_jwt
@@ -60,7 +60,7 @@ no.nav:
               audience: ${K9_SAK_INNSYN_API_TOKEN_X_AUDIENCE}
 
           tokenx-k9-selvbetjening-oppslag:
-            token-endpoint-url: ${TOKENDINGS_BASE_URL}/token
+            token-endpoint-url: ${TOKEN_X_TOKEN_ENDPOINT}
             grant-type: urn:ietf:params:oauth:grant-type:token-exchange
             authentication:
               client-auth-method: private_key_jwt
