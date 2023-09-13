@@ -2,22 +2,6 @@ package no.nav.sifinnsynapi.dittnav
 
 import no.nav.sifinnsynapi.common.Metadata
 
-/**
- * as json
- * {
- *  "metadata": {
- *    "correlationId": "123",
- *    "version": 1
- *    },
- *    "ident": "12345678910",
- *    "microfrontendId": "pleiepenger-innsyn",
- *    "action": "ENABLE",
- *    "sensitivitet": "HIGH",
- *    "initiatedBy": "k9-dittnav-varsel"
- *    }
- *   }
- *
- */
 data class K9Microfrontend(
     val metadata: Metadata,
     val ident: String,
