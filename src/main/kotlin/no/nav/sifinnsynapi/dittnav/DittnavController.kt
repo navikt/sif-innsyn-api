@@ -6,10 +6,10 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
 
-@RestController("/dittnav")
+@RestController
 class DittnavController(private val dittnavService: DittnavService) {
 
-    @PostMapping("/microfrontend/toggle")
+    @PostMapping("/dittnav/microfrontend/toggle")
     @ResponseStatus(HttpStatus.OK)
     fun toggleMicrofrontend(@RequestBody k9Microfrontend: K9Microfrontend) {
         dittnavService.toggleMicrofrontend(k9Microfrontend)
