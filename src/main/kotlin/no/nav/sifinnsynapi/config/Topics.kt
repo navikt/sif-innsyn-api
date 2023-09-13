@@ -2,6 +2,7 @@ package no.nav.sifinnsynapi.config
 
 object Topics {
     const val K9_DITTNAV_VARSEL_BESKJED_AIVEN = "dusseldorf.privat-k9-dittnav-varsel-beskjed"
+    const val K9_DITTNAV_VARSEL_MICROFRONTEND = "dusseldorf.privat-k9-dittnav-varsel-microfrontend"
     const val PP_SYKT_BARN = "dusseldorf.pp-sykt-barn-soknad-cleanup"
     const val PP_SYKT_BARN_ENDRINGSMELDING= "dusseldorf.privat-endringsmelding-pleiepenger-sykt-barn-cleanup"
     const val K9_ETTERSENDING = "dusseldorf.ettersendelse-cleanup"

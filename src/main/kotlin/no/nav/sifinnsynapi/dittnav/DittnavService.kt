@@ -2,7 +2,10 @@ package no.nav.sifinnsynapi.dittnav
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import no.nav.sifinnsynapi.config.Topics.K9_DITTNAV_VARSEL_BESKJED_AIVEN
+import no.nav.sifinnsynapi.config.Topics.K9_DITTNAV_VARSEL_MICROFRONTEND
+import no.nav.sifinnsynapi.util.MDCUtil
 import org.apache.kafka.clients.producer.ProducerRecord
+import org.json.JSONObject
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.kafka.core.KafkaTemplate
@@ -44,6 +47,26 @@ class DittnavService(
                 )
             }
     }
+
+    fun toggleMicrofrontend(k9Microfrontend: K9Microfrontend) {
+        log.info("Sender ut dittnav microfrontend event til aiven med")
+        aivenKafkaTemplate.send(
+            ProducerRecord(
+                K9_DITTNAV_VARSEL_MICROFRONTEND,
+                k9Microfrontend.metadata.correlationId,
+                k9Microfrontend.somJson(objectMapper)
+            )
+        )
+            .exceptionally { ex: Throwable ->
+                log.warn("Kunne ikke sende microfrontend event til {}", K9_DITTNAV_VARSEL_MICROFRONTEND, ex)
+                throw ex
+            }.thenAccept {
+                val anonymisertUtkast = JSONObject(it.producerRecord.value())
+                anonymisertUtkast.remove("ident") // Fjerner ident fra microfrontend event før det logges.
+                log.info("Microfrontend event sendt til ${K9_DITTNAV_VARSEL_MICROFRONTEND}. {}", anonymisertUtkast)
+            }
+    }
 }
 
 fun K9Beskjed.somJson(mapper: ObjectMapper) = mapper.writeValueAsString(this)
+fun K9Microfrontend.somJson(mapper: ObjectMapper) = mapper.writeValueAsString(this)
