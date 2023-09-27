@@ -41,10 +41,10 @@ internal class SafServiceTest {
                 )
             )
 
-            assertThat {
+            assertThat(runCatching<Journalpost> {
                 val hentJournalpostinfo: Journalpost = safService.hentJournalpostinfo("123456")
                 hentJournalpostinfo
-            }.isEqualTo(Result.success(forventetJournalpostinfo))
+            }).isEqualTo(Result.success(forventetJournalpostinfo))
         }
     }
 }
