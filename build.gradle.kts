@@ -25,7 +25,7 @@ configurations {
 val confluentVersion = "7.5.0"
 val springCloudVersion = "4.0.4"
 val logstashLogbackEncoderVersion = "7.4"
-val tokenSupportVersion = "3.1.5"
+val tokenSupportVersion = "3.1.7"
 val retryVersion = "2.0.3"
 val zalandoVersion = "0.27.0"
 val openhtmltopdfVersion = "1.0.10"
@@ -40,7 +40,7 @@ val orgJsonVersion = "20230618"
 val graphQLKotlinVersion = "7.0.1"
 val k9FormatVersion = "8.3.4"
 val teamDokumenthåndteringAvroSchemaVersion = "357738b9"
-val testContainersVersion = "1.19.0"
+val testContainersVersion = "1.19.1"
 val springdocVersion = "2.2.0"
 
 repositories {
