@@ -10,7 +10,7 @@ import no.nav.sifinnsynapi.konsument.ettersending.K9EttersendingKonsument.Compan
 import no.nav.sifinnsynapi.konsument.ettersending.K9EttersendingKonsument.Companion.Keys.SØKER
 import no.nav.sifinnsynapi.konsument.ettersending.K9EttersendingKonsument.Companion.Keys.SØKNAD_ID
 import no.nav.sifinnsynapi.konsument.ettersending.K9EttersendingKonsument.Companion.Keys.SØKNAD_TYPE
-import no.nav.sifinnsynapi.konsument.ettersending.K9EttersendingKonsument.Companion.Søknadstype.*
+import no.nav.sifinnsynapi.konsument.ettersending.K9EttersendingKonsument.Companion.Ettersendelsestype.*
 import no.nav.sifinnsynapi.soknad.Søknad
 import no.nav.sifinnsynapi.soknad.SøknadRepository
 import no.nav.sifinnsynapi.util.storForbokstav
@@ -45,14 +45,14 @@ class K9EttersendingKonsument(
             const val SØKNAD_TYPE = "søknadstype"
         }
 
-        enum class Søknadstype(val utskriftsvennlig: String) {
-            PLEIEPENGER_SYKT_BARN("pleiepenger"),
-            PLEIEPENGER_LIVETS_SLUTTFASE("pleiepenger livets sluttfase"),
-            OMP_UTV_KS("omsorgspenger"), // Omsorgspenger utvidet rett - kronisk syke eller funksjonshemming.
-            OMP_UT_SNF("omsorgspenger"), // Omsorgspenger utbetaling SNF ytelse.
-            OMP_UT_ARBEIDSTAKER("omsorgspenger"), // Omsorgspenger utbetaling arbeidstaker ytelse.
-            OMP_DELE_DAGER("omsorgspenger"),
-            OMP_UTV_MA("omsorgspenger"), // Omsorgspenger utvidet rett - midlertidig alene
+        enum class Ettersendelsestype(val utskriftsvennlig: String) {
+            PLEIEPENGER_SYKT_BARN("Ettersendelse av dokumentasjon til søknad om pleiepenger"),
+            PLEIEPENGER_LIVETS_SLUTTFASE("Ettersendelse av dokumentasjon til søknad om pleiepenger i livets sluttfase"),
+            OMP_UTV_KS("Ettersendelse av dokumentasjon til søknad om ekstra omsorgsdager for barn som har kronisk/langvarig sykdom eller funksjonshemning"),
+            OMP_UT_SNF("Ettersendelse av dokumentasjon til søknad om utbetaling av omsorgspenger for selvstendig næringsdrivende og frilansere"),
+            OMP_UT_ARBEIDSTAKER("Ettersendelse av dokumentasjon til søknad om utbetaling av omsorgspenger når arbeidsgiver ikke utbetaler"),
+            OMP_UTV_MA("Ettersendelse av dokumentasjon til søknad om ekstra omsorgsdager når den andre forelderen ikke kan ha tilsyn med barn"),
+            OMP_UTV_AO("Ettersendelse av dokumentasjon til søknad om ekstra omsorgsdager ved aleneomsorg"),
         }
     }
 
@@ -74,7 +74,7 @@ class K9EttersendingKonsument(
             val søknadId = melding.getString(SØKNAD_ID)
             val søknadstype = valueOf(melding.getString(SØKNAD_TYPE).storForbokstav())
 
-            logger.info("Mottok hendelse om '$YTELSE - ${søknadstype.utskriftsvennlig}' med søknadId: $søknadId")
+            logger.info("Mottok hendelse om '${søknadstype.utskriftsvennlig}' med søknadId: $søknadId")
 
             val beskjedProperties = when (søknadstype) {
                 PLEIEPENGER_SYKT_BARN, PLEIEPENGER_LIVETS_SLUTTFASE -> k9EttersendingPPBeskjedProperties
@@ -87,9 +87,9 @@ class K9EttersendingKonsument(
                 fødselsnummer = Fødselsnummer(melding.getJSONObject(SØKER).getString(FØDSELSNUMMER)),
                 journalpostId = hendelse.data.journalførtMelding.journalpostId,
                 søknadstype = when (søknadstype) {
-                    PLEIEPENGER_SYKT_BARN -> no.nav.sifinnsynapi.common.Søknadstype.PP_ETTERSENDELSE
-                    PLEIEPENGER_LIVETS_SLUTTFASE -> no.nav.sifinnsynapi.common.Søknadstype.PP_LIVETS_SLUTTFASE_ETTERSENDELSE
-                    else -> no.nav.sifinnsynapi.common.Søknadstype.OMS_ETTERSENDELSE
+                    PLEIEPENGER_SYKT_BARN -> Søknadstype.PP_ETTERSENDELSE
+                    PLEIEPENGER_LIVETS_SLUTTFASE -> Søknadstype.PP_LIVETS_SLUTTFASE_ETTERSENDELSE
+                    else -> Søknadstype.OMS_ETTERSENDELSE
                 },
                 status = SøknadsStatus.MOTTATT,
                 søknad = hendelse.data.melding

@@ -71,7 +71,7 @@ fun defaultHendelseK9Ettersending(
     søknadIdKey: String = "soknadId",
     søknadId: UUID = UUID.randomUUID(),
     journalpostId: String = "123456789",
-    søknadstype: K9EttersendingKonsument.Companion.Søknadstype
+    ettersendelsestype: K9EttersendingKonsument.Companion.Ettersendelsestype
 ) = TopicEntry(
     data = SøknadsHendelse(
         metadata = defaultMetadata,
@@ -82,7 +82,7 @@ fun defaultHendelseK9Ettersending(
                 "fødselsnummer" to "1234567",
                 "aktørId" to "123456"
             ),
-            "søknadstype" to "${søknadstype.name}"
+            "søknadstype" to "${ettersendelsestype.name}"
         ),
         journalførtMelding = JournalfortMelding(
             journalpostId = "$journalpostId"

@@ -23,26 +23,49 @@ import no.nav.sifinnsynapi.config.Topics.K9_ETTERSENDING
 import no.nav.sifinnsynapi.config.Topics.PP_SYKT_BARN
 import no.nav.sifinnsynapi.config.Topics.PP_SYKT_BARN_ENDRINGSMELDING
 import no.nav.sifinnsynapi.dittnav.K9Beskjed
-import no.nav.sifinnsynapi.konsument.ettersending.K9EttersendingKonsument
-import no.nav.sifinnsynapi.konsument.ettersending.K9EttersendingKonsument.Companion.Søknadstype.PLEIEPENGER_LIVETS_SLUTTFASE
+import no.nav.sifinnsynapi.konsument.ettersending.K9EttersendingKonsument.Companion.Ettersendelsestype
 import no.nav.sifinnsynapi.konsument.pleiepenger.endringsmelding.PleiepengerEndringsmeldingDittnavBeskjedProperties
 import no.nav.sifinnsynapi.safselvbetjening.SafSelvbetjeningService
 import no.nav.sifinnsynapi.safselvbetjening.generated.enums.Datotype
 import no.nav.sifinnsynapi.safselvbetjening.generated.enums.Journalstatus
 import no.nav.sifinnsynapi.safselvbetjening.generated.enums.Variantformat
-import no.nav.sifinnsynapi.safselvbetjening.generated.hentdokumentoversikt.*
+import no.nav.sifinnsynapi.safselvbetjening.generated.hentdokumentoversikt.DokumentInfo
+import no.nav.sifinnsynapi.safselvbetjening.generated.hentdokumentoversikt.Dokumentoversikt
+import no.nav.sifinnsynapi.safselvbetjening.generated.hentdokumentoversikt.Dokumentvariant
+import no.nav.sifinnsynapi.safselvbetjening.generated.hentdokumentoversikt.Journalpost
+import no.nav.sifinnsynapi.safselvbetjening.generated.hentdokumentoversikt.RelevantDato
+import no.nav.sifinnsynapi.safselvbetjening.generated.hentdokumentoversikt.Sak
 import no.nav.sifinnsynapi.soknad.SøknadDAO
 import no.nav.sifinnsynapi.soknad.SøknadDTO
 import no.nav.sifinnsynapi.soknad.SøknadRepository
-import no.nav.sifinnsynapi.utils.*
+import no.nav.sifinnsynapi.utils.defaultHendelse
+import no.nav.sifinnsynapi.utils.defaultHendelseK9Ettersending
+import no.nav.sifinnsynapi.utils.defaultHendelsePPEndringsmelding
+import no.nav.sifinnsynapi.utils.defaultJournalfoeringHendelseRecord
+import no.nav.sifinnsynapi.utils.hentToken
+import no.nav.sifinnsynapi.utils.leggPåTopic
+import no.nav.sifinnsynapi.utils.lesMelding
+import no.nav.sifinnsynapi.utils.opprettDittnavConsumer
+import no.nav.sifinnsynapi.utils.opprettJoarkKafkaProducer
+import no.nav.sifinnsynapi.utils.opprettKafkaProducer
+import no.nav.sifinnsynapi.utils.somJson
+import no.nav.sifinnsynapi.utils.stubForAktørId
+import no.nav.sifinnsynapi.utils.tokenTilHttpEntity
 import org.apache.kafka.clients.consumer.Consumer
 import org.apache.kafka.clients.producer.Producer
 import org.awaitility.kotlin.await
 import org.json.JSONObject
-import org.junit.Assert
 import org.junit.Assert.assertNotNull
-import org.junit.jupiter.api.*
+import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.extension.ExtendWith
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.EnumSource
 import org.skyscreamer.jsonassert.JSONAssert
 import org.skyscreamer.jsonassert.JSONCompareMode
 import org.slf4j.Logger
@@ -267,7 +290,10 @@ class KafkaHendelseKonsumentIntegrasjonsTest {
         val hendelse = defaultHendelse(journalpostId = "4")
         producer.leggPåTopic(hendelse, PP_SYKT_BARN, mapper)
 
-        val dittnavBeskjed = dittNavConsumer.lesMelding(hendelse.data.melding["søknadId"] as String, topic = K9_DITTNAV_VARSEL_BESKJED_AIVEN)
+        val dittnavBeskjed = dittNavConsumer.lesMelding(
+            hendelse.data.melding["søknadId"] as String,
+            topic = K9_DITTNAV_VARSEL_BESKJED_AIVEN
+        )
         log.info("----> dittnav melding: {}", dittnavBeskjed)
         assertThat(dittnavBeskjed).isNotNull()
     }
@@ -280,7 +306,8 @@ class KafkaHendelseKonsumentIntegrasjonsTest {
 
         // forvent at mottatt hendelse konsumeres og persisteres, samt at gitt restkall gir forventet resultat.
         await.atMost(15, TimeUnit.SECONDS).ignoreExceptions().untilAsserted {
-            val responseEntity = restTemplate.exchange("${SØKNAD}/${søknadId}", HttpMethod.GET, hentToken(), SøknadDTO::class.java)
+            val responseEntity =
+                restTemplate.exchange("${SØKNAD}/${søknadId}", HttpMethod.GET, hentToken(), SøknadDTO::class.java)
             val forventetRespons =
                 //language=json
                 """
@@ -374,8 +401,8 @@ class KafkaHendelseKonsumentIntegrasjonsTest {
 
     @Test
     fun `Konsumer hendelse om ettersending av PLEIEPENGER_SYKT_BARN og forvent at dittNav beskjed blir sendt ut`() {
-        val søknadstype = K9EttersendingKonsument.Companion.Søknadstype.PLEIEPENGER_SYKT_BARN
-        val hendelse = defaultHendelseK9Ettersending(søknadstype = søknadstype)
+        val ettersendelsestype = Ettersendelsestype.PLEIEPENGER_SYKT_BARN
+        val hendelse = defaultHendelseK9Ettersending(ettersendelsestype = ettersendelsestype)
         producer.leggPåTopic(hendelse, K9_ETTERSENDING, mapper)
         val søknadId = hendelse.data.melding["soknadId"] as String
 
@@ -388,66 +415,43 @@ class KafkaHendelseKonsumentIntegrasjonsTest {
             val dittnavBeskjed = dittNavConsumer.lesMelding(søknadId, K9_DITTNAV_VARSEL_BESKJED_AIVEN)
             log.info("----> dittnav melding: {}", dittnavBeskjed)
             assertThat(dittnavBeskjed).isNotNull()
-            Assert.assertTrue(dittnavBeskjed.toString().contains("pleiepenger"))
+            Assertions.assertTrue(dittnavBeskjed.toString().contains("pleiepenger"))
         }
     }
 
-    @Test
-    fun `Konsumer hendelse om ettersending av OMP_UTV_KS og forvent at dittNav beskjed blir sendt ut`() {
-        val søknadstype = K9EttersendingKonsument.Companion.Søknadstype.OMP_UTV_KS
-        val hendelse = defaultHendelseK9Ettersending(søknadstype = søknadstype)
+    @ParameterizedTest
+    @EnumSource(value = Ettersendelsestype::class)
+    fun `Konsumer hendelse om ettersending og forvent at dittnav beskjed blir sendt ut`(ettersendelsestype: Ettersendelsestype) {
+        val hendelse = defaultHendelseK9Ettersending(ettersendelsestype = ettersendelsestype)
         producer.leggPåTopic(hendelse, K9_ETTERSENDING, mapper)
         val søknadId = hendelse.data.melding["soknadId"] as String
 
         await.atMost(Duration.ofSeconds(10)).untilAsserted {
-            val ettersendelse = repository.findByIdOrNull(UUID.fromString(søknadId))
-            assertThat(ettersendelse).isNotNull()
-            assertThat(ettersendelse!!.søknadstype).isEqualTo(Søknadstype.OMS_ETTERSENDELSE)
+            val ettersendelseDao = repository.findByIdOrNull(UUID.fromString(søknadId))
+            assertThat(ettersendelseDao).isNotNull()
+
+            when (ettersendelsestype) {
+                Ettersendelsestype.PLEIEPENGER_SYKT_BARN -> assertThat(ettersendelseDao!!.søknadstype)
+                    .isEqualTo(Søknadstype.PP_ETTERSENDELSE)
+
+                Ettersendelsestype.PLEIEPENGER_LIVETS_SLUTTFASE -> assertThat(ettersendelseDao!!.søknadstype)
+                    .isEqualTo(Søknadstype.PP_LIVETS_SLUTTFASE_ETTERSENDELSE)
+
+                else -> assertThat(ettersendelseDao!!.søknadstype).isEqualTo(Søknadstype.OMS_ETTERSENDELSE)
+            }
 
             // forvent at dittNav melding blir sendt
             val dittnavBeskjed = dittNavConsumer.lesMelding(søknadId, K9_DITTNAV_VARSEL_BESKJED_AIVEN)
             log.info("----> dittnav melding: {}", dittnavBeskjed)
             assertThat(dittnavBeskjed).isNotNull()
-            Assert.assertTrue(dittnavBeskjed.toString().contains("omsorgspenger"))
-        }
-    }
-
-    @Test
-    fun `Konsumer hendelse om ettersending av OMP_DELE_DAGER og forvent at dittNav beskjed blir sendt ut`() {
-        val søknadstype = K9EttersendingKonsument.Companion.Søknadstype.OMP_DELE_DAGER
-        val hendelse = defaultHendelseK9Ettersending(søknadstype = søknadstype)
-        producer.leggPåTopic(hendelse, K9_ETTERSENDING, mapper)
-        val søknadId = hendelse.data.melding["soknadId"] as String
-
-        await.atMost(Duration.ofSeconds(10)).untilAsserted {
-            val ettersendelse = repository.findByIdOrNull(UUID.fromString(søknadId))
-            assertThat(ettersendelse).isNotNull()
-            assertThat(ettersendelse!!.søknadstype).isEqualTo(Søknadstype.OMS_ETTERSENDELSE)
-
-            // forvent at dittNav melding blir sendt
-            val dittnavBeskjed = dittNavConsumer.lesMelding(søknadId, K9_DITTNAV_VARSEL_BESKJED_AIVEN)
-            log.info("----> dittnav melding: {}", dittnavBeskjed)
-            assertThat(dittnavBeskjed).isNotNull()
-            Assert.assertTrue(dittnavBeskjed.toString().contains("omsorgspenger"))
-        }
-    }
-
-    @Test
-    fun `Konsumer hendelse om ettersending av PLEIEPENGER_LIVETS_SLUTTFASE og forvent at dittNav beskjed blir sendt ut`() {
-        val hendelse = defaultHendelseK9Ettersending(søknadstype = PLEIEPENGER_LIVETS_SLUTTFASE)
-        producer.leggPåTopic(hendelse, K9_ETTERSENDING, mapper)
-        val søknadId = hendelse.data.melding["soknadId"] as String
-
-        await.atMost(Duration.ofSeconds(10)).untilAsserted {
-            val ettersendelse = repository.findByIdOrNull(UUID.fromString(søknadId))
-            assertThat(ettersendelse).isNotNull()
-            assertThat(ettersendelse!!.søknadstype).isEqualTo(Søknadstype.PP_LIVETS_SLUTTFASE_ETTERSENDELSE)
-
-            // forvent at dittNav melding blir sendt
-            val dittnavBeskjed = dittNavConsumer.lesMelding(søknadId, K9_DITTNAV_VARSEL_BESKJED_AIVEN)
-            log.info("----> dittnav melding: {}", dittnavBeskjed)
-            assertThat(dittnavBeskjed).isNotNull()
-            Assert.assertTrue(dittnavBeskjed.toString().contains("pleiepenger"))
+            when (ettersendelsestype) {
+                Ettersendelsestype.PLEIEPENGER_SYKT_BARN, Ettersendelsestype.PLEIEPENGER_LIVETS_SLUTTFASE -> {
+                    assertThat(dittnavBeskjed.toString().contains("pleiepenger"))
+                }
+                else -> {
+                    assertThat(dittnavBeskjed.toString().contains("omsorgspenger"))
+                }
+            }
         }
     }
 
@@ -461,7 +465,8 @@ class KafkaHendelseKonsumentIntegrasjonsTest {
         JSONAssert.assertEquals(forventetResponse, body!!.somJson(mapper), JSONCompareMode.LENIENT)
     }
 
-    private fun hentToken(): HttpEntity<String> = mockOAuth2Server.hentToken(issuerId = Issuers.TOKEN_X).tokenTilHttpEntity()
+    private fun hentToken(): HttpEntity<String> =
+        mockOAuth2Server.hentToken(issuerId = Issuers.TOKEN_X).tokenTilHttpEntity()
 
     private fun stubDokumentOversikt() {
         coEvery {
