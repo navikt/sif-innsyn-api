@@ -6,7 +6,7 @@ $$
         -- Check if the mikrofrontend table is empty
         IF
             NOT EXISTS (SELECT 1 FROM mikrofrontend) THEN
-            INSERT INTO mikrofrontend (id, fødselsnummer, mikrofrntend_id, status, opprettet)
+            INSERT INTO mikrofrontend (id, fødselsnummer, mikrofrontend_id, status, opprettet)
             SELECT uuid_generate_v4(),
                    s.fødselsnummer,
                    'pleiepenger-innsyn',
