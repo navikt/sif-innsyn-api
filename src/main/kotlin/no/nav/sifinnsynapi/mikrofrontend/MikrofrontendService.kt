@@ -55,7 +55,7 @@ class MikrofrontendService(
         metadata = Metadata(version = 1, correlationId = UUID.randomUUID().toString()),
         ident = fødselsnummer,
         microfrontendId = MicrofrontendId.fromId(mikrofrontendId),
-        action = status,
+        action = MicrofrontendAction.ENABLE,
         sensitivitet = Sensitivitet.SUBSTANTIAL,
         initiatedBy = "sif-innsyn-api"
     )
