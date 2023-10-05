@@ -1,5 +1,7 @@
 package no.nav.sifinnsynapi.dittnav
 
+import com.fasterxml.jackson.annotation.JsonValue
+import jakarta.persistence.Embeddable
 import no.nav.sifinnsynapi.common.Metadata
 
 data class K9Microfrontend(
@@ -22,7 +24,8 @@ enum class MicrofrontendAction {
 /**
  * MicrofrontendId avtales på forhånd med team-personbruker.
  */
-enum class MicrofrontendId(val id: String) {
+@Embeddable
+enum class MicrofrontendId(@get:JsonValue val mikrofrontendId: String) {
     PLEIEPENGER_INNSYN("pleiepenger-innsyn"),
 }
 
