@@ -32,13 +32,13 @@ class MikrofrontendService(
     @Transactional
     fun aktiverDinePleiepengerFrontend() {
         val antallDeaktiverteDinePleiepenger = mikrofrontendRepository.countAllByMikrofrontendIdAndStatus(
-            MicrofrontendId.PLEIEPENGER_INNSYN,
+            MicrofrontendId.PLEIEPENGER_INNSYN.id,
             MicrofrontendAction.DISABLE
         )
         logger.info("Fant ${antallDeaktiverteDinePleiepenger} deaktiverte dine-pleiepenger mikrofrontend")
 
         mikrofrontendRepository.findAllByMikrofrontendIdAndStatus(
-            MicrofrontendId.PLEIEPENGER_INNSYN,
+            MicrofrontendId.PLEIEPENGER_INNSYN.id,
             MicrofrontendAction.DISABLE
         )
             .forEach { mikrofrontend: MikrofrontendDAO ->
@@ -54,7 +54,7 @@ class MikrofrontendService(
     private fun MikrofrontendDAO.toK9Microfrontend() = K9Microfrontend(
         metadata = Metadata(version = 1, correlationId = UUID.randomUUID().toString()),
         ident = fødselsnummer,
-        microfrontendId = mikrofrontendId,
+        microfrontendId = MicrofrontendId.valueOf(mikrofrontendId),
         action = status,
         sensitivitet = Sensitivitet.SUBSTANTIAL,
         initiatedBy = "sif-innsyn-api"

@@ -22,7 +22,7 @@ import java.util.*
 data class MikrofrontendDAO(
     @Column(name = "id") @Id @JdbcTypeCode(SqlTypes.UUID) val id: UUID = UUID.randomUUID(),
     @Column(name = "fødselsnummer", nullable = false, length = 11) val fødselsnummer: String,
-    @Column(name = "mikrofrontend_id", nullable = false, length = 100) @Embedded val mikrofrontendId: MicrofrontendId,
+    @Column(name = "mikrofrontend_id", nullable = false, length = 100) val mikrofrontendId: String,
     @Column(name = "status", nullable = false, length = 50) @Enumerated(EnumType.STRING) val status: MicrofrontendAction,
     @Column(name = "opprettet") @CreatedDate val opprettet: ZonedDateTime? = null,
     @Column(name = "endret") @UpdateTimestamp val endret: LocalDateTime? = null,

@@ -24,8 +24,7 @@ enum class MicrofrontendAction {
 /**
  * MicrofrontendId avtales på forhånd med team-personbruker.
  */
-@Embeddable
-enum class MicrofrontendId(@get:JsonValue val mikrofrontendId: String) {
+enum class MicrofrontendId(val id: String) {
     PLEIEPENGER_INNSYN("pleiepenger-innsyn"),
 }
 

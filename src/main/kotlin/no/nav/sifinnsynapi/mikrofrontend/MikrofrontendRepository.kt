@@ -8,28 +8,29 @@ import org.springframework.data.jpa.repository.Lock
 import java.util.UUID
 import java.util.stream.Stream
 
+
 interface MikrofrontendRepository: JpaRepository<MikrofrontendDAO, UUID> {
     /**
-     * Henter alle mikrofrontender basert på gitt mikrofrontendId og status med en pessimistisk skrivelås.
-     * Når en rad er låst av denne metoden, kan ingen andre transaksjoner lese, oppdatere eller slette denne raden
+     * Henter alle mikrofrontender basert på gitt mikrofrontendId og status med en pessimistisk leselås.
+     * Når en rad er låst av denne metoden, kan ingen andre transaksjoner lese denne raden
      * før låsen er frigjort.
      *
      * @param mikrofrontendId ID for mikrofrontend.
      * @param status Status for mikrofrontend.
      * @return En strøm av MikrofrontendDAO-entiteter.
      */
-    @Lock(LockModeType.PESSIMISTIC_WRITE)
-    fun findAllByMikrofrontendIdAndStatus(mikrofrontendId: MicrofrontendId, status: MicrofrontendAction): Stream<MikrofrontendDAO>
+    @Lock(LockModeType.PESSIMISTIC_READ)
+    fun findAllByMikrofrontendIdAndStatus(mikrofrontendId: String, status: MicrofrontendAction): Stream<MikrofrontendDAO>
 
     /**
-     * Teller alle mikrofrontender basert på gitt mikrofrontendId og status med en pessimistisk skrivelås.
-     * Når en rad er låst av denne metoden, kan ingen andre transaksjoner lese, oppdatere eller slette denne raden
+     * Teller alle mikrofrontender basert på gitt mikrofrontendId og status med en pessimistisk leselås.
+     * Når en rad er låst av denne metoden, kan ingen andre transaksjoner lese denne raden
      * før låsen er frigjort.
      *
      * @param mikrofrontendId ID for mikrofrontend.
      * @param status Status for mikrofrontend.
      * @return Antall mikrofrontender som oppfyller kriteriene.
      */
-    @Lock(LockModeType.PESSIMISTIC_WRITE)
-    fun countAllByMikrofrontendIdAndStatus(mikrofrontendId: MicrofrontendId, status: MicrofrontendAction): Long
+    @Lock(LockModeType.PESSIMISTIC_READ)
+    fun countAllByMikrofrontendIdAndStatus(mikrofrontendId: String, status: MicrofrontendAction): Long
 }
