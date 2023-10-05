@@ -25,9 +25,15 @@ enum class MicrofrontendAction {
  * MicrofrontendId avtales på forhånd med team-personbruker.
  */
 enum class MicrofrontendId(val id: String) {
-    PLEIEPENGER_INNSYN("pleiepenger-innsyn"),
+    PLEIEPENGER_INNSYN("pleiepenger-innsyn");
+
+    companion object {
+        fun fromId(id: String): MicrofrontendId {
+            return entries.find { it.id == id } ?: throw IllegalStateException("$id kunne ikke mappes til en enum")
+        }
+    }
 }
 
-enum class Sensitivitet{
+enum class Sensitivitet {
     HIGH, SUBSTANTIAL;
 }

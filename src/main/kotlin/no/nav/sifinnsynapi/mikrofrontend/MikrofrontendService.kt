@@ -54,7 +54,7 @@ class MikrofrontendService(
     private fun MikrofrontendDAO.toK9Microfrontend() = K9Microfrontend(
         metadata = Metadata(version = 1, correlationId = UUID.randomUUID().toString()),
         ident = fødselsnummer,
-        microfrontendId = MicrofrontendId.valueOf(mikrofrontendId),
+        microfrontendId = MicrofrontendId.fromId(mikrofrontendId),
         action = status,
         sensitivitet = Sensitivitet.SUBSTANTIAL,
         initiatedBy = "sif-innsyn-api"
