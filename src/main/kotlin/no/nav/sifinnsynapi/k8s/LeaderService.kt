@@ -13,12 +13,13 @@ class LeaderService(@Qualifier("leaderRestTemplate") private val restTemplate: R
         private val logger = LoggerFactory.getLogger(LeaderService::class.java)
     }
 
-    fun executeAsLeader(job: String, action: () -> Unit) {
+    fun executeAsLeader(action: () -> Unit) {
+        val caller = action.javaClass.name
         if (isLeader()) {
-            logger.info("$job kjøres av leder ${leader()}")
+            logger.info("$caller kjøres av leder ${leader()}")
             action.invoke()
         } else {
-            logger.info("Pod er ikke leder. Skipper $job.")
+            logger.info("Pod er ikke leder. Skipper $caller.")
         }
     }
 

@@ -10,6 +10,7 @@ import no.nav.sifinnsynapi.k8s.LeaderService
 import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -30,8 +31,9 @@ class MikrofrontendService(
      * Oppdaterer status på mikrofrontend entitet.
      */
     @Scheduled(fixedDelay = 15, timeUnit = TimeUnit.MINUTES)
+    @Transactional
     fun aktiverDinePleiepengerFrontend() {
-        leaderService.executeAsLeader("aktiverDinePleiepengerFrontend") {
+        leaderService.executeAsLeader {
             val antallDeaktiverteDinePleiepenger = mikrofrontendRepository.countAllByMikrofrontendIdAndStatus(
                 MicrofrontendId.PLEIEPENGER_INNSYN.id,
                 MicrofrontendAction.DISABLE

@@ -21,7 +21,7 @@ class SøknadMetricService(
 
     @Scheduled(fixedRateString = "#{'\${no.nav.metrics.interval}'}")
     fun reportSøknadMetrics() {
-        leaderService.executeAsLeader("reportSøknadMetrics") {
+        leaderService.executeAsLeader {
             søknadRepository.finnAntallUnikeSøkere().let {
                 logger.info("Måling: antall unike brukere = $it")
                 Gauge.builder("sif_innsyn_antall_unike_brukere") { it }
