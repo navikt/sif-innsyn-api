@@ -31,7 +31,7 @@ class MikrofrontendService(
      */
     @Scheduled(fixedDelay = 15, timeUnit = TimeUnit.MINUTES)
     fun aktiverDinePleiepengerFrontend() {
-        if (leaderService.isLeader()) {
+        leaderService.executeAsLeader("aktiverDinePleiepengerFrontend") {
             val antallDeaktiverteDinePleiepenger = mikrofrontendRepository.countAllByMikrofrontendIdAndStatus(
                 MicrofrontendId.PLEIEPENGER_INNSYN.id,
                 MicrofrontendAction.DISABLE
@@ -50,8 +50,6 @@ class MikrofrontendService(
                         logger.error("Feilet med å aktivere dine-pleiepenger mikrofrontend. Prøver igjen senere.", it)
                     }
                 }
-        } else {
-            logger.info("Jobb kjøres av leader.")
         }
     }
 

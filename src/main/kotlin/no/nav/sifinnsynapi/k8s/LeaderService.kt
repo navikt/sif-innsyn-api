@@ -13,7 +13,16 @@ class LeaderService(@Qualifier("leaderRestTemplate") private val restTemplate: R
         private val logger = LoggerFactory.getLogger(LeaderService::class.java)
     }
 
-    fun isLeader(): Boolean {
+    fun executeAsLeader(job: String, action: () -> Unit) {
+        if (isLeader()) {
+            logger.info("$job kjøres av leder ${leader()}")
+            action.invoke()
+        } else {
+            logger.info("Pod er ikke leder. Skipper $job.")
+        }
+    }
+
+    private fun isLeader(): Boolean {
         val leader = leader()
         logger.info("$leader er leder.")
         val hostname = InetAddress.getLocalHost().hostName
