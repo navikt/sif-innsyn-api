@@ -21,7 +21,7 @@ class LeaderService(@Qualifier("leaderRestTemplate") private val restTemplate: R
     }
 
     private fun leader(): String {
-        val response = restTemplate.getForObject("", String::class.java)
+        val response = restTemplate.getForObject("/", String::class.java)
         return JSONObject(response).getString("name")
     }
 }
