@@ -55,6 +55,8 @@ class MikrofrontendService(
         }
     }
 
+    // TODO: Legg til jobb for å hente all pleiepengesøknader og oppdatere mikrofrontend tabell dersom søker ikke er oppført der.
+
     private fun MikrofrontendDAO.toK9Microfrontend() = K9Microfrontend(
         metadata = Metadata(version = 1, correlationId = UUID.randomUUID().toString()),
         ident = fødselsnummer,
