@@ -1,3 +1,4 @@
+ELECTOR_PATH: localhost:4040
 no.nav:
   gateways:
     k9-selvbetjening-oppslag: http://localhost:${wiremock.server.port}/k9-selvbetjening-oppslag-mock
@@ -76,6 +77,7 @@ logging:
         logger: ERROR
     kafka: ERROR
     org:
+      springframework: DEBUG
       apache:
         zookeeper: ERROR
         kafka:
