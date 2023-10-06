@@ -17,7 +17,7 @@ class LeaderClientConfig(@Value("\${ELECTOR_PATH}") private val electorPath: Str
     fun leaderRestTemplate(restTemplateBuilder: RestTemplateBuilder): RestTemplate {
         logger.info("Konfigurerer opp klient for leader election.")
         return restTemplateBuilder
-            .rootUri(electorPath)
+            .rootUri("http://$electorPath")
             .build()
     }
 }
