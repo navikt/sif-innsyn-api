@@ -24,7 +24,6 @@ class LeaderService(@Qualifier("leaderRestTemplate") private val restTemplate: R
 
     private fun isLeader(): Boolean {
         val leader = leader()
-        logger.info("$leader er leder.")
         val hostname = InetAddress.getLocalHost().hostName
         return hostname == leader
     }
