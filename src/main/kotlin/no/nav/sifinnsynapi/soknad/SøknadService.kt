@@ -120,7 +120,7 @@ class SøknadService(
     }
 
     fun finnAlleSøknaderMedUnikeFødselsnummerForSøknadstype(søknadstype: Søknadstype): Stream<Søknad> {
-        return repo.finnAlleSøknaderMedUnikeFødselsnummerForSøknadstype(søknadstype)
+        return repo.finnAlleSøknaderMedUnikeFødselsnummerForSøknadstype(søknadstype.name)
     }
 }
 

@@ -36,5 +36,5 @@ interface SøknadRepository : JpaRepository<SøknadDAO, UUID> {
     """,
         nativeQuery = true
     )
-    fun finnAlleSøknaderMedUnikeFødselsnummerForSøknadstype(søknadstype: Søknadstype): Stream<Søknad>
+    fun finnAlleSøknaderMedUnikeFødselsnummerForSøknadstype(søknadstype: String): Stream<Søknad>
 }
