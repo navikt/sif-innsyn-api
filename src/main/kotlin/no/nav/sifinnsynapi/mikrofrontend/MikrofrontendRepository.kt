@@ -24,4 +24,6 @@ interface MikrofrontendRepository: JpaRepository<MikrofrontendDAO, UUID> {
      * @return Antall mikrofrontender som oppfyller kriteriene.
      */
     fun countAllByMikrofrontendIdAndStatus(mikrofrontendId: String, status: MicrofrontendAction): Long
+
+    fun existsByFødselsnummer(fødselsnummer: String): Boolean
 }
