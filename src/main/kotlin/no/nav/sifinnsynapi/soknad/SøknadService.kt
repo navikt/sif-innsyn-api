@@ -119,7 +119,7 @@ class SøknadService(
         return repo.findByJournalpostId(journalpostId) != null
     }
 
-    fun finnAlleSøknaderMedUnikeFødselsnummerForSøknadstype(søknadstype: Søknadstype): Stream<Søknad> {
+    fun finnAlleSøknaderMedUnikeFødselsnummerForSøknadstype(søknadstype: Søknadstype): Stream<SøknadDAO> {
         return repo.finnAlleSøknaderMedUnikeFødselsnummerForSøknadstype(søknadstype.name)
     }
 }

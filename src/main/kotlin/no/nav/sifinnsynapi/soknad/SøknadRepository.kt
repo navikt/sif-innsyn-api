@@ -1,7 +1,6 @@
 package no.nav.sifinnsynapi.soknad
 
 import no.nav.sifinnsynapi.common.AktørId
-import no.nav.sifinnsynapi.common.Søknadstype
 import no.nav.sifinnsynapi.config.TxConfiguration.Companion.TRANSACTION_MANAGER
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
@@ -36,5 +35,5 @@ interface SøknadRepository : JpaRepository<SøknadDAO, UUID> {
     """,
         nativeQuery = true
     )
-    fun finnAlleSøknaderMedUnikeFødselsnummerForSøknadstype(søknadstype: String): Stream<Søknad>
+    fun finnAlleSøknaderMedUnikeFødselsnummerForSøknadstype(søknadstype: String): Stream<SøknadDAO>
 }
