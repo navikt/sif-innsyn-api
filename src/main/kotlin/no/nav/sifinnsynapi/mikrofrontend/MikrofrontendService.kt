@@ -69,7 +69,7 @@ class MikrofrontendService(
     @Transactional
     fun oppdaterMikrofrontendTabell() = leaderService.executeAsLeader {
         søknadService.finnAlleSøknaderMedUnikeFødselsnummerForSøknadstype(Søknadstype.PP_SYKT_BARN)
-            .filter { mikrofrontendRepository.existsByFødselsnummer(it.fødselsnummer.fødselsnummer!!) }
+            .filter { !mikrofrontendRepository.existsByFødselsnummer(it.fødselsnummer.fødselsnummer!!) }
             .map {
                 MikrofrontendDAO(
                     id = UUID.randomUUID(),
