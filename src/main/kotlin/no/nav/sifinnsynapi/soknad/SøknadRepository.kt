@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
+import java.util.stream.Stream
 
 @Transactional(transactionManager = TRANSACTION_MANAGER, rollbackFor = [Exception::class])
 interface SøknadRepository : JpaRepository<SøknadDAO, UUID> {
@@ -24,4 +25,15 @@ interface SøknadRepository : JpaRepository<SøknadDAO, UUID> {
             nativeQuery = true
     )
     fun finnAntallSøknaderGittSøknadstype(søknadstype: String): Long
+
+    @Query(
+        value = """
+        SELECT DISTINCT ON (s.fødselsnummer) s.*
+        FROM søknad s
+        WHERE s.søknadstype = ?1
+        ORDER BY s.fødselsnummer, s.id
+    """,
+        nativeQuery = true
+    )
+    fun finnAlleSøknaderMedUnikeFødselsnummerForSøknadstype(søknadstype: String): Stream<SøknadDAO>
 }

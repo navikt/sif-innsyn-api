@@ -22,6 +22,7 @@ import java.net.URI
 import java.net.URLDecoder
 import java.nio.charset.Charset
 import java.util.*
+import java.util.stream.Stream
 
 @Service
 class SøknadService(
@@ -116,6 +117,10 @@ class SøknadService(
 
     fun søknadGittJournalpostIdEksisterer(journalpostId: String): Boolean {
         return repo.findByJournalpostId(journalpostId) != null
+    }
+
+    fun finnAlleSøknaderMedUnikeFødselsnummerForSøknadstype(søknadstype: Søknadstype): Stream<SøknadDAO> {
+        return repo.finnAlleSøknaderMedUnikeFødselsnummerForSøknadstype(søknadstype.name)
     }
 }
 
