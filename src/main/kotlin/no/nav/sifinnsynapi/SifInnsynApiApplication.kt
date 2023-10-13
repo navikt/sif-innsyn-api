@@ -1,5 +1,6 @@
 package no.nav.sifinnsynapi
 
+import no.nav.sifinnsynapi.exception.SifInnsynApiUncaughtExceptionHandler
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan
@@ -24,5 +25,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement
 class SifInnsynApiApplication
 
 fun main(args: Array<String>) {
+    Thread.setDefaultUncaughtExceptionHandler(SifInnsynApiUncaughtExceptionHandler())
     runApplication<SifInnsynApiApplication>(*args)
 }
