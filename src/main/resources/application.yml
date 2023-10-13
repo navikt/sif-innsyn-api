@@ -175,10 +175,10 @@ kafka:
       schemaRegistryPassword: ${KAFKA_SCHEMA_REGISTRY_PASSWORD}
 
     producer:
-      client-id: ${HOSTNAME}
+      client-id: ${HOSTNAME}-${random.uuid}
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
-      transaction-id-prefix: .tx-${HOSTNAME}-
+      transaction-id-prefix: tx-${HOSTNAME}-${random.uuid}
       retries: 3
 
 springdoc:
