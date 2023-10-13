@@ -66,7 +66,7 @@ class MikrofrontendService(
      * eksisterer i mikrofrontend-tabellen. Hvis det ikke eksisterer, opprettes en ny `MikrofrontendDAO`
      * og lagres i databasen. Til slutt, en handling for å aktivere mikrofrontend blir trigget.
      */
-    @Scheduled(fixedDelay = 20, timeUnit = TimeUnit.MINUTES)
+    //@Scheduled(fixedDelay = 20, timeUnit = TimeUnit.MINUTES)
     @Transactional(transactionManager = TxConfiguration.TRANSACTION_MANAGER, rollbackFor = [Exception::class])
     fun oppdaterMikrofrontendTabell() = leaderService.executeAsLeader {
         søknadService.finnAlleSøknaderMedUnikeFødselsnummerForSøknadstype(Søknadstype.PP_SYKT_BARN)
