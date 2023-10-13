@@ -82,8 +82,12 @@ class MikrofrontendService(
                 )
             }
             .forEach {
-                dittnavService.toggleMicrofrontend(it.toK9Microfrontend())
-                mikrofrontendRepository.save(it)
+                runCatching {
+                    dittnavService.toggleMicrofrontend(it.toK9Microfrontend())
+                    mikrofrontendRepository.save(it)
+                }.onFailure {
+                    logger.error("Feilet med å oppdatere MikrofrontendTabell. Prøver igjen senere.", it)
+                }
             }
     }
 
