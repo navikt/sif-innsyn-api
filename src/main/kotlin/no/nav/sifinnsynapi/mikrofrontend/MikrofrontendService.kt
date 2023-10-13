@@ -2,6 +2,7 @@ package no.nav.sifinnsynapi.mikrofrontend
 
 import no.nav.sifinnsynapi.common.Metadata
 import no.nav.sifinnsynapi.common.Søknadstype
+import no.nav.sifinnsynapi.config.TxConfiguration
 import no.nav.sifinnsynapi.dittnav.DittnavService
 import no.nav.sifinnsynapi.dittnav.K9Microfrontend
 import no.nav.sifinnsynapi.dittnav.MicrofrontendAction
@@ -35,7 +36,7 @@ class MikrofrontendService(
      * Oppdaterer status på mikrofrontend entitet.
      */
     @Scheduled(fixedDelay = 15, timeUnit = TimeUnit.MINUTES)
-    @Transactional
+    @Transactional(transactionManager = TxConfiguration.TRANSACTION_MANAGER, rollbackFor = [Exception::class])
     fun aktiverDinePleiepengerFrontend() = leaderService.executeAsLeader {
         val antallDeaktiverteDinePleiepenger = mikrofrontendRepository.countAllByMikrofrontendIdAndStatus(
             MicrofrontendId.PLEIEPENGER_INNSYN.id,
@@ -66,7 +67,7 @@ class MikrofrontendService(
      * og lagres i databasen. Til slutt, en handling for å aktivere mikrofrontend blir trigget.
      */
     @Scheduled(fixedDelay = 20, timeUnit = TimeUnit.MINUTES)
-    @Transactional
+    @Transactional(transactionManager = TxConfiguration.TRANSACTION_MANAGER, rollbackFor = [Exception::class])
     fun oppdaterMikrofrontendTabell() = leaderService.executeAsLeader {
         søknadService.finnAlleSøknaderMedUnikeFødselsnummerForSøknadstype(Søknadstype.PP_SYKT_BARN)
             .filter { !mikrofrontendRepository.existsByFødselsnummer(it.fødselsnummer.fødselsnummer!!) }
