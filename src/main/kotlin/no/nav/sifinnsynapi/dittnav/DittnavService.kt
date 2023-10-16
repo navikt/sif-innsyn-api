@@ -49,7 +49,6 @@ class DittnavService(
     }
 
     fun toggleMicrofrontend(k9Microfrontend: K9Microfrontend) {
-        log.info("Sender ut dittnav microfrontend event til aiven med")
         aivenKafkaTemplate.send(
             ProducerRecord(
                 K9_DITTNAV_VARSEL_MICROFRONTEND,
@@ -63,7 +62,7 @@ class DittnavService(
             }.thenAccept {
                 val anonymisertUtkast = JSONObject(it.producerRecord.value())
                 anonymisertUtkast.remove("ident") // Fjerner ident fra microfrontend event før det logges.
-                log.info("Microfrontend event sendt til ${K9_DITTNAV_VARSEL_MICROFRONTEND}. {}", anonymisertUtkast)
+                log.info("Microfrontend event sendt til ${K9_DITTNAV_VARSEL_MICROFRONTEND} med offset ${it.recordMetadata.offset()}. {}", anonymisertUtkast)
             }
     }
 }

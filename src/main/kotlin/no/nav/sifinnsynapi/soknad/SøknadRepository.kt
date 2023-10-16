@@ -30,10 +30,22 @@ interface SøknadRepository : JpaRepository<SøknadDAO, UUID> {
         value = """
         SELECT DISTINCT ON (s.fødselsnummer) s.*
         FROM søknad s
-        WHERE s.søknadstype = ?1
+        WHERE s.søknadstype = ?1 AND s.opprettet >= CURRENT_DATE - INTERVAL '6 months'
         ORDER BY s.fødselsnummer, s.id
     """,
         nativeQuery = true
     )
-    fun finnAlleSøknaderMedUnikeFødselsnummerForSøknadstype(søknadstype: String): Stream<SøknadDAO>
+    fun finnAlleSøknaderMedUnikeFødselsnummerForSøknadstypeSisteSeksMåneder(søknadstype: String): Stream<SøknadDAO>
+
+
+    @Query(
+        value = """
+        SELECT DISTINCT ON (s.fødselsnummer) s.*
+        FROM søknad s
+        WHERE s.søknadstype = ?1 AND s.opprettet < CURRENT_DATE - INTERVAL '6 months'
+        ORDER BY s.fødselsnummer, s.id
+    """,
+        nativeQuery = true
+    )
+    fun finnAlleSøknaderMedUnikeFødselsnummerForSøknadstypeEldreEnnSeksMåneder(søknadstype: String): Stream<SøknadDAO>
 }

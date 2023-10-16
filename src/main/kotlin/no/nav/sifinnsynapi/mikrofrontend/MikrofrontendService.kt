@@ -13,6 +13,7 @@ import no.nav.sifinnsynapi.soknad.SøknadService
 import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
 import java.time.ZonedDateTime
 import java.util.*
@@ -31,31 +32,35 @@ class MikrofrontendService(
     }
 
     /**
-     * Henter all deaktiverte dine-pleiepenger mikrofrontender og aktiverer dem.
-     * Sender ut ditt nav varsel med om å aktivere dine-pleiepenger.
+     * Henter all aktiverte dine-pleiepenger mikrofrontender og deaktiverer dem.
+     * Sender ut ditt nav varsel med om å deaktivere dine-pleiepenger.
      * Oppdaterer status på mikrofrontend entitet.
      */
     @Scheduled(fixedDelay = 15, timeUnit = TimeUnit.MINUTES)
-    @Transactional(transactionManager = TxConfiguration.TRANSACTION_MANAGER, rollbackFor = [Exception::class])
-    fun aktiverDinePleiepengerFrontend() = leaderService.executeAsLeader {
-        val antallDeaktiverteDinePleiepenger = mikrofrontendRepository.countAllByMikrofrontendIdAndStatus(
-            MicrofrontendId.PLEIEPENGER_INNSYN.id,
-            MicrofrontendAction.DISABLE
-        )
-        logger.info("Fant ${antallDeaktiverteDinePleiepenger} deaktiverte dine-pleiepenger mikrofrontend")
+    fun deaktiverAlleDinePleiepengerMicrofrontend() {
+        leaderService.executeAsLeader {
+            logger.info("Deaktiverer mikrofrontend for pleiepengesøknader de siste seks måneder.")
+            val status = MicrofrontendAction.ENABLE
+            val mikrofrontendId = MicrofrontendId.PLEIEPENGER_INNSYN.id
 
-        mikrofrontendRepository.findAllByMikrofrontendIdAndStatus(
-            MicrofrontendId.PLEIEPENGER_INNSYN.id,
-            MicrofrontendAction.DISABLE
-        )
-            .forEach { mikrofrontend: MikrofrontendDAO ->
-                runCatching {
-                    dittnavService.toggleMicrofrontend(mikrofrontend.toK9Microfrontend())
-                    mikrofrontendRepository.save(mikrofrontend.copy(status = MicrofrontendAction.ENABLE))
-                }.onFailure {
-                    logger.error("Feilet med å aktivere dine-pleiepenger mikrofrontend. Prøver igjen senere.", it)
+            val antallAktiverteDinePleiepenger = mikrofrontendRepository.countAllByMikrofrontendIdAndStatus(
+                mikrofrontendId,
+                status
+            )
+            logger.info("Fant ${antallAktiverteDinePleiepenger} aktiverte dine-pleiepenger mikrofrontend")
+
+            mikrofrontendRepository.findAllByMikrofrontendIdAndStatus(
+                mikrofrontendId,
+                status
+            )
+                .forEach { mikrofrontendDAO: MikrofrontendDAO ->
+                    runCatching {
+                        sendOgLagre(mikrofrontendDAO, MicrofrontendAction.DISABLE)
+                    }.onFailure {
+                        logger.error("Feilet med å deaktivere dine-pleiepenger mikrofrontend. Prøver igjen senere.", it)
+                    }
                 }
-            }
+        }
     }
 
     /**
@@ -67,9 +72,9 @@ class MikrofrontendService(
      * og lagres i databasen. Til slutt, en handling for å aktivere mikrofrontend blir trigget.
      */
     //@Scheduled(fixedDelay = 20, timeUnit = TimeUnit.MINUTES)
-    @Transactional(transactionManager = TxConfiguration.TRANSACTION_MANAGER, rollbackFor = [Exception::class])
-    fun oppdaterMikrofrontendTabell() = leaderService.executeAsLeader {
-        søknadService.finnAlleSøknaderMedUnikeFødselsnummerForSøknadstype(Søknadstype.PP_SYKT_BARN)
+    fun aktiverMikrofrontendForPleiepengesøknaderSisteSeksMåneder() = leaderService.executeAsLeader {
+        logger.info("Aktiverer mikrofrontend for pleiepengesøknader de siste seks måneder.")
+        søknadService.finnAlleSøknaderMedUnikeFødselsnummerForSøknadstypeSisteSeksMåneder(Søknadstype.PP_SYKT_BARN)
             .filter { !mikrofrontendRepository.existsByFødselsnummer(it.fødselsnummer.fødselsnummer!!) }
             .map {
                 MikrofrontendDAO(
@@ -81,21 +86,54 @@ class MikrofrontendService(
                     behandlingsdato = null,
                 )
             }
-            .forEach {
+            .forEach { mikrofrontendDAO: MikrofrontendDAO ->
                 runCatching {
-                    dittnavService.toggleMicrofrontend(it.toK9Microfrontend())
-                    mikrofrontendRepository.save(it)
+                    sendOgLagre(mikrofrontendDAO, MicrofrontendAction.ENABLE)
                 }.onFailure {
                     logger.error("Feilet med å oppdatere MikrofrontendTabell. Prøver igjen senere.", it)
                 }
             }
     }
 
-    private fun MikrofrontendDAO.toK9Microfrontend() = K9Microfrontend(
+    //@Scheduled(fixedDelay = 20, timeUnit = TimeUnit.MINUTES)
+    fun deaktiverMikrofrontendForPleiepengesøknaderEldreEnnSeksMåneder() = leaderService.executeAsLeader {
+        logger.info("Deaktiverer mikrofrontend for pleiepengesøknader eldre enn seks måneder.")
+        søknadService.finnAlleSøknaderMedUnikeFødselsnummerForSøknadstypeEldreEnnSeksMåneder(Søknadstype.PP_SYKT_BARN)
+            .filter { !mikrofrontendRepository.existsByFødselsnummer(it.fødselsnummer.fødselsnummer!!) }
+            .map {
+                MikrofrontendDAO(
+                    id = UUID.randomUUID(),
+                    fødselsnummer = it.fødselsnummer.fødselsnummer!!,
+                    mikrofrontendId = MicrofrontendId.PLEIEPENGER_INNSYN.id,
+                    status = MicrofrontendAction.DISABLE,
+                    opprettet = ZonedDateTime.now(),
+                    behandlingsdato = null,
+                )
+            }
+            .forEach { mikrofrontendDAO: MikrofrontendDAO ->
+                runCatching {
+                    sendOgLagre(mikrofrontendDAO, MicrofrontendAction.ENABLE)
+                }.onFailure {
+                    logger.error("Feilet med å oppdatere MikrofrontendTabell. Prøver igjen senere.", it)
+                }
+            }
+    }
+
+    @Transactional(
+        transactionManager = TxConfiguration.TRANSACTION_MANAGER,
+        rollbackFor = [Exception::class],
+        propagation = Propagation.REQUIRES_NEW
+    )
+    fun sendOgLagre(mikrofrontendDAO: MikrofrontendDAO, microfrontendAction: MicrofrontendAction) {
+        dittnavService.toggleMicrofrontend(mikrofrontendDAO.toK9Microfrontend(microfrontendAction))
+        mikrofrontendRepository.save(mikrofrontendDAO)
+    }
+
+    private fun MikrofrontendDAO.toK9Microfrontend(microfrontendAction: MicrofrontendAction) = K9Microfrontend(
         metadata = Metadata(version = 1, correlationId = UUID.randomUUID().toString()),
         ident = fødselsnummer,
         microfrontendId = MicrofrontendId.fromId(mikrofrontendId),
-        action = MicrofrontendAction.ENABLE,
+        action = microfrontendAction,
         sensitivitet = Sensitivitet.SUBSTANTIAL,
         initiatedBy = "sif-innsyn-api"
     )
