@@ -37,6 +37,7 @@ class MikrofrontendService(
      * Oppdaterer status på mikrofrontend entitet.
      */
     @Scheduled(fixedDelay = 15, timeUnit = TimeUnit.MINUTES)
+    @Transactional
     fun deaktiverAlleDinePleiepengerMicrofrontend() {
         leaderService.executeAsLeader {
             logger.info("Deaktiverer mikrofrontend for pleiepengesøknader de siste seks måneder.")
@@ -49,10 +50,7 @@ class MikrofrontendService(
             )
             logger.info("Fant ${antallAktiverteDinePleiepenger} aktiverte dine-pleiepenger mikrofrontend")
 
-            mikrofrontendRepository.findAllByMikrofrontendIdAndStatus(
-                mikrofrontendId,
-                status
-            )
+            mikrofrontendRepository.findAllByMikrofrontendIdAndStatus(mikrofrontendId, status)
                 .forEach { mikrofrontendDAO: MikrofrontendDAO ->
                     runCatching {
                         sendOgLagre(mikrofrontendDAO, MicrofrontendAction.DISABLE)
