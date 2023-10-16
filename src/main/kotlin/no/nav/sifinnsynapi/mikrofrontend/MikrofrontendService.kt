@@ -53,7 +53,10 @@ class MikrofrontendService(
             mikrofrontendRepository.findAllByMikrofrontendIdAndStatus(mikrofrontendId, status)
                 .forEach { mikrofrontendDAO: MikrofrontendDAO ->
                     runCatching {
-                        sendOgLagre(mikrofrontendDAO, MicrofrontendAction.DISABLE)
+                        sendOgLagre(
+                            mikrofrontendDAO.copy(status = MicrofrontendAction.DISABLE),
+                            MicrofrontendAction.DISABLE
+                        )
                     }.onFailure {
                         logger.error("Feilet med å deaktivere dine-pleiepenger mikrofrontend. Prøver igjen senere.", it)
                     }
@@ -120,7 +123,7 @@ class MikrofrontendService(
     @Transactional(
         transactionManager = TxConfiguration.TRANSACTION_MANAGER,
         rollbackFor = [Exception::class],
-        propagation = Propagation.REQUIRES_NEW
+        propagation = Propagation.NESTED
     )
     fun sendOgLagre(mikrofrontendDAO: MikrofrontendDAO, microfrontendAction: MicrofrontendAction) {
         dittnavService.toggleMicrofrontend(mikrofrontendDAO.toK9Microfrontend(microfrontendAction))
