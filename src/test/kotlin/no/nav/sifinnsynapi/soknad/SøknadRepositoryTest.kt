@@ -17,6 +17,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit.jupiter.SpringExtension
+import java.time.LocalDate
 import java.time.ZonedDateTime
 import java.util.*
 
@@ -26,7 +27,7 @@ import java.util.*
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(SpringExtension::class)
 @AutoConfigureTestDatabase(
-        replace = AutoConfigureTestDatabase.Replace.NONE
+    replace = AutoConfigureTestDatabase.Replace.NONE
 )
 class SøknadRepositoryTest {
 
@@ -36,7 +37,8 @@ class SøknadRepositoryTest {
     companion object {
         private val aktørId = AktørId.valueOf("123456")
         private val aktørIdSomIkkeEksisterer = AktørId.valueOf("54321")
-        private val fødselsnummer = Fødselsnummer.valueOf("1234567")
+        private val fødselsnummer1 = Fødselsnummer.valueOf("1234567")
+        private val fødselsnummer2 = Fødselsnummer.valueOf("7654321")
         private val journalpostId = "12345"
     }
 
@@ -115,7 +117,8 @@ class SøknadRepositoryTest {
     fun `Sjekke om søknad eksisterer ved bruk av aktørId som ikke eksisterer`() {
         val søknadDAO = lagSøknadDAO()
         repository.save(søknadDAO)
-        val eksistererSøknad = repository.existsSøknadDAOByAktørIdAndJournalpostId(aktørIdSomIkkeEksisterer, journalpostId)
+        val eksistererSøknad =
+            repository.existsSøknadDAOByAktørIdAndJournalpostId(aktørIdSomIkkeEksisterer, journalpostId)
 
         assertFalse(eksistererSøknad)
     }
@@ -140,52 +143,114 @@ class SøknadRepositoryTest {
 
     @Test
     fun `gitt søknader i database, forvent 2 unike brukere`() {
-        repository.saveAll(listOf(
+        repository.saveAll(
+            listOf(
                 lagSøknadDAO(),
                 lagSøknadDAO(customAktørId = AktørId("789010")),
                 lagSøknadDAO(customAktørId = AktørId("789010"))
-        ))
+            )
+        )
 
         assertk.assertThat(repository.finnAntallUnikeSøkere()).isEqualTo(2)
     }
 
     @Test
     fun `gitt 3 PSB søknader i DB, forvent riktig antall hentes ut med type`() {
-        repository.saveAll(listOf(
-                lagSøknadDAO(søknadstype =Søknadstype.PP_SYKT_BARN),
-                lagSøknadDAO(søknadstype =Søknadstype.PP_SYKT_BARN),
-                lagSøknadDAO(søknadstype =Søknadstype.PP_SYKT_BARN),
-        ))
+        repository.saveAll(
+            listOf(
+                lagSøknadDAO(søknadstype = Søknadstype.PP_SYKT_BARN),
+                lagSøknadDAO(søknadstype = Søknadstype.PP_SYKT_BARN),
+                lagSøknadDAO(søknadstype = Søknadstype.PP_SYKT_BARN),
+            )
+        )
 
         assertk.assertThat(repository.finnAntallSøknaderGittSøknadstype(Søknadstype.PP_SYKT_BARN.name)).isEqualTo(3)
     }
 
     @Test
     fun `gitt 2 PSB søknader på samme søker i DB, forvent at kun 1 hentes`() {
-        repository.saveAll(listOf(
-                lagSøknadDAO(søknadstype =Søknadstype.PP_SYKT_BARN),
-                lagSøknadDAO(søknadstype =Søknadstype.PP_SYKT_BARN),
-        ))
+        repository.saveAll(
+            listOf(
+                lagSøknadDAO(søknadstype = Søknadstype.PP_SYKT_BARN),
+                lagSøknadDAO(søknadstype = Søknadstype.PP_SYKT_BARN),
+            )
+        )
 
-        assertk.assertThat(repository.finnAlleSøknaderMedUnikeFødselsnummerForSøknadstype(Søknadstype.PP_SYKT_BARN.name).count()).isEqualTo(1)
+        assertk.assertThat(
+            repository.finnAlleSøknaderMedUnikeFødselsnummerForSøknadstypeSisteSeksMåneder(Søknadstype.PP_SYKT_BARN.name).count()
+        ).isEqualTo(1)
+    }
+
+    @Test
+    fun `gitt 2 PSB søknader med 6 måneders mellomrom, forvent at søknader eldre enn 6 måneder ikke hentes`() {
+        repository.saveAll(
+            listOf(
+                lagSøknadDAO(søknadstype = Søknadstype.PP_SYKT_BARN, fødselsnummer = fødselsnummer1),
+                lagSøknadDAO(
+                    søknadstype = Søknadstype.PP_SYKT_BARN,
+                    fødselsnummer = fødselsnummer2,
+                    opprettet = ZonedDateTime.now().minusMonths(6).minusDays(1)
+                ),
+            )
+        )
+
+        assertk.assertThat(
+            repository.finnAlleSøknaderMedUnikeFødselsnummerForSøknadstypeSisteSeksMåneder(Søknadstype.PP_SYKT_BARN.name).count()
+        ).isEqualTo(1)
+
+        assertk.assertThat(
+            repository.finnAlleSøknaderMedUnikeFødselsnummerForSøknadstypeSisteSeksMåneder(Søknadstype.PP_SYKT_BARN.name)
+                .findFirst()
+                .get().opprettet!!.toLocalDate()
+        )
+            .isEqualTo(LocalDate.now())
+    }
+
+
+
+    @Test
+    fun `gitt 2 PSB søknader med 6 måneders mellomrom, forvent at søknader eldre enn 6 måneder hentes`() {
+        repository.saveAll(
+            listOf(
+                lagSøknadDAO(søknadstype = Søknadstype.PP_SYKT_BARN, fødselsnummer = fødselsnummer1),
+                lagSøknadDAO(
+                    søknadstype = Søknadstype.PP_SYKT_BARN,
+                    fødselsnummer = fødselsnummer2,
+                    opprettet = ZonedDateTime.now().minusMonths(6).minusDays(1)
+                ),
+            )
+        )
+
+        assertk.assertThat(
+            repository.finnAlleSøknaderMedUnikeFødselsnummerForSøknadstypeEldreEnnSeksMåneder(Søknadstype.PP_SYKT_BARN.name).count()
+        ).isEqualTo(1)
+
+        assertk.assertThat(
+            repository.finnAlleSøknaderMedUnikeFødselsnummerForSøknadstypeEldreEnnSeksMåneder(Søknadstype.PP_SYKT_BARN.name)
+                .findFirst()
+                .get().opprettet!!.toLocalDate()
+        )
+            .isEqualTo(LocalDate.now().minusMonths(6).minusDays(1))
     }
 
     private fun lagSøknadDAO(
-            customAktørId: AktørId = aktørId,
-            customJournalpostId: String = journalpostId,
-            søknadstype: Søknadstype = Søknadstype.PP_SYKT_BARN
+        customAktørId: AktørId = aktørId,
+        customJournalpostId: String = journalpostId,
+        søknadstype: Søknadstype = Søknadstype.PP_SYKT_BARN,
+        opprettet: ZonedDateTime = ZonedDateTime.now(),
+        fødselsnummer: Fødselsnummer = fødselsnummer1,
     ): SøknadDAO = SøknadDAO(
-            id = UUID.randomUUID(),
-            aktørId = customAktørId,
-            fødselsnummer = fødselsnummer,
-            søknadstype = søknadstype,
-            status = SøknadsStatus.MOTTATT,
-            journalpostId = customJournalpostId,
-            saksId = "2222",
-            opprettet = ZonedDateTime.now(),
-            søknad =
-            //language=json
-            """
+        id = UUID.randomUUID(),
+        aktørId = customAktørId,
+        fødselsnummer = fødselsnummer,
+        søknadstype = søknadstype,
+        status = SøknadsStatus.MOTTATT,
+        journalpostId = customJournalpostId,
+        saksId = "2222",
+        opprettet = opprettet,
+        søknad =
+        //language=json
+        """
                     {
                         "søknadId": "05ce3630-76eb-40f4-87a3-a5d55af58e40",
                         "språk": "nb"

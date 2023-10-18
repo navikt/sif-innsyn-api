@@ -1,4 +1,4 @@
-ELECTOR_PATH: localhost:4040
+ELECTOR_PATH: localhost:${wiremock.server.port}/leader
 no.nav:
   gateways:
     k9-selvbetjening-oppslag: http://localhost:${wiremock.server.port}/k9-selvbetjening-oppslag-mock
@@ -97,8 +97,8 @@ kafka:
       schemaRegistryUser: user
       schemaRegistryPassword: password
     producer:
-      client-id: sif-innsyn-api-aiven
-      transaction-id-prefix: .tx-sif-innsyn-api-
+      client-id: sif-innsyn-api-${random.uuid}
+      transaction-id-prefix: tx-sif-innsyn-api-${random.uuid}
 
 wiremock:
   reset-mappings-after-each-test: true
