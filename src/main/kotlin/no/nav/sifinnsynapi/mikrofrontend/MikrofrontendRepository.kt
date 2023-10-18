@@ -1,29 +1,30 @@
 package no.nav.sifinnsynapi.mikrofrontend
 
-import no.nav.sifinnsynapi.dittnav.MicrofrontendAction
 import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.Query
 import java.util.*
-import java.util.stream.Stream
 
 
 interface MikrofrontendRepository: JpaRepository<MikrofrontendDAO, UUID> {
     /**
-     * Henter alle mikrofrontender basert på gitt mikrofrontendId og status.
+     * Henter alle mikrofrontender basert på gitt mikrofrontendId og status, begrenset til gitt limit.
      *
      * @param mikrofrontendId ID for mikrofrontend.
      * @param status Status for mikrofrontend.
+     * @param limit Antall mikrofrontender som skal hentes.
      * @return En strøm av MikrofrontendDAO-entiteter.
      */
-    fun findAllByMikrofrontendIdAndStatus(mikrofrontendId: String, status: MicrofrontendAction): Stream<MikrofrontendDAO>
+    @Query(
+        value = """
+        SELECT * FROM mikrofrontend m 
+        WHERE m.mikrofrontend_id = ?1 AND m.status = ?2 
+        ORDER BY m.opprettet DESC 
+        LIMIT ?3
+    """,
+        nativeQuery = true
+    )
+    fun hentMikrofrontendIdAndStatus(mikrofrontendId: String, status: String, limit: Int): List<MikrofrontendDAO>
 
-    /**
-     * Teller alle mikrofrontender basert på gitt mikrofrontendId og status.
-     *
-     * @param mikrofrontendId ID for mikrofrontend.
-     * @param status Status for mikrofrontend.
-     * @return Antall mikrofrontender som oppfyller kriteriene.
-     */
-    fun countAllByMikrofrontendIdAndStatus(mikrofrontendId: String, status: MicrofrontendAction): Long
 
     fun existsByFødselsnummer(fødselsnummer: String): Boolean
 }

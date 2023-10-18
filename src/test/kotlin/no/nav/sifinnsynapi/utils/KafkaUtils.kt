@@ -14,6 +14,7 @@ import org.apache.kafka.clients.producer.Producer
 import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.apache.kafka.clients.producer.RecordMetadata
+import org.apache.kafka.common.serialization.StringDeserializer
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory
 import org.springframework.kafka.core.DefaultKafkaProducerFactory
@@ -53,7 +54,7 @@ fun Producer<Long, JournalfoeringHendelseRecord>.leggPåTopic(hendelse: Journalf
 fun EmbeddedKafkaBroker.opprettDittnavConsumer(
     topics: List<String> = listOf(
         K9_DITTNAV_VARSEL_BESKJED_AIVEN
-    )
+    ),
 ): Consumer<String, K9Beskjed> {
     val consumerProps = KafkaTestUtils.consumerProps("dittnav-consumer-${UUID.randomUUID()}", "true", this)
     consumerProps[ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG] =
@@ -64,6 +65,25 @@ fun EmbeddedKafkaBroker.opprettDittnavConsumer(
     val consumer = DefaultKafkaConsumerFactory<String, K9Beskjed>(consumerProps).createConsumer()
     consumer.subscribe(topics)
     return consumer
+}
+
+fun <K, V> EmbeddedKafkaBroker.opprettKafkaStringConsumer(groupId: String, topics: List<String>): Consumer<K, V> {
+    val consumerProps = KafkaTestUtils.consumerProps(groupId, "true", this)
+    consumerProps[ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG] = StringDeserializer::class.java
+    consumerProps[ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG] = StringDeserializer::class.java
+    consumerProps[ConsumerConfig.MAX_POLL_RECORDS_CONFIG] = 100_000
+
+    val consumer = DefaultKafkaConsumerFactory<K, V>(HashMap(consumerProps)).createConsumer()
+    consumer.subscribe(topics)
+    return consumer
+}
+
+fun <K, V> Consumer<K, V>.entriesOnTopic(
+    topic: String,
+    pollDuration: Duration,
+): MutableIterable<ConsumerRecord<K, V>> {
+    seekToBeginning(assignment())
+    return poll(pollDuration).records(topic)
 }
 
 fun Consumer<String, K9Beskjed>.lesMelding(
