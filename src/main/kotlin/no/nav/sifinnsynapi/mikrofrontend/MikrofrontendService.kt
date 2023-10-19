@@ -1,5 +1,6 @@
 package no.nav.sifinnsynapi.mikrofrontend
 
+import no.nav.sifinnsynapi.common.Fødselsnummer
 import no.nav.sifinnsynapi.common.Metadata
 import no.nav.sifinnsynapi.common.Søknadstype
 import no.nav.sifinnsynapi.config.TxConfiguration
@@ -11,10 +12,11 @@ import no.nav.sifinnsynapi.dittnav.Sensitivitet
 import no.nav.sifinnsynapi.soknad.SøknadDAO
 import no.nav.sifinnsynapi.soknad.SøknadService
 import org.slf4j.LoggerFactory
+import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Slice
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
-import java.util.stream.Stream
 
 @Service
 class MikrofrontendService(
@@ -27,9 +29,12 @@ class MikrofrontendService(
         private val logger = LoggerFactory.getLogger(MikrofrontendService::class.java)
     }
 
-    fun hentUnikePleiepengesøknaderUtenMikrofrontend(): Stream<SøknadDAO> {
-        return søknadService.finnAlleSøknaderMedUnikeFødselsnummerForSøknadstypeEldreEnnSeksMåneder(Søknadstype.PP_SYKT_BARN)
-            .filter { !mikrofrontendRepository.existsByFødselsnummer(it.fødselsnummer.fødselsnummer!!) }
+    fun finnAlleSøknaderMedUnikeFødselsnummerForSøknadstypeSisteSeksMåneder(page: Pageable): Slice<SøknadDAO> {
+        return søknadService.finnAlleSøknaderMedUnikeFødselsnummerForSøknadstypeSisteSeksMåneder(Søknadstype.PP_SYKT_BARN, page)
+    }
+
+    fun finnesMedFødselsnummer(fødselsnummer: Fødselsnummer): Boolean {
+        return mikrofrontendRepository.existsByFødselsnummer(fødselsnummer.fødselsnummer!!)
     }
 
     @Transactional(transactionManager = TxConfiguration.TRANSACTION_MANAGER, rollbackFor = [Exception::class])

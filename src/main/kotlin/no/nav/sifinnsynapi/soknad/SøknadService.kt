@@ -14,6 +14,8 @@ import no.nav.sifinnsynapi.oppslag.OppslagsService
 import no.nav.sifinnsynapi.util.ServletUtils
 import org.json.JSONObject
 import org.slf4j.LoggerFactory
+import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Slice
 import org.springframework.http.HttpStatus
 import org.springframework.http.ProblemDetail
 import org.springframework.stereotype.Service
@@ -22,7 +24,6 @@ import java.net.URI
 import java.net.URLDecoder
 import java.nio.charset.Charset
 import java.util.*
-import java.util.stream.Stream
 
 @Service
 class SøknadService(
@@ -119,12 +120,8 @@ class SøknadService(
         return repo.findByJournalpostId(journalpostId) != null
     }
 
-    fun finnAlleSøknaderMedUnikeFødselsnummerForSøknadstypeSisteSeksMåneder(søknadstype: Søknadstype): Stream<SøknadDAO> {
-        return repo.finnAlleSøknaderMedUnikeFødselsnummerForSøknadstypeSisteSeksMåneder(søknadstype.name)
-    }
-
-    fun finnAlleSøknaderMedUnikeFødselsnummerForSøknadstypeEldreEnnSeksMåneder(søknadstype: Søknadstype): Stream<SøknadDAO> {
-        return repo.finnAlleSøknaderMedUnikeFødselsnummerForSøknadstypeEldreEnnSeksMåneder(søknadstype.name)
+    fun finnAlleSøknaderMedUnikeFødselsnummerForSøknadstypeSisteSeksMåneder(søknadstype: Søknadstype, page: Pageable): Slice<SøknadDAO> {
+        return repo.finnAlleSøknaderMedUnikeFødselsnummerForSøknadstypeSisteSeksMåneder(søknadstype.name, page)
     }
 }
 

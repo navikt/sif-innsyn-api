@@ -5,10 +5,13 @@ import no.nav.sifinnsynapi.dittnav.MicrofrontendId
 import no.nav.sifinnsynapi.k8s.LeaderService
 import no.nav.sifinnsynapi.soknad.SøknadDAO
 import org.slf4j.LoggerFactory
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Slice
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 import java.time.ZonedDateTime
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 @Component
 class MikrofrontendScheduler(
@@ -26,9 +29,9 @@ class MikrofrontendScheduler(
      * Sender ut ditt nav varsel med om å deaktivere dine-pleiepenger.
      * Oppdaterer status på mikrofrontend entitet.
      */
-    @Scheduled(fixedDelay = Long.MAX_VALUE, initialDelay = 1000*5*60)
+    //@Scheduled(fixedDelay = Long.MAX_VALUE, initialDelay = 1000*5*60)
     fun deaktiverAlleDinePleiepengerMicrofrontend() = leaderService.executeAsLeader {
-        logger.info("Deaktiverer mikrofrontend for pleiepengesøknader.")
+        logger.info("Deaktiverer alle mikrofrontend for pleiepengesøknader.")
         val eksiterendeStatus = MicrofrontendAction.ENABLE
         val statusÅOppdatere = MicrofrontendAction.DISABLE
         val mikrofrontendId = MicrofrontendId.PLEIEPENGER_INNSYN.id
@@ -43,7 +46,7 @@ class MikrofrontendScheduler(
             )
 
             logger.info("Prosesserer batch nummer $batchNummer.")
-            prosesser(mikrofrontendDAOS, statusÅOppdatere)
+            deaktiver(mikrofrontendDAOS, statusÅOppdatere)
             logger.info("Batch nummer $batchNummer ferdig.")
             batchNummer++
 
@@ -51,10 +54,10 @@ class MikrofrontendScheduler(
                 harMerÅLese = false
             }
         }
-        logger.info("Deaktivering av mikrofrontend for pleiepengesøknader fullført.")
+        logger.info("Deaktivering av alle mikrofrontend for pleiepengesøknader fullført.")
     }
 
-    private fun prosesser(
+    private fun deaktiver(
         mikrofrontendDAOS: List<MikrofrontendDAO>,
         statusÅOppdatere: MicrofrontendAction,
     ) {
@@ -71,12 +74,34 @@ class MikrofrontendScheduler(
     }
 
 
-    //@Scheduled(fixedDelay = 20, timeUnit = TimeUnit.MINUTES)
+    @Scheduled(fixedDelay = 20, initialDelay = 5, timeUnit = TimeUnit.MINUTES)
     fun aktiverMikrofrontendForPleiepengesøknaderDeSisteSeksMåneder() = leaderService.executeAsLeader {
-        val statusÅOppdatere = MicrofrontendAction.ENABLE
-
         logger.info("Aktiverer mikrofrontend for pleiepengesøknader de siste seks måneder.")
-        mikrofrontendService.hentUnikePleiepengesøknaderUtenMikrofrontend()
+
+        val statusÅOppdatere = MicrofrontendAction.ENABLE
+        val currentPage = PageRequest.of(0, BATCH_SIZE)
+
+        var søknader =
+            mikrofrontendService.finnAlleSøknaderMedUnikeFødselsnummerForSøknadstypeSisteSeksMåneder(currentPage)
+
+        deaktiver(søknader, statusÅOppdatere)
+
+        while (søknader.hasNext()) {
+            val nextPageable = søknader.nextPageable()
+            søknader = mikrofrontendService.finnAlleSøknaderMedUnikeFødselsnummerForSøknadstypeSisteSeksMåneder(nextPageable)
+            deaktiver(søknader, statusÅOppdatere)
+        }
+
+        logger.info("Aktivering av mikrofrontend for pleiepengesøknader de siste seks måneder fullført.")
+    }
+
+    private fun deaktiver(
+        søknader: Slice<SøknadDAO>,
+        statusÅOppdatere: MicrofrontendAction,
+    ) {
+        logger.info("Prosesserer batch ${søknader.pageable.pageNumber}.")
+        søknader
+            .filter { !mikrofrontendService.finnesMedFødselsnummer(it.fødselsnummer) }
             .map { it.toMicrofrontendDAO(statusÅOppdatere) }
             .forEach { mikrofrontendDAO: MikrofrontendDAO ->
                 runCatching {
@@ -85,6 +110,7 @@ class MikrofrontendScheduler(
                     logger.error("Feilet med å oppdatere MikrofrontendTabell. Prøver igjen senere.", it)
                 }
             }
+        logger.info("Batch ${søknader.pageable.pageNumber} ferdig.")
     }
 
     private fun SøknadDAO.toMicrofrontendDAO(statusÅOppdatere: MicrofrontendAction) = MikrofrontendDAO(
