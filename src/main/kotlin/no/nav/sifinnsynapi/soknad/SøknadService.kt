@@ -120,8 +120,8 @@ class SøknadService(
         return repo.findByJournalpostId(journalpostId) != null
     }
 
-    fun finnAlleSøknaderMedUnikeFødselsnummerForSøknadstypeSisteSeksMåneder(søknadstype: Søknadstype, page: Pageable): Slice<SøknadDAO> {
-        return repo.finnAlleSøknaderMedUnikeFødselsnummerForSøknadstypeSisteSeksMåneder(søknadstype.name, page)
+    fun finnUnikeSøknaderUtenMikrofrontendSisteSeksMåneder(søknadstype: Søknadstype, page: Pageable): Slice<SøknadDAO> {
+        return repo.finnUnikeSøknaderUtenMikrofrontendSisteSeksMåneder(søknadstype.name, page)
     }
 }
 

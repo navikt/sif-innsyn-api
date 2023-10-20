@@ -29,8 +29,8 @@ class MikrofrontendService(
         private val logger = LoggerFactory.getLogger(MikrofrontendService::class.java)
     }
 
-    fun finnAlleSøknaderMedUnikeFødselsnummerForSøknadstypeSisteSeksMåneder(page: Pageable): Slice<SøknadDAO> {
-        return søknadService.finnAlleSøknaderMedUnikeFødselsnummerForSøknadstypeSisteSeksMåneder(Søknadstype.PP_SYKT_BARN, page)
+    fun finnUnikeSøknaderUtenMikrofrontendSisteSeksMåneder(page: Pageable): Slice<SøknadDAO> {
+        return søknadService.finnUnikeSøknaderUtenMikrofrontendSisteSeksMåneder(Søknadstype.PP_SYKT_BARN, page)
     }
 
     fun finnesMedFødselsnummer(fødselsnummer: Fødselsnummer): Boolean {

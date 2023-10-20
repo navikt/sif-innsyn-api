@@ -57,6 +57,27 @@ class MikrofrontendScheduler(
         logger.info("Deaktivering av alle mikrofrontend for pleiepengesøknader fullført.")
     }
 
+    @Scheduled(fixedDelay = 20, initialDelay = 5, timeUnit = TimeUnit.MINUTES)
+    fun aktiverMikrofrontendForPleiepengesøknaderDeSisteSeksMåneder() = leaderService.executeAsLeader {
+        logger.info("Aktiverer mikrofrontend for pleiepengesøknader de siste seks måneder.")
+
+        val statusÅOppdatere = MicrofrontendAction.ENABLE
+        val currentPage = PageRequest.of(0, BATCH_SIZE)
+
+        var søknader =
+            mikrofrontendService.finnUnikeSøknaderUtenMikrofrontendSisteSeksMåneder(currentPage)
+
+        aktiver(søknader, statusÅOppdatere)
+
+        while (søknader.hasNext()) {
+            val nextPageable = søknader.nextPageable()
+            søknader = mikrofrontendService.finnUnikeSøknaderUtenMikrofrontendSisteSeksMåneder(nextPageable)
+            aktiver(søknader, statusÅOppdatere)
+        }
+
+        logger.info("Aktivering av mikrofrontend for pleiepengesøknader de siste seks måneder fullført.")
+    }
+
     private fun deaktiver(
         mikrofrontendDAOS: List<MikrofrontendDAO>,
         statusÅOppdatere: MicrofrontendAction,
@@ -73,29 +94,7 @@ class MikrofrontendScheduler(
         }
     }
 
-
-    @Scheduled(fixedDelay = 20, initialDelay = 5, timeUnit = TimeUnit.MINUTES)
-    fun aktiverMikrofrontendForPleiepengesøknaderDeSisteSeksMåneder() = leaderService.executeAsLeader {
-        logger.info("Aktiverer mikrofrontend for pleiepengesøknader de siste seks måneder.")
-
-        val statusÅOppdatere = MicrofrontendAction.ENABLE
-        val currentPage = PageRequest.of(0, BATCH_SIZE)
-
-        var søknader =
-            mikrofrontendService.finnAlleSøknaderMedUnikeFødselsnummerForSøknadstypeSisteSeksMåneder(currentPage)
-
-        deaktiver(søknader, statusÅOppdatere)
-
-        while (søknader.hasNext()) {
-            val nextPageable = søknader.nextPageable()
-            søknader = mikrofrontendService.finnAlleSøknaderMedUnikeFødselsnummerForSøknadstypeSisteSeksMåneder(nextPageable)
-            deaktiver(søknader, statusÅOppdatere)
-        }
-
-        logger.info("Aktivering av mikrofrontend for pleiepengesøknader de siste seks måneder fullført.")
-    }
-
-    private fun deaktiver(
+    private fun aktiver(
         søknader: Slice<SøknadDAO>,
         statusÅOppdatere: MicrofrontendAction,
     ) {

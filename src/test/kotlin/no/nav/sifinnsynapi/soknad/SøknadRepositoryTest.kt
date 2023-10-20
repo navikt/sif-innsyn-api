@@ -178,7 +178,7 @@ class SøknadRepositoryTest {
         )
 
         assertk.assertThat(
-            repository.finnAlleSøknaderMedUnikeFødselsnummerForSøknadstypeSisteSeksMåneder(
+            repository.finnUnikeSøknaderUtenMikrofrontendSisteSeksMåneder(
                 Søknadstype.PP_SYKT_BARN.name, PageRequest.of(0, 10)
             ).count()
         ).isEqualTo(1)
@@ -198,13 +198,13 @@ class SøknadRepositoryTest {
         )
 
         assertk.assertThat(
-            repository.finnAlleSøknaderMedUnikeFødselsnummerForSøknadstypeSisteSeksMåneder(
+            repository.finnUnikeSøknaderUtenMikrofrontendSisteSeksMåneder(
                 Søknadstype.PP_SYKT_BARN.name, PageRequest.of(0, 10)
             ).count()
         ).isEqualTo(1)
 
         assertk.assertThat(
-            repository.finnAlleSøknaderMedUnikeFødselsnummerForSøknadstypeSisteSeksMåneder(
+            repository.finnUnikeSøknaderUtenMikrofrontendSisteSeksMåneder(
                 Søknadstype.PP_SYKT_BARN.name,
                 PageRequest.of(0, 10)
             )
