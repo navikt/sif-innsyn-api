@@ -117,7 +117,7 @@ class MikrofrontendScheduler(
         fødselsnummer = fødselsnummer.fødselsnummer!!,
         mikrofrontendId = MicrofrontendId.PLEIEPENGER_INNSYN.id,
         status = statusÅOppdatere,
-        opprettet = ZonedDateTime.now(),
+        opprettet = opprettet,
         behandlingsdato = null,
     )
 }
