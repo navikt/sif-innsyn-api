@@ -74,7 +74,7 @@ class MikrofrontendSchedulerTest {
 
     private companion object {
         private val logger = LoggerFactory.getLogger(MikrofrontendSchedulerTest::class.java)
-        private const val ANTALL_MELDINGER = 10
+        private const val ANTALL_MELDINGER = 2_000
     }
 
     @BeforeEach
@@ -118,7 +118,7 @@ class MikrofrontendSchedulerTest {
             Assertions.assertEquals(ANTALL_MELDINGER / modulus, records.count())
         }
 
-        assertThat(mikrofrontendRepository.findAll().size).isEqualTo(10)
+        assertThat(mikrofrontendRepository.findAll().size).isEqualTo(ANTALL_MELDINGER)
 
         tømDatabase()
     }
