@@ -18,7 +18,7 @@ class MikrofrontendScheduler(
 
     private companion object {
         private val logger = LoggerFactory.getLogger(MikrofrontendScheduler::class.java)
-        private const val BATCH_SIZE = 1000
+        private const val BATCH_SIZE = 1
     }
 
     /**
@@ -96,7 +96,6 @@ class MikrofrontendScheduler(
     ) {
         logger.info("Prosesserer batch ${batchNummer}.")
         søknader
-            .filter { !mikrofrontendService.finnesMedFødselsnummer(it.fødselsnummer) }
             .map { it.toMicrofrontendDAO(statusÅOppdatere) }
             .forEach { mikrofrontendDAO: MikrofrontendDAO ->
                 runCatching {

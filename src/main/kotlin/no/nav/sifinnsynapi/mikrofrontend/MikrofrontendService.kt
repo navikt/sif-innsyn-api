@@ -31,10 +31,6 @@ class MikrofrontendService(
         return søknadService.finnUnikeSøknaderUtenMikrofrontendSisteSeksMåneder(Søknadstype.PP_SYKT_BARN, limit)
     }
 
-    fun finnesMedFødselsnummer(fødselsnummer: Fødselsnummer): Boolean {
-        return mikrofrontendRepository.existsByFødselsnummer(fødselsnummer.fødselsnummer!!)
-    }
-
     @Transactional(transactionManager = TxConfiguration.TRANSACTION_MANAGER, rollbackFor = [Exception::class])
     fun sendOgLagre(mikrofrontendDAO: MikrofrontendDAO, microfrontendAction: MicrofrontendAction) {
         dittnavService.toggleMicrofrontend(mikrofrontendDAO.toK9Microfrontend(microfrontendAction))

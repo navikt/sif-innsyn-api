@@ -24,7 +24,4 @@ interface MikrofrontendRepository: JpaRepository<MikrofrontendDAO, UUID> {
         nativeQuery = true
     )
     fun hentMikrofrontendIdAndStatus(mikrofrontendId: String, status: String, limit: Int): List<MikrofrontendDAO>
-
-
-    fun existsByFødselsnummer(fødselsnummer: String): Boolean
 }

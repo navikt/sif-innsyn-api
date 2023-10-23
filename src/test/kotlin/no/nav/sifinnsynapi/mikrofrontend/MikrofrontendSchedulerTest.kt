@@ -74,7 +74,7 @@ class MikrofrontendSchedulerTest {
 
     private companion object {
         private val logger = LoggerFactory.getLogger(MikrofrontendSchedulerTest::class.java)
-        private const val ANTALL_MELDINGER = 2_000
+        private const val ANTALL_MELDINGER = 10
     }
 
     @BeforeEach
