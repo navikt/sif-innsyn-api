@@ -6,6 +6,7 @@ import no.nav.sifinnsynapi.common.AktørId
 import no.nav.sifinnsynapi.common.Fødselsnummer
 import no.nav.sifinnsynapi.common.SøknadsStatus
 import no.nav.sifinnsynapi.common.Søknadstype
+import no.nav.sifinnsynapi.mikrofrontend.MikrofrontendRepository
 import org.junit.Assert.*
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeAll
@@ -34,6 +35,9 @@ class SøknadRepositoryTest {
 
     @Autowired
     lateinit var repository: SøknadRepository // Repository som brukes til databasekall.
+
+    @Autowired
+    lateinit var mikrofrontendRepository: MikrofrontendRepository
 
     companion object {
         private val aktørId = AktørId.valueOf("123456")
@@ -178,9 +182,8 @@ class SøknadRepositoryTest {
         )
 
         assertk.assertThat(
-            repository.finnUnikeSøknaderUtenMikrofrontendSisteSeksMåneder(
-                Søknadstype.PP_SYKT_BARN.name, PageRequest.of(0, 10)
-            ).count()
+            repository.finnUnikeSøknaderUtenMikrofrontendSisteSeksMåneder(Søknadstype.PP_SYKT_BARN.name, 10)
+                .count()
         ).isEqualTo(1)
     }
 
@@ -199,15 +202,11 @@ class SøknadRepositoryTest {
 
         assertk.assertThat(
             repository.finnUnikeSøknaderUtenMikrofrontendSisteSeksMåneder(
-                Søknadstype.PP_SYKT_BARN.name, PageRequest.of(0, 10)
-            ).count()
+                Søknadstype.PP_SYKT_BARN.name, 10).count()
         ).isEqualTo(1)
 
         assertk.assertThat(
-            repository.finnUnikeSøknaderUtenMikrofrontendSisteSeksMåneder(
-                Søknadstype.PP_SYKT_BARN.name,
-                PageRequest.of(0, 10)
-            )
+            repository.finnUnikeSøknaderUtenMikrofrontendSisteSeksMåneder(Søknadstype.PP_SYKT_BARN.name, 10)
                 .stream()
                 .findFirst().get().opprettet!!.toLocalDate()
         ).isEqualTo(LocalDate.now())

@@ -12,8 +12,6 @@ import no.nav.sifinnsynapi.dittnav.Sensitivitet
 import no.nav.sifinnsynapi.soknad.SøknadDAO
 import no.nav.sifinnsynapi.soknad.SøknadService
 import org.slf4j.LoggerFactory
-import org.springframework.data.domain.Pageable
-import org.springframework.data.domain.Slice
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
@@ -29,8 +27,8 @@ class MikrofrontendService(
         private val logger = LoggerFactory.getLogger(MikrofrontendService::class.java)
     }
 
-    fun finnUnikeSøknaderUtenMikrofrontendSisteSeksMåneder(page: Pageable): Slice<SøknadDAO> {
-        return søknadService.finnUnikeSøknaderUtenMikrofrontendSisteSeksMåneder(Søknadstype.PP_SYKT_BARN, page)
+    fun finnUnikeSøknaderUtenMikrofrontendSisteSeksMåneder(limit: Int): List<SøknadDAO> {
+        return søknadService.finnUnikeSøknaderUtenMikrofrontendSisteSeksMåneder(Søknadstype.PP_SYKT_BARN, limit)
     }
 
     fun finnesMedFødselsnummer(fødselsnummer: Fødselsnummer): Boolean {

@@ -5,11 +5,8 @@ import no.nav.sifinnsynapi.dittnav.MicrofrontendId
 import no.nav.sifinnsynapi.k8s.LeaderService
 import no.nav.sifinnsynapi.soknad.SøknadDAO
 import org.slf4j.LoggerFactory
-import org.springframework.data.domain.PageRequest
-import org.springframework.data.domain.Slice
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
-import java.time.ZonedDateTime
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -21,7 +18,7 @@ class MikrofrontendScheduler(
 
     private companion object {
         private val logger = LoggerFactory.getLogger(MikrofrontendScheduler::class.java)
-        private const val BATCH_SIZE = 1000
+        private const val BATCH_SIZE = 1
     }
 
     /**
@@ -60,19 +57,17 @@ class MikrofrontendScheduler(
     @Scheduled(fixedDelay = 20, initialDelay = 5, timeUnit = TimeUnit.MINUTES)
     fun aktiverMikrofrontendForPleiepengesøknaderDeSisteSeksMåneder() = leaderService.executeAsLeader {
         logger.info("Aktiverer mikrofrontend for pleiepengesøknader de siste seks måneder.")
-
+        var batchNummer = 1
+        var harMerÅLese = true
         val statusÅOppdatere = MicrofrontendAction.ENABLE
-        val currentPage = PageRequest.of(0, BATCH_SIZE)
 
-        var søknader =
-            mikrofrontendService.finnUnikeSøknaderUtenMikrofrontendSisteSeksMåneder(currentPage)
-
-        aktiver(søknader, statusÅOppdatere)
-
-        while (søknader.hasNext()) {
-            val nextPageable = søknader.nextPageable()
-            søknader = mikrofrontendService.finnUnikeSøknaderUtenMikrofrontendSisteSeksMåneder(nextPageable)
-            aktiver(søknader, statusÅOppdatere)
+        while (harMerÅLese) {
+            val søknader = mikrofrontendService.finnUnikeSøknaderUtenMikrofrontendSisteSeksMåneder(limit = BATCH_SIZE)
+            aktiver(søknader, statusÅOppdatere, batchNummer)
+            if (søknader.isEmpty()) {
+                harMerÅLese = false
+            }
+            batchNummer++
         }
 
         logger.info("Aktivering av mikrofrontend for pleiepengesøknader de siste seks måneder fullført.")
@@ -95,10 +90,11 @@ class MikrofrontendScheduler(
     }
 
     private fun aktiver(
-        søknader: Slice<SøknadDAO>,
+        søknader: List<SøknadDAO>,
         statusÅOppdatere: MicrofrontendAction,
+        batchNummer: Int,
     ) {
-        logger.info("Prosesserer batch ${søknader.pageable.pageNumber}.")
+        logger.info("Prosesserer batch ${batchNummer}.")
         søknader
             .filter { !mikrofrontendService.finnesMedFødselsnummer(it.fødselsnummer) }
             .map { it.toMicrofrontendDAO(statusÅOppdatere) }
@@ -109,7 +105,7 @@ class MikrofrontendScheduler(
                     logger.error("Feilet med å oppdatere MikrofrontendTabell. Prøver igjen senere.", it)
                 }
             }
-        logger.info("Batch ${søknader.pageable.pageNumber} ferdig.")
+        logger.info("Batch $batchNummer} ferdig.")
     }
 
     private fun SøknadDAO.toMicrofrontendDAO(statusÅOppdatere: MicrofrontendAction) = MikrofrontendDAO(

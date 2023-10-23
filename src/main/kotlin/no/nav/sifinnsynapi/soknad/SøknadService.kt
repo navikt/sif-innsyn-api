@@ -14,8 +14,6 @@ import no.nav.sifinnsynapi.oppslag.OppslagsService
 import no.nav.sifinnsynapi.util.ServletUtils
 import org.json.JSONObject
 import org.slf4j.LoggerFactory
-import org.springframework.data.domain.Pageable
-import org.springframework.data.domain.Slice
 import org.springframework.http.HttpStatus
 import org.springframework.http.ProblemDetail
 import org.springframework.stereotype.Service
@@ -120,8 +118,8 @@ class SøknadService(
         return repo.findByJournalpostId(journalpostId) != null
     }
 
-    fun finnUnikeSøknaderUtenMikrofrontendSisteSeksMåneder(søknadstype: Søknadstype, page: Pageable): Slice<SøknadDAO> {
-        return repo.finnUnikeSøknaderUtenMikrofrontendSisteSeksMåneder(søknadstype.name, page)
+    fun finnUnikeSøknaderUtenMikrofrontendSisteSeksMåneder(søknadstype: Søknadstype, limit: Int): List<SøknadDAO> {
+        return repo.finnUnikeSøknaderUtenMikrofrontendSisteSeksMåneder(søknadstype.name, limit)
     }
 }
 

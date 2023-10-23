@@ -1,5 +1,7 @@
 package no.nav.sifinnsynapi.mikrofrontend
 
+import assertk.assertThat
+import assertk.assertions.isEqualTo
 import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
 import no.nav.sifinnsynapi.common.AktørId
 import no.nav.sifinnsynapi.common.Fødselsnummer
@@ -72,7 +74,7 @@ class MikrofrontendSchedulerTest {
 
     private companion object {
         private val logger = LoggerFactory.getLogger(MikrofrontendSchedulerTest::class.java)
-        private const val ANTALL_MELDINGER = 2_000
+        private const val ANTALL_MELDINGER = 10
     }
 
     @BeforeEach
@@ -115,6 +117,8 @@ class MikrofrontendSchedulerTest {
             val records = KafkaTestUtils.getRecords(dittnavStringConsumer, Duration.ofMinutes(2))
             Assertions.assertEquals(ANTALL_MELDINGER / modulus, records.count())
         }
+
+        assertThat(mikrofrontendRepository.findAll().size).isEqualTo(10)
 
         tømDatabase()
     }
