@@ -94,7 +94,7 @@ class MikrofrontendScheduler(
         statusÅOppdatere: MicrofrontendAction,
         batchNummer: Int,
     ) {
-        logger.info("Prosesserer batch ${batchNummer}.")
+        logger.info("Prosesserer batch ${batchNummer} med ${søknader.size} elementer.")
         søknader
             .map { it.toMicrofrontendDAO(statusÅOppdatere) }
             .forEach { mikrofrontendDAO: MikrofrontendDAO ->
