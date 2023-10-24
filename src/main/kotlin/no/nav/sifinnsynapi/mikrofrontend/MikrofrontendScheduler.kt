@@ -33,23 +33,19 @@ class MikrofrontendScheduler(
         val statusÅOppdatere = MicrofrontendAction.DISABLE
         val mikrofrontendId = MicrofrontendId.PLEIEPENGER_INNSYN.id
         var batchNummer = 1
-        var harMerÅLese = true
 
-        while (harMerÅLese) {
+        while (true) {
             val mikrofrontendDAOS = mikrofrontendService.hentMikrofrontendIdAndStatus(
                 mikrofrontendId = mikrofrontendId,
                 status = eksiterendeStatus,
                 limit = BATCH_SIZE
             )
+            if (mikrofrontendDAOS.isEmpty()) break
 
             logger.info("Prosesserer batch nummer $batchNummer.")
             deaktiver(mikrofrontendDAOS, statusÅOppdatere)
             logger.info("Batch nummer $batchNummer ferdig.")
             batchNummer++
-
-            if (mikrofrontendDAOS.isEmpty()) {
-                harMerÅLese = false
-            }
         }
         logger.info("Deaktivering av alle mikrofrontend for pleiepengesøknader fullført.")
     }
@@ -58,15 +54,13 @@ class MikrofrontendScheduler(
     fun aktiverMikrofrontendForPleiepengesøknaderDeSisteSeksMåneder() = leaderService.executeAsLeader {
         logger.info("Aktiverer mikrofrontend for pleiepengesøknader de siste seks måneder.")
         var batchNummer = 1
-        var harMerÅLese = true
         val statusÅOppdatere = MicrofrontendAction.ENABLE
 
-        while (harMerÅLese) {
+        while (true) {
             val søknader = mikrofrontendService.finnUnikeSøknaderUtenMikrofrontendSisteSeksMåneder(limit = BATCH_SIZE)
+            if (søknader.isEmpty()) break
+
             aktiver(søknader, statusÅOppdatere, batchNummer)
-            if (søknader.isEmpty()) {
-                harMerÅLese = false
-            }
             batchNummer++
         }
 
