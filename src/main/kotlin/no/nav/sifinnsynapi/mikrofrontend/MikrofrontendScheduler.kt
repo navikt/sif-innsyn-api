@@ -18,7 +18,7 @@ class MikrofrontendScheduler(
 
     private companion object {
         private val logger = LoggerFactory.getLogger(MikrofrontendScheduler::class.java)
-        private const val BATCH_SIZE = 1
+        private const val BATCH_SIZE = 1000
     }
 
     /**
