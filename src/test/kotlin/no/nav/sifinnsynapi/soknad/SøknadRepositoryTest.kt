@@ -6,6 +6,7 @@ import no.nav.sifinnsynapi.common.AktørId
 import no.nav.sifinnsynapi.common.Fødselsnummer
 import no.nav.sifinnsynapi.common.SøknadsStatus
 import no.nav.sifinnsynapi.common.Søknadstype
+import no.nav.sifinnsynapi.mikrofrontend.MikrofrontendRepository
 import org.junit.Assert.*
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeAll
@@ -15,6 +16,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
+import org.springframework.data.domain.PageRequest
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.time.LocalDate
@@ -33,6 +35,9 @@ class SøknadRepositoryTest {
 
     @Autowired
     lateinit var repository: SøknadRepository // Repository som brukes til databasekall.
+
+    @Autowired
+    lateinit var mikrofrontendRepository: MikrofrontendRepository
 
     companion object {
         private val aktørId = AktørId.valueOf("123456")
@@ -177,7 +182,8 @@ class SøknadRepositoryTest {
         )
 
         assertk.assertThat(
-            repository.finnAlleSøknaderMedUnikeFødselsnummerForSøknadstypeSisteSeksMåneder(Søknadstype.PP_SYKT_BARN.name).count()
+            repository.finnUnikeSøknaderUtenMikrofrontendSisteSeksMåneder(Søknadstype.PP_SYKT_BARN.name, 10)
+                .count()
         ).isEqualTo(1)
     }
 
@@ -195,17 +201,16 @@ class SøknadRepositoryTest {
         )
 
         assertk.assertThat(
-            repository.finnAlleSøknaderMedUnikeFødselsnummerForSøknadstypeSisteSeksMåneder(Søknadstype.PP_SYKT_BARN.name).count()
+            repository.finnUnikeSøknaderUtenMikrofrontendSisteSeksMåneder(
+                Søknadstype.PP_SYKT_BARN.name, 10).count()
         ).isEqualTo(1)
 
         assertk.assertThat(
-            repository.finnAlleSøknaderMedUnikeFødselsnummerForSøknadstypeSisteSeksMåneder(Søknadstype.PP_SYKT_BARN.name)
-                .findFirst()
-                .get().opprettet!!.toLocalDate()
-        )
-            .isEqualTo(LocalDate.now())
+            repository.finnUnikeSøknaderUtenMikrofrontendSisteSeksMåneder(Søknadstype.PP_SYKT_BARN.name, 10)
+                .stream()
+                .findFirst().get().opprettet!!.toLocalDate()
+        ).isEqualTo(LocalDate.now())
     }
-
 
 
     @Test
@@ -222,15 +227,14 @@ class SøknadRepositoryTest {
         )
 
         assertk.assertThat(
-            repository.finnAlleSøknaderMedUnikeFødselsnummerForSøknadstypeEldreEnnSeksMåneder(Søknadstype.PP_SYKT_BARN.name).count()
+            repository.finnAlleSøknaderMedUnikeFødselsnummerForSøknadstypeEldreEnnSeksMåneder(Søknadstype.PP_SYKT_BARN.name)
+                .count()
         ).isEqualTo(1)
 
         assertk.assertThat(
             repository.finnAlleSøknaderMedUnikeFødselsnummerForSøknadstypeEldreEnnSeksMåneder(Søknadstype.PP_SYKT_BARN.name)
-                .findFirst()
-                .get().opprettet!!.toLocalDate()
-        )
-            .isEqualTo(LocalDate.now().minusMonths(6).minusDays(1))
+                .findFirst().get().opprettet!!.toLocalDate()
+        ).isEqualTo(LocalDate.now().minusMonths(6).minusDays(1))
     }
 
     private fun lagSøknadDAO(

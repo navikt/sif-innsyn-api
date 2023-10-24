@@ -1,5 +1,6 @@
 package no.nav.sifinnsynapi.mikrofrontend
 
+import no.nav.sifinnsynapi.common.Fødselsnummer
 import no.nav.sifinnsynapi.common.Metadata
 import no.nav.sifinnsynapi.common.Søknadstype
 import no.nav.sifinnsynapi.config.TxConfiguration
@@ -14,7 +15,6 @@ import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
-import java.util.stream.Stream
 
 @Service
 class MikrofrontendService(
@@ -27,9 +27,8 @@ class MikrofrontendService(
         private val logger = LoggerFactory.getLogger(MikrofrontendService::class.java)
     }
 
-    fun hentUnikePleiepengesøknaderUtenMikrofrontend(): Stream<SøknadDAO> {
-        return søknadService.finnAlleSøknaderMedUnikeFødselsnummerForSøknadstypeEldreEnnSeksMåneder(Søknadstype.PP_SYKT_BARN)
-            .filter { !mikrofrontendRepository.existsByFødselsnummer(it.fødselsnummer.fødselsnummer!!) }
+    fun finnUnikeSøknaderUtenMikrofrontendSisteSeksMåneder(limit: Int): List<SøknadDAO> {
+        return søknadService.finnUnikeSøknaderUtenMikrofrontendSisteSeksMåneder(Søknadstype.PP_SYKT_BARN, limit)
     }
 
     @Transactional(transactionManager = TxConfiguration.TRANSACTION_MANAGER, rollbackFor = [Exception::class])

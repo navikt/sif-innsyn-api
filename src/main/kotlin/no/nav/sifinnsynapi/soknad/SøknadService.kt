@@ -22,7 +22,6 @@ import java.net.URI
 import java.net.URLDecoder
 import java.nio.charset.Charset
 import java.util.*
-import java.util.stream.Stream
 
 @Service
 class SøknadService(
@@ -119,12 +118,8 @@ class SøknadService(
         return repo.findByJournalpostId(journalpostId) != null
     }
 
-    fun finnAlleSøknaderMedUnikeFødselsnummerForSøknadstypeSisteSeksMåneder(søknadstype: Søknadstype): Stream<SøknadDAO> {
-        return repo.finnAlleSøknaderMedUnikeFødselsnummerForSøknadstypeSisteSeksMåneder(søknadstype.name)
-    }
-
-    fun finnAlleSøknaderMedUnikeFødselsnummerForSøknadstypeEldreEnnSeksMåneder(søknadstype: Søknadstype): Stream<SøknadDAO> {
-        return repo.finnAlleSøknaderMedUnikeFødselsnummerForSøknadstypeEldreEnnSeksMåneder(søknadstype.name)
+    fun finnUnikeSøknaderUtenMikrofrontendSisteSeksMåneder(søknadstype: Søknadstype, limit: Int): List<SøknadDAO> {
+        return repo.finnUnikeSøknaderUtenMikrofrontendSisteSeksMåneder(søknadstype.name, limit)
     }
 }
 

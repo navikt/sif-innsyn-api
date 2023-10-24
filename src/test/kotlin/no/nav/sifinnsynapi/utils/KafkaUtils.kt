@@ -78,14 +78,6 @@ fun <K, V> EmbeddedKafkaBroker.opprettKafkaStringConsumer(groupId: String, topic
     return consumer
 }
 
-fun <K, V> Consumer<K, V>.entriesOnTopic(
-    topic: String,
-    pollDuration: Duration,
-): MutableIterable<ConsumerRecord<K, V>> {
-    seekToBeginning(assignment())
-    return poll(pollDuration).records(topic)
-}
-
 fun Consumer<String, K9Beskjed>.lesMelding(
     søknadId: String,
     topic: String = K9_DITTNAV_VARSEL_BESKJED_AIVEN,

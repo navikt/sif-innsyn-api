@@ -7,8 +7,8 @@ import no.nav.sifinnsynapi.soknad.SøknadDAO
 import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
-import java.time.ZonedDateTime
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 @Component
 class MikrofrontendScheduler(
@@ -18,7 +18,7 @@ class MikrofrontendScheduler(
 
     private companion object {
         private val logger = LoggerFactory.getLogger(MikrofrontendScheduler::class.java)
-        private const val BATCH_SIZE = 1000
+        private const val BATCH_SIZE = 1
     }
 
     /**
@@ -26,9 +26,9 @@ class MikrofrontendScheduler(
      * Sender ut ditt nav varsel med om å deaktivere dine-pleiepenger.
      * Oppdaterer status på mikrofrontend entitet.
      */
-    @Scheduled(fixedDelay = Long.MAX_VALUE, initialDelay = 1000*5*60)
+    //@Scheduled(fixedDelay = Long.MAX_VALUE, initialDelay = 1000*5*60)
     fun deaktiverAlleDinePleiepengerMicrofrontend() = leaderService.executeAsLeader {
-        logger.info("Deaktiverer mikrofrontend for pleiepengesøknader.")
+        logger.info("Deaktiverer alle mikrofrontend for pleiepengesøknader.")
         val eksiterendeStatus = MicrofrontendAction.ENABLE
         val statusÅOppdatere = MicrofrontendAction.DISABLE
         val mikrofrontendId = MicrofrontendId.PLEIEPENGER_INNSYN.id
@@ -43,7 +43,7 @@ class MikrofrontendScheduler(
             )
 
             logger.info("Prosesserer batch nummer $batchNummer.")
-            prosesser(mikrofrontendDAOS, statusÅOppdatere)
+            deaktiver(mikrofrontendDAOS, statusÅOppdatere)
             logger.info("Batch nummer $batchNummer ferdig.")
             batchNummer++
 
@@ -51,10 +51,29 @@ class MikrofrontendScheduler(
                 harMerÅLese = false
             }
         }
-        logger.info("Deaktivering av mikrofrontend for pleiepengesøknader fullført.")
+        logger.info("Deaktivering av alle mikrofrontend for pleiepengesøknader fullført.")
     }
 
-    private fun prosesser(
+    @Scheduled(fixedDelay = 20, initialDelay = 5, timeUnit = TimeUnit.MINUTES)
+    fun aktiverMikrofrontendForPleiepengesøknaderDeSisteSeksMåneder() = leaderService.executeAsLeader {
+        logger.info("Aktiverer mikrofrontend for pleiepengesøknader de siste seks måneder.")
+        var batchNummer = 1
+        var harMerÅLese = true
+        val statusÅOppdatere = MicrofrontendAction.ENABLE
+
+        while (harMerÅLese) {
+            val søknader = mikrofrontendService.finnUnikeSøknaderUtenMikrofrontendSisteSeksMåneder(limit = BATCH_SIZE)
+            aktiver(søknader, statusÅOppdatere, batchNummer)
+            if (søknader.isEmpty()) {
+                harMerÅLese = false
+            }
+            batchNummer++
+        }
+
+        logger.info("Aktivering av mikrofrontend for pleiepengesøknader de siste seks måneder fullført.")
+    }
+
+    private fun deaktiver(
         mikrofrontendDAOS: List<MikrofrontendDAO>,
         statusÅOppdatere: MicrofrontendAction,
     ) {
@@ -70,13 +89,13 @@ class MikrofrontendScheduler(
         }
     }
 
-
-    //@Scheduled(fixedDelay = 20, timeUnit = TimeUnit.MINUTES)
-    fun aktiverMikrofrontendForPleiepengesøknaderDeSisteSeksMåneder() = leaderService.executeAsLeader {
-        val statusÅOppdatere = MicrofrontendAction.ENABLE
-
-        logger.info("Aktiverer mikrofrontend for pleiepengesøknader de siste seks måneder.")
-        mikrofrontendService.hentUnikePleiepengesøknaderUtenMikrofrontend()
+    private fun aktiver(
+        søknader: List<SøknadDAO>,
+        statusÅOppdatere: MicrofrontendAction,
+        batchNummer: Int,
+    ) {
+        logger.info("Prosesserer batch ${batchNummer} med ${søknader.size} elementer.")
+        søknader
             .map { it.toMicrofrontendDAO(statusÅOppdatere) }
             .forEach { mikrofrontendDAO: MikrofrontendDAO ->
                 runCatching {
@@ -85,6 +104,7 @@ class MikrofrontendScheduler(
                     logger.error("Feilet med å oppdatere MikrofrontendTabell. Prøver igjen senere.", it)
                 }
             }
+        logger.info("Batch $batchNummer} ferdig.")
     }
 
     private fun SøknadDAO.toMicrofrontendDAO(statusÅOppdatere: MicrofrontendAction) = MikrofrontendDAO(
@@ -92,7 +112,7 @@ class MikrofrontendScheduler(
         fødselsnummer = fødselsnummer.fødselsnummer!!,
         mikrofrontendId = MicrofrontendId.PLEIEPENGER_INNSYN.id,
         status = statusÅOppdatere,
-        opprettet = ZonedDateTime.now(),
+        opprettet = opprettet,
         behandlingsdato = null,
     )
 }
