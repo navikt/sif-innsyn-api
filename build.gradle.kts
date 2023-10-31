@@ -7,7 +7,7 @@ plugins {
     kotlin("plugin.jpa") version "1.9.10"
     id("org.springframework.boot") version "3.1.4"
     id("io.spring.dependency-management") version "1.1.3"
-    id("com.expediagroup.graphql") version "7.0.1"
+    id("com.expediagroup.graphql") version "7.0.2"
     id("org.sonarqube") version "4.4.0.3356"
     jacoco
 }
