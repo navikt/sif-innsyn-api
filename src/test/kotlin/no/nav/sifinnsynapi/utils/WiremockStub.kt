@@ -27,7 +27,7 @@ fun stubForAktørId(aktørId: String, status: Int) {
 }
 
 fun stubForLeaderElection(status: Int = 200) = WireMock.stubFor(
-    WireMock.get(WireMock.urlEqualTo("/leader/"))
+    WireMock.get(WireMock.urlPathMatching("/leader-mock/*"))
         .willReturn(
             WireMock.aResponse()
                 .withStatus(status)

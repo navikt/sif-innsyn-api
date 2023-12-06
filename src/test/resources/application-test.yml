@@ -1,4 +1,4 @@
-ELECTOR_PATH: localhost:${wiremock.server.port}/leader
+ELECTOR_PATH: localhost:${wiremock.server.port}/leader-mock
 no.nav:
   gateways:
     k9-selvbetjening-oppslag: http://localhost:${wiremock.server.port}/k9-selvbetjening-oppslag-mock
