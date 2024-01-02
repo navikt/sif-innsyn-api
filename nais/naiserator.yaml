@@ -18,9 +18,7 @@ spec:
   accessPolicy:
     inbound:
       rules:
-        - application: sif-innsyn
         - application: endringsmelding-pleiepenger
-        - application: pleiepengesoknad-api
         - application: dine-pleiepenger
         - application: k9-brukerdialog-api
     outbound:
