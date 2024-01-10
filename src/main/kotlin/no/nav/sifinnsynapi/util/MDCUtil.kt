@@ -27,7 +27,6 @@ object MDCUtil {
                 .orElse(defaultValue))
     }
 
-    @JvmOverloads
     fun clearFomMDC(key: String) {
         MDC.remove(key)
     }
