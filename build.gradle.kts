@@ -22,10 +22,10 @@ configurations {
     }
 }
 
-val confluentVersion = "7.5.3"
+val confluentVersion = "7.6.0"
 val springCloudVersion = "4.1.1"
 val logstashLogbackEncoderVersion = "7.4"
-val tokenSupportVersion = "3.2.0"
+val tokenSupportVersion = "4.1.3"
 val retryVersion = "2.0.5"
 val zalandoVersion = "0.27.0"
 val openhtmltopdfVersion = "1.0.10"
@@ -36,11 +36,11 @@ val assertkJvmVersion = "0.28.0"
 val springMockkVersion = "4.0.2"
 val mockkVersion = "1.13.9"
 val guavaVersion = "33.0.0-jre"
-val orgJsonVersion = "20231013"
+val orgJsonVersion = "20240205"
 val graphQLKotlinVersion = "7.0.2"
 val k9FormatVersion = "8.3.4"
 val teamDokumenthåndteringAvroSchemaVersion = "357738b9"
-val testContainersVersion = "1.19.4"
+val testContainersVersion = "1.19.5"
 val springdocVersion = "2.3.0"
 
 repositories {
