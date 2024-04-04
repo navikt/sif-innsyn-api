@@ -28,7 +28,7 @@
     "SPRING_APPLICATION_NAME": "sif-innsyn-api",
     "APPLICATION_INGRESS": "http://sif-innsyn-api",
     "SPRING_PROFILES_ACTIVE": "prod-gcp",
-    "KAFKA_AIVEN_CONSUMER_AUTO_OFFSET_RESET": "earliest",
+    "KAFKA_AIVEN_CONSUMER_AUTO_OFFSET_RESET": "none",
     "NO_NAV_SECURITY_CORS_ALLOWED_ORIGINS": "https://www.nav.no",
     "NO_NAV_GATEWAYS_K9_SELVBETJENING_OPPSLAG": "http://k9-selvbetjening-oppslag",
     "NO_NAV_GATEWAYS_SAF_BASE_URL": "https://saf.prod-fss-pub.nais.io",
