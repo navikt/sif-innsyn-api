@@ -5,7 +5,7 @@ topic:
       bryter: true
       dry-run: false
     pp-sykt-barn-endringsmelding:
-      bryter: false
+      bryter: true
       dry-run: false
     k9-ettersending:
       bryter: true
