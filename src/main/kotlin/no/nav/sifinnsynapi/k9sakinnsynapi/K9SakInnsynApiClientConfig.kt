@@ -51,7 +51,7 @@ class K9SakInnsynApiClientConfig(
     private fun bearerTokenInterceptor(): ClientHttpRequestInterceptor {
         return ClientHttpRequestInterceptor { request: HttpRequest, body: ByteArray, execution: ClientHttpRequestExecution ->
             val response = oAuth2AccessTokenService.getAccessToken(tokenxK9SakInnsynApiClientProperties)
-            request.headers.setBearerAuth(response.accessToken)
+            request.headers.setBearerAuth(response.accessToken!!)
             execution.execute(request, body)
         }
     }

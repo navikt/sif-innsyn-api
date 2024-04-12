@@ -2,19 +2,19 @@ import com.expediagroup.graphql.plugin.gradle.tasks.GraphQLGenerateClientTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.9.22"
-    kotlin("plugin.spring") version "1.9.22"
-    kotlin("plugin.jpa") version "1.9.22"
-    id("org.springframework.boot") version "3.2.2"
+    kotlin("jvm") version "1.9.23"
+    kotlin("plugin.spring") version "1.9.23"
+    kotlin("plugin.jpa") version "1.9.23"
+    id("org.springframework.boot") version "3.2.4"
     id("io.spring.dependency-management") version "1.1.4"
     id("com.expediagroup.graphql") version "7.0.2"
-    id("org.sonarqube") version "4.4.1.3373"
+    id("org.sonarqube") version "5.0.0.4638"
     jacoco
 }
 
 group = "no.nav"
 version = "0.0.1-SNAPSHOT"
-java.sourceCompatibility = JavaVersion.VERSION_17
+java.sourceCompatibility = JavaVersion.VERSION_21
 
 configurations {
     compileOnly {
@@ -22,26 +22,26 @@ configurations {
     }
 }
 
-val confluentVersion = "7.5.3"
-val springCloudVersion = "4.1.1"
+val confluentVersion = "7.6.1"
+val springCloudVersion = "4.1.2"
 val logstashLogbackEncoderVersion = "7.4"
-val tokenSupportVersion = "3.2.0"
+val tokenSupportVersion = "4.1.4"
 val retryVersion = "2.0.5"
 val zalandoVersion = "0.27.0"
 val openhtmltopdfVersion = "1.0.10"
-val handlebarsVersion = "4.3.1"
-val postgresqlVersion = "42.7.1"
-val awailitilityKotlinVersion = "4.2.0"
+val handlebarsVersion = "4.4.0"
+val postgresqlVersion = "42.7.3"
+val awailitilityKotlinVersion = "4.2.1"
 val assertkJvmVersion = "0.28.0"
 val springMockkVersion = "4.0.2"
-val mockkVersion = "1.13.9"
-val guavaVersion = "33.0.0-jre"
-val orgJsonVersion = "20231013"
+val mockkVersion = "1.13.10"
+val guavaVersion = "33.1.0-jre"
+val orgJsonVersion = "20240303"
 val graphQLKotlinVersion = "7.0.2"
 val k9FormatVersion = "8.3.4"
 val teamDokumenthåndteringAvroSchemaVersion = "357738b9"
-val testContainersVersion = "1.19.4"
-val springdocVersion = "2.3.0"
+val testContainersVersion = "1.19.7"
+val springdocVersion = "2.5.0"
 
 repositories {
     mavenCentral()
@@ -161,7 +161,7 @@ tasks.withType<Test> {
 tasks.withType<KotlinCompile> {
     kotlinOptions {
         freeCompilerArgs = listOf("-Xjsr305=strict")
-        jvmTarget = "17"
+        jvmTarget = "21"
     }
 }
 

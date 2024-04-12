@@ -14,7 +14,7 @@ class LoggerInterceptor(private val tokenValidationContextHolder: TokenValidatio
         private val logger = LoggerFactory.getLogger(LoggerInterceptor::class.java)
     }
     override fun preHandle(request: HttpServletRequest, response: HttpServletResponse, handler: Any): Boolean {
-        val jwtToken = tokenValidationContextHolder.tokenValidationContext.firstValidToken.orElse(null)
+        val jwtToken = tokenValidationContextHolder.getTokenValidationContext().firstValidToken
         if (jwtToken !== null) {
             logger.info("Issuer [${jwtToken.issuer}]")
         }

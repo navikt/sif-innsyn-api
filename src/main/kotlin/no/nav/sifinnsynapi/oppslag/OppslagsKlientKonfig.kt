@@ -85,8 +85,8 @@ class OppslagsKlientKonfig(
                 else -> {
                     val response = oAuth2AccessTokenService.getAccessToken(tokenxK9SelvbetjeningOppslagClientProperties)
                     val expiresIn = response.expiresIn
-                    logger.debug("Utveklset token utgår kl. {}, ({} min)", ZonedDateTime.now(UTC).plusSeconds(expiresIn.toLong()), expiresIn/60)
-                    request.headers.setBearerAuth(response.accessToken)
+                    logger.debug("Utveklset token utgår kl. {}, ({} min)", ZonedDateTime.now(UTC).plusSeconds(expiresIn!!.toLong()), expiresIn/60)
+                    request.headers.setBearerAuth(response.accessToken!!)
                 }
             }
             execution.execute(request, body)
