@@ -1,6 +1,5 @@
 package no.nav.sifinnsynapi.mikrofrontend
 
-import no.nav.sifinnsynapi.common.Fødselsnummer
 import no.nav.sifinnsynapi.common.Metadata
 import no.nav.sifinnsynapi.common.Søknadstype
 import no.nav.sifinnsynapi.config.TxConfiguration

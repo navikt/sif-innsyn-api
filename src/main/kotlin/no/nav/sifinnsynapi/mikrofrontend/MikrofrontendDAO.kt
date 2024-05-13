@@ -1,14 +1,12 @@
 package no.nav.sifinnsynapi.mikrofrontend
 
 import jakarta.persistence.Column
-import jakarta.persistence.Embedded
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
 import jakarta.persistence.Enumerated
 import jakarta.persistence.Id
 import jakarta.persistence.Table
 import no.nav.sifinnsynapi.dittnav.MicrofrontendAction
-import no.nav.sifinnsynapi.dittnav.MicrofrontendId
 import org.hibernate.annotations.JdbcTypeCode
 import org.hibernate.annotations.UpdateTimestamp
 import org.hibernate.type.SqlTypes

@@ -1,16 +1,22 @@
 package no.nav.sifinnsynapi.konsument.ettersending
 
-import no.nav.sifinnsynapi.common.*
+import no.nav.sifinnsynapi.common.AktørId
+import no.nav.sifinnsynapi.common.Fødselsnummer
+import no.nav.sifinnsynapi.common.SøknadsStatus
+import no.nav.sifinnsynapi.common.Søknadstype
+import no.nav.sifinnsynapi.common.TopicEntry
 import no.nav.sifinnsynapi.config.TxConfiguration
 import no.nav.sifinnsynapi.dittnav.DittnavService
 import no.nav.sifinnsynapi.dittnav.byggK9Beskjed
+import no.nav.sifinnsynapi.konsument.ettersending.K9EttersendingKonsument.Companion.Ettersendelsestype.PLEIEPENGER_LIVETS_SLUTTFASE
+import no.nav.sifinnsynapi.konsument.ettersending.K9EttersendingKonsument.Companion.Ettersendelsestype.PLEIEPENGER_SYKT_BARN
+import no.nav.sifinnsynapi.konsument.ettersending.K9EttersendingKonsument.Companion.Ettersendelsestype.valueOf
 import no.nav.sifinnsynapi.konsument.ettersending.K9EttersendingKonsument.Companion.Keys.AKTØR_ID
 import no.nav.sifinnsynapi.konsument.ettersending.K9EttersendingKonsument.Companion.Keys.FØDSELSNUMMER
 import no.nav.sifinnsynapi.konsument.ettersending.K9EttersendingKonsument.Companion.Keys.MOTTATT
 import no.nav.sifinnsynapi.konsument.ettersending.K9EttersendingKonsument.Companion.Keys.SØKER
 import no.nav.sifinnsynapi.konsument.ettersending.K9EttersendingKonsument.Companion.Keys.SØKNAD_ID
 import no.nav.sifinnsynapi.konsument.ettersending.K9EttersendingKonsument.Companion.Keys.SØKNAD_TYPE
-import no.nav.sifinnsynapi.konsument.ettersending.K9EttersendingKonsument.Companion.Ettersendelsestype.*
 import no.nav.sifinnsynapi.soknad.Søknad
 import no.nav.sifinnsynapi.soknad.SøknadRepository
 import no.nav.sifinnsynapi.util.storForbokstav

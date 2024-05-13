@@ -1,6 +1,10 @@
 package no.nav.sifinnsynapi.konsument.pleiepenger.syktbarn
 
-import no.nav.sifinnsynapi.common.*
+import no.nav.sifinnsynapi.common.AktørId
+import no.nav.sifinnsynapi.common.Fødselsnummer
+import no.nav.sifinnsynapi.common.SøknadsStatus
+import no.nav.sifinnsynapi.common.Søknadstype
+import no.nav.sifinnsynapi.common.TopicEntry
 import no.nav.sifinnsynapi.config.TxConfiguration.Companion.TRANSACTION_MANAGER
 import no.nav.sifinnsynapi.dittnav.DittnavService
 import no.nav.sifinnsynapi.dittnav.byggK9Beskjed

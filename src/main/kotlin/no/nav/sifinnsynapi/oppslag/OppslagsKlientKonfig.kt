@@ -22,7 +22,6 @@ import org.springframework.web.client.RestTemplate
 import java.time.Duration
 import java.time.ZoneOffset.UTC
 import java.time.ZonedDateTime
-import java.util.*
 
 @Configuration
 class OppslagsKlientKonfig(

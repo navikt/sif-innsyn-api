@@ -1,7 +1,5 @@
 package no.nav.sifinnsynapi.dittnav
 
-import com.fasterxml.jackson.annotation.JsonValue
-import jakarta.persistence.Embeddable
 import no.nav.sifinnsynapi.common.Metadata
 
 data class K9Microfrontend(

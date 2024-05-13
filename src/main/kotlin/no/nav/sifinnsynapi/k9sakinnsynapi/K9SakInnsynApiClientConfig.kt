@@ -15,7 +15,6 @@ import org.springframework.http.client.ClientHttpRequestExecution
 import org.springframework.http.client.ClientHttpRequestInterceptor
 import org.springframework.web.client.RestTemplate
 import java.time.Duration
-import java.util.*
 
 @Configuration
 class K9SakInnsynApiClientConfig(

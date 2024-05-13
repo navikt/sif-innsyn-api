@@ -8,7 +8,7 @@ import no.nav.sifinnsynapi.Routes
 import no.nav.sifinnsynapi.config.SecurityConfiguration
 import no.nav.sifinnsynapi.safselvbetjening.ArkivertDokument
 import no.nav.sifinnsynapi.safselvbetjening.generated.enums.Datotype
-import no.nav.sifinnsynapi.safselvbetjening.generated.hentdokumentoversikt.*
+import no.nav.sifinnsynapi.safselvbetjening.generated.hentdokumentoversikt.RelevantDato
 import no.nav.sifinnsynapi.util.CallIdGenerator
 import no.nav.sifinnsynapi.utils.hentToken
 import org.junit.Assert
@@ -32,7 +32,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.net.URI
 import java.net.URL
-import jakarta.servlet.http.Cookie
 
 @ExtendWith(SpringExtension::class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)

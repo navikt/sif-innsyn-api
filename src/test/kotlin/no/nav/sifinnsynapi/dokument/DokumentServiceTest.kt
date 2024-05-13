@@ -3,7 +3,6 @@ package no.nav.sifinnsynapi.dokument
 import assertk.assertThat
 import assertk.assertions.hasSize
 import assertk.assertions.isEmpty
-import assertk.assertions.isEqualTo
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.coEvery
 import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
@@ -11,7 +10,12 @@ import no.nav.sifinnsynapi.safselvbetjening.SafSelvbetjeningService
 import no.nav.sifinnsynapi.safselvbetjening.generated.enums.Datotype
 import no.nav.sifinnsynapi.safselvbetjening.generated.enums.Journalstatus
 import no.nav.sifinnsynapi.safselvbetjening.generated.enums.Variantformat
-import no.nav.sifinnsynapi.safselvbetjening.generated.hentdokumentoversikt.*
+import no.nav.sifinnsynapi.safselvbetjening.generated.hentdokumentoversikt.DokumentInfo
+import no.nav.sifinnsynapi.safselvbetjening.generated.hentdokumentoversikt.Dokumentoversikt
+import no.nav.sifinnsynapi.safselvbetjening.generated.hentdokumentoversikt.Dokumentvariant
+import no.nav.sifinnsynapi.safselvbetjening.generated.hentdokumentoversikt.Journalpost
+import no.nav.sifinnsynapi.safselvbetjening.generated.hentdokumentoversikt.RelevantDato
+import no.nav.sifinnsynapi.safselvbetjening.generated.hentdokumentoversikt.Sak
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance

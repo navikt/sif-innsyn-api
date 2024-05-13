@@ -1,10 +1,10 @@
 package no.nav.sifinnsynapi.config
 
+import jakarta.persistence.EntityManagerFactory
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Primary
 import org.springframework.orm.jpa.JpaTransactionManager
-import jakarta.persistence.EntityManagerFactory
 
 @Configuration
 class TxConfiguration {

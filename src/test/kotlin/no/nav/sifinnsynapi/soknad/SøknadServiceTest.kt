@@ -1,7 +1,11 @@
 package no.nav.sifinnsynapi.soknad
 
 import assertk.assertThat
-import assertk.assertions.*
+import assertk.assertions.isEmpty
+import assertk.assertions.isGreaterThan
+import assertk.assertions.isNotEmpty
+import assertk.assertions.isNotEqualTo
+import assertk.assertions.size
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
 import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
@@ -13,8 +17,11 @@ import no.nav.sifinnsynapi.dokument.DokumentService
 import no.nav.sifinnsynapi.oppslag.OppslagRespons
 import no.nav.sifinnsynapi.oppslag.OppslagsService
 import org.awaitility.kotlin.await
-import org.junit.jupiter.api.*
+import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest

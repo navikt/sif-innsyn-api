@@ -3,7 +3,6 @@ package no.nav.sifinnsynapi.dittnav
 import com.fasterxml.jackson.databind.ObjectMapper
 import no.nav.sifinnsynapi.config.Topics.K9_DITTNAV_VARSEL_BESKJED_AIVEN
 import no.nav.sifinnsynapi.config.Topics.K9_DITTNAV_VARSEL_MICROFRONTEND
-import no.nav.sifinnsynapi.util.MDCUtil
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.json.JSONObject
 import org.slf4j.Logger
