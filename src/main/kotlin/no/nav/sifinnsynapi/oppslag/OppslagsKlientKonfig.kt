@@ -66,11 +66,11 @@ class OppslagsKlientKonfig(
 
     override fun <T : Any, E : Throwable> onError(context: RetryContext, callback: RetryCallback<T, E>, throwable: Throwable) {
         val currentTry = context.retryCount
-        val contextString = context.getAttribute("context.name") as String
+        val contextName = context.getAttribute("context.name") as String // Navnet på metoden som kalles
         val backoff = context.getAttribute("backOffContext")!!
         val nextInterval = backoff.nextInterval()
 
-        logger.warn("Forsøk {} av {}, {}", currentTry, maxAttempts, contextString.split(" ")[2])
+        logger.warn("Forsøk {} av {}, {}", currentTry, maxAttempts, contextName)
 
         if (currentTry < maxAttempts) logger.info("Forsøker om: {} ms", nextInterval)
     }
