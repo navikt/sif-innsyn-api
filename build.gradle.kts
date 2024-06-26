@@ -14,7 +14,11 @@ plugins {
 
 group = "no.nav"
 version = "0.0.1-SNAPSHOT"
-java.sourceCompatibility = JavaVersion.VERSION_21
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
 
 configurations {
     compileOnly {
@@ -107,6 +111,7 @@ dependencies {
     // Database
     runtimeOnly("org.postgresql:postgresql:$postgresqlVersion")
     implementation("org.flywaydb:flyway-core")
+    implementation("org.flywaydb:flyway-database-postgresql")
     testImplementation("org.testcontainers:junit-jupiter:$testContainersVersion")
     testImplementation("org.testcontainers:postgresql:$testContainersVersion")
 
@@ -159,9 +164,8 @@ tasks.withType<Test> {
 }
 
 tasks.withType<KotlinCompile> {
-    kotlinOptions {
-        freeCompilerArgs = listOf("-Xjsr305=strict")
-        jvmTarget = "21"
+    compilerOptions {
+        freeCompilerArgs.add("-Xjsr305=strict")
     }
 }
 
@@ -196,13 +200,13 @@ sonarqube {
  * For mer info, se lenke under
  * https://opensource.expediagroup.com/graphql-kotlin/docs/plugins/gradle-plugin-usage#generating-multiple-clients
  */
-val graphqlGenerateClient by tasks.getting(GraphQLGenerateClientTask::class) {
+val generateSafGraphqlClient by tasks.getting(GraphQLGenerateClientTask::class) {
     queryFileDirectory.set(file("${project.projectDir}/src/main/resources/saf"))
     schemaFile.set(file("${project.projectDir}/src/main/resources/saf/saf-api-sdl.graphqls"))
     packageName.set("no.nav.sifinnsynapi.saf.generated")
 }
 
-val graphqlGenerateOtherClient by tasks.creating(GraphQLGenerateClientTask::class) {
+val generateSafSelvbetjeningGraphqlClient by tasks.creating(GraphQLGenerateClientTask::class) {
     queryFileDirectory.set(file("${project.projectDir}/src/main/resources/safselvbetjening"))
     schemaFile.set(file("${project.projectDir}/src/main/resources/safselvbetjening/saf-selvbetjening-sdl.graphqls"))
     packageName.set("no.nav.sifinnsynapi.safselvbetjening.generated")
