@@ -21,6 +21,17 @@
     "diskAutoresize": "false",
     "highAvailability": "false"
   },
+  "azure": {
+    "replyURLs": [
+      "https://sif-innsyn-api.intern.dev.nav.no/swagger-ui/oauth2-redirect.html"
+    ],
+    "groups": [
+      {
+        "name": "0000-GA-k9-drift",
+        "objectId": "0bc9661c-975c-4adb-86d1-a97172490662"
+      }
+    ]
+  },
   "azureTenant": "trygdeetaten.no",
   "kafkaPool": "nav-dev",
   "env": {
@@ -39,7 +50,10 @@
     "SAF_AZURE_SCOPE": "api://dev-fss.teamdokumenthandtering.saf-q1/.default",
     "K9_SAK_INNSYN_API_TOKEN_X_AUDIENCE": "dev-gcp:dusseldorf:k9-sak-innsyn-api",
     "K9_SELVBETJENING_OPPSLAG_TOKEN_X_AUDIENCE": "dev-gcp:dusseldorf:k9-selvbetjening-oppslag",
-    "SWAGGER_ENABLED": "true"
+    "SWAGGER_ENABLED": "true",
+    "AZURE_LOGIN_URL": "https://login.microsoftonline.com/navq.onmicrosoft.com/oauth2/v2.0",
+    "K9_DRIFT_GRUPPE_ID": "0bc9661c-975c-4adb-86d1-a97172490662"
+
   },
   "slack-channel": "sif-alerts-dev",
   "slack-notify-type": "<!here> | sif-innsyn-api | "

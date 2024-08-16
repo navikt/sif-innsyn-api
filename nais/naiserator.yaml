@@ -13,6 +13,17 @@ spec:
     application:
       enabled: true
       tenant: {{azureTenant}}
+      claims:
+        extra:
+          - "NAVident"
+        groups:
+          {{#each azure.groups as |group|}}
+             - id: {{group.objectId}}
+            {{/each}}
+      replyURLs:
+        {{#each azure.replyURLs as |url|}}
+           - {{url}}
+          {{/each}}
   tokenx:
     enabled: true
   accessPolicy:

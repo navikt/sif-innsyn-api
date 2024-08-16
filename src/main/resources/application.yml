@@ -29,10 +29,14 @@ no.nav:
     saf-selvbetjening-base-url: # Settes i nais/<cluster>.json
 
   security:
+    k9-drift-gruppe: ${K9_DRIFT_GRUPPE_ID}
     cors:
       allowed-origins: # Settes i nais/<cluster>.json
     jwt:
       issuer:
+        azure:
+          discoveryUrl: ${AZURE_APP_WELL_KNOWN_URL}
+          accepted_audience: ${AZURE_APP_CLIENT_ID}
         tokenx:
           discoveryUrl: ${TOKEN_X_WELL_KNOWN_URL}
           accepted_audience: ${TOKEN_X_CLIENT_ID}
@@ -187,3 +191,11 @@ springdoc:
     enabled: ${SWAGGER_ENABLED:false}
     disable-swagger-default-url: true
     path: swagger-ui.html
+    oauth:
+      use-pkce-with-authorization-code-grant: true
+      client-id: ${AZURE_APP_CLIENT_ID}
+      scope-separator: ","
+  oAuthFlow:
+    authorizationUrl: ${AZURE_LOGIN_URL:http://localhost:8080}/authorize
+    tokenUrl: ${AZURE_LOGIN_URL:http://localhost:8080}/token
+    apiScope: api://${AZURE_APP_CLIENT_ID:abc123}/.default
