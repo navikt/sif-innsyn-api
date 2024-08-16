@@ -22,7 +22,7 @@ import java.util.*
 @Entity(name = "søknad")
 data class SøknadDAO(
     @Column(name = "id") @Id @JdbcTypeCode(SqlTypes.UUID) val id: UUID = UUID.randomUUID(),
-    @Column(name = "aktør_id") @Embedded val aktørId: AktørId,
+    @Column(name = "aktør_id") @Embedded internal val aktørId: AktørId,
     @Column(name = "fødselsnummer") @Embedded val fødselsnummer: Fødselsnummer,
     @Column(name = "søknadstype") @Enumerated(STRING) val søknadstype: Søknadstype,
     @Column(name = "status") @Enumerated(STRING) val status: SøknadsStatus,

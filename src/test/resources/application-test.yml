@@ -5,8 +5,12 @@ no.nav:
     saf-base-url: http://localhost:${wiremock.server.port}/saf-api-mock
     saf-selvbetjening-base-url: http://localhost:${wiremock.server.port}/saf-selvbetjening-graphql-mock
   security:
+    k9-drift-gruppe: testdrift
     jwt:
       issuer:
+        azure:
+          discoveryurl: http://localhost:${mock-oauth2-server.port}/azure/.well-known/openid-configuration
+          accepted_audience: aud-localhost
         tokenx:
           discoveryurl: http://localhost:${mock-oauth2-server.port}/tokenx/.well-known/openid-configuration
           accepted_audience: aud-localhost
