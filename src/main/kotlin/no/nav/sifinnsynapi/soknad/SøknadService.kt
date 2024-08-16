@@ -3,6 +3,7 @@ package no.nav.sifinnsynapi.soknad
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
 import no.nav.sifinnsynapi.common.AktørId
+import no.nav.sifinnsynapi.common.Fødselsnummer
 import no.nav.sifinnsynapi.common.Søknadstype
 import no.nav.sifinnsynapi.dokument.DokumentDTO
 import no.nav.sifinnsynapi.dokument.DokumentService
@@ -53,8 +54,9 @@ class SøknadService(
 
         return søknadDAOs
             .map { søknadDAO ->
-            val relevanteDokumenter = dokumentOversikt.filter { it.journalpostId == søknadDAO.journalpostId }
-            søknadDAO.tilSøknadDTO(relevanteDokumenter) }
+                val relevanteDokumenter = dokumentOversikt.filter { it.journalpostId == søknadDAO.journalpostId }
+                søknadDAO.tilSøknadDTO(relevanteDokumenter)
+            }
     }
 
     fun hentSøknad(søknadId: UUID): SøknadDTO {
@@ -120,6 +122,13 @@ class SøknadService(
 
     fun finnUnikeSøknaderUtenMikrofrontendSisteSeksMåneder(søknadstype: Søknadstype, limit: Int): List<SøknadDAO> {
         return repo.finnUnikeSøknaderUtenMikrofrontendSisteSeksMåneder(søknadstype.name, limit)
+    }
+
+    fun oppdaterAktørId(gyldigAktørId: AktørId, utgåttAktørId: AktørId): Int {
+        val søknader = repo.findAllByAktørId(utgåttAktørId);
+        søknader.map { it.copy( aktørId = gyldigAktørId ) }
+            .forEach { repo.save(it) }
+        return søknader.size;
     }
 }
 
