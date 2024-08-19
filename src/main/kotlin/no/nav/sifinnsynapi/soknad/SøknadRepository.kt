@@ -5,6 +5,7 @@ import no.nav.sifinnsynapi.common.Søknadstype
 import no.nav.sifinnsynapi.config.TxConfiguration.Companion.TRANSACTION_MANAGER
 import org.springframework.data.domain.Slice
 import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
@@ -63,4 +64,18 @@ interface SøknadRepository : JpaRepository<SøknadDAO, UUID> {
         nativeQuery = true
     )
     fun finnAlleSøknaderMedUnikeFødselsnummerForSøknadstypeEldreEnnSeksMåneder(søknadstype: String): Stream<SøknadDAO>
+
+    /**
+     * Oppdaterer Aktørid for søker (aktørsplitt/merge)
+     * @param gyldigAktørId: Gyldig aktørid
+     * @param utgåttAktørId: Utgått aktørId
+     * @return antall rader for utgått aktørid
+     */
+    @Transactional
+    @Modifying
+    @Query(
+        nativeQuery = true,
+        value = "UPDATE søknad SET aktør_id = ?1 WHERE aktør_id = ?2"
+    )
+    fun oppdaterAktørIdForSøker(gyldigAktørId: AktørId, utgåttAktørId: AktørId): Int
 }
