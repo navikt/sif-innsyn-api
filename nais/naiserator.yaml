@@ -13,6 +13,7 @@ spec:
     application:
       enabled: true
       tenant: {{azureTenant}}
+      allowAllUsers: false
       claims:
         extra:
           - "NAVident"
@@ -20,6 +21,7 @@ spec:
           {{#each azure.groups as |group|}}
              - id: {{group.objectId}}
             {{/each}}
+      singlePageApplication: true
       replyURLs:
         {{#each azure.replyURLs as |url|}}
            - {{url}}
