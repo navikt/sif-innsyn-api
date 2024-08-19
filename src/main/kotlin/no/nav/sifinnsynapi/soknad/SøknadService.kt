@@ -125,10 +125,7 @@ class SøknadService(
     }
 
     fun oppdaterAktørId(gyldigAktørId: AktørId, utgåttAktørId: AktørId): Int {
-        val søknader = repo.findAllByAktørId(utgåttAktørId);
-        søknader.map { it.copy( aktørId = gyldigAktørId ) }
-            .forEach { repo.save(it) }
-        return søknader.size;
+        return repo.oppdaterAktørIdForSøker(gyldigAktørId, utgåttAktørId)
     }
 }
 
