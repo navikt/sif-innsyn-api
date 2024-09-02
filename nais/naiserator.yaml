@@ -33,7 +33,6 @@ spec:
       rules:
         - application: endringsmelding-pleiepenger
         - application: dine-pleiepenger
-        - application: k9-brukerdialog-api
         - application: k9-sak-innsyn-api # Kaller hit for legacy søknader.
     outbound:
       external:
