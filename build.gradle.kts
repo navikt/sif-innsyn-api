@@ -25,7 +25,7 @@ configurations {
 val confluentVersion = "7.7.0"
 val springCloudVersion = "4.1.4"
 val logstashLogbackEncoderVersion = "8.0"
-val tokenSupportVersion = "5.0.3"
+val tokenSupportVersion = "5.0.5"
 val retryVersion = "2.0.8"
 val zalandoVersion = "0.27.0"
 val openhtmltopdfVersion = "1.0.10"
@@ -62,7 +62,7 @@ repositories {
 }
 dependencies {
 
-    implementation("org.yaml:snakeyaml:2.2") {
+    implementation("org.yaml:snakeyaml:2.3") {
         because("https://github.com/navikt/sif-innsyn-api/security/dependabot/2")
     }
 
