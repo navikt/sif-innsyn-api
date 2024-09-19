@@ -34,6 +34,9 @@ spec:
         - application: endringsmelding-pleiepenger
         - application: dine-pleiepenger
         - application: k9-sak-innsyn-api # Kaller hit for legacy søknader.
+        - application: sif-demo-app
+          namespace: dusseldorf
+          cluster: dev-gcp
     outbound:
       external:
         {{#each externalHosts as |host|}}
