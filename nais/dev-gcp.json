@@ -8,6 +8,13 @@
   "ingresses": [
     "https://sif-innsyn-api.intern.dev.nav.no"
   ],
+  "inboundRules": [
+    {
+      "app": "sif-demo-app",
+      "namespace": "duseldorf",
+      "cluster": "dev-gcp"
+    }
+  ],
   "externalHosts": [
     "login.microsoftonline.com",
     "saf.dev-fss-pub.nais.io",

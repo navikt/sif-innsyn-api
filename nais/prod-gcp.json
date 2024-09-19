@@ -8,6 +8,7 @@
   "ingresses": [
     "https://sif-innsyn-api.intern.nav.no"
   ],
+  "inboundRules": [],
   "externalHosts": [
     "login.microsoftonline.com",
     "saf.prod-fss-pub.nais.io",
