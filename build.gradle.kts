@@ -7,7 +7,7 @@ plugins {
     kotlin("plugin.jpa") version "2.0.21"
     id("org.springframework.boot") version "3.3.4"
     id("io.spring.dependency-management") version "1.1.6"
-    id("com.expediagroup.graphql") version "8.1.0"
+    id("com.expediagroup.graphql") version "8.2.0"
     id("org.sonarqube") version "5.1.0.4882"
     jacoco
 }
@@ -37,7 +37,7 @@ val springMockkVersion = "4.0.2"
 val mockkVersion = "1.13.13"
 val guavaVersion = "33.3.1-jre"
 val orgJsonVersion = "20240303"
-val graphQLKotlinVersion = "8.1.0"
+val graphQLKotlinVersion = "8.2.0"
 val k9FormatVersion = "9.5.0"
 val teamDokumenthåndteringAvroSchemaVersion = "357738b9"
 val testContainersVersion = "1.20.2"
