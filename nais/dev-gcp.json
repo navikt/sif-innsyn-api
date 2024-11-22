@@ -11,14 +11,14 @@
   "inboundRules": [
     {
       "app": "sif-demo-app",
-      "namespace": "duseldorf",
+      "namespace": "dusseldorf",
       "cluster": "dev-gcp"
     }
   ],
   "externalHosts": [
     "login.microsoftonline.com",
-    "saf.dev-fss-pub.nais.io",
-    "safselvbetjening-q1.dev-fss-pub.nais.io"
+    "saf-q2.dev-fss-pub.nais.io",
+    "safselvbetjening.dev-fss-pub.nais.io"
   ],
   "database": {
     "name": "sif-innsyn-db",
@@ -50,12 +50,11 @@
     "KAFKA_AIVEN_CONSUMER_AUTO_OFFSET_RESET": "latest",
     "NO_NAV_SECURITY_CORS_ALLOWED_ORIGINS": "https://sif-innsyn.dev.nav.no, https://endringsmelding-pleiepenger.dev.nav.no, https://dine-pleiepenger.intern.dev.nav.no/dine-pleiepenger",
     "NO_NAV_GATEWAYS_K9_SELVBETJENING_OPPSLAG": "http://k9-selvbetjening-oppslag",
-    "NO_NAV_GATEWAYS_SAF_BASE_URL": "https://saf.dev-fss-pub.nais.io",
-    "NO_NAV_GATEWAYS_SAF_SELVBETJENING_BASE_URL": "https://safselvbetjening-q1.dev-fss-pub.nais.io",
-    "NO_NAV_GATEWAYS_STS_URL": "https://api-gw-q1.oera.no/security-token-service",
+    "NO_NAV_GATEWAYS_SAF_BASE_URL": "https://saf-q2.dev-fss-pub.nais.io",
+    "NO_NAV_GATEWAYS_SAF_SELVBETJENING_BASE_URL": "https://safselvbetjening.dev-fss-pub.nais.io",
     "NO_NAV_GATEWAYS_K9_SAK_INNSYN_API_BASE_URL": "http://k9-sak-innsyn-api",
-    "SAFSELVBETJENING_TOKEN_X_AUDIENCE": "dev-fss:teamdokumenthandtering:safselvbetjening-q1",
-    "SAF_AZURE_SCOPE": "api://dev-fss.teamdokumenthandtering.saf-q1/.default",
+    "SAFSELVBETJENING_TOKEN_X_AUDIENCE": "dev-fss:teamdokumenthandtering:safselvbetjening",
+    "SAF_AZURE_SCOPE": "api://dev-fss.teamdokumenthandtering.saf/.default",
     "K9_SAK_INNSYN_API_TOKEN_X_AUDIENCE": "dev-gcp:dusseldorf:k9-sak-innsyn-api",
     "K9_SELVBETJENING_OPPSLAG_TOKEN_X_AUDIENCE": "dev-gcp:dusseldorf:k9-selvbetjening-oppslag",
     "SWAGGER_ENABLED": "true",
