@@ -5,10 +5,10 @@ plugins {
     kotlin("jvm") version "2.0.21"
     kotlin("plugin.spring") version "2.0.21"
     kotlin("plugin.jpa") version "2.0.21"
-    id("org.springframework.boot") version "3.3.5"
+    id("org.springframework.boot") version "3.4.0"
     id("io.spring.dependency-management") version "1.1.6"
     id("com.expediagroup.graphql") version "8.2.1"
-    id("org.sonarqube") version "5.1.0.4882"
+    id("org.sonarqube") version "6.0.0.5145"
     jacoco
 }
 
@@ -25,7 +25,7 @@ configurations {
 val confluentVersion = "7.7.1"
 val springCloudVersion = "4.1.4"
 val logstashLogbackEncoderVersion = "8.0"
-val tokenSupportVersion = "5.0.5"
+val tokenSupportVersion = "5.0.11"
 val retryVersion = "2.0.10"
 val zalandoVersion = "0.27.0"
 val openhtmltopdfVersion = "1.0.10"
@@ -40,8 +40,8 @@ val orgJsonVersion = "20240303"
 val graphQLKotlinVersion = "8.2.1"
 val k9FormatVersion = "9.5.0"
 val teamDokumenthåndteringAvroSchemaVersion = "357738b9"
-val testContainersVersion = "1.20.3"
-val springdocVersion = "2.6.0"
+val testContainersVersion = "1.20.4"
+val springdocVersion = "2.7.0"
 
 repositories {
     mavenCentral()
