@@ -43,8 +43,8 @@ class OppslagsKlientKonfig(
     @Bean(name = ["k9OppslagsKlient"])
     fun restTemplate(builder: RestTemplateBuilder, mdcInterceptor: MDCValuesPropagatingClienHttpRequesInterceptor): RestTemplate {
         return builder
-                .setConnectTimeout(Duration.ofSeconds(20))
-                .setReadTimeout(Duration.ofSeconds(20))
+                .connectTimeout(Duration.ofSeconds(20))
+                .readTimeout(Duration.ofSeconds(20))
                 .defaultHeader(CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .defaultHeader(XK9Ytelse, "PLEIEPENGER_SYKT_BARN")
                 .rootUri(oppslagsUrl)
@@ -83,9 +83,9 @@ class OppslagsKlientKonfig(
                 }
                 else -> {
                     val response = oAuth2AccessTokenService.getAccessToken(tokenxK9SelvbetjeningOppslagClientProperties)
-                    val expiresIn = response.expiresIn
+                    val expiresIn = response.expires_in
                     logger.debug("Utveklset token utgår kl. {}, ({} min)", ZonedDateTime.now(UTC).plusSeconds(expiresIn!!.toLong()), expiresIn/60)
-                    request.headers.setBearerAuth(response.accessToken!!)
+                    request.headers.setBearerAuth(response.access_token!!)
                 }
             }
             execution.execute(request, body)

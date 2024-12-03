@@ -61,6 +61,6 @@ class SafClientConfig(
     )
 
     private fun accessToken(clientProperties: ClientProperties): String {
-        return oAuth2AccessTokenService.getAccessToken(clientProperties).accessToken!!
+        return oAuth2AccessTokenService.getAccessToken(clientProperties).access_token!!
     }
 }

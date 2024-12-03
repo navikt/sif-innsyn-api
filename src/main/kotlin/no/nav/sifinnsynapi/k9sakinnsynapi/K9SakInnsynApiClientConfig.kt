@@ -38,8 +38,8 @@ class K9SakInnsynApiClientConfig(
         mdcInterceptor: MDCValuesPropagatingClienHttpRequesInterceptor
     ): RestTemplate {
         return builder
-            .setConnectTimeout(Duration.ofSeconds(20))
-            .setReadTimeout(Duration.ofSeconds(20))
+            .connectTimeout(Duration.ofSeconds(20))
+            .readTimeout(Duration.ofSeconds(20))
             .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
             .rootUri(k9SakInnsynApiBaseUrl)
             .defaultMessageConverters()
@@ -50,7 +50,7 @@ class K9SakInnsynApiClientConfig(
     private fun bearerTokenInterceptor(): ClientHttpRequestInterceptor {
         return ClientHttpRequestInterceptor { request: HttpRequest, body: ByteArray, execution: ClientHttpRequestExecution ->
             val response = oAuth2AccessTokenService.getAccessToken(tokenxK9SakInnsynApiClientProperties)
-            request.headers.setBearerAuth(response.accessToken!!)
+            request.headers.setBearerAuth(response.access_token!!)
             execution.execute(request, body)
         }
     }
