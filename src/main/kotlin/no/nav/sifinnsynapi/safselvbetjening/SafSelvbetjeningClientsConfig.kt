@@ -59,7 +59,7 @@ class SafSelvbetjeningClientsConfig(
                 it.header(X_CORRELATION_ID, correlationId)
                 it.header(
                     AUTHORIZATION,
-                    "Bearer ${oAuth2AccessTokenService.getAccessToken(tokenxSafSelvbetjeningClientProperties).accessToken}"
+                    "Bearer ${oAuth2AccessTokenService.getAccessToken(tokenxSafSelvbetjeningClientProperties).access_token}"
                 )
             }
     )
@@ -86,7 +86,7 @@ class SafSelvbetjeningClientsConfig(
     ): ClientHttpRequestInterceptor {
         return ClientHttpRequestInterceptor { request: HttpRequest, body: ByteArray, execution: ClientHttpRequestExecution ->
             val response = oAuth2AccessTokenService.getAccessToken(clientProperties)
-            request.headers.setBearerAuth(response.accessToken!!)
+            request.headers.setBearerAuth(response.access_token!!)
             execution.execute(request, body)
         }
     }
