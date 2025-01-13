@@ -34,14 +34,14 @@ val postgresqlVersion = "42.7.4"
 val awailitilityKotlinVersion = "4.2.2"
 val assertkJvmVersion = "0.28.1"
 val springMockkVersion = "4.0.2"
-val mockkVersion = "1.13.14"
+val mockkVersion = "1.13.16"
 val guavaVersion = "33.4.0-jre"
-val orgJsonVersion = "20241224"
+val orgJsonVersion = "20250107"
 val graphQLKotlinVersion = "8.2.1"
 val k9FormatVersion = "9.5.0"
 val teamDokumenthåndteringAvroSchemaVersion = "357738b9"
 val testContainersVersion = "1.20.4"
-val springdocVersion = "2.8.1"
+val springdocVersion = "2.8.3"
 
 repositories {
     mavenCentral()
