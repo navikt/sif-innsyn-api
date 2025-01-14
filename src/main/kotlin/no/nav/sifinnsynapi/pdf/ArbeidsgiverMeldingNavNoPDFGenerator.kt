@@ -7,10 +7,10 @@ import java.time.ZoneOffset.UTC
 import java.time.ZonedDateTime
 
 @Service
-class ArbeidsgiverMeldingPDFGenerator : PDFGenerator<PleiepengerArbeidsgiverMelding>() {
+class ArbeidsgiverMeldingNavNoPDFGenerator : PDFGenerator<PleiepengerArbeidsgiverMelding>() {
 
     override val templateNavn: String
-        get() = "informasjonsbrev-til-arbeidsgiver"
+        get() = "informasjonsbrev-til-arbeidsgiver-nav-no"
 
 
     override fun PleiepengerArbeidsgiverMelding.tilMap(): Map<String, Any?> = mapOf(

@@ -22,6 +22,9 @@ no.nav:
         tekst: 'Vi har mottatt din ettersendelse til omsorgspenger.'
         dagerSynlig: 7
 
+  inntektsmelding:
+    ny-im-aktivert: false
+
   gateways:
     k9-selvbetjening-oppslag: # Settes i nais/<cluster>.json
     saf-base-url: # Settes i nais/<cluster>.json
