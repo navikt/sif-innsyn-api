@@ -6,6 +6,10 @@ import org.springframework.stereotype.Service
 import java.time.ZoneOffset.UTC
 import java.time.ZonedDateTime
 
+@Deprecated(
+    "Etter at ny inntektsmelding gjennom nav.no er aktivert, ønsker vi ikke å bruke denne lenger",
+    ReplaceWith("ArbeidsgiverMeldingNavNoPDFGenerator")
+)
 @Service
 class ArbeidsgiverMeldingPDFGenerator : PDFGenerator<PleiepengerArbeidsgiverMelding>() {
 
