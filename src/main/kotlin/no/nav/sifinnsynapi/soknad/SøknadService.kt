@@ -33,9 +33,8 @@ class SøknadService(
     private val dokumentService: DokumentService,
     private val arbeidsgiverMeldingPDFGenerator: ArbeidsgiverMeldingPDFGenerator,
     private val arbeidsgiverMeldingNavNoPDFGenerator: ArbeidsgiverMeldingNavNoPDFGenerator,
-    @Value("\${no.nav.inntektsmelding.ny-im-aktivert}") val erNyImAktivert: Boolean = false,
-
-    ) {
+    @Value("\${no.nav.inntektsmelding.ny-im-aktivert}") val erNyImAktivert: Boolean = false
+) {
 
     companion object {
         private val mapper = ObjectMapper()
@@ -118,12 +117,11 @@ class SøknadService(
                         )
                     )
                 } else {
-                arbeidsgiverMeldingPDFGenerator.genererPDF(
-                    pleiepengesøknadJson.tilPleiepengerAreidsgivermelding(
-                        funnetOrg
+                    arbeidsgiverMeldingPDFGenerator.genererPDF(
+                        pleiepengesøknadJson.tilPleiepengerAreidsgivermelding(
+                            funnetOrg
+                        )
                     )
-                )
-
                 }
             }
 
