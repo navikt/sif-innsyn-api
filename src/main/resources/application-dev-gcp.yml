@@ -39,6 +39,10 @@ no.nav:
     pleiepenger-sykt-barn:
       beskjed:
         link: https://sif-innsyn.intern.dev.nav.no/familie/sykdom-i-familien/soknad/innsyn
+
     pleiepenger-sykt-barn-endringsmelding:
       beskjed:
         link: https://sif-innsyn.intern.dev.nav.no/familie/sykdom-i-familien/soknad/innsyn
+
+    inntektsmelding:
+      ny-im-aktivert: true
