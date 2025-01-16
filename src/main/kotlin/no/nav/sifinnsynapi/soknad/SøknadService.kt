@@ -111,6 +111,7 @@ class SøknadService(
                 val funnetOrg: JSONObject = pleiepengesøknadJson.finnOrganisasjon(søknad, organisasjonsnummer)
 
                 if (erNyImAktivert) {
+                    logger.info("Ny inntektsmelding er aktivert, genererer PDF med nytt template.")
                     arbeidsgiverMeldingNavNoPDFGenerator.genererPDF(
                         pleiepengesøknadJson.tilPleiepengerAreidsgivermelding(
                             funnetOrg
