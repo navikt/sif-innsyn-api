@@ -33,7 +33,7 @@ class SøknadService(
     private val dokumentService: DokumentService,
     private val arbeidsgiverMeldingPDFGenerator: ArbeidsgiverMeldingPDFGenerator,
     private val arbeidsgiverMeldingNavNoPDFGenerator: ArbeidsgiverMeldingNavNoPDFGenerator,
-    @Value("\${no.nav.inntektsmelding.ny-im-aktivert}") private val erNyImAktivert: Boolean
+    @Value("\${no.nav.inntektsmelding.ny-im-aktivert:false}") private val erNyImAktivert: Boolean
 ) {
 
     companion object {
@@ -109,10 +109,7 @@ class SøknadService(
                 val pleiepengesøknadJson = JSONObject(søknad.søknad)
                 val funnetOrg: JSONObject = pleiepengesøknadJson.finnOrganisasjon(søknad, organisasjonsnummer)
 
-                logger.info("Skal generere arbeidsgivermelding. erNyImAktivert=$erNyImAktivert")
-
                 if (erNyImAktivert) {
-                    logger.info("Ny inntektsmelding er aktivert, genererer PDF med nytt template.")
                     arbeidsgiverMeldingNavNoPDFGenerator.genererPDF(
                         pleiepengesøknadJson.tilPleiepengerAreidsgivermelding(
                             funnetOrg
