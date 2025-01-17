@@ -44,5 +44,5 @@ no.nav:
       beskjed:
         link: https://sif-innsyn.intern.dev.nav.no/familie/sykdom-i-familien/soknad/innsyn
 
-    inntektsmelding:
-      ny-im-aktivert: true
+  inntektsmelding:
+    ny-im-aktivert: true
