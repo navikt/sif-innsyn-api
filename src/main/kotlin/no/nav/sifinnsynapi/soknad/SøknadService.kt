@@ -33,7 +33,7 @@ class SøknadService(
     private val dokumentService: DokumentService,
     private val arbeidsgiverMeldingPDFGenerator: ArbeidsgiverMeldingPDFGenerator,
     private val arbeidsgiverMeldingNavNoPDFGenerator: ArbeidsgiverMeldingNavNoPDFGenerator,
-    @Value("\${no.nav.inntektsmelding.ny-im-aktivert:false}") val erNyImAktivert: Boolean
+    @Value("\${no.nav.inntektsmelding.ny-im-aktivert}") private val erNyImAktivert: Boolean
 ) {
 
     companion object {
