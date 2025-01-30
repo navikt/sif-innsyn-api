@@ -23,7 +23,7 @@ no.nav:
         dagerSynlig: 7
 
   inntektsmelding:
-    ny-im-aktivert: false
+    ny-im-aktivert: true
 
   gateways:
     k9-selvbetjening-oppslag: # Settes i nais/<cluster>.json
