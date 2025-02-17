@@ -41,7 +41,7 @@ val graphQLKotlinVersion = "8.3.0"
 val k9FormatVersion = "9.5.0"
 val teamDokumenthåndteringAvroSchemaVersion = "357738b9"
 val testContainersVersion = "1.20.4"
-val springdocVersion = "2.8.4"
+val springdocVersion = "2.8.5"
 
 repositories {
     mavenCentral()
@@ -62,7 +62,7 @@ repositories {
 }
 dependencies {
 
-    implementation("org.yaml:snakeyaml:2.3") {
+    implementation("org.yaml:snakeyaml:2.4") {
         because("https://github.com/navikt/sif-innsyn-api/security/dependabot/2")
     }
 
