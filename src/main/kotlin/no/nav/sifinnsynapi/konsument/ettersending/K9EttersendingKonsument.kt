@@ -59,6 +59,7 @@ class K9EttersendingKonsument(
             OMP_UT_ARBEIDSTAKER("Ettersendelse av dokumentasjon til søknad om utbetaling av omsorgspenger når arbeidsgiver ikke utbetaler"),
             OMP_UTV_MA("Ettersendelse av dokumentasjon til søknad om ekstra omsorgsdager når den andre forelderen ikke kan ha tilsyn med barn"),
             OMP_UTV_AO("Ettersendelse av dokumentasjon til søknad om ekstra omsorgsdager ved aleneomsorg"),
+            OPPLÆRINGSPENGER("Ettersendelse av dokumentasjon til søknad om opplæringspenger")
         }
     }
 
