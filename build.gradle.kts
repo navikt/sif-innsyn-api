@@ -41,7 +41,7 @@ val orgJsonVersion = "20250517"
 val graphQLKotlinVersion = "8.8.1"
 val k9FormatVersion = "9.5.0"
 val teamDokumenthåndteringAvroSchemaVersion = "357738b9"
-val testContainersVersion = "1.21.2"
+val testContainersVersion = "1.21.3"
 val springdocVersion = "2.8.9"
 
 repositories {
