@@ -3,13 +3,13 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "2.2.0"
-    kotlin("plugin.spring") version "2.2.0"
-    kotlin("plugin.jpa") version "2.2.0"
-    id("org.springframework.boot") version "3.5.4"
+    kotlin("jvm") version "2.2.10"
+    kotlin("plugin.spring") version "2.2.10"
+    kotlin("plugin.jpa") version "2.2.10"
+    id("org.springframework.boot") version "3.5.5"
     id("io.spring.dependency-management") version "1.1.7"
     id("com.expediagroup.graphql") version "8.8.1"
-    id("org.sonarqube") version "6.2.0.5505"
+    id("org.sonarqube") version "6.3.1.5724"
     jacoco
 }
 
@@ -26,11 +26,11 @@ configurations {
 val confluentVersion = "8.0.0"
 val springCloudVersion = "4.3.0"
 val logstashLogbackEncoderVersion = "8.1"
-val tokenSupportVersion = "5.0.33"
+val tokenSupportVersion = "5.0.34"
 val retryVersion = "2.0.12"
 val zalandoVersion = "0.27.0"
 val openhtmltopdfVersion = "1.0.10"
-val handlebarsVersion = "4.4.0"
+val handlebarsVersion = "4.5.0"
 val postgresqlVersion = "42.7.7"
 val awailitilityKotlinVersion = "4.3.0"
 val assertkJvmVersion = "0.28.1"
@@ -39,10 +39,10 @@ val mockkVersion = "1.14.5"
 val guavaVersion = "33.4.8-jre"
 val orgJsonVersion = "20250517"
 val graphQLKotlinVersion = "8.8.1"
-val k9FormatVersion = "12.3.2"
+val k9FormatVersion = "12.5.3"
 val teamDokumenthåndteringAvroSchemaVersion = "08271806"
 val testContainersVersion = "1.21.3"
-val springdocVersion = "2.8.9"
+val springdocVersion = "2.8.11"
 
 repositories {
     mavenCentral()
