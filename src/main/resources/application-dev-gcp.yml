@@ -30,7 +30,7 @@ topic:
     # topic.listener.dok-journalfoering-v1
     dok-journalfoering-v1:
       id: dok-journalfoering-v1-listener
-      navn: teamdokumenthandtering.aapen-dok-journalfoering-q1
+      navn: teamdokumenthandtering.aapen-dok-journalfoering
       bryter: true
       dry-run: false
 
