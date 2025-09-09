@@ -40,7 +40,7 @@ val guavaVersion = "33.4.8-jre"
 val orgJsonVersion = "20250517"
 val graphQLKotlinVersion = "8.8.1"
 val k9FormatVersion = "12.5.5"
-val teamDokumenthåndteringAvroSchemaVersion = "1.1.6"
+val teamDokumenthåndteringAvroSchemaVersion = "873c5cdd"
 val testContainersVersion = "1.21.3"
 val springdocVersion = "2.8.13"
 
