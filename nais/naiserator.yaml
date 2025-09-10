@@ -59,11 +59,10 @@ spec:
     timeout: 1
   resources:
     limits:
-      cpu: 2000m
-      memory: 3072Mi
+      memory: 1009Mi
     requests:
-      cpu: 80m
-      memory: 1536Mi
+      cpu: 359m
+      memory: 992Mi
   ingresses:
   {{#each ingresses as |url|}}
      - {{url}}
