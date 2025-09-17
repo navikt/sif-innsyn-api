@@ -38,11 +38,11 @@ no.nav:
   dittnav:
     pleiepenger-sykt-barn:
       beskjed:
-        link: https://sif-innsyn.intern.dev.nav.no/familie/sykdom-i-familien/soknad/innsyn
+        link: https://dine-pleiepenger.intern.dev.nav.no/innsyn
 
     pleiepenger-sykt-barn-endringsmelding:
       beskjed:
-        link: https://sif-innsyn.intern.dev.nav.no/familie/sykdom-i-familien/soknad/innsyn
+        link: https://dine-pleiepenger.intern.dev.nav.no/innsyn
 
   inntektsmelding:
     ny-im-aktivert: true
