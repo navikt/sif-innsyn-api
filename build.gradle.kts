@@ -3,13 +3,13 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "2.2.10"
-    kotlin("plugin.spring") version "2.2.10"
-    kotlin("plugin.jpa") version "2.2.10"
-    id("org.springframework.boot") version "3.5.5"
+    kotlin("jvm") version "2.2.20"
+    kotlin("plugin.spring") version "2.2.20"
+    kotlin("plugin.jpa") version "2.2.20"
+    id("org.springframework.boot") version "3.5.6"
     id("io.spring.dependency-management") version "1.1.7"
     id("com.expediagroup.graphql") version "8.8.1"
-    id("org.sonarqube") version "6.3.1.5724"
+    id("org.sonarqube") version "7.0.0.6105"
     jacoco
 }
 
@@ -23,23 +23,23 @@ configurations {
     }
 }
 
-val confluentVersion = "8.0.0"
+val confluentVersion = "8.1.0"
 val springCloudVersion = "4.3.0"
 val logstashLogbackEncoderVersion = "8.1"
-val tokenSupportVersion = "5.0.36"
+val tokenSupportVersion = "5.0.37"
 val retryVersion = "2.0.12"
 val zalandoVersion = "0.27.0"
 val openhtmltopdfVersion = "1.0.10"
 val handlebarsVersion = "4.5.0"
-val postgresqlVersion = "42.7.7"
+val postgresqlVersion = "42.7.8"
 val awailitilityKotlinVersion = "4.3.0"
 val assertkJvmVersion = "0.28.1"
 val springMockkVersion = "4.0.2"
-val mockkVersion = "1.14.5"
-val guavaVersion = "33.4.8-jre"
+val mockkVersion = "1.14.6"
+val guavaVersion = "33.5.0-jre"
 val orgJsonVersion = "20250517"
 val graphQLKotlinVersion = "8.8.1"
-val k9FormatVersion = "12.5.5"
+val k9FormatVersion = "12.5.7"
 val teamDokumenthåndteringAvroSchemaVersion = "1.1.6"
 val testContainersVersion = "1.21.3"
 val springdocVersion = "2.8.13"
@@ -137,7 +137,7 @@ dependencies {
     }
     implementation("io.confluent:kafka-connect-avro-converter:$confluentVersion")
     implementation("io.confluent:kafka-avro-serializer:$confluentVersion")
-    implementation("org.apache.avro:avro:1.12.0")
+    implementation("org.apache.avro:avro:1.12.1")
     testImplementation("org.springframework.kafka:spring-kafka-test")
 
     // PDF
