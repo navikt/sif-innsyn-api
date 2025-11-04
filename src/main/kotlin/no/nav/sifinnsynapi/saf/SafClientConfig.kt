@@ -38,6 +38,7 @@ class SafClientConfig(
             .clientConnector(
                 ReactorClientHttpConnector(
                     HttpClient.create()
+                        .wiretap(true) // viktig for å se H2/TLS-hendelser
                         .doOnRequest { request: HttpClientRequest, _ ->
                             logger.info("{} {} {}", request.version(), request.method(), request.resourceUrl())
                         }
