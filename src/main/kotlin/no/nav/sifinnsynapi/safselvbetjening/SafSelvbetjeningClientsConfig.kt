@@ -1,6 +1,7 @@
 package no.nav.sifinnsynapi.safselvbetjening
 
 import com.expediagroup.graphql.client.spring.GraphQLWebClient
+import io.netty.channel.ChannelOption
 import no.nav.security.token.support.client.core.ClientProperties
 import no.nav.security.token.support.client.core.oauth2.OAuth2AccessTokenService
 import no.nav.security.token.support.client.spring.ClientConfigurationProperties
@@ -18,17 +19,19 @@ import org.springframework.http.client.ClientHttpRequestExecution
 import org.springframework.http.client.ClientHttpRequestInterceptor
 import org.springframework.http.client.reactive.ReactorClientHttpConnector
 import org.springframework.web.client.RestTemplate
+import org.springframework.web.reactive.function.client.ClientResponse
 import org.springframework.web.reactive.function.client.WebClient
+import reactor.core.publisher.Mono
 import reactor.netty.http.client.HttpClient
-import reactor.netty.http.client.HttpClientRequest
-import reactor.netty.http.client.HttpClientResponse
+import reactor.netty.resources.ConnectionProvider
+import java.time.Duration
 import java.util.*
 
 @Configuration
 class SafSelvbetjeningClientsConfig(
     oauth2Config: ClientConfigurationProperties,
     private val oAuth2AccessTokenService: OAuth2AccessTokenService,
-    @Value("\${no.nav.gateways.saf-selvbetjening-base-url}") private val safSelvbetjeningBaseUrl: String
+    @Value("\${no.nav.gateways.saf-selvbetjening-base-url}") private val safSelvbetjeningBaseUrl: String,
 ) {
 
     private companion object {
@@ -38,22 +41,38 @@ class SafSelvbetjeningClientsConfig(
     private val tokenxSafSelvbetjeningClientProperties = oauth2Config.registration["tokenx-safselvbetjening"]
         ?: throw RuntimeException("could not find oauth2 client config for tokenx-safselvbetjening")
 
+    /**
+     * Egen ConnectionProvider med idle-eviction for å unngå resirkulering av døde connections
+     */
+    @Bean
+    fun safSelvbetjeningConnectionProvider(): ConnectionProvider =
+        ConnectionProvider.builder("saf-selvbetjening-connection-pool")
+            .maxConnections(200)
+            .maxIdleTime(Duration.ofSeconds(25))       // kortere enn LB keep-alive
+            .evictInBackground(Duration.ofSeconds(60)) // rydder jevnlig
+            .build()
+
+    @Bean
+    fun safSelvbetjeningHttpClient(safSelvbetjeningConnectionProvider: ConnectionProvider): HttpClient =
+        HttpClient.create(safSelvbetjeningConnectionProvider)
+            .responseTimeout(Duration.ofSeconds(15))
+            .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 5_000)
+
     @Bean("safSelvbetjeningGraphQLClient")
-    fun graphQLClient() = GraphQLWebClient(
+    fun graphQLClient(safSelvbetjeningHttpClient: HttpClient) = GraphQLWebClient(
         url = "${safSelvbetjeningBaseUrl}/graphql",
         builder = WebClient.builder()
-            .clientConnector(
-                ReactorClientHttpConnector(
-                    HttpClient.create()
-                        .wiretap(true) // viktig for å se H2/TLS-hendelser
-                        .doOnRequest { request: HttpClientRequest, _ ->
-                            logger.info("{} {} {}", request.version(), request.method(), request.resourceUrl())
+            .clientConnector(ReactorClientHttpConnector(safSelvbetjeningHttpClient))
+            .filters { filters ->
+                filters.add { request, next ->
+                    logger.info("---> {} {}", request.method(), request.url())
+                    next.exchange(request).also { it: Mono<ClientResponse> ->
+                        it.subscribe {
+                            logger.info("<--- {} for {} {}", it.statusCode().value(), request.method(), request.url())
                         }
-                        .doOnResponse { response: HttpClientResponse, _ ->
-                            logger.info("{} - {} {} {}", response.status().toString(), response.version(), response.method(), response.resourceUrl())
-                        }
-                )
-            )
+                    }
+                }
+            }
             .defaultRequest {
                 val correlationId = MDCUtil.callIdOrNew()
                 it.header(NAV_CALL_ID, correlationId)
@@ -70,20 +89,25 @@ class SafSelvbetjeningClientsConfig(
     fun safSelvbetjeningRestTemplate(
         restTemplateBuilder: RestTemplateBuilder,
         clientConfigurationProperties: ClientConfigurationProperties,
-        oAuth2AccessTokenService: OAuth2AccessTokenService
+        oAuth2AccessTokenService: OAuth2AccessTokenService,
     ): RestTemplate {
 
         logger.info("Konfigurerer opp tokenx klient for safselvbetjening.")
         return restTemplateBuilder
             .rootUri(safSelvbetjeningBaseUrl)
             .defaultHeader(NAV_CALL_ID, UUID.randomUUID().toString())
-            .additionalInterceptors(bearerTokenInterceptor(tokenxSafSelvbetjeningClientProperties, oAuth2AccessTokenService), requestLoggerInterceptor())
+            .additionalInterceptors(
+                bearerTokenInterceptor(
+                    tokenxSafSelvbetjeningClientProperties,
+                    oAuth2AccessTokenService
+                ), requestLoggerInterceptor()
+            )
             .build()
     }
 
     private fun bearerTokenInterceptor(
         clientProperties: ClientProperties,
-        oAuth2AccessTokenService: OAuth2AccessTokenService
+        oAuth2AccessTokenService: OAuth2AccessTokenService,
     ): ClientHttpRequestInterceptor {
         return ClientHttpRequestInterceptor { request: HttpRequest, body: ByteArray, execution: ClientHttpRequestExecution ->
             val response = oAuth2AccessTokenService.getAccessToken(clientProperties)

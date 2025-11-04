@@ -1,6 +1,7 @@
 package no.nav.sifinnsynapi.saf
 
 import com.expediagroup.graphql.client.spring.GraphQLWebClient
+import io.netty.channel.ChannelOption
 import no.nav.security.token.support.client.core.ClientProperties
 import no.nav.security.token.support.client.core.oauth2.OAuth2AccessTokenService
 import no.nav.security.token.support.client.spring.ClientConfigurationProperties
@@ -12,10 +13,12 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.http.client.reactive.ReactorClientHttpConnector
+import org.springframework.web.reactive.function.client.ClientResponse
 import org.springframework.web.reactive.function.client.WebClient
+import reactor.core.publisher.Mono
 import reactor.netty.http.client.HttpClient
-import reactor.netty.http.client.HttpClientRequest
-import reactor.netty.http.client.HttpClientResponse
+import reactor.netty.resources.ConnectionProvider
+import java.time.Duration
 
 @Configuration
 class SafClientConfig(
@@ -31,28 +34,38 @@ class SafClientConfig(
     private val azureSafClientProperties = oauth2Config.registration["azure-saf"]
         ?: throw RuntimeException("could not find oauth2 client config for azure-saf")
 
+    /**
+     * Egen ConnectionProvider med idle-eviction for å unngå resirkulering av døde connections
+     */
+    @Bean
+    fun safConnectionProvider(): ConnectionProvider =
+        ConnectionProvider.builder("saf-connection-pool")
+            .maxConnections(200)
+            .maxIdleTime(Duration.ofSeconds(25))       // kortere enn LB keep-alive
+            .evictInBackground(Duration.ofSeconds(60)) // rydder jevnlig
+            .build()
+
+    @Bean
+    fun safHttpClient(safConnectionProvider: ConnectionProvider): HttpClient =
+        HttpClient.create(safConnectionProvider)
+            .responseTimeout(Duration.ofSeconds(15))
+            .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 5_000)
+
     @Bean("safClient")
-    fun client() = GraphQLWebClient(
+    fun client(safHttpClient: HttpClient) = GraphQLWebClient(
         url = "$safBaseUrl/graphql",
         builder = WebClient.builder()
-            .clientConnector(
-                ReactorClientHttpConnector(
-                    HttpClient.create()
-                        .wiretap(true) // viktig for å se H2/TLS-hendelser
-                        .doOnRequest { request: HttpClientRequest, _ ->
-                            logger.info("{} {} {}", request.version(), request.method(), request.resourceUrl())
+            .clientConnector(ReactorClientHttpConnector(safHttpClient))
+            .filters { filters ->
+                filters.add { request, next ->
+                    logger.info("---> {} {}", request.method(), request.url())
+                    next.exchange(request).also { it: Mono<ClientResponse> ->
+                        it.subscribe {
+                            logger.info("<--- {} for {} {}", it.statusCode().value(), request.method(), request.url())
                         }
-                        .doOnResponse { response: HttpClientResponse, _ ->
-                            logger.info(
-                                "{} - {} {} {}",
-                                response.status().toString(),
-                                response.version(),
-                                response.method(),
-                                response.resourceUrl()
-                            )
-                        }
-                )
-            )
+                    }
+                }
+            }
             .defaultRequest {
                 it.header(AUTHORIZATION, "Bearer ${accessToken(azureSafClientProperties)}")
                 val correlationId = MDCUtil.callIdOrNew()
