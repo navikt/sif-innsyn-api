@@ -19,8 +19,6 @@ import org.springframework.http.client.ClientHttpRequestExecution
 import org.springframework.http.client.ClientHttpRequestInterceptor
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.reactive.function.client.WebClient
-import reactor.netty.resources.ConnectionProvider
-import java.time.Duration
 import java.util.*
 
 @Configuration
@@ -36,17 +34,6 @@ class SafSelvbetjeningClientsConfig(
 
     private val tokenxSafSelvbetjeningClientProperties = oauth2Config.registration["tokenx-safselvbetjening"]
         ?: throw RuntimeException("could not find oauth2 client config for tokenx-safselvbetjening")
-
-    /**
-     * Egen ConnectionProvider med idle-eviction for å unngå resirkulering av døde connections
-     */
-    @Bean
-    fun safSelvbetjeningConnectionProvider(): ConnectionProvider =
-        ConnectionProvider.builder("saf-selvbetjening-connection-pool")
-            .maxConnections(200)
-            .maxIdleTime(Duration.ofSeconds(25))       // kortere enn LB keep-alive
-            .evictInBackground(Duration.ofSeconds(60)) // rydder jevnlig
-            .build()
 
     @Bean("safSelvbetjeningGraphQLClient")
     fun graphQLClient() = GraphQLWebClient(
