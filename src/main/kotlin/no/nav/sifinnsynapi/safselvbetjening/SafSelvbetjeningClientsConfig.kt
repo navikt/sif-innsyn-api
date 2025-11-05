@@ -1,13 +1,13 @@
 package no.nav.sifinnsynapi.safselvbetjening
 
 import com.expediagroup.graphql.client.spring.GraphQLWebClient
-import io.netty.channel.ChannelOption
 import no.nav.security.token.support.client.core.ClientProperties
 import no.nav.security.token.support.client.core.oauth2.OAuth2AccessTokenService
 import no.nav.security.token.support.client.spring.ClientConfigurationProperties
 import no.nav.sifinnsynapi.util.HttpHeaderConstants.NAV_CALL_ID
 import no.nav.sifinnsynapi.util.HttpHeaderConstants.X_CORRELATION_ID
 import no.nav.sifinnsynapi.util.MDCUtil
+import no.nav.sifinnsynapi.util.WebClientUtils.requestLoggerFilter
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.web.client.RestTemplateBuilder
@@ -17,13 +17,8 @@ import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.http.HttpRequest
 import org.springframework.http.client.ClientHttpRequestExecution
 import org.springframework.http.client.ClientHttpRequestInterceptor
-import org.springframework.http.client.reactive.ReactorClientHttpConnector
 import org.springframework.web.client.RestTemplate
-import org.springframework.web.reactive.function.client.ClientResponse
 import org.springframework.web.reactive.function.client.WebClient
-import reactor.core.publisher.Mono
-import reactor.netty.http.HttpProtocol
-import reactor.netty.http.client.HttpClient
 import reactor.netty.resources.ConnectionProvider
 import java.time.Duration
 import java.util.*
@@ -53,28 +48,11 @@ class SafSelvbetjeningClientsConfig(
             .evictInBackground(Duration.ofSeconds(60)) // rydder jevnlig
             .build()
 
-    @Bean
-    fun safSelvbetjeningHttpClient(safSelvbetjeningConnectionProvider: ConnectionProvider): HttpClient =
-        HttpClient.create(safSelvbetjeningConnectionProvider)
-            .protocol(HttpProtocol.HTTP11)
-            .responseTimeout(Duration.ofSeconds(15))
-            .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 5_000)
-
     @Bean("safSelvbetjeningGraphQLClient")
-    fun graphQLClient(safSelvbetjeningHttpClient: HttpClient) = GraphQLWebClient(
+    fun graphQLClient() = GraphQLWebClient(
         url = "${safSelvbetjeningBaseUrl}/graphql",
         builder = WebClient.builder()
-            .clientConnector(ReactorClientHttpConnector(safSelvbetjeningHttpClient))
-            .filters { filters ->
-                filters.add { request, next ->
-                    logger.info("---> {} {}", request.method(), request.url())
-                    next.exchange(request).also { it: Mono<ClientResponse> ->
-                        it.subscribe {
-                            logger.info("<--- {} for {} {}", it.statusCode().value(), request.method(), request.url())
-                        }
-                    }
-                }
-            }
+            .requestLoggerFilter(logger)
             .defaultRequest {
                 val correlationId = MDCUtil.callIdOrNew()
                 it.header(NAV_CALL_ID, correlationId)
