@@ -16,6 +16,7 @@ import org.springframework.http.client.reactive.ReactorClientHttpConnector
 import org.springframework.web.reactive.function.client.ClientResponse
 import org.springframework.web.reactive.function.client.WebClient
 import reactor.core.publisher.Mono
+import reactor.netty.http.HttpProtocol
 import reactor.netty.http.client.HttpClient
 import reactor.netty.resources.ConnectionProvider
 import java.time.Duration
@@ -48,6 +49,7 @@ class SafClientConfig(
     @Bean
     fun safHttpClient(safConnectionProvider: ConnectionProvider): HttpClient =
         HttpClient.create(safConnectionProvider)
+            .protocol(HttpProtocol.HTTP11)
             .responseTimeout(Duration.ofSeconds(15))
             .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 5_000)
 
