@@ -6,16 +6,13 @@ import no.nav.security.token.support.client.core.oauth2.OAuth2AccessTokenService
 import no.nav.security.token.support.client.spring.ClientConfigurationProperties
 import no.nav.sifinnsynapi.util.HttpHeaderConstants
 import no.nav.sifinnsynapi.util.MDCUtil
+import no.nav.sifinnsynapi.util.WebClientUtils.requestLoggerFilter
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpHeaders.AUTHORIZATION
-import org.springframework.http.client.reactive.ReactorClientHttpConnector
 import org.springframework.web.reactive.function.client.WebClient
-import reactor.netty.http.client.HttpClient
-import reactor.netty.http.client.HttpClientRequest
-import reactor.netty.http.client.HttpClientResponse
 
 @Configuration
 class SafClientConfig(
@@ -35,24 +32,7 @@ class SafClientConfig(
     fun client() = GraphQLWebClient(
         url = "$safBaseUrl/graphql",
         builder = WebClient.builder()
-            .clientConnector(
-                ReactorClientHttpConnector(
-                    HttpClient.create()
-                        .wiretap(true) // viktig for å se H2/TLS-hendelser
-                        .doOnRequest { request: HttpClientRequest, _ ->
-                            logger.info("{} {} {}", request.version(), request.method(), request.resourceUrl())
-                        }
-                        .doOnResponse { response: HttpClientResponse, _ ->
-                            logger.info(
-                                "{} - {} {} {}",
-                                response.status().toString(),
-                                response.version(),
-                                response.method(),
-                                response.resourceUrl()
-                            )
-                        }
-                )
-            )
+            .requestLoggerFilter(logger)
             .defaultRequest {
                 it.header(AUTHORIZATION, "Bearer ${accessToken(azureSafClientProperties)}")
                 val correlationId = MDCUtil.callIdOrNew()
