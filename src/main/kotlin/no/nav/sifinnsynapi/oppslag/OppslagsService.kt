@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service
 import org.springframework.web.ErrorResponseException
 import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.HttpServerErrorException
-import org.springframework.web.client.ResourceAccessException
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.util.UriComponentsBuilder
 import java.net.URI
@@ -23,7 +22,7 @@ import java.nio.charset.Charset
 
 @Service
 @Retryable(
-        exclude = [HttpClientErrorException.Forbidden::class, ResourceAccessException::class],
+        exclude = [HttpClientErrorException.Forbidden::class],
         backoff = Backoff(
                 delayExpression = "\${spring.rest.retry.initialDelay}",
                 multiplierExpression = "\${spring.rest.retry.multiplier}",
@@ -69,12 +68,6 @@ class OppslagsService(
         if (error.responseBodyAsString.isNotEmpty()) logger.error("Error response = '${error.responseBodyAsString}' fra '${søkerUrl.toUriString()}'")
         else logger.error("Feil ved henting av søkers personinformasjon", error)
         throw søkerOppslagFeil
-    }
-
-    @Recover
-    private fun recover(error: ResourceAccessException): OppslagRespons? {
-        logger.error("{}", error.message)
-        throw IllegalStateException("Timout ved henting av søkers personinformasjon")
     }
 }
 

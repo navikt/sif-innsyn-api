@@ -42,7 +42,14 @@ class JoarkHendelseKonsument(
 
         runBlocking {
             logger.info("Slår opp journalpostinfo...")
-            val journalpostinfo = safService.hentJournalpostinfo(journalpostId)
+            val journalpostinfo = runCatching { safService.hentJournalpostinfo(journalpostId) }
+                .fold(
+                    onSuccess = { it },
+                    onFailure = {
+                        logger.error("Feil ved henting av journalpostinfo for journalpostId: $journalpostId", it)
+                        throw it
+                    }
+                )
             logger.info("JournalpostInfo hentet.")
 
             val fagsak = journalpostinfo.sak
