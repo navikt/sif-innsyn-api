@@ -12,14 +12,13 @@ import org.springframework.retry.annotation.Retryable
 import org.springframework.stereotype.Service
 import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.HttpServerErrorException
-import org.springframework.web.client.ResourceAccessException
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.util.UriComponentsBuilder
 import java.time.LocalDate
 
 @Service
 @Retryable(
-    exclude = [HttpClientErrorException.Unauthorized::class, HttpClientErrorException.Forbidden::class, ResourceAccessException::class],
+    exclude = [HttpClientErrorException.Unauthorized::class, HttpClientErrorException.Forbidden::class],
     backoff = Backoff(
         delayExpression = "\${spring.rest.retry.initialDelay}",
         multiplierExpression = "\${spring.rest.retry.multiplier}",
@@ -72,12 +71,6 @@ class K9SakInnsynApiService(
     @Recover
     private fun recover(error: HttpClientErrorException): List<K9SakInnsynSøknad> {
         logger.error("Error response = '${error.responseBodyAsString}' fra '${søknaddataUrl}'")
-        throw søknadOpplysningerOppslafFeil
-    }
-
-    @Recover
-    private fun recover(error: ResourceAccessException): List<K9SakInnsynSøknad> {
-        logger.error("{}", error.message)
         throw søknadOpplysningerOppslafFeil
     }
 }
