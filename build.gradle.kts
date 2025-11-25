@@ -24,7 +24,6 @@ configurations {
 }
 
 val confluentVersion = "8.1.0"
-val springCloudVersion = "4.3.0"
 val logstashLogbackEncoderVersion = "9.0"
 val tokenSupportVersion = "6.0.0"
 val retryVersion = "2.0.12"
@@ -44,6 +43,8 @@ val teamDokumenthåndteringAvroSchemaVersion = "1.1.6"
 val testContainersVersion = "1.21.3"
 val springdocVersion = "3.0.0"
 
+extra["springCloudVersion"] = "2025.1.0"
+
 repositories {
     mavenCentral()
 
@@ -61,6 +62,13 @@ repositories {
         }
     }
 }
+
+dependencyManagement {
+    imports {
+        mavenBom("org.springframework.cloud:spring-cloud-dependencies:${property("springCloudVersion")}")
+    }
+}
+
 dependencies {
 
     implementation("org.yaml:snakeyaml:2.5") {
@@ -88,13 +96,18 @@ dependencies {
     implementation("org.springframework:spring-aspects")
     runtimeOnly("org.springframework.boot:spring-boot-properties-migrator")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
-    testImplementation("org.springframework.boot:spring-boot-starter-test") {
+    testImplementation("org.springframework.boot:spring-boot-starter-test-classic") {
         exclude(module = "mockito-core")
     }
+    testImplementation("org.springframework.boot:spring-boot-resttestclient")
 
     // Spring Cloud
     // https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-contract-stub-runner
-    testImplementation("org.springframework.cloud:spring-cloud-starter-contract-stub-runner:$springCloudVersion")
+    testImplementation("org.springframework.cloud:spring-cloud-starter-contract-stub-runner") // vurder å droppe
+    testImplementation("org.wiremock.integrations:wiremock-spring-boot:3.10.0")
+    testImplementation("org.wiremock:wiremock-jetty12:3.13.2")
+    testImplementation("org.eclipse.jetty.ee10:jetty-ee10-bom:12.1.0")
+
 
     // Swagger (openapi 3)
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:$springdocVersion")
@@ -113,6 +126,7 @@ dependencies {
     testImplementation("org.testcontainers:postgresql:$testContainersVersion")
 
     // Jackson
+    implementation("org.springframework.boot:spring-boot-jackson2")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
     //graphql

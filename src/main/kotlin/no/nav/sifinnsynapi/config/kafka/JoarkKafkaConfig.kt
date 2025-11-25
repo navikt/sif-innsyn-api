@@ -57,7 +57,7 @@ internal class JoarkKafkaConfig(
     @Bean
     fun joarkKafkaJsonListenerContainerFactor(joarkConsumerFactory: ConsumerFactory<Long, JournalfoeringHendelseRecord>) =
         ConcurrentKafkaListenerContainerFactory<Long, JournalfoeringHendelseRecord>().apply {
-            consumerFactory = joarkConsumerFactory
+            setConsumerFactory(joarkConsumerFactory)
 
             // https://docs.spring.io/spring-kafka/reference/html/#listener-container
             containerProperties.setAuthExceptionRetryInterval(Duration.ofSeconds(10L))

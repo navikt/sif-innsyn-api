@@ -56,8 +56,8 @@ class ResponseDecoratorFilter : Filter {
      * @see UnavailableException
      */
     override fun doFilter(request: ServletRequest, response: ServletResponse, chain: FilterChain) {
-        val requestWrapper = ContentCachingRequestWrapper(request as HttpServletRequest)
-        val responseWrapper = ContentCachingResponseWrapper(response as HttpServletResponse)
+        val requestWrapper = ContentCachingRequestWrapper(request as HttpServletRequest, 0)
+        val responseWrapper = ContentCachingResponseWrapper(response as HttpServletResponse,)
         chain.doFilter(requestWrapper, responseWrapper)
 
         when (response.status) {
