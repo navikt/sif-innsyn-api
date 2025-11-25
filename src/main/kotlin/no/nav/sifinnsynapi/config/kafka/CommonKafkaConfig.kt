@@ -115,7 +115,7 @@ class CommonKafkaConfig {
         ): ConcurrentKafkaListenerContainerFactory<String, String> {
             val factory = ConcurrentKafkaListenerContainerFactory<String, String>()
 
-            factory.consumerFactory = consumerFactory
+            factory.setConsumerFactory(consumerFactory)
 
             factory.setReplyTemplate(kafkaTemplate)
 
