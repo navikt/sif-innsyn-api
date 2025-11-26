@@ -12,16 +12,17 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit.jupiter.SpringExtension
+import org.wiremock.spring.ConfigureWireMock
+import org.wiremock.spring.EnableWireMock
 
 @Suppress("DEPRECATION")
 @SpringBootTest(
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
     properties = ["spring.main.allow-bean-definition-overriding=true"]
 )
-@AutoConfigureWireMock
+@EnableWireMock(ConfigureWireMock())
 @ActiveProfiles("test")
 @ExtendWith(SpringExtension::class)
 @EnableMockOAuth2Server // Tilgjengliggjør en oicd-provider for test. Se application-test.yml -> no.nav.security.jwt.issuer.selvbetjening for konfigurasjon
