@@ -92,8 +92,10 @@ dependencies {
        // exclude(group = "org.springframework.boot", module = "spring-boot-starter-tomcat")
     }
     //implementation("org.springframework.boot:spring-boot-starter-jetty")
+    testImplementation("org.springframework.boot:spring-boot-starter-data-jpa-test")
     implementation("org.springframework.retry:spring-retry:$retryVersion")
     implementation("org.springframework:spring-aspects")
+    implementation("org.springframework.boot:spring-boot-starter-flyway")
     runtimeOnly("org.springframework.boot:spring-boot-properties-migrator")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     testImplementation("org.springframework.boot:spring-boot-starter-test-classic") {

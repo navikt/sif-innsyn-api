@@ -1,0 +1,14 @@
+{
+  "request": {
+    "urlPattern": "/leader-mock/.*",
+    "method": "GET"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "bodyFileName": "leader-mock.json"
+  }
+}
+

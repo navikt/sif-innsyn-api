@@ -108,7 +108,6 @@ import java.util.concurrent.TimeUnit
 @ActiveProfiles("test")
 @EnableMockOAuth2Server // Tilgjengliggjør en oicd-provider for test. Se application-test.yml -> no.nav.security.jwt.issuer.selvbetjening for konfigurasjon
 @Import(SecurityConfiguration::class)
-//@AutoConfigureWireMock // Konfigurerer og setter opp en wiremockServer. Default leses src/test/resources/__files og src/test/resources/mappings
 @EnableWireMock(ConfigureWireMock())
 @AutoConfigureTestRestTemplate
 @SpringBootTest(
