@@ -4,6 +4,8 @@ updates:
     directory: "/"
     schedule:
       interval: daily
+    cooldown:
+      default-days: 7
     groups:
       github:
         patterns:
@@ -13,6 +15,10 @@ updates:
     directory: "/"
     schedule:
       interval: daily
+    cooldown:
+      default-days: 7
+      exclude:
+        - "no.nav.*"
     groups:
       gradle:
         patterns:
