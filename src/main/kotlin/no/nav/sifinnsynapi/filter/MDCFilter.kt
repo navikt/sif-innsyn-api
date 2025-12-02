@@ -63,7 +63,7 @@ class HeadersToMDCFilterRegistrationBean(headersFilter: MDCFilter) : FilterRegis
     }
 
     init {
-        filter = headersFilter
+        setFilter(headersFilter)
         urlPatterns = FilterRegistrationUtil.always()
         logger.info("Registrert filter {}", this.javaClass.simpleName)
     }

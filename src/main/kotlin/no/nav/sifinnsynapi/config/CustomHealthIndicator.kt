@@ -1,8 +1,8 @@
 package no.nav.sifinnsynapi.config
 
 import org.springframework.beans.factory.annotation.Qualifier
-import org.springframework.boot.actuate.health.Health
-import org.springframework.boot.actuate.health.ReactiveHealthIndicator
+import org.springframework.boot.health.contributor.Health
+import org.springframework.boot.health.contributor.ReactiveHealthIndicator
 import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Component
 import org.springframework.web.client.HttpServerErrorException
@@ -12,7 +12,8 @@ import org.springframework.web.util.UriComponentsBuilder
 import reactor.core.publisher.Mono
 
 @Component
-class CustomHealthIndicator(@Qualifier("k9OppslagsKlient") private val oppslagsKlient: RestTemplate) : ReactiveHealthIndicator {
+class CustomHealthIndicator(@Qualifier("k9OppslagsKlient") private val oppslagsKlient: RestTemplate) :
+    ReactiveHealthIndicator {
     companion object{
 
         val healthUrl = UriComponentsBuilder
