@@ -1,6 +1,7 @@
 package no.nav.sifinnsynapi.saf
 
 import com.expediagroup.graphql.client.spring.GraphQLWebClient
+import io.netty.channel.ChannelOption
 import no.nav.security.token.support.client.core.ClientProperties
 import no.nav.security.token.support.client.core.oauth2.OAuth2AccessTokenService
 import no.nav.security.token.support.client.spring.ClientConfigurationProperties
@@ -12,7 +13,11 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpHeaders.AUTHORIZATION
+import org.springframework.http.client.reactive.ReactorClientHttpConnector
 import org.springframework.web.reactive.function.client.WebClient
+import reactor.netty.http.client.HttpClient
+import reactor.netty.resources.ConnectionProvider
+import java.time.Duration
 
 @Configuration
 class SafClientConfig(
@@ -32,6 +37,22 @@ class SafClientConfig(
     fun client() = GraphQLWebClient(
         url = "$safBaseUrl/graphql",
         builder = WebClient.builder()
+            .clientConnector(
+                ReactorClientHttpConnector(
+                    HttpClient.create(
+                        ConnectionProvider.builder("saf-pool")
+                            .maxConnections(100)
+                            .maxIdleTime(Duration.ofMinutes(55))    // Stay below 60-min firewall timeout
+                            .maxLifeTime(Duration.ofMinutes(55))    // Connection TTL for DNS refresh
+                            .pendingAcquireMaxCount(50)  // Max requests waiting for connection
+                            .evictInBackground(Duration.ofMinutes(5))  // Periodic cleanup of stale connections
+                            .build()
+                    )
+                        .responseTimeout(Duration.ofSeconds(40))  // Max time to wait for complete response (cross-cluster)
+                        .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 10000)  // 10s connection timeout (cross-cluster)
+                        .option(ChannelOption.SO_KEEPALIVE, true)  // Enable TCP keep-alive to detect dead connections
+                )
+            )
             .requestLoggerFilter(logger)
             .defaultRequest {
                 it.header(AUTHORIZATION, "Bearer ${accessToken(azureSafClientProperties)}")
