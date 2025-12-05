@@ -49,7 +49,9 @@ internal class JoarkKafkaConfig(
                 KafkaAvroDeserializerConfig.SCHEMA_REGISTRY_URL_CONFIG to consumerProps.schemaRegistryUrl,
                 KafkaAvroDeserializerConfig.BASIC_AUTH_CREDENTIALS_SOURCE to "USER_INFO",
                 KafkaAvroDeserializerConfig.USER_INFO_CONFIG to "${consumerProps.schemaRegistryUser}:${consumerProps.schemaRegistryPassword}",
-                KafkaAvroDeserializerConfig.SPECIFIC_AVRO_READER_CONFIG to "true"
+                KafkaAvroDeserializerConfig.SPECIFIC_AVRO_READER_CONFIG to "true",
+                ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG to (consumerProps.maxPollIntervalMs ?: 600000),
+                ConsumerConfig.MAX_POLL_RECORDS_CONFIG to (consumerProps.maxPollRecords ?: 10)
             ) + CommonKafkaConfig.commonConfig(kafkaClusterProperties.aiven)
         )
     }

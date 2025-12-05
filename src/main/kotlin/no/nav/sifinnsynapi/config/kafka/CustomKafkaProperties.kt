@@ -28,6 +28,8 @@ data class KafkaConsumerProperties(
     val schemaRegistryUrl: String,
     val schemaRegistryUser: String,
     val schemaRegistryPassword: String,
+    val maxPollIntervalMs: Int? = 600000,
+    val maxPollRecords: Int? = 10
 )
 
 data class KafkaProducerProperties(

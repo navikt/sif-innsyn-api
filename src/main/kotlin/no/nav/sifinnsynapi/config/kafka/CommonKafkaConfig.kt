@@ -69,7 +69,9 @@ class CommonKafkaConfig {
                     ConsumerConfig.AUTO_OFFSET_RESET_CONFIG to consumerProps.autoOffsetReset,
                     ConsumerConfig.ISOLATION_LEVEL_CONFIG to consumerProps.isolationLevel,
                     ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG to consumerProps.keyDeserializer,
-                    ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG to consumerProps.valueDeserializer
+                    ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG to consumerProps.valueDeserializer,
+                    ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG to (consumerProps.maxPollIntervalMs ?: 600000),
+                    ConsumerConfig.MAX_POLL_RECORDS_CONFIG to (consumerProps.maxPollRecords ?: 10)
                 ) + commonConfig(kafkaConfigProps)
             )
         }
