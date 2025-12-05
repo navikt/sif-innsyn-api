@@ -179,6 +179,8 @@ kafka:
       schemaRegistryUrl: ${KAFKA_SCHEMA_REGISTRY}
       schemaRegistryUser: ${KAFKA_SCHEMA_REGISTRY_USER}
       schemaRegistryPassword: ${KAFKA_SCHEMA_REGISTRY_PASSWORD}
+      max-poll-interval-ms: 600000
+      max-poll-records: 10
 
     producer:
       client-id: ${HOSTNAME}-${random.uuid}
