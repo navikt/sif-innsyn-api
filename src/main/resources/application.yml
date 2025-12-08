@@ -204,8 +204,3 @@ springdoc:
     authorizationUrl: ${AZURE_LOGIN_URL:http://localhost:8080}/authorize
     tokenUrl: ${AZURE_LOGIN_URL:http://localhost:8080}/token
     apiScope: api://${AZURE_APP_CLIENT_ID:abc456}/.default
-
-logging:
-  level:
-    reactor.netty: DEBUG
-    reactor.netty.transport: DEBUG
