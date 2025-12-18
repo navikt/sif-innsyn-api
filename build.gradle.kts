@@ -39,9 +39,9 @@ val mockkVersion = "1.14.6"
 val guavaVersion = "33.5.0-jre"
 val orgJsonVersion = "20250517"
 val graphQLKotlinVersion = "8.8.1"
-val k9FormatVersion = "12.6.2"
-val teamDokumenthåndteringAvroSchemaVersion = "1.1.6"
-val testContainersVersion = "1.21.3"
+val k9FormatVersion = "12.7.2"
+val teamDokumenthåndteringAvroSchemaVersion = "1.1.7"
+val testContainersVersion = "1.21.4"
 val springdocVersion = "2.8.14"
 
 repositories {
