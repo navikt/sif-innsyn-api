@@ -3,9 +3,9 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "2.2.21"
-    kotlin("plugin.spring") version "2.2.21"
-    kotlin("plugin.jpa") version "2.2.21"
+    kotlin("jvm") version "2.2.10"
+    kotlin("plugin.spring") version "2.2.10"
+    kotlin("plugin.jpa") version "2.2.10"
     id("org.springframework.boot") version "4.0.0"
     id("io.spring.dependency-management") version "1.1.7"
     id("com.expediagroup.graphql") version "8.8.1"
@@ -43,8 +43,6 @@ val teamDokumenthåndteringAvroSchemaVersion = "1.1.7"
 val testContainersVersion = "1.21.4"
 val springdocVersion = "3.0.0"
 
-extra["springCloudVersion"] = "2025.1.0"
-
 repositories {
     mavenCentral()
 
@@ -60,12 +58,6 @@ repositories {
             username = "sif-innsyn-api"
             password = project.findProperty("gpr.key") as String? ?: System.getenv("GITHUB_TOKEN")
         }
-    }
-}
-
-dependencyManagement {
-    imports {
-        mavenBom("org.springframework.cloud:spring-cloud-dependencies:${property("springCloudVersion")}")
     }
 }
 
@@ -98,14 +90,10 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-flyway")
     runtimeOnly("org.springframework.boot:spring-boot-properties-migrator")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
-    testImplementation("org.springframework.boot:spring-boot-starter-test-classic") {
-        exclude(module = "mockito-core")
-    }
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
     testImplementation("org.springframework.boot:spring-boot-resttestclient")
 
-    // Spring Cloud
-    // https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-contract-stub-runner
-    testImplementation("org.springframework.cloud:spring-cloud-starter-contract-stub-runner") // vurder å droppe
     testImplementation("org.wiremock.integrations:wiremock-spring-boot:3.10.0")
     testImplementation("org.wiremock:wiremock-jetty12:3.13.2")
     testImplementation("org.eclipse.jetty.ee10:jetty-ee10-bom:12.1.0")

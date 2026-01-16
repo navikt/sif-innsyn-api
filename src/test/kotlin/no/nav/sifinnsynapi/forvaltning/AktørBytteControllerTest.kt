@@ -23,6 +23,7 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit.jupiter.SpringExtension
+import org.springframework.test.json.JsonCompareMode
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
@@ -113,13 +114,12 @@ open class AktørBytteControllerTest {
                 content().json(
                     """
                         {
-                        "type":"about:blank",
                         "title":"Forbidden",
                         "status":403,
                         "detail":"Mangler driftsrolle",
                         "instance":"/forvaltning/oppdaterAktoerId"
                         }
-                    """.trimIndent(), true
+                    """.trimIndent(), JsonCompareMode.STRICT
                 )
             )
 

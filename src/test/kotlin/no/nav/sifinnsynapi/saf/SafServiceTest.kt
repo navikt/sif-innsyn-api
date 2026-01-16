@@ -16,6 +16,7 @@ import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.wiremock.spring.ConfigureWireMock
 import org.wiremock.spring.EnableWireMock
+import org.wiremock.spring.InjectWireMock
 
 @Suppress("DEPRECATION")
 @SpringBootTest(
@@ -31,7 +32,7 @@ internal class SafServiceTest {
     @Autowired
     lateinit var safService: SafService
 
-    @Autowired
+    @InjectWireMock
     lateinit var wireMockServer: WireMockServer
 
     @Test

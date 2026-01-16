@@ -129,7 +129,6 @@ class KafkaHendelseKonsumentIntegrasjonsTest {
     @Autowired
     lateinit var restTemplate: TestRestTemplate // Restklient som brukes til å gjøre restkall mot endepunkter i appen.
 
-    @Suppress("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
     lateinit var mockOAuth2Server: MockOAuth2Server
 

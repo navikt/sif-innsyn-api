@@ -11,8 +11,6 @@ import no.nav.sifinnsynapi.safselvbetjening.generated.enums.Datotype
 import no.nav.sifinnsynapi.safselvbetjening.generated.hentdokumentoversikt.RelevantDato
 import no.nav.sifinnsynapi.util.CallIdGenerator
 import no.nav.sifinnsynapi.utils.hentToken
-import org.junit.Assert
-import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.extension.ExtendWith
@@ -24,6 +22,7 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit.jupiter.SpringExtension
+import org.springframework.test.json.JsonCompareMode
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
@@ -44,17 +43,11 @@ internal class DokumentControllerTest {
     @Autowired
     lateinit var mockMvc: MockMvc
 
-    @Suppress("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
     lateinit var mockOAuth2Server: MockOAuth2Server
 
     @MockkBean(relaxed = true)
     lateinit var dokumentService: DokumentService
-
-    @BeforeAll
-    internal fun setUp() {
-        Assert.assertNotNull(mockOAuth2Server)
-    }
 
     @Test
     fun `Gitt 200 respons, forvent korrekt format på dokumentoversikt`() {
@@ -69,7 +62,7 @@ internal class DokumentControllerTest {
                         tittel = "Søknad om pleiepenger",
                         filtype = "pdf",
                         harTilgang = true,
-                        url = URL("http://localhost:8080/dokument/510536545/533440578/ARKIV"),
+                        url = URI("http://localhost:8080/dokument/510536545/533440578/ARKIV").toURL(),
                         relevanteDatoer = listOf(
                             RelevantDato(
                                 dato = "2021-08-25T09:58:55",
@@ -109,7 +102,7 @@ internal class DokumentControllerTest {
                         ]
                       }
                     ]
-                    """.trimIndent(), true
+                    """.trimIndent(), JsonCompareMode.STRICT
                 )
             )
     }
@@ -188,7 +181,7 @@ internal class DokumentControllerTest {
                         }
                       ]
                     }
-                """.trimIndent(), true
+                """.trimIndent(), JsonCompareMode.STRICT
                 )
             )
     }
@@ -212,7 +205,7 @@ internal class DokumentControllerTest {
                       "title": "Ikke autentisert",
                       "status": 401
                     }
-                """.trimIndent(), true
+                """.trimIndent(), JsonCompareMode.STRICT
                 )
             )
     }
