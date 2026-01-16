@@ -93,7 +93,7 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 @EmbeddedKafka( // Setter opp og tilgjengligjør embeded kafka broker
-    count = 3,
+    count = 1,
     bootstrapServersProperty = "kafka-servers", // Setter bootstrap-servers for consumer og producer.
     topics = [
         PP_SYKT_BARN,
