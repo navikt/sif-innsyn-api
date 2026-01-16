@@ -9,9 +9,12 @@ import no.nav.sifinnsynapi.util.HttpHeaderConstants.NAV_CALL_ID
 import no.nav.sifinnsynapi.util.HttpHeaderConstants.X_CORRELATION_ID
 import no.nav.sifinnsynapi.util.MDCUtil
 import no.nav.sifinnsynapi.util.WebClientUtils.requestLoggerFilter
+import org.apache.hc.client5.http.config.ConnectionConfig
+import org.apache.hc.client5.http.config.RequestConfig
 import org.apache.hc.client5.http.impl.classic.HttpClients
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager
 import org.apache.hc.core5.util.TimeValue
+import org.apache.hc.core5.util.Timeout
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.restclient.RestTemplateBuilder
@@ -86,24 +89,31 @@ class SafSelvbetjeningClientsConfig(
     ): RestTemplate {
         logger.info("Konfigurerer opp tokenx klient for safselvbetjening.")
 
+        val connectionConfig = ConnectionConfig.custom()
+            .setConnectTimeout(Timeout.ofSeconds(10))              // Connection timeout (external services recommendation)
+            .build()
+
         val connectionManager = PoolingHttpClientConnectionManager().apply {
             maxTotal = 100
             defaultMaxPerRoute = 20
             setValidateAfterInactivity(TimeValue.ofSeconds(5))
+            setDefaultConnectionConfig(connectionConfig)
         }
+
+        val requestConfig = RequestConfig.custom()
+            .setConnectionRequestTimeout(Timeout.ofSeconds(45))
+            .setResponseTimeout(Timeout.ofSeconds(40))             // Read timeout
+            .build()
 
         val httpClient = HttpClients.custom()
             .setConnectionManager(connectionManager)
+            .setDefaultRequestConfig(requestConfig)
             .evictIdleConnections(TimeValue.ofMinutes(5))              // Short TTL for external services
             .setKeepAliveStrategy { response, context -> TimeValue.ofMinutes(55) }  // Stay below 60-min firewall timeout
             .evictExpiredConnections()
             .build()
 
-        val requestFactory = HttpComponentsClientHttpRequestFactory(httpClient).apply {
-            setConnectTimeout(Duration.ofSeconds(10))              // Connection timeout (external services recommendation)
-            setConnectionRequestTimeout(Duration.ofSeconds(45))
-            setReadTimeout(Duration.ofSeconds(40))
-        }
+        val requestFactory = HttpComponentsClientHttpRequestFactory(httpClient)
 
         return restTemplateBuilder
             .requestFactory(Supplier { requestFactory })
