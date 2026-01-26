@@ -6,7 +6,7 @@ plugins {
     kotlin("jvm") version "2.2.10"
     kotlin("plugin.spring") version "2.2.10"
     kotlin("plugin.jpa") version "2.2.10"
-    id("org.springframework.boot") version "4.0.0"
+    id("org.springframework.boot") version "4.0.2"
     id("io.spring.dependency-management") version "1.1.7"
     id("com.expediagroup.graphql") version "8.8.1"
     id("org.sonarqube") version "7.1.0.6387"
@@ -27,10 +27,8 @@ val confluentVersion = "8.1.0"
 val logstashLogbackEncoderVersion = "9.0"
 val tokenSupportVersion = "6.0.0"
 val retryVersion = "2.0.12"
-val zalandoVersion = "0.27.0"
 val openhtmltopdfVersion = "1.0.10"
 val handlebarsVersion = "4.5.0"
-val postgresqlVersion = "42.7.8"
 val awailitilityKotlinVersion = "4.3.0"
 val assertkJvmVersion = "0.28.1"
 val springMockkVersion = "4.0.2"
@@ -40,8 +38,8 @@ val orgJsonVersion = "20250517"
 val graphQLKotlinVersion = "8.8.1"
 val k9FormatVersion = "12.7.3"
 val teamDokumenthåndteringAvroSchemaVersion = "1.1.7"
-val testContainersVersion = "1.21.4"
 val springdocVersion = "3.0.0"
+val wiremockSpringVersion = "4.0.9"
 
 repositories {
     mavenCentral()
@@ -94,9 +92,8 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
     testImplementation("org.springframework.boot:spring-boot-resttestclient")
 
-    testImplementation("org.wiremock.integrations:wiremock-spring-boot:3.10.0")
-    testImplementation("org.wiremock:wiremock-jetty12:3.13.2")
-    testImplementation("org.eclipse.jetty.ee10:jetty-ee10-bom:12.1.0")
+
+    testImplementation("org.wiremock.integrations:wiremock-spring-boot:$wiremockSpringVersion")
 
 
     // Swagger (openapi 3)
@@ -109,11 +106,11 @@ dependencies {
     implementation("net.logstash.logback:logstash-logback-encoder:$logstashLogbackEncoderVersion")
 
     // Database
-    runtimeOnly("org.postgresql:postgresql:$postgresqlVersion")
+    runtimeOnly("org.postgresql:postgresql")
     implementation("org.flywaydb:flyway-core")
     implementation("org.flywaydb:flyway-database-postgresql")
-    testImplementation("org.testcontainers:junit-jupiter:$testContainersVersion")
-    testImplementation("org.testcontainers:postgresql:$testContainersVersion")
+    testImplementation("org.testcontainers:testcontainers-junit-jupiter")
+    testImplementation("org.testcontainers:testcontainers-postgresql")
 
     // Jackson
     implementation("org.springframework.boot:spring-boot-jackson2")
@@ -156,7 +153,7 @@ dependencies {
     testImplementation("com.willowtreeapps.assertk:assertk-jvm:$assertkJvmVersion")
     testImplementation("com.ninja-squad:springmockk:$springMockkVersion")
     testImplementation("io.mockk:mockk:$mockkVersion")
-    testImplementation("org.testcontainers:testcontainers:$testContainersVersion")
+    testImplementation("org.testcontainers:testcontainers")
 }
 
 tasks.withType<Test> {

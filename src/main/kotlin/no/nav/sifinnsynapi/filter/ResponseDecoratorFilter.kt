@@ -4,7 +4,6 @@ import jakarta.servlet.Filter
 import jakarta.servlet.FilterChain
 import jakarta.servlet.ServletRequest
 import jakarta.servlet.ServletResponse
-import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import no.nav.sifinnsynapi.util.HttpHeaderConstants.PROBLEM_DETAILS
 import org.slf4j.Logger
@@ -12,7 +11,6 @@ import org.slf4j.LoggerFactory
 import org.springframework.core.Ordered
 import org.springframework.core.annotation.Order
 import org.springframework.stereotype.Component
-import org.springframework.web.util.ContentCachingRequestWrapper
 import org.springframework.web.util.ContentCachingResponseWrapper
 
 @Component
@@ -56,9 +54,8 @@ class ResponseDecoratorFilter : Filter {
      * @see UnavailableException
      */
     override fun doFilter(request: ServletRequest, response: ServletResponse, chain: FilterChain) {
-        val requestWrapper = ContentCachingRequestWrapper(request as HttpServletRequest, 0)
         val responseWrapper = ContentCachingResponseWrapper(response as HttpServletResponse,)
-        chain.doFilter(requestWrapper, responseWrapper)
+        chain.doFilter(request, responseWrapper)
 
         when (response.status) {
             200, 201, 202, 204, 401, 403, 404 -> {
