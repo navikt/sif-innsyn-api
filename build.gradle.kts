@@ -3,13 +3,13 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "2.2.21"
-    kotlin("plugin.spring") version "2.2.21"
-    kotlin("plugin.jpa") version "2.2.21"
-    id("org.springframework.boot") version "3.5.7"
+    kotlin("jvm") version "2.2.10"
+    kotlin("plugin.spring") version "2.2.10"
+    kotlin("plugin.jpa") version "2.2.10"
+    id("org.springframework.boot") version "4.0.2"
     id("io.spring.dependency-management") version "1.1.7"
     id("com.expediagroup.graphql") version "8.8.1"
-    id("org.sonarqube") version "7.0.1.6134"
+    id("org.sonarqube") version "7.1.0.6387"
     jacoco
 }
 
@@ -24,14 +24,11 @@ configurations {
 }
 
 val confluentVersion = "8.1.0"
-val springCloudVersion = "4.3.0"
 val logstashLogbackEncoderVersion = "9.0"
-val tokenSupportVersion = "5.0.39"
+val tokenSupportVersion = "6.0.0"
 val retryVersion = "2.0.12"
-val zalandoVersion = "0.27.0"
 val openhtmltopdfVersion = "1.0.10"
 val handlebarsVersion = "4.5.0"
-val postgresqlVersion = "42.7.8"
 val awailitilityKotlinVersion = "4.3.0"
 val assertkJvmVersion = "0.28.1"
 val springMockkVersion = "4.0.2"
@@ -39,10 +36,10 @@ val mockkVersion = "1.14.6"
 val guavaVersion = "33.5.0-jre"
 val orgJsonVersion = "20250517"
 val graphQLKotlinVersion = "8.8.1"
-val k9FormatVersion = "12.7.2"
+val k9FormatVersion = "12.7.3"
 val teamDokumenthåndteringAvroSchemaVersion = "1.1.7"
-val testContainersVersion = "1.21.4"
-val springdocVersion = "2.8.14"
+val springdocVersion = "3.0.0"
+val wiremockSpringVersion = "4.0.9"
 
 repositories {
     mavenCentral()
@@ -61,6 +58,7 @@ repositories {
         }
     }
 }
+
 dependencies {
 
     implementation("org.yaml:snakeyaml:2.5") {
@@ -84,17 +82,19 @@ dependencies {
        // exclude(group = "org.springframework.boot", module = "spring-boot-starter-tomcat")
     }
     //implementation("org.springframework.boot:spring-boot-starter-jetty")
+    testImplementation("org.springframework.boot:spring-boot-starter-data-jpa-test")
     implementation("org.springframework.retry:spring-retry:$retryVersion")
     implementation("org.springframework:spring-aspects")
+    implementation("org.springframework.boot:spring-boot-starter-flyway")
     runtimeOnly("org.springframework.boot:spring-boot-properties-migrator")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
-    testImplementation("org.springframework.boot:spring-boot-starter-test") {
-        exclude(module = "mockito-core")
-    }
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
+    testImplementation("org.springframework.boot:spring-boot-resttestclient")
 
-    // Spring Cloud
-    // https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-contract-stub-runner
-    testImplementation("org.springframework.cloud:spring-cloud-starter-contract-stub-runner:$springCloudVersion")
+
+    testImplementation("org.wiremock.integrations:wiremock-spring-boot:$wiremockSpringVersion")
+
 
     // Swagger (openapi 3)
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:$springdocVersion")
@@ -106,13 +106,14 @@ dependencies {
     implementation("net.logstash.logback:logstash-logback-encoder:$logstashLogbackEncoderVersion")
 
     // Database
-    runtimeOnly("org.postgresql:postgresql:$postgresqlVersion")
+    runtimeOnly("org.postgresql:postgresql")
     implementation("org.flywaydb:flyway-core")
     implementation("org.flywaydb:flyway-database-postgresql")
-    testImplementation("org.testcontainers:junit-jupiter:$testContainersVersion")
-    testImplementation("org.testcontainers:postgresql:$testContainersVersion")
+    testImplementation("org.testcontainers:testcontainers-junit-jupiter")
+    testImplementation("org.testcontainers:testcontainers-postgresql")
 
     // Jackson
+    implementation("org.springframework.boot:spring-boot-jackson2")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
     //graphql
@@ -139,7 +140,6 @@ dependencies {
     implementation("io.confluent:kafka-avro-serializer:$confluentVersion")
     implementation("org.apache.avro:avro:1.12.1")
     testImplementation("org.springframework.kafka:spring-kafka-test")
-
     // PDF
     implementation("com.openhtmltopdf:openhtmltopdf-pdfbox:$openhtmltopdfVersion")
     implementation("com.openhtmltopdf:openhtmltopdf-slf4j:$openhtmltopdfVersion")
@@ -153,7 +153,7 @@ dependencies {
     testImplementation("com.willowtreeapps.assertk:assertk-jvm:$assertkJvmVersion")
     testImplementation("com.ninja-squad:springmockk:$springMockkVersion")
     testImplementation("io.mockk:mockk:$mockkVersion")
-    testImplementation("org.testcontainers:testcontainers:$testContainersVersion")
+    testImplementation("org.testcontainers:testcontainers")
 }
 
 tasks.withType<Test> {

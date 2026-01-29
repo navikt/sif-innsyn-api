@@ -71,9 +71,9 @@ import org.skyscreamer.jsonassert.JSONCompareMode
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.resttestclient.TestRestTemplate
+import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureTestRestTemplate
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.web.client.TestRestTemplate
-import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock
 import org.springframework.context.annotation.Import
 import org.springframework.core.ParameterizedTypeReference
 import org.springframework.data.repository.findByIdOrNull
@@ -85,13 +85,15 @@ import org.springframework.kafka.test.context.EmbeddedKafka
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit.jupiter.SpringExtension
+import org.wiremock.spring.ConfigureWireMock
+import org.wiremock.spring.EnableWireMock
 import java.time.Duration
 import java.time.ZonedDateTime
 import java.util.*
 import java.util.concurrent.TimeUnit
 
 @EmbeddedKafka( // Setter opp og tilgjengligjør embeded kafka broker
-    count = 3,
+    count = 1,
     bootstrapServersProperty = "kafka-servers", // Setter bootstrap-servers for consumer og producer.
     topics = [
         PP_SYKT_BARN,
@@ -106,7 +108,8 @@ import java.util.concurrent.TimeUnit
 @ActiveProfiles("test")
 @EnableMockOAuth2Server // Tilgjengliggjør en oicd-provider for test. Se application-test.yml -> no.nav.security.jwt.issuer.selvbetjening for konfigurasjon
 @Import(SecurityConfiguration::class)
-@AutoConfigureWireMock // Konfigurerer og setter opp en wiremockServer. Default leses src/test/resources/__files og src/test/resources/mappings
+@EnableWireMock(ConfigureWireMock())
+@AutoConfigureTestRestTemplate
 @SpringBootTest(
     classes = [SifInnsynApiApplication::class],
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
@@ -126,7 +129,6 @@ class KafkaHendelseKonsumentIntegrasjonsTest {
     @Autowired
     lateinit var restTemplate: TestRestTemplate // Restklient som brukes til å gjøre restkall mot endepunkter i appen.
 
-    @Suppress("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
     lateinit var mockOAuth2Server: MockOAuth2Server
 

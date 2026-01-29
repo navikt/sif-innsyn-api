@@ -67,13 +67,14 @@ fun EmbeddedKafkaBroker.opprettDittnavConsumer(
     return consumer
 }
 
-fun <K, V> EmbeddedKafkaBroker.opprettKafkaStringConsumer(groupId: String, topics: List<String>): Consumer<K, V> {
-    val consumerProps = KafkaTestUtils.consumerProps(groupId, "true", this)
+fun EmbeddedKafkaBroker.opprettKafkaStringConsumer(groupId: String, topics: List<String>): Consumer<String, String> {
+    val consumerProps: MutableMap<String, Any> = KafkaTestUtils.consumerProps(this, groupId, true).toMutableMap()
     consumerProps[ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG] = StringDeserializer::class.java
     consumerProps[ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG] = StringDeserializer::class.java
     consumerProps[ConsumerConfig.MAX_POLL_RECORDS_CONFIG] = 100_000
 
-    val consumer = DefaultKafkaConsumerFactory<K, V>(HashMap(consumerProps)).createConsumer()
+    val defaultKafkaConsumerFactory = DefaultKafkaConsumerFactory<String, String>(consumerProps)
+    val consumer = defaultKafkaConsumerFactory.createConsumer()
     consumer.subscribe(topics)
     return consumer
 }
