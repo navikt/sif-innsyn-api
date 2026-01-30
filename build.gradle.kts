@@ -3,13 +3,13 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "2.2.10"
-    kotlin("plugin.spring") version "2.2.10"
-    kotlin("plugin.jpa") version "2.2.10"
+    kotlin("jvm") version "2.3.0"
+    kotlin("plugin.spring") version "2.3.0"
+    kotlin("plugin.jpa") version "2.3.0"
     id("org.springframework.boot") version "4.0.2"
     id("io.spring.dependency-management") version "1.1.7"
     id("com.expediagroup.graphql") version "8.8.1"
-    id("org.sonarqube") version "7.1.0.6387"
+    id("org.sonarqube") version "7.2.2.6593"
     jacoco
 }
 
@@ -25,20 +25,20 @@ configurations {
 
 val confluentVersion = "8.1.0"
 val logstashLogbackEncoderVersion = "9.0"
-val tokenSupportVersion = "6.0.0"
+val tokenSupportVersion = "6.0.2"
 val retryVersion = "2.0.12"
 val openhtmltopdfVersion = "1.0.10"
 val handlebarsVersion = "4.5.0"
 val awailitilityKotlinVersion = "4.3.0"
 val assertkJvmVersion = "0.28.1"
-val springMockkVersion = "4.0.2"
-val mockkVersion = "1.14.6"
+val springMockkVersion = "5.0.1"
+val mockkVersion = "1.14.7"
 val guavaVersion = "33.5.0-jre"
-val orgJsonVersion = "20250517"
+val orgJsonVersion = "20251224"
 val graphQLKotlinVersion = "8.8.1"
-val k9FormatVersion = "12.7.3"
-val teamDokumenthåndteringAvroSchemaVersion = "1.1.7"
-val springdocVersion = "3.0.0"
+val k9FormatVersion = "12.8.2"
+val teamDokumenthåndteringAvroSchemaVersion = "1.1.8"
+val springdocVersion = "3.0.1"
 val wiremockSpringVersion = "4.0.9"
 
 repositories {
