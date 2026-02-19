@@ -5,6 +5,9 @@
   "team": "dusseldorf",
   "minReplicas": "2",
   "maxReplicas": "2",
+  "memoryLimit": "1500Mi",
+  "memoryRequest": "832Mi",
+  "cpuRequest": "100m",
   "ingresses": [
     "https://sif-innsyn-api.intern.dev.nav.no"
   ],
