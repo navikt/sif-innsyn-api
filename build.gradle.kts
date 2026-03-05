@@ -3,12 +3,12 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "2.2.10"
-    kotlin("plugin.spring") version "2.2.10"
-    kotlin("plugin.jpa") version "2.2.10"
-    id("org.springframework.boot") version "4.0.2"
+    kotlin("jvm") version "2.3.10"
+    kotlin("plugin.spring") version "2.3.10"
+    kotlin("plugin.jpa") version "2.3.10"
+    id("org.springframework.boot") version "4.0.3"
     id("io.spring.dependency-management") version "1.1.7"
-    id("com.expediagroup.graphql") version "8.8.1"
+    id("com.expediagroup.graphql") version "9.0.0"
     id("org.sonarqube") version "7.1.0.6387"
     jacoco
 }
@@ -31,15 +31,15 @@ val openhtmltopdfVersion = "1.0.10"
 val handlebarsVersion = "4.5.0"
 val awailitilityKotlinVersion = "4.3.0"
 val assertkJvmVersion = "0.28.1"
-val springMockkVersion = "4.0.2"
-val mockkVersion = "1.14.6"
+val springMockkVersion = "5.0.1"
+val mockkVersion = "1.14.9"
 val guavaVersion = "33.5.0-jre"
-val orgJsonVersion = "20250517"
-val graphQLKotlinVersion = "8.8.1"
+val orgJsonVersion = "20251224"
+val graphQLKotlinVersion = "9.0.0"
 val k9FormatVersion = "12.7.3"
 val teamDokumenthåndteringAvroSchemaVersion = "1.1.7"
-val springdocVersion = "3.0.0"
-val wiremockSpringVersion = "4.0.9"
+val springdocVersion = "3.0.1"
+val wiremockSpringVersion = "4.1.0"
 
 repositories {
     mavenCentral()
@@ -61,7 +61,7 @@ repositories {
 
 dependencies {
 
-    implementation("org.yaml:snakeyaml:2.5") {
+    implementation("org.yaml:snakeyaml:2.6") {
         because("https://github.com/navikt/sif-innsyn-api/security/dependabot/2")
     }
 
