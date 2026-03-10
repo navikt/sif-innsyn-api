@@ -38,8 +38,8 @@ val orgJsonVersion = "20251224"
 val graphQLKotlinVersion = "9.0.0"
 val k9FormatVersion = "12.7.3"
 val teamDokumenthåndteringAvroSchemaVersion = "1.1.7"
-val springdocVersion = "3.0.1"
-val wiremockSpringVersion = "4.1.0"
+val springdocVersion = "3.0.2"
+val wiremockSpringVersion = "4.2.0"
 
 repositories {
     mavenCentral()
