@@ -9,7 +9,7 @@ plugins {
     id("org.springframework.boot") version "4.0.3"
     id("io.spring.dependency-management") version "1.1.7"
     id("com.expediagroup.graphql") version "9.0.0"
-    id("org.sonarqube") version "7.1.0.6387"
+    id("org.sonarqube") version "7.2.3.7755"
     jacoco
 }
 
@@ -38,8 +38,8 @@ val orgJsonVersion = "20251224"
 val graphQLKotlinVersion = "9.0.0"
 val k9FormatVersion = "12.7.3"
 val teamDokumenthåndteringAvroSchemaVersion = "1.1.7"
-val springdocVersion = "3.0.1"
-val wiremockSpringVersion = "4.1.0"
+val springdocVersion = "3.0.2"
+val wiremockSpringVersion = "4.2.0"
 
 repositories {
     mavenCentral()
