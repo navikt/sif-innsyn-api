@@ -17,6 +17,8 @@ group = "no.nav"
 version = "0.0.1-SNAPSHOT"
 java.sourceCompatibility = JavaVersion.VERSION_25
 
+extra["tomcat.version"] = "11.0.21"
+
 configurations {
     compileOnly {
         extendsFrom(configurations.annotationProcessor.get())
