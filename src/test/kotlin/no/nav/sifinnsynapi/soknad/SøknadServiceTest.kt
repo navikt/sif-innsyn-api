@@ -74,7 +74,7 @@ internal class SøknadServiceTest {
                 status = SøknadsStatus.MOTTATT,
                 journalpostId = "123456789",
                 opprettet = ZonedDateTime.parse("2020-08-04T10:30:00Z").withZoneSameInstant(ZoneId.of("UTC")),
-                fødselsnummer = Fødselsnummer("02119970078"),
+                fødselsnummer = Fødselsnummer("01017000299"),
                 aktørId = AktørId("123456"),
                 søknad =
                 //language=json
@@ -86,7 +86,7 @@ internal class SøknadServiceTest {
                                   "mellomnavn": "Mellomnavn",
                                   "etternavn": "Nordmann",
                                   "aktørId": "123456",
-                                  "fødselsnummer": "02119970078",
+                                  "fødselsnummer": "01017000299",
                                   "fornavn": "Ola"
                                 },
                                 "arbeidsgivere": {
@@ -129,7 +129,7 @@ internal class SøknadServiceTest {
                 status = SøknadsStatus.MOTTATT,
                 journalpostId = "123456789",
                 opprettet = ZonedDateTime.parse("2020-08-04T10:30:00Z").withZoneSameInstant(ZoneId.of("UTC")),
-                fødselsnummer = Fødselsnummer("02119970078"),
+                fødselsnummer = Fødselsnummer("01017000299"),
                 aktørId = AktørId("123456"),
                 søknad =
                 //language=json
@@ -141,7 +141,7 @@ internal class SøknadServiceTest {
                     "mellomnavn": "Mellomnavn",
                     "etternavn": "Nordmann",
                     "aktørId": "123456",
-                    "fødselsnummer": "02119970078",
+                    "fødselsnummer": "01017000299",
                     "fornavn": "Ola"
                   },
                   "arbeidsgivere": [
@@ -181,7 +181,7 @@ internal class SøknadServiceTest {
                 status = SøknadsStatus.MOTTATT,
                 journalpostId = "123456789",
                 opprettet = ZonedDateTime.parse("2020-08-04T10:30:00Z").withZoneSameInstant(ZoneId.of("UTC")),
-                fødselsnummer = Fødselsnummer("02119970078"),
+                fødselsnummer = Fødselsnummer("01017000299"),
                 aktørId = AktørId("123456"),
                 søknad =
                 //language=json
