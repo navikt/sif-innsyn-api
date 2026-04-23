@@ -46,12 +46,12 @@ class K9SakInnsynApiService(
             søknaddataUrl,
             HttpMethod.GET,
             null,
-            object: ParameterizedTypeReference<List<K9SakInnsynSøknadFraK9>>() {}
+            object: ParameterizedTypeReference<List<K9SakInnsynSøknad>>() {}
         )
         logger.info("Fikk response {} for oppslag av søknadsdata fra k9-sak-innsyn-api", exchange.statusCode)
 
         return if (exchange.statusCode.is2xxSuccessful) {
-            exchange.body!!.map { K9SakInnsynSøknad(barn = it.barn.tilBarn(), søknad = it.søknad) }
+            exchange.body!!
         } else {
             logger.error(
                 "Henting av søknadsdata feilet med status: {}, og respons: {}",
@@ -81,25 +81,10 @@ data class K9SakInnsynSøknad(
 )
 
 data class Barn(
-    val norskIdentitetsnummer: String?,
-    val fødselsdato: LocalDate?
-)
-
-internal data class K9SakInnsynSøknadFraK9(
-    val barn: BarnFraK9Innsyn,
-    val søknad: Søknad
-)
-
-internal data class BarnFraK9Innsyn(
     val fødselsdato: LocalDate?,
     val fornavn: String?,
     val mellomnavn: String? = null,
     val etternavn: String?,
     val aktørId: String?,
     val identitetsnummer: String? = null
-) {
-    fun tilBarn() = Barn(
-        norskIdentitetsnummer = identitetsnummer,
-        fødselsdato = fødselsdato
-    )
-}
+)
