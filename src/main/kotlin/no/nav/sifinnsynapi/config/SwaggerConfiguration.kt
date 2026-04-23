@@ -6,6 +6,7 @@ import io.swagger.v3.oas.models.OpenAPI
 import io.swagger.v3.oas.models.info.Info
 import io.swagger.v3.oas.models.security.*
 import io.swagger.v3.oas.models.servers.Server
+import org.springdoc.core.models.GroupedOpenApi
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.EnvironmentAware
 import org.springframework.context.annotation.Bean
@@ -49,6 +50,18 @@ class SwaggerConfiguration(
             )
     }
 
+
+    @Bean
+    fun forvaltningGroup(): GroupedOpenApi = GroupedOpenApi.builder()
+        .group("forvaltning")
+        .pathsToMatch("/forvaltning/**")
+        .build()
+
+    @Bean
+    fun defaultGroup(): GroupedOpenApi = GroupedOpenApi.builder()
+        .group("default")
+        .pathsToExclude("/forvaltning/**")
+        .build()
 
     private fun azureLogin(): SecurityScheme {
         return SecurityScheme()
