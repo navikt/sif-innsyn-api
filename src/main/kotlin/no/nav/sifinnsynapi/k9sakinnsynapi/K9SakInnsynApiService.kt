@@ -81,10 +81,10 @@ data class K9SakInnsynSøknad(
 )
 
 data class Barn(
-    val fødselsdato: LocalDate?,
-    val fornavn: String?,
+    val fødselsdato: LocalDate,
+    val fornavn: String,
     val mellomnavn: String? = null,
-    val etternavn: String?,
-    val aktørId: String?,
+    val etternavn: String,
+    val aktørId: String,
     val identitetsnummer: String? = null
 )
