@@ -76,11 +76,11 @@ class K9SakInnsynApiService(
 }
 
 data class K9SakInnsynSøknad(
-    val barn: Barn,
+    val barn: BarnOpplysninger,
     val søknad: Søknad
 )
 
-data class Barn(
+data class BarnOpplysninger(
     val fødselsdato: LocalDate,
     val fornavn: String,
     val mellomnavn: String? = null,
