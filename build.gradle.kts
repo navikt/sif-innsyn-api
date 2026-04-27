@@ -6,9 +6,9 @@ plugins {
     kotlin("jvm") version "2.3.20"
     kotlin("plugin.spring") version "2.3.20"
     kotlin("plugin.jpa") version "2.3.20"
-    id("org.springframework.boot") version "4.0.3"
+    id("org.springframework.boot") version "4.0.5"
     id("io.spring.dependency-management") version "1.1.7"
-    id("com.expediagroup.graphql") version "9.1.0"
+    id("com.expediagroup.graphql") version "9.2.0"
     id("org.sonarqube") version "7.2.3.7755"
     jacoco
 }
@@ -27,7 +27,7 @@ configurations {
 
 val confluentVersion = "8.1.0"
 val logstashLogbackEncoderVersion = "9.0"
-val tokenSupportVersion = "6.0.5"
+val tokenSupportVersion = "6.0.6"
 val retryVersion = "2.0.12"
 val openhtmltopdfVersion = "1.0.10"
 val handlebarsVersion = "4.5.0"
@@ -35,12 +35,12 @@ val awailitilityKotlinVersion = "4.3.0"
 val assertkJvmVersion = "0.28.1"
 val springMockkVersion = "5.0.1"
 val mockkVersion = "1.14.9"
-val guavaVersion = "33.5.0-jre"
+val guavaVersion = "33.6.0-jre"
 val orgJsonVersion = "20251224"
-val graphQLKotlinVersion = "9.1.0"
-val k9FormatVersion = "12.10.0"
-val teamDokumenthåndteringAvroSchemaVersion = "1.1.8"
-val springdocVersion = "3.0.2"
+val graphQLKotlinVersion = "9.2.0"
+val k9FormatVersion = "13.0.1"
+val teamDokumenthåndteringAvroSchemaVersion = "1.1.10"
+val springdocVersion = "3.0.3"
 val wiremockSpringVersion = "4.2.1"
 
 repositories {
