@@ -6,7 +6,7 @@ plugins {
     kotlin("jvm") version "2.3.20"
     kotlin("plugin.spring") version "2.3.20"
     kotlin("plugin.jpa") version "2.3.20"
-    id("org.springframework.boot") version "4.0.5"
+    id("org.springframework.boot") version "4.0.6"
     id("io.spring.dependency-management") version "1.1.7"
     id("com.expediagroup.graphql") version "9.2.0"
     id("org.sonarqube") version "7.2.3.7755"
@@ -16,8 +16,6 @@ plugins {
 group = "no.nav"
 version = "0.0.1-SNAPSHOT"
 java.sourceCompatibility = JavaVersion.VERSION_25
-
-extra["tomcat.version"] = "11.0.21"
 
 configurations {
     compileOnly {
