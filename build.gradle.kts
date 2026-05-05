@@ -3,9 +3,9 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "2.3.20"
-    kotlin("plugin.spring") version "2.3.20"
-    kotlin("plugin.jpa") version "2.3.20"
+    kotlin("jvm") version "2.3.21"
+    kotlin("plugin.spring") version "2.3.21"
+    kotlin("plugin.jpa") version "2.3.21"
     id("org.springframework.boot") version "4.0.6"
     id("io.spring.dependency-management") version "1.1.7"
     id("com.expediagroup.graphql") version "9.2.0"
@@ -36,7 +36,7 @@ val mockkVersion = "1.14.9"
 val guavaVersion = "33.6.0-jre"
 val orgJsonVersion = "20251224"
 val graphQLKotlinVersion = "9.2.0"
-val k9FormatVersion = "13.0.1"
+val k9FormatVersion = "13.1.0"
 val teamDokumenthåndteringAvroSchemaVersion = "1.1.10"
 val springdocVersion = "3.0.3"
 val wiremockSpringVersion = "4.2.1"
