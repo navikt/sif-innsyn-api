@@ -9,7 +9,7 @@ plugins {
     id("org.springframework.boot") version "4.0.6"
     id("io.spring.dependency-management") version "1.1.7"
     id("com.expediagroup.graphql") version "9.2.0"
-    id("org.sonarqube") version "7.2.3.7755"
+    id("org.sonarqube") version "7.3.0.8198"
     jacoco
 }
 
@@ -25,7 +25,7 @@ configurations {
 
 val confluentVersion = "8.1.0"
 val logstashLogbackEncoderVersion = "9.0"
-val tokenSupportVersion = "6.0.6"
+val tokenSupportVersion = "6.0.7"
 val retryVersion = "2.0.12"
 val openhtmltopdfVersion = "1.0.10"
 val handlebarsVersion = "4.5.0"
@@ -36,7 +36,7 @@ val mockkVersion = "1.14.9"
 val guavaVersion = "33.6.0-jre"
 val orgJsonVersion = "20251224"
 val graphQLKotlinVersion = "9.2.0"
-val k9FormatVersion = "13.0.1"
+val k9FormatVersion = "13.1.0"
 val teamDokumenthåndteringAvroSchemaVersion = "1.1.10"
 val springdocVersion = "3.0.3"
 val wiremockSpringVersion = "4.2.1"
