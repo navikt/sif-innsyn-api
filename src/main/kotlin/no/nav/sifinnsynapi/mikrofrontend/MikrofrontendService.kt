@@ -13,6 +13,7 @@ import no.nav.sifinnsynapi.soknad.SøknadService
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.time.ZonedDateTime
 import java.util.*
 
 @Service
@@ -44,6 +45,37 @@ class MikrofrontendService(
         sensitivitet = Sensitivitet.SUBSTANTIAL,
         initiatedBy = "sif-innsyn-api"
     )
+
+    fun findByFødselsnummer(fødselsnummer: String): List<MikrofrontendDAO> {
+        return mikrofrontendRepository.findByFødselsnummer(fødselsnummer)
+    }
+
+    @Transactional(transactionManager = TxConfiguration.TRANSACTION_MANAGER, rollbackFor = [Exception::class])
+    fun aktiverIdempotent(fødselsnummer: String, mikrofrontendId: String): Pair<MikrofrontendDAO, Boolean> {
+        val eksisterende = mikrofrontendRepository.findByFødselsnummerAndMikrofrontendId(fødselsnummer, mikrofrontendId)
+
+        if (eksisterende != null) {
+            if (eksisterende.status == MicrofrontendAction.ENABLE) {
+                logger.info("Mikrofrontend er allerede aktivert – ingen endring")
+                return Pair(eksisterende, false)
+            }
+            logger.info("Mikrofrontend funnet med annen status – oppdaterer til ENABLE")
+            val oppdatert = eksisterende.copy(status = MicrofrontendAction.ENABLE)
+            sendOgLagre(oppdatert, MicrofrontendAction.ENABLE)
+            return Pair(oppdatert, false)
+        }
+
+        logger.info("Ingen eksisterende mikrofrontend funnet – oppretter ny")
+        val ny = MikrofrontendDAO(
+            fødselsnummer = fødselsnummer,
+            mikrofrontendId = mikrofrontendId,
+            status = MicrofrontendAction.ENABLE,
+            opprettet = ZonedDateTime.now(),
+            behandlingsdato = null,
+        )
+        sendOgLagre(ny, MicrofrontendAction.ENABLE)
+        return Pair(ny, true)
+    }
 
     fun hentMikrofrontendIdAndStatus(
         mikrofrontendId: String,
