@@ -26,9 +26,6 @@ class SwaggerConfiguration(
     @Bean
     fun openAPI(): OpenAPI {
         return OpenAPI()
-            .addServersItem(
-                Server().url("https://sif-innsyn-api.intern.dev.nav.no/").description("Swagger Server")
-            )
             .info(
                 Info()
                     .title("Sif Innsyn Api")
