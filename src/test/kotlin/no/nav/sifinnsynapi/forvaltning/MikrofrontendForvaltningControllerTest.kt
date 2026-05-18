@@ -5,8 +5,6 @@ import com.nimbusds.jose.JOSEObjectType.JWT
 import com.nimbusds.jwt.JWTClaimsSet
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
-import io.mockk.justRun
-import io.mockk.verify
 import no.nav.security.mock.oauth2.MockOAuth2Server
 import no.nav.security.mock.oauth2.token.DefaultOAuth2TokenCallback
 import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
@@ -108,15 +106,21 @@ open class MikrofrontendForvaltningControllerTest {
     }
 
     @Test
-    fun `skal aktivere mikrofrontend og kalle sendOgLagre`() {
-        justRun { mikrofrontendService.sendOgLagre(any(), any()) }
-
-        val request = MikrofrontendAktiverRequest(
-            fødselsnummer = "12345678901",
+    fun `skal opprette ny mikrofrontend og returnere 201`() {
+        val fødselsnummer = "12345678901"
+        val dao = MikrofrontendDAO(
+            fødselsnummer = fødselsnummer,
+            mikrofrontendId = MicrofrontendId.PLEIEPENGER_INNSYN.id,
+            status = MicrofrontendAction.ENABLE,
+            opprettet = ZonedDateTime.now(),
+            behandlingsdato = null,
         )
+        every {
+            mikrofrontendService.aktiverIdempotent(fødselsnummer, MicrofrontendId.PLEIEPENGER_INNSYN.id)
+        } returns Pair(dao, true)
 
         val token = tokenMedDriftsrolle(gyldigTestDriftRolle)
-        val requestBody = objectMapper.writeValueAsString(request)
+        val requestBody = objectMapper.writeValueAsString(MikrofrontendAktiverRequest(fødselsnummer))
 
         mockMvc.perform(
             post(URI("/forvaltning/mikrofrontend/aktiver"))
@@ -125,11 +129,36 @@ open class MikrofrontendForvaltningControllerTest {
                 .content(requestBody)
         )
             .andExpect(status().isCreated)
-            .andExpect(jsonPath("$.fødselsnummer").value("12345678901"))
+            .andExpect(jsonPath("$.fødselsnummer").value(fødselsnummer))
             .andExpect(jsonPath("$.mikrofrontendId").value(MicrofrontendId.PLEIEPENGER_INNSYN.id))
             .andExpect(jsonPath("$.status").value("ENABLE"))
+    }
 
-        verify(exactly = 1) { mikrofrontendService.sendOgLagre(any(), eq(MicrofrontendAction.ENABLE)) }
+    @Test
+    fun `skal returnere 200 når mikrofrontend allerede er aktivert`() {
+        val fødselsnummer = "12345678901"
+        val dao = MikrofrontendDAO(
+            fødselsnummer = fødselsnummer,
+            mikrofrontendId = MicrofrontendId.PLEIEPENGER_INNSYN.id,
+            status = MicrofrontendAction.ENABLE,
+            opprettet = ZonedDateTime.now(),
+            behandlingsdato = null,
+        )
+        every {
+            mikrofrontendService.aktiverIdempotent(fødselsnummer, MicrofrontendId.PLEIEPENGER_INNSYN.id)
+        } returns Pair(dao, false)
+
+        val token = tokenMedDriftsrolle(gyldigTestDriftRolle)
+        val requestBody = objectMapper.writeValueAsString(MikrofrontendAktiverRequest(fødselsnummer))
+
+        mockMvc.perform(
+            post(URI("/forvaltning/mikrofrontend/aktiver"))
+                .header(HttpHeaders.AUTHORIZATION, "Bearer $token")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody)
+        )
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$.status").value("ENABLE"))
     }
 
     @Test

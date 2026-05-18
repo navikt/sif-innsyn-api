@@ -4,9 +4,7 @@ import jakarta.validation.Valid
 import no.nav.security.token.support.core.api.ProtectedWithClaims
 import no.nav.security.token.support.core.api.RequiredIssuers
 import no.nav.sifinnsynapi.config.Issuers
-import no.nav.sifinnsynapi.dittnav.MicrofrontendAction
 import no.nav.sifinnsynapi.dittnav.MicrofrontendId
-import no.nav.sifinnsynapi.mikrofrontend.MikrofrontendDAO
 import no.nav.sifinnsynapi.mikrofrontend.MikrofrontendService
 import no.nav.sifinnsynapi.sikkerhet.AuthorizationService
 import no.nav.sifinnsynapi.sikkerhet.ContextHolder
@@ -20,7 +18,6 @@ import org.springframework.web.ErrorResponseException
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
-import java.time.ZonedDateTime
 
 @RestController
 @RequiredIssuers(
@@ -62,17 +59,12 @@ class MikrofrontendForvaltningController(
     ): ResponseEntity<MikrofrontendRespons> {
         validerDriftsrolle()
         logger.info("Aktiverer mikrofrontend for fødselsnummer")
-
-        val dao = MikrofrontendDAO(
+        val (dao, opprettet) = mikrofrontendService.aktiverIdempotent(
             fødselsnummer = request.fødselsnummer,
             mikrofrontendId = MicrofrontendId.PLEIEPENGER_INNSYN.id,
-            status = MicrofrontendAction.ENABLE,
-            opprettet = ZonedDateTime.now(),
-            behandlingsdato = null,
         )
-
-        mikrofrontendService.sendOgLagre(dao, MicrofrontendAction.ENABLE)
-        return ResponseEntity.status(HttpStatus.CREATED).body(MikrofrontendRespons.fra(dao))
+        val httpStatus = if (opprettet) HttpStatus.CREATED else HttpStatus.OK
+        return ResponseEntity.status(httpStatus).body(MikrofrontendRespons.fra(dao))
     }
 
     private fun validerDriftsrolle() {

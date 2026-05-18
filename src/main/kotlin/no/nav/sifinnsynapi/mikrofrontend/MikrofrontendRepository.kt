@@ -9,6 +9,8 @@ interface MikrofrontendRepository: JpaRepository<MikrofrontendDAO, UUID> {
 
     fun findByFødselsnummer(fødselsnummer: String): List<MikrofrontendDAO>
 
+    fun findByFødselsnummerAndMikrofrontendId(fødselsnummer: String, mikrofrontendId: String): MikrofrontendDAO?
+
     /**
      * Henter alle mikrofrontender basert på gitt mikrofrontendId og status, begrenset til gitt limit.
      *
