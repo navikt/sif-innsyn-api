@@ -6,6 +6,9 @@ import java.util.*
 
 
 interface MikrofrontendRepository: JpaRepository<MikrofrontendDAO, UUID> {
+
+    fun findByFødselsnummer(fødselsnummer: String): List<MikrofrontendDAO>
+
     /**
      * Henter alle mikrofrontender basert på gitt mikrofrontendId og status, begrenset til gitt limit.
      *

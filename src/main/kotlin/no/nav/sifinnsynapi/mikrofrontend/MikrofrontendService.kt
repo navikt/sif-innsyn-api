@@ -45,6 +45,10 @@ class MikrofrontendService(
         initiatedBy = "sif-innsyn-api"
     )
 
+    fun findByFødselsnummer(fødselsnummer: String): List<MikrofrontendDAO> {
+        return mikrofrontendRepository.findByFødselsnummer(fødselsnummer)
+    }
+
     fun hentMikrofrontendIdAndStatus(
         mikrofrontendId: String,
         status: MicrofrontendAction,
