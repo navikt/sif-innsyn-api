@@ -7,6 +7,11 @@ import java.time.LocalDateTime
 import java.time.ZonedDateTime
 import java.util.*
 
+data class MikrofrontendOppslagRequest(
+    @field:Pattern(regexp = "\\d{11}", message = "Fødselsnummer må være 11 siffer")
+    val fødselsnummer: String,
+)
+
 data class MikrofrontendAktiverRequest(
     @field:Pattern(regexp = "\\d{11}", message = "Fødselsnummer må være 11 siffer")
     val fødselsnummer: String,

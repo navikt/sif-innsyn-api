@@ -29,7 +29,6 @@ import org.springframework.http.MediaType
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 import java.net.URI
@@ -74,11 +73,13 @@ open class MikrofrontendForvaltningControllerTest {
         every { mikrofrontendService.findByFødselsnummer(fødselsnummer) } returns listOf(dao)
 
         val token = tokenMedDriftsrolle(gyldigTestDriftRolle)
+        val request = objectMapper.writeValueAsString(MikrofrontendOppslagRequest(fødselsnummer))
 
         mockMvc.perform(
-            get(URI("/forvaltning/mikrofrontend/$fødselsnummer"))
+            post(URI("/forvaltning/mikrofrontend/hent"))
                 .header(HttpHeaders.AUTHORIZATION, "Bearer $token")
-                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(request)
         )
             .andExpect(status().isOk)
             .andExpect(jsonPath("$[0].fødselsnummer").value(fødselsnummer))
@@ -93,11 +94,13 @@ open class MikrofrontendForvaltningControllerTest {
         every { mikrofrontendService.findByFødselsnummer(fødselsnummer) } returns emptyList()
 
         val token = tokenMedDriftsrolle(gyldigTestDriftRolle)
+        val request = objectMapper.writeValueAsString(MikrofrontendOppslagRequest(fødselsnummer))
 
         mockMvc.perform(
-            get(URI("/forvaltning/mikrofrontend/$fødselsnummer"))
+            post(URI("/forvaltning/mikrofrontend/hent"))
                 .header(HttpHeaders.AUTHORIZATION, "Bearer $token")
-                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(request)
         )
             .andExpect(status().isOk)
             .andExpect(jsonPath("$").isArray)
@@ -130,13 +133,15 @@ open class MikrofrontendForvaltningControllerTest {
     }
 
     @Test
-    fun `GET skal gi 403 dersom det mangler driftsrolle`() {
+    fun `hent skal gi 403 dersom det mangler driftsrolle`() {
         val token = tokenMedDriftsrolle(ugyldigTestDriftRolle)
+        val request = objectMapper.writeValueAsString(MikrofrontendOppslagRequest("12345678901"))
 
         mockMvc.perform(
-            get(URI("/forvaltning/mikrofrontend/12345678901"))
+            post(URI("/forvaltning/mikrofrontend/hent"))
                 .header(HttpHeaders.AUTHORIZATION, "Bearer $token")
-                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(request)
         )
             .andExpect(status().isForbidden)
     }
@@ -161,19 +166,19 @@ open class MikrofrontendForvaltningControllerTest {
 
     private fun tokenMedDriftsrolle(driftRolle: String): String {
         return mockOAuth2Server.issueToken(
-            ContextHolder.AZURE_AD,
-            "theclientid",
-            DefaultOAuth2TokenCallback(
-                ContextHolder.AZURE_AD,
-                "saksbehandler",
-                JWT.type,
-                listOf("aud-localhost"),
-                defaultJwtClaimsSetBuilder()
+            issuerId = ContextHolder.AZURE_AD,
+            clientId = "theclientid",
+            tokenCallback = DefaultOAuth2TokenCallback(
+                issuerId = ContextHolder.AZURE_AD,
+                subject = "saksbehandler",
+                typeHeader = JWT.type,
+                audience = listOf("aud-localhost"),
+                claims = defaultJwtClaimsSetBuilder()
                     .claim("NAVident", "TEST")
                     .claim("groups", arrayOf(driftRolle))
                     .build()
                     .claims,
-                30L
+                expiry = 30L
             )
         ).serialize()
     }
