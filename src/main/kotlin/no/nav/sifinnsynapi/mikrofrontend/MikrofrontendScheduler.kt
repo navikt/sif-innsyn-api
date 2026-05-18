@@ -7,7 +7,6 @@ import no.nav.sifinnsynapi.soknad.SøknadDAO
 import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
-import java.util.*
 import java.util.concurrent.TimeUnit
 
 @Component
@@ -54,13 +53,12 @@ class MikrofrontendScheduler(
     fun aktiverMikrofrontendForPleiepengesøknaderDeSisteSeksMåneder() = leaderService.executeAsLeader {
         logger.info("Aktiverer mikrofrontend for pleiepengesøknader de siste seks måneder.")
         var batchNummer = 1
-        val statusÅOppdatere = MicrofrontendAction.ENABLE
 
         while (true) {
             val søknader = mikrofrontendService.finnUnikeSøknaderUtenMikrofrontendSisteSeksMåneder(limit = BATCH_SIZE)
             if (søknader.isEmpty()) break
 
-            aktiver(søknader, statusÅOppdatere, batchNummer)
+            aktiver(søknader, batchNummer)
             batchNummer++
         }
 
@@ -85,28 +83,19 @@ class MikrofrontendScheduler(
 
     private fun aktiver(
         søknader: List<SøknadDAO>,
-        statusÅOppdatere: MicrofrontendAction,
         batchNummer: Int,
     ) {
         logger.info("Prosesserer batch ${batchNummer} med ${søknader.size} elementer.")
-        søknader
-            .map { it.toMicrofrontendDAO(statusÅOppdatere) }
-            .forEach { mikrofrontendDAO: MikrofrontendDAO ->
-                runCatching {
-                    mikrofrontendService.sendOgLagre(mikrofrontendDAO, statusÅOppdatere)
-                }.onFailure {
-                    logger.error("Feilet med å oppdatere MikrofrontendTabell. Prøver igjen senere.", it)
-                }
+        søknader.forEach { søknad ->
+            runCatching {
+                mikrofrontendService.aktiverIdempotent(
+                    fødselsnummer = søknad.fødselsnummer.fødselsnummer!!,
+                    mikrofrontendId = MicrofrontendId.PLEIEPENGER_INNSYN.id,
+                )
+            }.onFailure {
+                logger.error("Feilet med å oppdatere MikrofrontendTabell. Prøver igjen senere.", it)
             }
-        logger.info("Batch $batchNummer} ferdig.")
+        }
+        logger.info("Batch $batchNummer ferdig.")
     }
-
-    private fun SøknadDAO.toMicrofrontendDAO(statusÅOppdatere: MicrofrontendAction) = MikrofrontendDAO(
-        id = UUID.randomUUID(),
-        fødselsnummer = fødselsnummer.fødselsnummer!!,
-        mikrofrontendId = MicrofrontendId.PLEIEPENGER_INNSYN.id,
-        status = statusÅOppdatere,
-        opprettet = opprettet,
-        behandlingsdato = null,
-    )
 }
