@@ -25,7 +25,7 @@ configurations {
 
 val confluentVersion = "8.1.0"
 val logstashLogbackEncoderVersion = "9.0"
-val tokenSupportVersion = "6.0.7"
+val tokenSupportVersion = "6.0.8"
 val retryVersion = "2.0.12"
 val openhtmltopdfVersion = "1.0.10"
 val handlebarsVersion = "4.5.1"
