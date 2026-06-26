@@ -43,6 +43,3 @@ no.nav:
     pleiepenger-sykt-barn-endringsmelding:
       beskjed:
         link: https://dine-pleiepenger.intern.dev.nav.no/innsyn
-
-  inntektsmelding:
-    ny-im-aktivert: true

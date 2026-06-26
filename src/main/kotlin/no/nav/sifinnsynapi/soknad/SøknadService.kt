@@ -3,13 +3,11 @@ package no.nav.sifinnsynapi.soknad
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
 import no.nav.sifinnsynapi.common.AktørId
-import no.nav.sifinnsynapi.common.Fødselsnummer
 import no.nav.sifinnsynapi.common.Søknadstype
 import no.nav.sifinnsynapi.dokument.DokumentDTO
 import no.nav.sifinnsynapi.dokument.DokumentService
 import no.nav.sifinnsynapi.dokument.DokumentService.Companion.brevkoder
 import no.nav.sifinnsynapi.konsument.pleiepenger.syktbarn.ArbeidsgiverMeldingNavNoPDFGenerator
-import no.nav.sifinnsynapi.konsument.pleiepenger.syktbarn.ArbeidsgiverMeldingPDFGenerator
 import no.nav.sifinnsynapi.konsument.pleiepenger.syktbarn.PleiepengerJSONObjectUtils.finnOrganisasjon
 import no.nav.sifinnsynapi.konsument.pleiepenger.syktbarn.PleiepengerJSONObjectUtils.tilPleiepengerAreidsgivermelding
 import no.nav.sifinnsynapi.oppslag.OppslagsService
@@ -31,9 +29,7 @@ class SøknadService(
     private val repo: SøknadRepository,
     private val oppslagsService: OppslagsService,
     private val dokumentService: DokumentService,
-    private val arbeidsgiverMeldingPDFGenerator: ArbeidsgiverMeldingPDFGenerator,
-    private val arbeidsgiverMeldingNavNoPDFGenerator: ArbeidsgiverMeldingNavNoPDFGenerator,
-    @Value("\${no.nav.inntektsmelding.ny-im-aktivert:false}") private val erNyImAktivert: Boolean
+    private val arbeidsgiverMeldingNavNoPDFGenerator: ArbeidsgiverMeldingNavNoPDFGenerator
 ) {
 
     companion object {
@@ -109,19 +105,11 @@ class SøknadService(
                 val pleiepengesøknadJson = JSONObject(søknad.søknad)
                 val funnetOrg: JSONObject = pleiepengesøknadJson.finnOrganisasjon(søknad, organisasjonsnummer)
 
-                if (erNyImAktivert) {
                     arbeidsgiverMeldingNavNoPDFGenerator.genererPDF(
                         pleiepengesøknadJson.tilPleiepengerAreidsgivermelding(
                             funnetOrg
                         )
                     )
-                } else {
-                    arbeidsgiverMeldingPDFGenerator.genererPDF(
-                        pleiepengesøknadJson.tilPleiepengerAreidsgivermelding(
-                            funnetOrg
-                        )
-                    )
-                }
             }
 
             else -> throw NotSupportedArbeidsgiverMeldingException(søknad.id.toString(), søknad.søknadstype)
