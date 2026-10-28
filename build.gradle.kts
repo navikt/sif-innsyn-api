@@ -3,13 +3,13 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "2.4.10"
-    kotlin("plugin.spring") version "2.4.10"
-    kotlin("plugin.jpa") version "2.4.10"
+    kotlin("jvm") version "2.4.21"
+    kotlin("plugin.spring") version "2.4.21"
+    kotlin("plugin.jpa") version "2.4.21"
     id("org.springframework.boot") version "4.1.1"
     id("io.spring.dependency-management") version "1.1.7"
-    id("com.expediagroup.graphql") version "10.1.2"
-    id("org.sonarqube") version "7.3.1.8318"
+    id("com.expediagroup.graphql") version "11.0.0"
+    id("org.sonarqube") version "7.5.0.8588"
     jacoco
 }
 
@@ -25,21 +25,21 @@ configurations {
 
 val confluentVersion = "8.1.0"
 val logstashLogbackEncoderVersion = "9.0"
-val tokenSupportVersion = "6.0.11"
+val tokenSupportVersion = "7.0.1"
 val retryVersion = "2.0.13"
 val openhtmltopdfVersion = "1.0.10"
-val handlebarsVersion = "4.5.3"
+val handlebarsVersion = "4.5.5"
 val awailitilityKotlinVersion = "4.3.0"
 val assertkJvmVersion = "0.28.1"
 val springMockkVersion = "5.0.1"
 val mockkVersion = "1.14.11"
-val guavaVersion = "33.7.1-jre"
-val orgJsonVersion = "20260719"
-val graphQLKotlinVersion = "10.1.2"
-val k9FormatVersion = "13.4.0"
-val teamDokumenthåndteringAvroSchemaVersion = "1.1.11"
-val springdocVersion = "3.0.3"
-val wiremockSpringVersion = "4.2.2"
+val guavaVersion = "33.7.2-jre"
+val orgJsonVersion = "20260814"
+val graphQLKotlinVersion = "11.0.0"
+val k9FormatVersion = "14.1.2"
+val teamDokumenthåndteringAvroSchemaVersion = "2.0.0"
+val springdocVersion = "3.1.1"
+val wiremockSpringVersion = "4.4.3"
 
 repositories {
     mavenCentral()
@@ -61,7 +61,7 @@ repositories {
 
 dependencies {
 
-    implementation("org.yaml:snakeyaml:2.6") {
+    implementation("org.yaml:snakeyaml:2.7") {
         because("https://github.com/navikt/sif-innsyn-api/security/dependabot/2")
     }
 
@@ -138,7 +138,7 @@ dependencies {
     }
     implementation("io.confluent:kafka-connect-avro-converter:$confluentVersion")
     implementation("io.confluent:kafka-avro-serializer:$confluentVersion")
-    implementation("org.apache.avro:avro:1.12.1")
+    implementation("org.apache.avro:avro:1.12.2")
     testImplementation("org.springframework.kafka:spring-kafka-test")
     // PDF
     implementation("com.openhtmltopdf:openhtmltopdf-pdfbox:$openhtmltopdfVersion")
