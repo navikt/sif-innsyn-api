@@ -138,7 +138,7 @@ dependencies {
     }
     implementation("io.confluent:kafka-connect-avro-converter:$confluentVersion")
     implementation("io.confluent:kafka-avro-serializer:$confluentVersion")
-    implementation("org.apache.avro:avro:1.12.1")
+    implementation("org.apache.avro:avro:1.12.2")
     testImplementation("org.springframework.kafka:spring-kafka-test")
     // PDF
     implementation("com.openhtmltopdf:openhtmltopdf-pdfbox:$openhtmltopdfVersion")
