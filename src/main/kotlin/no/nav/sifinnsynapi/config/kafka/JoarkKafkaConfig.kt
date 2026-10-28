@@ -8,6 +8,8 @@ import no.nav.sifinnsynapi.util.MDCConstants.CORRELATION_ID
 import no.nav.sifinnsynapi.util.MDCConstants.JOURNALPOST_ID
 import no.nav.sifinnsynapi.util.MDCConstants.K9_SAK_ID
 import no.nav.sifinnsynapi.util.MDCUtil
+import org.apache.avro.util.ClassSecurityValidator
+import org.apache.avro.util.ClassSecurityValidator.ClassSecurityPredicate
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.slf4j.LoggerFactory
@@ -33,6 +35,16 @@ internal class JoarkKafkaConfig(
 
         const val TEMA_NYTT_OMS = "oms"
         const val ENDELIG_JOURNALFØRT = "endeligjournalført"
+    }
+
+    init {
+        // Avro 1.12.2+ avviser klasser som ikke er eksplisitt tillatt ved deserialisering.
+        ClassSecurityValidator.setGlobal(
+            ClassSecurityValidator.composite(
+                ClassSecurityValidator.DEFAULT,
+                ClassSecurityPredicate { it.packageName == JournalfoeringHendelseRecord::class.java.packageName }
+            )
+        )
     }
 
     @Bean
