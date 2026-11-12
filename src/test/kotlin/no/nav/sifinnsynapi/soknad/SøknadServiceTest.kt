@@ -22,6 +22,7 @@ import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
+import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -169,6 +170,36 @@ internal class SøknadServiceTest {
             assertNotNull(bytes)
             assertThat(bytes).isNotEmpty()
             assertThat(bytes).size().isGreaterThan(1000)
+        }
+    }
+
+    @Test
+    fun `gitt søknad som tilhører en annen bruker, forvent SøknadNotFoundException`() {
+        val fremmedSøknad = søknadRepository.save(
+            SøknadDAO(
+                saksId = "fremmed",
+                søknadstype = Søknadstype.PP_SYKT_BARN,
+                status = SøknadsStatus.MOTTATT,
+                journalpostId = "987654321",
+                opprettet = ZonedDateTime.parse("2020-08-04T10:30:00Z").withZoneSameInstant(ZoneId.of("UTC")),
+                fødselsnummer = Fødselsnummer("01015450572"),
+                aktørId = AktørId("999999"),
+                søknad =
+                //language=json
+                """
+                {
+                  "arbeidsgivere": [
+                    { "navn": "Peppes", "organisasjonsnummer": "917755645" }
+                  ]
+                }
+                """.trimIndent()
+            )
+        )
+        every { dokumentService.hentDokumentOversikt(any()) } returns listOf()
+
+        assertThrows<SøknadNotFoundException> { søknadService.hentSøknad(fremmedSøknad.id) }
+        assertThrows<SøknadNotFoundException> {
+            søknadService.hentArbeidsgiverMeldingFil(fremmedSøknad.id, "917755645")
         }
     }
 

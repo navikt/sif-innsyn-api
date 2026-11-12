@@ -39,7 +39,7 @@ class SøknadService(
 
     fun hentSøknader(): List<SøknadDTO> {
 
-        val aktørId = AktørId.valueOf(oppslagsService.hentAktørId()!!.aktør_id)
+        val aktørId = AktørId.valueOf(oppslagsService.hentAktørId()?.aktør_id ?: throw Error("AktørId not found"))
 
         val søknadDAOs = repo.findAllByAktørId(aktørId)
             .filter { it.søknadstype.gjelderPP() }
@@ -60,9 +60,7 @@ class SøknadService(
     }
 
     fun hentSøknad(søknadId: UUID): SøknadDTO {
-        val søknadDAO = repo.findById(søknadId).orElseThrow {
-            SøknadNotFoundException(søknadId.toString())
-        }
+        val søknadDAO = hentSøknadForInnloggetBruker(søknadId)
 
         val dokumentOversikt = dokumentService.hentDokumentOversikt(brevkoder[søknadDAO.søknadstype]!!)
             .filter { it.journalpostId == søknadDAO.journalpostId }
@@ -96,9 +94,7 @@ class SøknadService(
 
     fun hentArbeidsgiverMeldingFil(søknadId: UUID, organisasjonsnummer: String): ByteArray {
 
-        val søknad = repo.findById(søknadId).orElseThrow {
-            SøknadNotFoundException(søknadId.toString())
-        }
+        val søknad = hentSøknadForInnloggetBruker(søknadId)
 
         return when (søknad.søknadstype) {
             Søknadstype.PP_SYKT_BARN -> {
@@ -114,6 +110,13 @@ class SøknadService(
 
             else -> throw NotSupportedArbeidsgiverMeldingException(søknad.id.toString(), søknad.søknadstype)
         }
+    }
+
+
+    private fun hentSøknadForInnloggetBruker(søknadId: UUID): SøknadDAO {
+        val aktørId = AktørId.valueOf(oppslagsService.hentAktørId()?.aktør_id ?: throw Error("AktørId not found"))
+        return repo.findByIdAndAktørId(søknadId, aktørId)
+            ?: throw SøknadNotFoundException(søknadId.toString())
     }
 
     fun søknadGittJournalpostIdEksisterer(journalpostId: String): Boolean {

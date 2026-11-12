@@ -14,6 +14,7 @@ import java.util.stream.Stream
 @Transactional(transactionManager = TRANSACTION_MANAGER, rollbackFor = [Exception::class])
 interface SøknadRepository : JpaRepository<SøknadDAO, UUID> {
     fun findAllByAktørId(aktørId: AktørId): List<SøknadDAO>
+    fun findByIdAndAktørId(id: UUID, aktørId: AktørId): SøknadDAO?
     fun findByJournalpostId(journalpostId: String): SøknadDAO?
     fun existsSøknadDAOByAktørIdAndJournalpostId(aktørId: AktørId, journalpostId: String): Boolean
 
