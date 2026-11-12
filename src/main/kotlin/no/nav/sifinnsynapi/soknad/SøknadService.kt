@@ -39,7 +39,7 @@ class SøknadService(
 
     fun hentSøknader(): List<SøknadDTO> {
 
-        val aktørId = AktørId.valueOf(oppslagsService.hentAktørId()!!.aktør_id)
+        val aktørId = AktørId.valueOf(oppslagsService.hentAktørId()?.aktør_id ?: throw Error("AktørId not found"))
 
         val søknadDAOs = repo.findAllByAktørId(aktørId)
             .filter { it.søknadstype.gjelderPP() }
@@ -114,7 +114,7 @@ class SøknadService(
 
 
     private fun hentSøknadForInnloggetBruker(søknadId: UUID): SøknadDAO {
-        val aktørId = AktørId.valueOf(oppslagsService.hentAktørId()!!.aktør_id)
+        val aktørId = AktørId.valueOf(oppslagsService.hentAktørId()?.aktør_id ?: throw Error("AktørId not found"))
         return repo.findByIdAndAktørId(søknadId, aktørId)
             ?: throw SøknadNotFoundException(søknadId.toString())
     }
