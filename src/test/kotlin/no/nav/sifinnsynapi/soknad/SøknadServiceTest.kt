@@ -182,7 +182,7 @@ internal class SøknadServiceTest {
                 status = SøknadsStatus.MOTTATT,
                 journalpostId = "987654321",
                 opprettet = ZonedDateTime.parse("2020-08-04T10:30:00Z").withZoneSameInstant(ZoneId.of("UTC")),
-                fødselsnummer = Fødselsnummer("02119970078"),
+                fødselsnummer = Fødselsnummer("01015450572"),
                 aktørId = AktørId("999999"),
                 søknad =
                 //language=json
